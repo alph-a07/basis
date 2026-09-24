@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -10,7 +8,7 @@ plugins {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     signAllPublications()
 
     coordinates("io.github.alph-a07", "basis", "0.1.0")
