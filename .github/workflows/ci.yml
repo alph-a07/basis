@@ -31,12 +31,12 @@ jobs:
 
       - name: Android Lint
         run: ./gradlew lint
-#
-#      - name: Detekt
-#        run: ./gradlew detekt
+
+      - name: Detekt
+        run: ./gradlew detekt
 
       - name: Binary compatibility check
-        run: ./gradlew apiCheck
+        run: ./gradlew releaseApiCheck
 
       - name: Upload reports on failure
         if: failure()
