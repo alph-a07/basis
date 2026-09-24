@@ -42,3 +42,23 @@ mavenPublishing {
         }
     }
 }
+
+tasks.register("installGitHooks") {
+    group = "git hooks"
+    description = "Points git at the versioned .githooks directory and makes the scripts executable."
+
+    val hookFiles = fileTree(".githooks").files
+    val rootDir = layout.projectDirectory.asFile
+
+    doLast {
+        val exitCode = ProcessBuilder("git", "config", "core.hooksPath", ".githooks")
+            .directory(rootDir)
+            .inheritIO()
+            .start()
+            .waitFor()
+        check(exitCode == 0) { "git config core.hooksPath failed (exit code $exitCode)" }
+
+        hookFiles.forEach { it.setExecutable(true) }
+        println("✅ Git hooks installed — commit-msg and pre-push are now active.")
+    }
+}

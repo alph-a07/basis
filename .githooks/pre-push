@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+protected='^refs/heads/main$'
+allowed='^refs/heads/(feature|bugfix|enhancement)/Issue-[0-9]+$'
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$local_ref" ] && continue
+  echo "$local_ref" | grep -qE "$protected" && continue
+
+  if ! echo "$local_ref" | grep -qE "$allowed"; then
+    echo "❌ Branch '${local_ref#refs/heads/}' doesn't match the required pattern."
+    echo "  Expected: feature/Issue-<n>, bugfix/Issue-<n>, or enhancement/Issue-<n>"
+    echo "  Example:  feature/Issue-42"
+    exit 1
+  fi
+done
+exit 0

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+commit_msg_file="$1"
+commit_msg=$(head -n1 "$commit_msg_file")
+
+# Let git's own generated messages through untouched
+if echo "$commit_msg" | grep -qE '^(Merge |Revert "|fixup!|squash!)'; then
+  exit 0
+fi
+
+pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z0-9._-]+\))?!?: .{1,88}$'
+
+if ! echo "$commit_msg" | grep -qE "$pattern"; then
+  echo "❌ Commit message doesn't follow Conventional Commits."
+  echo
+  echo "  Got:      $commit_msg"
+  echo "  Expected: <type>(<optional scope>): <description>"
+  echo "  Types:    feat fix docs style refactor perf test build ci chore"
+  echo "  Example:  feat(button): add pill-shaped variant"
+  echo "  Breaking: add '!' after type/scope, e.g. feat!: ..."
+  exit 1
+fi
+exit 0
