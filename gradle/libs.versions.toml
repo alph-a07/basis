@@ -10,6 +10,10 @@ kotlin = "2.2.10"
 composeBom = "2026.02.01"
 appcompat = "1.7.1"
 material = "1.14.0"
+detekt = "1.23.7"
+vanniktechMavenPublish = "0.30.0"
+bcv = "0.18.1"
+bcvBridge = "0.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,4 +37,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
+android-bcv-bridge = { id = "io.github.tjokinen.android-bcv-bridge", version.ref = "bcvBridge" }
