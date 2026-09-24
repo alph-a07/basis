@@ -4,20 +4,18 @@ plugins {
 }
 
 android {
-    namespace = "io.github.alph_a07.basis"
+    namespace = "io.github.alph_a07.basis.demo"
+
     compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
+        version = release(37)
     }
 
     defaultConfig {
-        applicationId = "io.github.alph_a07.basis"
+        applicationId = "io.github.alph_a07.basis.demo"
         minSdk = 24
         targetSdk = 36
-        compileSdk = 37
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,10 +27,12 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
     }
