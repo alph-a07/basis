@@ -1,0 +1,32 @@
+name: PR title
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          BRANCH="${{ github.head_ref }}"
+
+          if ! [[ "$TITLE" =~ ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z0-9._-]+\))?\!?:\ .{1,88}$ ]]; then
+            echo "::error::PR title doesn't follow Conventional Commits: <type>(<scope>): <description>"
+            exit 1
+          fi
+
+          TYPE="${TITLE%%[(:!]*}"
+          case "$BRANCH" in
+            feature/*)     EXPECTED="feat" ;;
+            enhancement/*) EXPECTED="feat" ;;
+            bugfix/*)      EXPECTED="fix" ;;
+            *)             EXPECTED="" ;;
+          esac
+
+          if [ -n "$EXPECTED" ] && [ "$TYPE" != "$EXPECTED" ]; then
+            echo "::error::Branch '$BRANCH' implies type '$EXPECTED', but the PR title uses '$TYPE'."
+            exit 1
+          fi

@@ -1,0 +1,18 @@
+name: Branch naming
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch name
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          echo "Checking branch: $BRANCH"
+          if ! [[ "$BRANCH" =~ ^(feature|bugfix|enhancement)/Issue-[0-9]+$ ]]; then
+            echo "::error::Branch '$BRANCH' doesn't match feature|bugfix|enhancement/Issue-<number>"
+            exit 1
+          fi
