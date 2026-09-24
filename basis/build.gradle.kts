@@ -1,5 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.binary.compatibility.validator)
+    alias(libs.plugins.android.bcv.bridge)
 }
 
 android {
@@ -21,11 +24,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
 }
 
 kotlin {
     explicitApi()
+}
+
+androidBcvBridge {
+    variant.set("release")
 }
 
 dependencies {
