@@ -53,7 +53,7 @@ object BasisSpringTokens {
 }
 
 /** Delay offset between consecutive elements in a staggered/cascading entrance, in milliseconds. */
-const val staggerDelay = 40
+const val STAGGER_DELAY = 40
 
 /** Utility function to get the appropriate motion duration based on the reduced motion setting.
  * @param duration The original duration in milliseconds.
