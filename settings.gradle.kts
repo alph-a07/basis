@@ -26,4 +26,4 @@ rootProject.name = "Basis"
 include(":demo")
 include(":basis")
 include(":basis-lint")
-include(":basis-tokens")
+include(":basis:tokens")

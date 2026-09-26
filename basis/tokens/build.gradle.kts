@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.alph_a07.basis_tokens"
+    namespace = "io.github.alph_a07.basis.tokens"
     compileSdk {
         version = release(37)
     }
