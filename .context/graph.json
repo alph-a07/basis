@@ -1,0 +1,941 @@
+{
+  "nodes": {
+    "concept-oklch-derivation": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt",
+          "sha": "5781dcc28baccded162e885262fed1da55bc0b4b"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/OklchDerivation.kt",
+          "sha": "d9dac0b8c3927837b3b193c6c9b40e971b7135c6"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/CategoricalColor.kt",
+          "sha": "4155b1ffb5c31a4caa22aee4c9b9aa2613e708dc"
+        }
+      ],
+      "depends_on": [
+        "pkg-tokens-color"
+      ],
+      "gotchas": [
+        "The conversion matrices are the OKLab reference implementation, the same derivation CSS oklch() uses; changing them changes every derived color in the system.",
+        "Alpha is outside OKLCH, so overlays and backdrops set alpha separately from lightness and chroma, and neutrals rely on a near-zero chroma tint for their hue.",
+        "The status hues are private file constants in the derivation file, so they are invisible to callers even though the rest of derivation is tunable."
+      ],
+      "invariants": [
+        {
+          "rule": "OKLCH is the single working space for every derived Basis color; new derivation should route through Oklch rather than sRGB or HSL manipulation",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt"
+        },
+        {
+          "rule": "Every derivation numeric is exposed on the scheme derivation or categorical tuning type; the one exception is status hues, which are fixed constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "The tokens module holds no concrete brand or palette values, only the engine that derives them",
+          "source": "AGENTS.md §2"
+        }
+      ],
+      "kind": "concept",
+      "public_surface": [],
+      "purpose": "The idea that every Basis color is produced by moving in OKLCH rather than by picking hex values. A seed hue sets the hue; tuning supplies lightness and chroma; neutrals get a small vibe tint at the seed hue. Spans the color package's space, math and categorical generation, and the theme package's derivation engine.",
+      "rationale": {
+        "source": "KDoc on Oklch",
+        "text": "OKLCH is perceptually uniform, so lightness and chroma steps and hue rotations behave predictably regardless of the underlying hue, unlike HSL"
+      },
+      "related": [
+        "pkg-tokens-theme"
+      ],
+      "summary": "OKLCH is the single working color space: seeds in, tuned lightness/chroma steps out",
+      "title": "OKLCH derivation"
+    },
+    "concept-tokens-vs-presets": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/DerivationTuning.kt",
+          "sha": "8675bb8c2ad2dd812715b283e75e8feccdb77994"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/BasisThemeConfig.kt",
+          "sha": "c9d81c6de259fb164f6a5cf7620a0140a91fdc02"
+        }
+      ],
+      "depends_on": [
+        "module-basis-tokens"
+      ],
+      "gotchas": [
+        "The tuning data classes ship default values that reproduce the library's stock look, so the boundary between definition and preset is a judgement call, not a hard line: nothing in the tokens module is a brand preset today, but its defaults already encode a look.",
+        "The main library has no sources yet, so the preset side of this split is currently unwritten and nothing enforces the boundary at compile time."
+      ],
+      "invariants": [
+        {
+          "rule": "The tokens module holds definitions and derivation engines only, with no default color scheme and no baked categorical palette",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Concrete preset values live in the main library module",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet; do not invent, tweak or improve them, and ask when a needed value is not already in code",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "One source of truth: every constant or piece of logic has exactly one owner",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "concept",
+      "public_surface": [
+        {
+          "note": "config field nesting scheme tuning",
+          "symbol": "derivationTuning"
+        },
+        {
+          "note": "config field nesting categorical tuning",
+          "symbol": "categoricalTuning"
+        }
+      ],
+      "purpose": "The split that decides where a new value belongs. The tokens module holds scales, tuning defaults, roles and the engines that turn seeds into colors; the main library holds the concrete brand presets, the default theme and the components that consume them. Spans the tuning defaults and the config that nests them.",
+      "rationale": null,
+      "related": [
+        "module-basis",
+        "pkg-tokens-theme"
+      ],
+      "summary": "Tokens own definitions and derivation engines; concrete brand and palette values belong to the main library",
+      "title": "Tokens versus presets"
+    },
+    "module-basis": {
+      "anchors": [
+        {
+          "path": "basis/build.gradle.kts",
+          "sha": "27d2ff7a788571cc59acbdf8a1e91b21c0d028ec"
+        },
+        {
+          "path": "basis/api/basis.api",
+          "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The tracked API baseline file is empty, so the binary compatibility check currently passes trivially and would not catch a first public symbol until the baseline is regenerated.",
+        "The build file declares no project dependency on the tokens module, so tokens are not yet on this module's compile classpath."
+      ],
+      "invariants": [
+        {
+          "rule": "Public API carries the Basis prefix",
+          "source": "AGENTS.md §3"
+        },
+        {
+          "rule": "Layering is atoms to molecules to components; components compose existing atoms and molecules instead of re-implementing them",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Concrete brand and palette preset values live in this module, not in the tokens module",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "An intentional public-API change fails the API check; the baseline must not be regenerated without being asked",
+          "source": "AGENTS.md §4"
+        }
+      ],
+      "kind": "module",
+      "public_surface": [
+        {
+          "note": "kotlin block, explicit visibility and return types",
+          "symbol": "explicitApi"
+        },
+        {
+          "note": "binary compatibility validator bridge",
+          "symbol": "androidBcvBridge"
+        },
+        {
+          "note": "maven group",
+          "symbol": "io.github.alph_a07"
+        }
+      ],
+      "purpose": "The published library where the atoms, molecules and public components live. It currently has no Kotlin sources at all: its only tracked content is an empty API baseline, so everything it is meant to own is not written yet.",
+      "rationale": null,
+      "related": [
+        "module-basis-tokens",
+        "concept-tokens-vs-presets"
+      ],
+      "summary": "Gradle module for the published Basis design system library; no Kotlin sources yet",
+      "title": "Basis main library module"
+    },
+    "module-basis-lint": {
+      "anchors": [
+        {
+          "path": "basis-lint/build.gradle.kts",
+          "sha": "efd5c88099f852c15c7882300b6115c5a4fc9457"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The build file declares no lint plugin and no dependency on the main library, so the module currently produces no checks."
+      ],
+      "invariants": [
+        {
+          "rule": "A lint plugin for the main library, not a consumer of it",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "No new third-party dependencies without asking",
+          "source": "AGENTS.md §2"
+        }
+      ],
+      "kind": "module",
+      "public_surface": [],
+      "purpose": "Reserved home for lint rules about Basis usage. It applies only com.android.library and contains no Kotlin sources, no issue registry and no lint plugin, so nothing is checked yet.",
+      "rationale": {
+        "source": "AGENTS.md §2",
+        "text": "Intentionally left empty to be filled as lint rules are needed"
+      },
+      "related": [
+        "module-basis"
+      ],
+      "summary": "Placeholder Gradle module for Basis lint checks; no rules implemented",
+      "title": "Basis lint module"
+    },
+    "module-basis-tokens": {
+      "anchors": [
+        {
+          "path": "basis/tokens/build.gradle.kts",
+          "sha": "39b51a22c5725a73d387545b54d6be90919da903"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The build file applies the Android library plugin and pulls in appcompat, core-ktx and material, so this is an Android library, not the pure Kotlin/JVM module AGENTS.md section 2 describes. It does not use Compose.",
+        "No module declares a project dependency on this one, so the tokens are not yet on any consumer's compile classpath."
+      ],
+      "invariants": [
+        {
+          "rule": "Holds token definitions and derivation engines only, never concrete brand or palette values; concrete preset values belong to the main library module",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Derivation constants are exposed as fields on BasisSchemeDerivationTuning or BasisCategoricalTuning rather than bare literals in signatures",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Status hues are fixed constants, not tunable",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Dependencies point only toward this module; nothing here may depend on the main library or the demo",
+          "source": "AGENTS.md §2"
+        }
+      ],
+      "kind": "module",
+      "public_surface": [
+        {
+          "note": "plugin alias applied",
+          "symbol": "android.library"
+        },
+        {
+          "note": "namespace",
+          "symbol": "io.github.alph_a07.basis.tokens"
+        }
+      ],
+      "purpose": "Owns every Basis token value and the engines that turn seed hues into a scheme. Holds no concrete brand palette and no Compose UI code. It is the only module in the repo with substantial source today.",
+      "rationale": null,
+      "related": [
+        "module-basis",
+        "concept-tokens-vs-presets"
+      ],
+      "summary": "Gradle module holding Basis token definitions and derivation engines",
+      "title": "Basis tokens module"
+    },
+    "module-demo": {
+      "anchors": [
+        {
+          "path": "demo/build.gradle.kts",
+          "sha": "077e337520c803eaf05e4e184ae4a5dbc9b8f4ac"
+        },
+        {
+          "path": "demo/src/main/java/io/github/alph_a07/basis/demo/MainActivity.kt",
+          "sha": "57035859ef5b92f9d2d78f89e934a3bab7a132a8"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The build file declares no project dependency on the library or tokens modules, so the demo compiles without Basis on the classpath.",
+        "The composable in the demo's ui/theme package is named BasisTheme but wraps Material3's MaterialTheme with hardcoded Material3 colors; it is template code, not a Basis theme."
+      ],
+      "invariants": [
+        {
+          "rule": "Depends only toward the main library, which in turn points at the tokens module",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "No new third-party dependencies without asking",
+          "source": "AGENTS.md §2"
+        }
+      ],
+      "kind": "module",
+      "public_surface": [
+        {
+          "note": "single activity, launcher entry point",
+          "symbol": "MainActivity"
+        },
+        {
+          "note": "template composable",
+          "symbol": "Greeting"
+        },
+        {
+          "note": "preview wrapper",
+          "symbol": "GreetingPreview"
+        },
+        {
+          "note": "applicationId and namespace",
+          "symbol": "io.github.alph_a07.basis.demo"
+        }
+      ],
+      "purpose": "Hosts the sample app used to exercise Basis visually. It is the only module with Compose enabled and the only Android application, and it currently renders a template greeting rather than any Basis component.",
+      "rationale": null,
+      "related": [
+        "module-basis",
+        "module-basis-tokens"
+      ],
+      "summary": "Android app module that hosts the Basis demo; still the Compose template",
+      "title": "Basis demo module"
+    },
+    "pkg-tokens-color": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/BasisColor.kt",
+          "sha": "7aeb9302546bf84128810e0c3f9e33f5b6aec56a"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/ColorTokens.kt",
+          "sha": "c48bf858ac7282fae1e9db8c7d35ca32b8f2d360"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt",
+          "sha": "5781dcc28baccded162e885262fed1da55bc0b4b"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/CategoricalColor.kt",
+          "sha": "4155b1ffb5c31a4caa22aee4c9b9aa2613e708dc"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Gradient.kt",
+          "sha": "b0d1c0100b7a44c3b081706f4c628fe9f1f9f7a1"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/GradientPresets.kt",
+          "sha": "69c98e6df292262e15b5d8a5f825cf5b250106b5"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "This node is the union of the whole color package plus the two gradient presets, which live in the theme package because presets consume a derived scheme. A change to GradientPresets.kt makes this node stale, not the theme node.",
+        "OKLCH has no alpha channel: the conversion out drops it and the conversion in takes alpha as a separate argument, so round-tripping a translucent color loses its alpha.",
+        "The ink-picking helper returns pure black or pure white only, choosing whichever contrasts higher; it is not a tinted ink.",
+        "Conversion back to BasisColor clamps each channel into sRGB, so out-of-gamut OKLCH values silently lose chroma.",
+        "All categorical colors generated for one mode share a single chroma, the maximum across the seed hues floored at the tuning minimum, so seeds of differing chroma do not stay distinct on that axis.",
+        "Categorical indices past the end of the seed hue list do not wrap: they rotate the last seed by the golden angle, so a short seed list silently extends rather than repeating.",
+        "The gradient value type is a plain description of stops and direction, not a Compose brush; the main library is expected to map it.",
+        "The brand gradient preset bakes in a 30 degree hue rotation and a 0.75 chroma factor as literals in the preset rather than as tuning fields."
+      ],
+      "invariants": [
+        {
+          "rule": "The color files never import the theme package; the dependency runs the other way",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt"
+        },
+        {
+          "rule": "No concrete brand or palette values: the package defines roles and engines, not presets",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "No bare hardcoded literals in function signatures; categorical knobs are fields on the categorical tuning type",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Contrast thresholds are the WCAG AA constants, not numbers written at call sites",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "inline value class over packed ARGB",
+          "symbol": "BasisColor"
+        },
+        {
+          "note": "6 or 8 digit hex, optional hash prefix",
+          "symbol": "fromHex"
+        },
+        {
+          "note": "channel constructor, requires 0..255",
+          "symbol": "fromArgb"
+        },
+        {
+          "note": "complete scheme, all color tokens",
+          "symbol": "BasisColorScheme"
+        },
+        {
+          "note": "surface role set",
+          "symbol": "SurfaceColors"
+        },
+        {
+          "note": "text and content role set",
+          "symbol": "ContentColors"
+        },
+        {
+          "note": "icon role set, aliasing of content",
+          "symbol": "IconColors"
+        },
+        {
+          "note": "border role set",
+          "symbol": "BorderColors"
+        },
+        {
+          "note": "interactive and state role set",
+          "symbol": "InteractiveColors"
+        },
+        {
+          "note": "selected role set",
+          "symbol": "SelectedColors"
+        },
+        {
+          "note": "one status tone",
+          "symbol": "StatusColorSet"
+        },
+        {
+          "note": "positive, negative, caution, info",
+          "symbol": "StatusColors"
+        },
+        {
+          "note": "loading skeleton role set",
+          "symbol": "SkeletonColors"
+        },
+        {
+          "note": "perceptual working color space",
+          "symbol": "Oklch"
+        },
+        {
+          "note": "wraps hue into 0..360",
+          "symbol": "rotateHue"
+        },
+        {
+          "note": "BasisColor to OKLCH",
+          "symbol": "toOklch"
+        },
+        {
+          "note": "Oklch to BasisColor, clamps to sRGB",
+          "symbol": "toBasisColor"
+        },
+        {
+          "note": "hue spacing constant",
+          "symbol": "GOLDEN_ANGLE_DEGREES"
+        },
+        {
+          "note": "normal text contrast threshold",
+          "symbol": "WCAG_AA_NORMAL_TEXT"
+        },
+        {
+          "note": "large text contrast threshold",
+          "symbol": "WCAG_AA_LARGE_TEXT"
+        },
+        {
+          "note": "WCAG relative luminance",
+          "symbol": "relativeLuminance"
+        },
+        {
+          "note": "1:1 to 21:1",
+          "symbol": "contrastRatio"
+        },
+        {
+          "note": "picks black or white ink",
+          "symbol": "contentOn"
+        },
+        {
+          "note": "categorical palette knobs",
+          "symbol": "BasisCategoricalTuning"
+        },
+        {
+          "note": "one categorical color for one mode",
+          "symbol": "categoricalColor"
+        },
+        {
+          "note": "count categorical colors for one mode",
+          "symbol": "categoricalPalette"
+        },
+        {
+          "note": "muted variant of a color list",
+          "symbol": "softVariant"
+        },
+        {
+          "note": "stops as position to color pairs",
+          "symbol": "BasisGradient"
+        },
+        {
+          "note": "horizontal, vertical, diagonal, radial",
+          "symbol": "GradientDirection"
+        },
+        {
+          "note": "two overloads, two points or full stops",
+          "symbol": "gradient"
+        },
+        {
+          "note": "preset from the interactive color",
+          "symbol": "gradientBrand"
+        },
+        {
+          "note": "preset surface to elevated",
+          "symbol": "gradientSurface"
+        }
+      ],
+      "purpose": "Owns the BasisColor ARGB value class, the full BasisColorScheme and its per-role color sets, the OKLCH working space with conversion and WCAG contrast helpers, categorical palette generation, and the gradient type with its builders and scheme-derived presets. It does not derive a scheme from seed hues; that lives in the theme package.",
+      "rationale": {
+        "source": "KDoc on Oklch",
+        "text": "OKLCH is the single working space for every derived Basis color because it is perceptually uniform, so lightness and chroma steps and hue rotations behave predictably regardless of hue, unlike HSL"
+      },
+      "related": [
+        "pkg-tokens-theme",
+        "concept-oklch-derivation"
+      ],
+      "summary": "ARGB color type, scheme data classes, OKLCH math, WCAG contrast, categorical palettes and gradients",
+      "title": "Color tokens"
+    },
+    "pkg-tokens-elevation": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/elevation/ElevationTokens.kt",
+          "sha": "61a156fb1dfb092f841194e20a9cc2be79443e65"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The shadow alpha helper always returns 0f for a dark theme regardless of level, so passing the wrong dark-theme flag silently removes all elevation.",
+        "The press helper is ordinal arithmetic over the enum entries, so inserting a level anywhere but the end silently changes what every level presses to.",
+        "The per-level shadow alpha values are literals in a when expression, not fields on the enum, unlike the dp and tonal values."
+      ],
+      "invariants": [
+        {
+          "rule": "Sizes come from the token scale rather than per-component private constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "Level0 to Level5, dp and darkTonalPercent",
+          "symbol": "BasisElevation"
+        },
+        {
+          "note": "resting cards and raised rows",
+          "symbol": "Level1"
+        },
+        {
+          "note": "alpha for this level, 0 in dark mode",
+          "symbol": "shadowAlpha"
+        },
+        {
+          "note": "one level down, floored at Level0",
+          "symbol": "pressed"
+        }
+      ],
+      "purpose": "Owns the six-level elevation scale, the per-level shadow alpha, and the pressed-state step down. Each level pairs a light-mode dp depth with a dark-mode tonal percentage so the same enum serves both modes.",
+      "rationale": {
+        "source": "KDoc on BasisElevation",
+        "text": "Per the locked dark-mode rule, shadow alpha fades toward 0 as the theme goes dark and the tonal percentage carries the visual weight instead"
+      },
+      "related": [
+        "pkg-tokens-shape",
+        "pkg-tokens-motion"
+      ],
+      "summary": "Elevation scale carrying both a light shadow depth and a dark tonal shift, with press behavior",
+      "title": "Elevation tokens"
+    },
+    "pkg-tokens-motion": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/MotionTokens.kt",
+          "sha": "38ef59b80f0bc61fb33831f0be8c83eb03c1fda2"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "Durations are Int milliseconds while easing control points and spring parameters are Float, so the scale is not uniformly typed.",
+        "The easing and spring token objects use lowerCamelCase values while the duration constants are SCREAMING_SNAKE_CASE; this predates the convention and should not be mass-renamed.",
+        "The reduced-motion path returns 1 rather than 0, a deliberate non-zero duration for animation APIs that reject zero."
+      ],
+      "invariants": [
+        {
+          "rule": "Durations come from the token scale rather than per-component private constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "instant through slower",
+          "symbol": "BasisMotionDurationTokens"
+        },
+        {
+          "note": "default duration step",
+          "symbol": "DURATION_NORMAL"
+        },
+        {
+          "note": "cubic-bezier control points",
+          "symbol": "BasisEasing"
+        },
+        {
+          "note": "standard, decelerate, accelerate, emphasized",
+          "symbol": "BasisEasingTokens"
+        },
+        {
+          "note": "damping ratio and stiffness",
+          "symbol": "BasisSpring"
+        },
+        {
+          "note": "standard, bouncy, stiff",
+          "symbol": "BasisSpringTokens"
+        },
+        {
+          "note": "per-element entrance delay",
+          "symbol": "STAGGER_DELAY"
+        },
+        {
+          "note": "reduced-motion aware duration",
+          "symbol": "motionDuration"
+        }
+      ],
+      "purpose": "Owns the millisecond duration scale, cubic-bezier easing curves, spring configurations, the stagger delay, and the function that collapses durations under reduced motion. Curves are plain data, not Compose animation spec types.",
+      "rationale": null,
+      "related": [
+        "pkg-tokens-spacing",
+        "pkg-tokens-typography"
+      ],
+      "summary": "Duration, easing, spring and stagger tokens plus reduced-motion duration handling",
+      "title": "Motion tokens"
+    },
+    "pkg-tokens-shape": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/shape/ShapeTokens.kt",
+          "sha": "13c89e2d70ef854b6c8f85ba1db5482e757afe8d"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "Radius values are dp typed as Int, not Float, unlike typography which uses Float sp.",
+        "The scale function is not purely proportional: under the pill roundness every radius except the none entry becomes full, and under the sharp roundness everything collapses to zero.",
+        "The factors behind Sharp, Soft and Round are literals inside the function, not token fields, so roundness strength is not tunable.",
+        "The pill branch in the factor expression is unreachable, since pill returns earlier."
+      ],
+      "invariants": [
+        {
+          "rule": "Sizes come from the token scale rather than per-component private constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "sealed set, fixed dp or full",
+          "symbol": "BasisRadius"
+        },
+        {
+          "note": "none through xl, plus full",
+          "symbol": "BasisRadiusTokens"
+        },
+        {
+          "note": "none, thin, medium, thick",
+          "symbol": "BasisBorderWidthTokens"
+        },
+        {
+          "note": "four independent corner radii",
+          "symbol": "BasisCornerShape"
+        },
+        {
+          "note": "Sharp, Soft, Round, Pill",
+          "symbol": "BasisRoundness"
+        },
+        {
+          "note": "scaled radius set",
+          "symbol": "BasisRadiusScale"
+        },
+        {
+          "note": "applies roundness to the scale",
+          "symbol": "radiusScale"
+        },
+        {
+          "note": "top corners only",
+          "symbol": "shapeTopRounded"
+        },
+        {
+          "note": "bottom corners only",
+          "symbol": "shapeBottomRounded"
+        },
+        {
+          "note": "all four corners independently",
+          "symbol": "cornerShape"
+        }
+      ],
+      "purpose": "Owns the corner radius scale, the border stroke width scale, the roundness knob, and the functions that scale a radius set by roundness or build a per-corner shape. It does not know about the Compose shape type.",
+      "rationale": null,
+      "related": [
+        "pkg-tokens-theme",
+        "pkg-tokens-typography"
+      ],
+      "summary": "Radius and border-width scales, the roundness enum and per-corner shape builders",
+      "title": "Shape tokens"
+    },
+    "pkg-tokens-spacing": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/spacing/SpacingTokens.kt",
+          "sha": "95d9e6458793692821c33a552b364ed70b058f35"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The scale function clamps the factor to a narrow range and rounds to the nearest Int, so spacing is integer dp and small values can collapse to the same number.",
+        "The clamp bounds are literals inside the function, so they are not tunable without editing this file."
+      ],
+      "invariants": [
+        {
+          "rule": "Sizes come from the token scale rather than per-component private constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "the dp scale, 2 through 64",
+          "symbol": "BasisSpacingTokens"
+        },
+        {
+          "note": "representative step of the scale",
+          "symbol": "SPACE_16"
+        },
+        {
+          "note": "scales and rounds a dp value",
+          "symbol": "spacingScale"
+        }
+      ],
+      "purpose": "Owns the spacing scale in dp and the function that scales a spacing value by a user-driven factor within fixed bounds. It is the whole package: one file, one object, one function.",
+      "rationale": null,
+      "related": [
+        "pkg-tokens-typography",
+        "pkg-tokens-shape"
+      ],
+      "summary": "The dp spacing scale and the bounded function that scales a spacing value for user settings",
+      "title": "Spacing tokens"
+    },
+    "pkg-tokens-theme": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/BasisThemeConfig.kt",
+          "sha": "c9d81c6de259fb164f6a5cf7620a0140a91fdc02"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/DerivationTuning.kt",
+          "sha": "8675bb8c2ad2dd812715b283e75e8feccdb77994"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/OklchDerivation.kt",
+          "sha": "d9dac0b8c3927837b3b193c6c9b40e971b7135c6"
+        }
+      ],
+      "depends_on": [
+        "pkg-tokens-color",
+        "pkg-tokens-shape",
+        "pkg-tokens-typography"
+      ],
+      "gotchas": [
+        "The theme config validates in its own init block: at least one seed hue is required, and the two-tone and three-tone vibes additionally require 2 and 3 seed hues.",
+        "The scheme derivation returns a Pair ordered light first, dark second, not a data class with named fields.",
+        "Defaults reproduce the library's stock look; the config's KDoc says tuning is only worth touching when the stock look needs retuning, not for ordinary theming.",
+        "The contrast validator only checks five foreground/background pairs, so a passing result is not a full accessibility audit.",
+        "This node's directory holds four files, but the fourth (GradientPresets.kt) is anchored by the color node, so a for-path query on this directory returns this node and the color node."
+      ],
+      "invariants": [
+        {
+          "rule": "Every numeric knob derivation uses is a field on the derivation tuning type, nested on the theme config, never a bare literal in a signature",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Status hues stay fixed constants and are not tunable",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "No concrete brand or palette values; concrete preset values live in the main library module",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "vibe, seed hues, fonts, roundness, tuning",
+          "symbol": "BasisThemeConfig"
+        },
+        {
+          "note": "monochrome through full spectrum",
+          "symbol": "BasisVibe"
+        },
+        {
+          "note": "per-slot font overrides",
+          "symbol": "BasisFontFamilyOverrides"
+        },
+        {
+          "note": "all scheme derivation knobs",
+          "symbol": "BasisSchemeDerivationTuning"
+        },
+        {
+          "note": "neutral lightness values with light and dark defaults",
+          "symbol": "BasisNeutralRamp"
+        },
+        {
+          "note": "interactive lightness and chroma",
+          "symbol": "BasisInteractiveTuning"
+        },
+        {
+          "note": "status lightness and chroma",
+          "symbol": "BasisStatusToneTuning"
+        },
+        {
+          "note": "overlay lightness and alpha",
+          "symbol": "BasisOverlayTuning"
+        },
+        {
+          "note": "per-vibe neutral tint",
+          "symbol": "BasisVibeTintStrength"
+        },
+        {
+          "note": "light and dark scheme pair",
+          "symbol": "deriveColorSchemes"
+        },
+        {
+          "note": "list of failure messages",
+          "symbol": "validateContrast"
+        }
+      ],
+      "purpose": "Owns the theme config and vibe enum, every numeric knob derivation uses, the function that produces the light and dark scheme pair, and the contrast validator. It holds no preset brand values. The theme package also holds the two gradient presets, but those are claimed by the color node.",
+      "rationale": {
+        "source": "KDoc on BasisThemeConfig",
+        "text": "The theme's vibe and seed hues govern how hues are used, not how many are allowed, so the seed hue list stays open-length; categorical tuning is separate from derivation tuning because categorical and chart colors are an independent concern from the UI scheme"
+      },
+      "related": [
+        "concept-oklch-derivation",
+        "concept-tokens-vs-presets",
+        "module-basis"
+      ],
+      "summary": "Theme config, derivation tuning knobs and the engine that turns seed hues into light/dark schemes",
+      "title": "Theme configuration and derivation"
+    },
+    "pkg-tokens-typography": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/TypographyTokens.kt",
+          "sha": "e8dd3b8b724af02ecf2bbd701ee19afb35235c3b"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "The type scale uses sp for size, line height and letter spacing, unlike spacing, shape and elevation which are dp.",
+        "The font family field of the text style is nullable and null means resolve from weight, so setting it to null does not force the default family.",
+        "The custom font family entry carries only a name string; resolving it to a real font is the main library's job."
+      ],
+      "invariants": [
+        {
+          "rule": "Sizes come from the token scale rather than per-component private constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "sealed set including a named custom entry",
+          "symbol": "BasisFontFamily"
+        },
+        {
+          "note": "default, display, mono references",
+          "symbol": "BasisFontFamilyTokens"
+        },
+        {
+          "note": "the four locked weights",
+          "symbol": "BasisFontWeightTokens"
+        },
+        {
+          "note": "default display threshold",
+          "symbol": "WEIGHT_SEMIBOLD"
+        },
+        {
+          "note": "size, line height, weight, family, spacing",
+          "symbol": "BasisTextStyle"
+        },
+        {
+          "note": "weight-driven family resolution",
+          "symbol": "resolvedFontFamily"
+        },
+        {
+          "note": "applies mono family and tabular figures",
+          "symbol": "tabularNums"
+        },
+        {
+          "note": "display through caption styles",
+          "symbol": "BasisTypeScale"
+        }
+      ],
+      "purpose": "Owns the closed set of font family references, the four font weights, the text style type with its resolution helpers, and the named type scale in sp. It holds no font resources and no Compose text style.",
+      "rationale": null,
+      "related": [
+        "pkg-tokens-theme",
+        "pkg-tokens-shape"
+      ],
+      "summary": "Font family set, locked weights, text style type and the sp type scale",
+      "title": "Typography tokens"
+    }
+  },
+  "schema_version": 1
+}
