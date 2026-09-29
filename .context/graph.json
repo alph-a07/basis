@@ -710,6 +710,85 @@
       "summary": "Radius and border-width scales, the roundness enum and per-corner shape builders",
       "title": "Shape tokens"
     },
+    "pkg-tokens-sizing": {
+      "anchors": [
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/sizing/SizingTokens.kt",
+          "sha": "5a04221a6aef1f232b1bdbfcdd545d19c950a036"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "Every value is a plain Int, not a Dp, so a caller must append .dp; there is no typed scale object to hold the conversion.",
+        "The scales are separate top-level objects rather than one nested Sizing object, so importing the icon scale does not bring the touch target or control heights into scope.",
+        "MIN_TOUCH_TARGET and CONTROL_HEIGHT_LG are both 48 by design, so a control at the large height already meets the touch target floor."
+      ],
+      "invariants": [
+        {
+          "rule": "Sizes come from the Sizing token group rather than per-component private size constants",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
+          "source": "AGENTS.md §2"
+        },
+        {
+          "rule": "Public API names carry the Basis prefix",
+          "source": "AGENTS.md §3"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "minimum size for any interactive element",
+          "symbol": "BasisTouchTargetTokens"
+        },
+        {
+          "note": "48, the accessibility floor",
+          "symbol": "MIN_TOUCH_TARGET"
+        },
+        {
+          "note": "the icon scale, 16 through 32",
+          "symbol": "BasisIconSizeTokens"
+        },
+        {
+          "note": "representative step of the icon scale",
+          "symbol": "ICON_SIZE_MD"
+        },
+        {
+          "note": "heights for buttons, chips and similar controls",
+          "symbol": "BasisControlHeightTokens"
+        },
+        {
+          "note": "representative step of the control scale",
+          "symbol": "CONTROL_HEIGHT_MD"
+        },
+        {
+          "note": "the avatar scale, 24 through 72",
+          "symbol": "BasisAvatarSizeTokens"
+        },
+        {
+          "note": "representative step of the avatar scale",
+          "symbol": "AVATAR_SIZE_MD"
+        },
+        {
+          "note": "the status dot scale, 6 through 10",
+          "symbol": "BasisDotSizeTokens"
+        },
+        {
+          "note": "representative step of the dot scale",
+          "symbol": "DOT_SIZE_MD"
+        }
+      ],
+      "purpose": "Owns the Sizing token group referenced by AGENTS.md §2: the minimum interactive touch target plus the icon, control height, avatar and status dot scales. Each scale is its own object of Int dp constants, so a component depends only on the scale it actually uses. It holds no behavior and no per-component size constants.",
+      "rationale": null,
+      "related": [
+        "pkg-tokens-spacing",
+        "pkg-tokens-shape"
+      ],
+      "summary": "The sizing group: minimum touch target, icon, control height, avatar and status dot scales, all in dp",
+      "title": "Sizing tokens"
+    },
     "pkg-tokens-spacing": {
       "anchors": [
         {
