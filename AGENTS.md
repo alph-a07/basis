@@ -54,6 +54,8 @@ and stop there. Don't fix it. Also don't edit this file unless asked.
 - Constants are `SCREAMING_SNAKE_CASE` (e.g. `WEIGHT_SEMIBOLD`). Existing spacing/motion/shape constants predate this; use the convention for anything new and don't mass-rename old ones unless asked.
 - One source of truth. Every constant or piece of logic has one owner. If a fix would duplicate it, patch around it, or work around a problem in a consumer instead of the owner, stop and say so. Fix the root cause or ask.
 - Keep changes scoped to the task. No drive-by refactors or renames.
+- Keep comments sophisticated and production ready, do not add any explanatory or change-tracking comments. If a comment is needed, it should be clear and concise, and not include any personal notes or explanations.
+- Professional, comprehensive enough and self-contained KDoc for public API. Don't leave a "TODO" or "FIXME" in public KDoc. KDoc need to be as good as any public libraries from Google, JetBrains, or AndroidX. If you can't write KDoc that good, ask me to do it.
 
 ## 4. Workflow and CI parity
 
