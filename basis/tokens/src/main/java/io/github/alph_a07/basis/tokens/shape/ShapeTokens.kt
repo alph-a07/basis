@@ -16,20 +16,40 @@ sealed class BasisRadius {
 
 /** The corner radius scale. */
 object BasisRadiusTokens {
+    /** Zero corner radius (0dp) producing sharp rectangular corners for full-bleed containers. */
     val radiusNone = BasisRadius.Fixed(0)
+
+    /** Extra-small corner radius (4dp) for compact tags, tooltips, and small badges. */
     val radiusXs = BasisRadius.Fixed(4)
+
+    /** Small corner radius (8dp) for standard buttons, text input fields, and small cards. */
     val radiusSm = BasisRadius.Fixed(8)
+
+    /** Medium corner radius (12dp) for standard cards, floating panels, and medium containers. */
     val radiusMd = BasisRadius.Fixed(12)
+
+    /** Large corner radius (16dp) for large surface cards, bottom sheet containers, and modal sheets. */
     val radiusLg = BasisRadius.Fixed(16)
+
+    /** Extra-large corner radius (24dp) for prominent floating containers and dialog windows. */
     val radiusXl = BasisRadius.Fixed(24)
+
+    /** Maximum corner radius rendering completely rounded circular or pill-shaped containers. */
     val radiusFull = BasisRadius.Full
 }
 
 /** The border stroke width scale, in dp. */
 object BasisBorderWidthTokens {
+    /** Zero border width (0dp) for flat, borderless component surfaces. */
     const val BORDER_WIDTH_NONE = 0
+
+    /** Thin border width (1dp) for subtle component outlines, dividers, and standard inputs. */
     const val BORDER_WIDTH_THIN = 1
+
+    /** Medium border width (2dp) for focused input borders, active chips, and highlighted outlines. */
     const val BORDER_WIDTH_MEDIUM = 2
+
+    /** Heavy border width (4dp) for high-contrast focus rings and strong selection boundaries. */
     const val BORDER_WIDTH_THICK = 4
 }
 
@@ -98,7 +118,14 @@ fun BasisRoundness.radiusScale(): BasisRadiusScale {
     )
 }
 
-/** Rounds only the top corners of a surface. */
+/**
+ * Applies [radius] to the top corners only, leaving the bottom corners flat.
+ *
+ * Suited to surfaces that sit flush against the bottom of the viewport, such as bottom sheets.
+ *
+ * @param radius The radius applied to the top-start and top-end corners.
+ * @return A [BasisCornerShape] with squared-off bottom corners.
+ */
 fun shapeTopRounded(radius: BasisRadius): BasisCornerShape = BasisCornerShape(
     topStart = radius,
     topEnd = radius,
@@ -106,7 +133,14 @@ fun shapeTopRounded(radius: BasisRadius): BasisCornerShape = BasisCornerShape(
     bottomStart = BasisRadiusTokens.radiusNone,
 )
 
-/** Rounds only the bottom corners of a surface. */
+/**
+ * Applies [radius] to the bottom corners only, leaving the top corners flat.
+ *
+ * Suited to surfaces anchored to the top of the viewport, such as top banners.
+ *
+ * @param radius The radius applied to the bottom-end and bottom-start corners.
+ * @return A [BasisCornerShape] with squared-off top corners.
+ */
 fun shapeBottomRounded(radius: BasisRadius): BasisCornerShape = BasisCornerShape(
     topStart = BasisRadiusTokens.radiusNone,
     topEnd = BasisRadiusTokens.radiusNone,
@@ -114,7 +148,18 @@ fun shapeBottomRounded(radius: BasisRadius): BasisCornerShape = BasisCornerShape
     bottomStart = radius,
 )
 
-/** Configures all four corners radii independently. */
+/**
+ * Configures each of the four corner radii independently.
+ *
+ * Use this for asymmetrical shapes — speech bubbles, notched cards, or any container whose corners
+ * deliberately differ from one another.
+ *
+ * @param topStart The radius of the top-start corner.
+ * @param topEnd The radius of the top-end corner.
+ * @param bottomEnd The radius of the bottom-end corner.
+ * @param bottomStart The radius of the bottom-start corner.
+ * @return A [BasisCornerShape] carrying the four radii in clockwise order.
+ */
 fun cornerShape(
     topStart: BasisRadius,
     topEnd: BasisRadius,

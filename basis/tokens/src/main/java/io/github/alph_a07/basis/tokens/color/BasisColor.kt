@@ -61,7 +61,7 @@ value class BasisColor(val argb: UInt) {
             }
 
             val packed = (alpha.toUInt() shl 24) or (red.toUInt() shl 16) or
-                    (green.toUInt() shl 8) or blue.toUInt()
+                (green.toUInt() shl 8) or blue.toUInt()
 
             return BasisColor(packed)
         }

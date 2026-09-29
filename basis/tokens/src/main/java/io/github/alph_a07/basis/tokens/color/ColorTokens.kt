@@ -135,7 +135,9 @@ data class StatusColors(
 data class SkeletonColors(
     /**
      * Base placeholder background color for loading skeletons before content resolves.
-     * Defaults to [SurfaceColors.surfaceRecessed] value.
+     *
+     * The derived scheme sets this to [SurfaceColors.surfaceRecessed], so a skeleton reads as a
+     * genuine container rather than as a hole in the layout.
      */
     val skeleton: BasisColor,
     /** Animated shimmer highlight band sweeping across loading skeleton shapes. */

@@ -118,7 +118,8 @@ private val PURE_WHITE = BasisColor.fromArgb(255, 255, 255, 255)
 private val PURE_BLACK = BasisColor.fromArgb(255, 0, 0, 0)
 
 /**
- * Returns the accessible ink color (black or white) that provides the highest contrast against this background color, according to WCAG 2.x guidelines.
+ * Returns the accessible ink color (black or white) that provides the highest contrast against this
+ * background color, according to WCAG 2.x guidelines.
  * This is useful for determining text color on colored backgrounds to ensure readability.
  */
 fun BasisColor.contentOn(): BasisColor {

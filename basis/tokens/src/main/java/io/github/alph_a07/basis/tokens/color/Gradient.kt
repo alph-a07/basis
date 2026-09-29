@@ -1,7 +1,19 @@
 package io.github.alph_a07.basis.tokens.color
 
-/** Closed enum for available gradient directions. */
-enum class GradientDirection { Horizontal, Vertical, Diagonal, Radial }
+/** Enumeration defining the allowed gradient directions. */
+enum class GradientDirection {
+    /** Left to right. */
+    Horizontal,
+
+    /** Top to bottom. */
+    Vertical,
+
+    /** Corner to opposite corner. */
+    Diagonal,
+
+    /** Outward from the center. Not a linear interpolation — see [gradient]. */
+    Radial,
+}
 
 /**
  * A gradient definition.
@@ -14,20 +26,27 @@ data class BasisGradient(
 )
 
 /**
- * Generates a two-point linear gradient.
- * @param from The starting color of the gradient.
- * @param to The ending color of the gradient.
- * @param direction The direction of the gradient.
- * @return A [BasisGradient] representing the generated gradient.
+ * Renders a two-point gradient along [direction].
+ *
+ * The stops are placed at the two extremes of the direction. For [GradientDirection.Horizontal],
+ * [GradientDirection.Vertical], and [GradientDirection.Diagonal] the result is a linear gradient; for
+ * [GradientDirection.Radial] the renderer reads the same two stops as the center and the outer edge,
+ * so the stops are not interpolated along a line.
+ *
+ * @param from The color at the start of the gradient.
+ * @param to The color at the end of the gradient.
+ * @param direction The direction along which the gradient runs.
+ * @return A [BasisGradient] pinned to positions `0f` and `1f`.
  */
 fun gradient(from: BasisColor, to: BasisColor, direction: GradientDirection): BasisGradient =
     BasisGradient(stops = listOf(0f to from, 1f to to), direction = direction)
 
 /**
- * Generates a multi-point gradient.
- * @param stops A list of pairs, where each pair consists of a position (0f to 1f) and a [BasisColor].
- * @param direction The direction of the gradient.
- * @return A [BasisGradient] representing the generated gradient.
+ * Generates a multi-stop color gradient along [direction].
+ *
+ * @param stops The color stops, each a position between `0f` and `1f` paired with its [BasisColor].
+ * @param direction The direction along which the gradient runs.
+ * @return A [BasisGradient] carrying the supplied stops verbatim.
  */
 fun gradient(stops: List<Pair<Float, BasisColor>>, direction: GradientDirection): BasisGradient =
     BasisGradient(stops = stops, direction = direction)

@@ -30,7 +30,7 @@ fun BasisColorScheme.validateContrast(): List<String> {
     fun check(name: String, fg: BasisColor, bg: BasisColor, minRatio: Float) {
         val ratio = contrastRatio(fg, bg)
         if (ratio < minRatio) {
-            failures += "$name is ${"%.2f".format(ratio)}:1, needs ${minRatio}:1"
+            failures += "$name is ${"%.2f".format(ratio)}:1, needs $minRatio:1"
         }
     }
 
@@ -94,24 +94,44 @@ fun deriveColorSchemes(
         val interactive = InteractiveColors(
             interactive = interactiveBase.toBasisColor(),
             interactiveHover = interactiveBase
-                .withLightness(interactiveBase.l + if (isDark) interactiveTuning.hoverDeltaDark else interactiveTuning.hoverDeltaLight)
+                .withLightness(
+                    interactiveBase.l +
+                        if (isDark) interactiveTuning.hoverDeltaDark else interactiveTuning.hoverDeltaLight
+                )
                 .toBasisColor(),
             interactivePressed = interactiveBase
-                .withLightness(interactiveBase.l + if (isDark) interactiveTuning.pressedDeltaDark else interactiveTuning.pressedDeltaLight)
+                .withLightness(
+                    interactiveBase.l +
+                        if (isDark) interactiveTuning.pressedDeltaDark else interactiveTuning.pressedDeltaLight
+                )
                 .toBasisColor(),
             interactiveDisabled = neutral(ramp.interactiveDisabled).toBasisColor(),
             interactiveMuted = interactiveBase
-                .withLightness(if (isDark) interactiveTuning.mutedLightnessDark else interactiveTuning.mutedLightnessLight)
+                .withLightness(
+                    if (isDark) interactiveTuning.mutedLightnessDark else interactiveTuning.mutedLightnessLight
+                )
                 .withChroma(interactiveBase.c * interactiveTuning.mutedChromaScale).toBasisColor(),
         )
 
         val selected = SelectedColors(
             selected = interactiveBase.toBasisColor(),
             selectedMuted = interactiveBase
-                .withLightness(if (isDark) interactiveTuning.selectedMutedLightnessDark else interactiveTuning.selectedMutedLightnessLight)
+                .withLightness(
+                    if (isDark) {
+                        interactiveTuning.selectedMutedLightnessDark
+                    } else {
+                        interactiveTuning.selectedMutedLightnessLight
+                    }
+                )
                 .withChroma(interactiveBase.c * interactiveTuning.selectedMutedChromaScale).toBasisColor(),
             selectedBorder = interactiveBase
-                .withLightness(if (isDark) interactiveTuning.selectedBorderLightnessDark else interactiveTuning.selectedBorderLightnessLight)
+                .withLightness(
+                    if (isDark) {
+                        interactiveTuning.selectedBorderLightnessDark
+                    } else {
+                        interactiveTuning.selectedBorderLightnessLight
+                    }
+                )
                 .toBasisColor(),
         )
 

@@ -1,9 +1,11 @@
 package io.github.alph_a07.basis.tokens.theme
 
 /**
- * The neutral ramp is a set of lightness values for the neutral color tokens, used to derive the actual colors in the theme.
+ * The neutral ramp is a set of lightness values for the neutral color tokens, used to derive the
+ * actual colors in the theme.
  * Each value is a float between 0.0 and 1.0, representing the lightness of the color in the Oklch color space.
- * Lower values are darker, higher values are lighter. The ramp is used to derive the actual colors in the theme, based on the brand hue and the vibe.
+ * Lower values are darker, higher values are lighter. The ramp is used to derive the actual colors
+ * in the theme, based on the brand hue and the vibe.
  */
 data class BasisNeutralRamp(
     val surface: Float,
@@ -100,16 +102,24 @@ data class BasisStatusToneTuning(
 ) {
     companion object {
         val LightDefaults = BasisStatusToneTuning(
-            iconLightness = 0.45f, iconChroma = 0.15f,
-            textLightness = 0.35f, textChroma = 0.13f,
-            surfaceLightness = 0.95f, surfaceChroma = 0.05f,
-            borderLightness = 0.75f, borderChroma = 0.10f,
+            iconLightness = 0.45f,
+            iconChroma = 0.15f,
+            textLightness = 0.35f,
+            textChroma = 0.13f,
+            surfaceLightness = 0.95f,
+            surfaceChroma = 0.05f,
+            borderLightness = 0.75f,
+            borderChroma = 0.10f,
         )
         val DarkDefaults = BasisStatusToneTuning(
-            iconLightness = 0.75f, iconChroma = 0.15f,
-            textLightness = 0.85f, textChroma = 0.13f,
-            surfaceLightness = 0.22f, surfaceChroma = 0.05f,
-            borderLightness = 0.40f, borderChroma = 0.10f,
+            iconLightness = 0.75f,
+            iconChroma = 0.15f,
+            textLightness = 0.85f,
+            textChroma = 0.13f,
+            surfaceLightness = 0.22f,
+            surfaceChroma = 0.05f,
+            borderLightness = 0.40f,
+            borderChroma = 0.10f,
         )
     }
 }
