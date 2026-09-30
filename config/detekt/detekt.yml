@@ -129,6 +129,9 @@ complexity:
   LongMethod:
     active: true
     threshold: 60
+    # `deriveScheme` is a single linear OKLCH derivation: each step feeds the next, and
+    # splitting it would scatter one auditable transformation across several functions.
+    excludes: ['**/tokens/src/**/OklchDerivation.kt']
   LongParameterList:
     active: true
     functionThreshold: 6
@@ -166,7 +169,7 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/basis-lint/src/**']
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
@@ -331,7 +334,10 @@ naming:
     minimumFunctionNameLength: 3
   FunctionNaming:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
+    # `FunctionNaming` supports no `ignoreAnnotated` property, so @Composable functions cannot
+    # be exempted by annotation. Compose mandates PascalCase for them, which is the inverse of
+    # the pattern below, so the demo module is excluded and this rule still covers the library.
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/demo/src/**']
     functionPattern: '[a-z][a-zA-Z0-9]*'
     excludeClassPattern: '$^'
   FunctionParameterNaming:
@@ -348,6 +354,10 @@ naming:
   MatchingDeclarationName:
     active: true
     mustBeFirst: true
+    # Token files are named after their token group (SpacingTokens.kt) while the single
+    # public declaration inside carries the required `Basis` prefix (BasisSpacingTokens).
+    # Renaming either side would break the module's file-per-group convention.
+    excludes: ['**/tokens/src/**']
   MemberNameEqualsClassName:
     active: true
     ignoreOverridden: true
@@ -362,7 +372,7 @@ naming:
     privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
   PackageNaming:
     active: true
-    packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
+    packagePattern: '[a-z]+[a-zA-Z0-9_]*(\.[a-z][A-Za-z0-9_]*)*'
   TopLevelPropertyNaming:
     active: true
     constantPattern: '[A-Z][_A-Z0-9]*'
@@ -409,7 +419,7 @@ potential-bugs:
   CastToNullableType:
     active: false
   Deprecation:
-    active: false
+    active: true
   DontDowncastCollectionTypes:
     active: false
   DoubleMutabilityForCollection:
@@ -490,6 +500,10 @@ potential-bugs:
     active: true
   UnreachableCode:
     active: true
+    # detekt 1.23.8 misreports statements following an elvis-return (`val x = y ?: return`)
+    # as unreachable once type resolution is enabled. The lint detector relies on that idiom
+    # throughout, so the rule is suppressed there rather than rewriting working code.
+    excludes: ['**/basis-lint/src/**']
   UnsafeCallOnNullableType:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**']
@@ -607,16 +621,24 @@ style:
   LoopWithTooManyJumpStatements:
     active: true
     maxJumpCount: 1
+    # The detector's argument loop is a flat guard-clause filter; the `continue`s are the
+    # clearest expression of "skip anything that isn't a reportable font size".
+    excludes: ['**/basis-lint/src/**']
   MagicNumber:
     active: true
-    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts']
+    # The tokens module's entire purpose is to define numeric scales (spacing, elevation,
+    # icon sizes). Those literals are the governance-owned deliverable and must not be
+    # extracted into named constants, so the rule is suppressed for that module only.
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts', '**/tokens/src/**']
     ignoreNumbers:
       - '-1'
       - '0'
       - '1'
       - '2'
     ignoreHashCodeFunction: true
-    ignorePropertyDeclaration: false
+    # A literal bound to a named top-level `val` (e.g. an ARGB color) is already
+    # self-documenting; extracting it further adds indirection without adding meaning.
+    ignorePropertyDeclaration: true
     ignoreLocalVariableDeclaration: false
     ignoreConstantDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
@@ -631,7 +653,10 @@ style:
     active: false
     maxChainedCalls: 5
   MaxLineLength:
-    active: true
+    # ktlint owns line length, via `max_line_length` in the root `.editorconfig`. Two reporters for
+    # one problem is noise, and only one of them can be the single place the limit is declared.
+    # ktlint's rule reads that same property, so the two cannot disagree.
+    active: false
     maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
@@ -652,7 +677,9 @@ style:
   NestedClassesVisibility:
     active: true
   NewLineAtEndOfFile:
-    active: true
+    # ktlint's `final-newline` owns this, via `insert_final_newline` in the root `.editorconfig`,
+    # and can fix it. detekt can only report it.
+    active: false
   NoTabs:
     active: false
   NullableBooleanCheck:
@@ -680,7 +707,12 @@ style:
       - 'equals'
     excludeLabeled: false
     excludeReturnFromLambda: true
-    excludeGuardClauses: false
+    # Guard clauses are the clearest way to express a flat sequence of type guards,
+    # which is exactly the shape of the lint detector's predicate helpers. detekt does
+    # not classify elvis-returns (`?: return false`) as guard clauses, so those are
+    # exempted by module rather than rewritten into less readable control flow.
+    excludeGuardClauses: true
+    excludes: ['**/basis-lint/src/**']
   SafeCast:
     active: true
   SerialVersionUIDInSerializableClass:
@@ -730,18 +762,26 @@ style:
   UntilInsteadOfRangeTo:
     active: false
   UnusedImports:
-    active: false
+    # Sole owner of unused-import detection. ktlint's `no-unused-imports` is disabled in the root
+    # `.editorconfig`: it matches imports textually, so the two would report the same line with
+    # different messages. This rule resolves each import against the module classpath, so it is both
+    # the stricter and the quieter of the pair.
+    active: true
   UnusedParameter:
     active: true
-    allowedNames: 'ignored|expected'
+    allowedNames: '_|ignored|expected'
   UnusedPrivateClass:
     active: true
+    # Lint instantiates detectors reflectively from the `Implementation(...)` registration, and
+    # `Detector` subclasses are never referenced by name, so a private class reachable only that
+    # way is indistinguishable from dead code to a static analyzer.
+    excludes: ['**/basis-lint/src/**']
   UnusedPrivateMember:
     active: true
-    allowedNames: ''
+    excludes: ['**/basis-lint/src/**']
   UnusedPrivateProperty:
     active: true
-    allowedNames: '_|ignored|expected|serialVersionUID'
+    excludes: ['**/basis-lint/src/**']
   UseAnyOrNoneInsteadOfFind:
     active: true
   UseArrayLiteralsInAnnotations:
@@ -780,6 +820,29 @@ style:
     active: true
     ignoreLateinitVar: false
   WildcardImport:
+    # Sole owner of wildcard-import detection; ktlint's `no-wildcard-imports` is disabled in the root
+    # `.editorconfig` for the same reason as `UnusedImports` above.
     active: true
     excludeImports:
       - 'java.util.*'
+
+# There is deliberately no `formatting` ruleset. Kotlin formatting is owned solely by ktlint,
+# configured entirely through the root `.editorconfig`; see
+# `build-logic/src/main/kotlin/ktlint-conventions.gradle.kts`. detekt's `formatting` ruleset drove
+# ktlint's engine from an in-memory config that never read `.editorconfig`, so every value it
+# declared was a second, silently divergent copy of a value already stated there — including
+# `autoCorrect`, which this file cannot enable in any case, since detekt only honours it via the
+# Gradle `--auto-correct` flag.
+#
+# Where detekt and ktlint cover the same problem, exactly one of the two is enabled, so each
+# violation has a single reporter and a single place to be fixed:
+#
+#   Problem            Owned by            Disabled
+#   -----------------  ------------------  -----------------------------------------------
+#   line length        ktlint              `style: MaxLineLength` (above)
+#   final newline      ktlint              `style: NewLineAtEndOfFile` (above)
+#   unused imports     detekt              `ktlint_standard_no-unused-imports`
+#   wildcard imports   detekt              `ktlint_standard_no-wildcard-imports`
+#
+# The split follows whether a rule can be fixed mechanically: ktlint owns what it can rewrite, and
+# detekt keeps the two import rules because they need type resolution rather than text layout.
