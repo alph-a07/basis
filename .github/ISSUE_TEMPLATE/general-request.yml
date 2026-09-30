@@ -1,0 +1,167 @@
+name: "Report or Request"
+description: Report a bug, request a feature, suggest an enhancement, or share something else
+title: "{{type}}: "
+labels: [ "status: triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to contribute! Pick the **type** below, then fill in the summary and
+        the section(s) that apply to it. You can leave the other sections blank.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: What kind of issue is this?
+      options:
+        - Bug report
+        - Feature request
+        - Enhancement to existing behavior
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area does this relate to?
+      options:
+        - Atom (button, input, icon…)
+        - Molecule (search field, form group…)
+        - Component (table, header, modal…)
+        - Design tokens / theming
+        - Documentation / Storybook
+        - Build / tooling / packaging
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: Component or item name (if known)
+      placeholder: "e.g. Button, DataTable"
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: A clear, concise description of the bug, request, or idea.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Bug reports only
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal reproduction (CodeSandbox / StackBlitz link) is the fastest way to get a fix.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+
+  - type: textarea
+    id: expected-actual
+    attributes:
+      label: Expected vs. actual behavior
+      placeholder: |
+        Expected: ...
+        Actual: ...
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, errors, or screenshots
+      description: Paste console output or drag in screenshots / recordings.
+      render: shell
+
+  - type: input
+    id: version
+    attributes:
+      label: Library version
+      placeholder: "e.g. 2.4.1"
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, OS, framework and version, Node version, package manager.
+      placeholder: |
+        - Browser: Chrome 130
+        - OS: macOS 15
+        - Framework: React 19
+        - Node: 22
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Feature requests & 🔧 enhancements only
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What are you trying to do, and what's getting in your way? For enhancements, what is the current behavior?
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see. Sketches, mockups, or API examples are welcome.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds or other approaches you've tried.
+
+  - type: dropdown
+    id: impact
+    attributes:
+      label: How much does this affect you?
+      options:
+        - Blocking my work
+        - Significant, but I have a workaround
+        - Minor / nice to have
+        - Not applicable
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ### Anything else
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Links, related issues, or anything else that helps.
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Would you be willing to help?
+      options:
+        - "Yes, I can submit a pull request"
+        - "Yes, I can help test or review"
+        - "No, but happy to answer questions"
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I checked the documentation and Storybook.
+          required: true
+        - label: I agree to follow the project's Code of Conduct.
+          required: true

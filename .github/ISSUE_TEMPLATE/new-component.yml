@@ -1,4 +1,4 @@
-name: "🧩 New Component (tracking)"
+name: "New Component Tracking"
 description: Track the design, build, and release of a new component (organism / feature-level UI built from molecules and atoms)
 title: "[Component]: "
 labels: [ "area: component", "type: new", "status: triage" ]
@@ -24,12 +24,6 @@ body:
       description: What does this component do, who uses it, and in which product areas?
     validations:
       required: true
-
-  - type: input
-    id: design
-    attributes:
-      label: Design link
-      placeholder: "https://figma.com/..."
 
   - type: textarea
     id: composition

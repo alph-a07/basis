@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Questions & discussion
-    url: https://github.com/OWNER/REPO/discussions
+    url: https://github.com/alph-a07/basis/discussions
     about: Ask usage questions or discuss ideas before opening an issue.
   - name: Documentation
-    url: https://OWNER.github.io/REPO
+    url: https://alph-a07.github.com/basis
     about: Check the docs and Storybook first.

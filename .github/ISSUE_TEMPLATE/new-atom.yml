@@ -1,4 +1,4 @@
-name: "🧬 New Atom (tracking)"
+name: "New Atom Tracking"
 description: Track the design, build, and release of a new atom (button, input, icon, badge…)
 title: "[Atom]: "
 labels: [ "area: atom", "type: new", "status: triage" ]
@@ -14,7 +14,7 @@ body:
     attributes:
       label: Atom name
       description: PascalCase name as it will appear in code.
-      placeholder: "e.g. Badge"
+      placeholder: "e.g. BasisBadge"
     validations:
       required: true
 
@@ -25,13 +25,6 @@ body:
       description: What problem does this atom solve? Where will it be used?
     validations:
       required: true
-
-  - type: input
-    id: design
-    attributes:
-      label: Design link
-      description: Figma / design spec URL
-      placeholder: "https://figma.com/..."
 
   - type: textarea
     id: variants

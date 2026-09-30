@@ -1,4 +1,4 @@
-name: "🧪 New Molecule (tracking)"
+name: "New Molecule Tracking"
 description: Track the design, build, and release of a new molecule (a group of atoms working together)
 title: "[Molecule]: "
 labels: [ "area: molecule", "type: new", "status: triage" ]
@@ -24,12 +24,6 @@ body:
       description: The single job this molecule performs and where it will be used.
     validations:
       required: true
-
-  - type: input
-    id: design
-    attributes:
-      label: Design link
-      placeholder: "https://figma.com/..."
 
   - type: textarea
     id: atoms
