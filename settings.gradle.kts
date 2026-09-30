@@ -22,6 +22,9 @@ dependencyResolutionManagement {
     }
 }
 
+// Contains the build logic for the project and custom plugins
+includeBuild("build-logic")
+
 rootProject.name = "Basis"
 include(":demo")
 include(":basis")
