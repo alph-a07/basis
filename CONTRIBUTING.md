@@ -40,7 +40,8 @@ does not.
 Dependencies run one way: `basis:tokens` → `basis` → `demo`.
 
 `build-logic` being an included build means the root `detekt` and `ktlintCheck` do not reach it. Any
-change to a convention plugin needs `-p build-logic` or it ships unchecked.
+change to a convention plugin needs `-p build-logic` or it ships unchecked — or just run
+[`verifyAll`](#checks), which covers it.
 
 ## Workflow
 
@@ -52,35 +53,50 @@ requires `fix`.
 ## Checks
 
 ```bash
+./gradlew verifyAll
+```
+
+`verifyAll` is the gate. It runs every check CI runs, across every module and the `build-logic` included
+build, in one invocation. Run it before you commit.
+
+| Check | Tool | Scope |
+| --- | --- | --- |
+| `assemble`, `test` | — | every module |
+| `lint` | Android Lint + `basis-lint` | Android modules |
+| `detekt` | detekt 1.23.8 (`config/detekt/detekt.yml`) | every module **and `build-logic`** |
+| `ktlintCheck` | ktlint 1.8.0 (`.editorconfig`) | every module **and `build-logic`** |
+| `releaseApiCheck` | BCV 0.18.2 (`basis/api/basis.api`) | `:basis` — see the trap below |
+
+The two commands this replaces, which is what CI itself runs:
+
+```bash
 ./gradlew assemble test lint detekt ktlintCheck releaseApiCheck
 ./gradlew -p build-logic detekt ktlintCheck
 ```
 
-The second line is easy to forget and is required.
+The second line is easy to forget by hand, which is most of the reason `verifyAll` exists.
 
-| Concern | Tool | Config |
-| --- | --- | --- |
-| Formatting | ktlint 1.8.0 | `.editorconfig` |
-| Kotlin/Android lint | detekt 1.23.8 | `config/detekt/detekt.yml` |
-| Android correctness | Android Lint + `basis-lint` | AGP defaults |
-| Public API | BCV 0.18.2 | `basis/api/basis.api` |
+`verifyAll` is defined in `build-logic/src/main/kotlin/verify-all-conventions.gradle.kts` and applied only
+to the root project. It collects each check per module rather than naming it at the root, because Gradle
+resolves a bare name like `./gradlew detekt` by searching subprojects — no such task exists on the root
+project itself. It also fails if a check it is meant to run is not registered anywhere, so the gate can't
+report success while quietly skipping something.
 
 `.editorconfig` is the only place Kotlin style is declared. Where detekt and ktlint could both report
 one problem, exactly one is enabled — the ownership table in `detekt.yml` records which, and why.
 
-Fix-it commands:
+`verifyAll` reports; it does not fix. The fix-it commands are separate, and they rewrite in place — run
+them, review the diff, re-stage, rather than hand-editing to satisfy a formatter:
 
 ```bash
 ./gradlew ktlintFormat           # formatting; then git add -A
 ./gradlew :basis:lintFix         # Android Lint, per module
 ```
 
-`ktlintFormat` and `lintFix` rewrite in place. Run them, review the diff, re-stage — don't hand-edit to
-satisfy a formatter.
-
 ## Traps
 
-**`releaseApiCheck` lives on `:basis`, not the root.** `./gradlew :basis:releaseApiCheck`.
+**`releaseApiCheck` lives on `:basis`, not the root.** `./gradlew :basis:releaseApiCheck`. `verifyAll`
+picks it up from there, so this only matters when running the checks by hand.
 
 It diffs the public API against the committed baseline. On a published library that baseline is a
 compatibility contract, so decide whether the change is *meant* to be public before regenerating.

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.vanniktech.maven.publish)
+    id("verify-all-conventions")
 }
 
 mavenPublishing {
