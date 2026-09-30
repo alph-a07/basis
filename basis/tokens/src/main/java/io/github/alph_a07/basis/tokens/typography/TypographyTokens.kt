@@ -104,35 +104,35 @@ object BasisTypeScale {
     val displayLarge = BasisTextStyle(
         fontSizeSp = 57f,
         lineHeightSp = 64f,
-        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD
+        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD,
     )
 
     /** Compact display typography scale for expressive hero callouts and section highlights. */
     val displaySmall = BasisTextStyle(
         fontSizeSp = 45f,
         lineHeightSp = 52f,
-        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD
+        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD,
     )
 
     /** Primary headline typography scale for top-level screen headers and major feature titles. */
     val headlineLarge = BasisTextStyle(
         fontSizeSp = 32f,
         lineHeightSp = 40f,
-        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD
+        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD,
     )
 
     /** Secondary headline typography scale for subsection headers, dialog titles, and card headers. */
     val headlineSmall = BasisTextStyle(
         fontSizeSp = 24f,
         lineHeightSp = 32f,
-        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD
+        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD,
     )
 
     /** Large title typography scale for primary card headers, app bar titles, and modal headers. */
     val titleLarge = BasisTextStyle(
         fontSizeSp = 22f,
         lineHeightSp = 28f,
-        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD
+        weight = BasisFontWeightTokens.WEIGHT_SEMIBOLD,
     )
 
     /** Medium title typography scale for section titles, dense list headers, and medium card titles. */

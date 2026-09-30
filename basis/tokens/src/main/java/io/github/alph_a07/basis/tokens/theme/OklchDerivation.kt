@@ -96,19 +96,19 @@ fun deriveColorSchemes(
             interactiveHover = interactiveBase
                 .withLightness(
                     interactiveBase.l +
-                        if (isDark) interactiveTuning.hoverDeltaDark else interactiveTuning.hoverDeltaLight
+                        if (isDark) interactiveTuning.hoverDeltaDark else interactiveTuning.hoverDeltaLight,
                 )
                 .toBasisColor(),
             interactivePressed = interactiveBase
                 .withLightness(
                     interactiveBase.l +
-                        if (isDark) interactiveTuning.pressedDeltaDark else interactiveTuning.pressedDeltaLight
+                        if (isDark) interactiveTuning.pressedDeltaDark else interactiveTuning.pressedDeltaLight,
                 )
                 .toBasisColor(),
             interactiveDisabled = neutral(ramp.interactiveDisabled).toBasisColor(),
             interactiveMuted = interactiveBase
                 .withLightness(
-                    if (isDark) interactiveTuning.mutedLightnessDark else interactiveTuning.mutedLightnessLight
+                    if (isDark) interactiveTuning.mutedLightnessDark else interactiveTuning.mutedLightnessLight,
                 )
                 .withChroma(interactiveBase.c * interactiveTuning.mutedChromaScale).toBasisColor(),
         )
@@ -121,7 +121,7 @@ fun deriveColorSchemes(
                         interactiveTuning.selectedMutedLightnessDark
                     } else {
                         interactiveTuning.selectedMutedLightnessLight
-                    }
+                    },
                 )
                 .withChroma(interactiveBase.c * interactiveTuning.selectedMutedChromaScale).toBasisColor(),
             selectedBorder = interactiveBase
@@ -130,7 +130,7 @@ fun deriveColorSchemes(
                         interactiveTuning.selectedBorderLightnessDark
                     } else {
                         interactiveTuning.selectedBorderLightnessLight
-                    }
+                    },
                 )
                 .toBasisColor(),
         )

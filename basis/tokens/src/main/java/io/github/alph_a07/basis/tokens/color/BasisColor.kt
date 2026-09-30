@@ -36,7 +36,7 @@ value class BasisColor(val argb: UInt) {
                 6 -> "FF$cleaned"
                 8 -> cleaned
                 else -> throw IllegalArgumentException(
-                    "BasisColor.fromHex expects 6 or 8 hex digits (optionally prefixed with '#'), got: \"$hex\""
+                    "BasisColor.fromHex expects 6 or 8 hex digits (optionally prefixed with '#'), got: \"$hex\"",
                 )
             }
             val value = withAlpha.toUIntOrNull(radix = 16)
