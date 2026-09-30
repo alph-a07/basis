@@ -1,0 +1,74 @@
+name: Setup labels
+
+# One-off (re-runnable) workflow: run it from the Actions tab to create/update all project labels.
+on:
+  workflow_dispatch:
+    inputs:
+      cleanup:
+        description: "Also delete GitHub's default bug / documentation / enhancement / question labels"
+        type: boolean
+        default: false
+
+permissions:
+  issues: write
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Create or update labels
+        run: |
+          label() { gh label create "$1" --color "$2" --description "$3" --force; }
+
+          # Type
+          label "type: bug"          "d73a4a" "Something isn't working as expected"
+          label "type: feature"      "a2eeef" "Request for new functionality"
+          label "type: enhancement"  "84b6eb" "Improvement to existing behavior"
+          label "type: docs"         "0075ca" "Documentation or Storybook changes"
+          label "type: question"     "d876e3" "Question, discussion, or other"
+          label "type: new"          "1d76db" "Tracking a brand-new atom, molecule, or component"
+          label "type: chore"        "ededed" "Maintenance, refactor, dependencies, CI"
+
+          # Area
+          label "area: atom"         "5319e7" "Atoms: smallest building blocks (button, input, icon)"
+          label "area: molecule"     "7057ff" "Molecules: small groups of atoms (search field)"
+          label "area: component"    "8b6cff" "Components/organisms: composed UI (table, header)"
+          label "area: tokens"       "c5b3ff" "Design tokens and theming"
+          label "area: docs"         "bfd4f2" "Documentation site / Storybook"
+          label "area: tooling"      "cfd3d7" "Build, packaging, testing, CI"
+          label "area: a11y"         "0e8a16" "Accessibility"
+
+          # Status
+          label "status: triage"       "fbca04" "Needs review by a maintainer"
+          label "status: needs-info"   "fef2c0" "Waiting on more information from the reporter"
+          label "status: needs-design" "f9d0c4" "Blocked on design input or approval"
+          label "status: accepted"     "0e8a16" "Approved and ready to be picked up"
+          label "status: in-progress"  "1d76db" "Someone is actively working on this"
+          label "status: in-review"    "c2e0c6" "PR open and under review"
+          label "status: blocked"      "b60205" "Blocked by another issue or external dependency"
+
+          # Priority
+          label "priority: P0" "b60205" "Blocking: drop everything"
+          label "priority: P1" "d93f0b" "High priority"
+          label "priority: P2" "fbca04" "Medium priority"
+          label "priority: P3" "c2e0c6" "Low priority / nice to have"
+
+          # Community
+          label "good first issue" "7057ff" "Good for newcomers"
+          label "help wanted"      "008672" "Contributions welcome"
+          label "breaking change"  "e99695" "Requires a major version bump"
+
+          # Resolution
+          label "duplicate" "cfd3d7" "Already reported elsewhere"
+          label "invalid"   "e4e669" "Not a valid issue"
+          label "wontfix"   "ffffff" "Will not be worked on"
+
+      - name: Remove redundant default labels
+        if: ${{ inputs.cleanup }}
+        run: |
+          for old in bug documentation enhancement question; do
+            gh label delete "$old" --yes || true
+          done
