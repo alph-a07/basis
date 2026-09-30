@@ -1,29 +1,49 @@
-name: "New Molecule Tracking"
-description: Track the design, build, and release of a new molecule (a group of atoms working together)
+name: "New Molecule (maintainers only)"
+description: Maintainers only. Track the design, build, and release of a new Basis molecule (a group of atoms working together)
 title: "[Molecule]: "
 labels: [ "area: molecule", "type: new", "status: triage" ]
 body:
   - type: markdown
     attributes:
       value: |
+        > 🔒 **Maintainers only.** Issues opened with this form by anyone without write access are closed automatically.
+        > If you'd like to suggest something new, please use the **Report / Request** form instead.
+
         Use this template to **track** a new molecule: a small, reusable group of atoms that does one job
-        (e.g. search field = label + input + button).
+        (e.g. search field = label + text field + icon button).
+
+        **Title format:** `[Molecule]: BasisSearchField`. Type the molecule's name after the prefix.
 
   - type: input
     id: name
     attributes:
       label: Molecule name
-      placeholder: "e.g. SearchField"
+      description: PascalCase with the Basis prefix, as it will appear in code.
+      placeholder: "e.g. BasisSearchField"
     validations:
       required: true
+
+  - type: input
+    id: governance
+    attributes:
+      label: Governance sheet reference
+      description: Row in the Molecules tab plus any related Decisions Log entries. The sheet is the source of truth, so update it alongside this issue.
+      placeholder: "e.g. Molecules tab, row 4"
 
   - type: textarea
     id: purpose
     attributes:
       label: Purpose & use cases
-      description: The single job this molecule performs and where it will be used.
+      description: The single job this molecule performs and where consumers will use it.
     validations:
       required: true
+
+  - type: input
+    id: design
+    attributes:
+      label: Design reference
+      description: Figma / sketch / screenshot URL, if there is one
+      placeholder: "https://..."
 
   - type: textarea
     id: atoms
@@ -31,9 +51,9 @@ body:
       label: Composed atoms
       description: List the atoms used. Flag any that don't exist yet and link their tracking issues.
       placeholder: |
-        - [ ] Label (exists)
-        - [ ] Input (exists)
-        - [ ] IconButton (needs new atom → #123)
+        - [ ] BasisText (exists)
+        - [ ] BasisTextField (exists)
+        - [ ] BasisIconButton (needs new atom → #123)
     validations:
       required: true
 
@@ -41,7 +61,7 @@ body:
     id: behavior
     attributes:
       label: Behavior & interactions
-      description: How the atoms interact (validation, focus flow, clear/submit actions, controlled vs uncontrolled).
+      description: How the atoms interact (validation, focus flow, IME actions, clear / submit actions), and the state hoisting approach (stateless core, optional stateful wrapper).
     validations:
       required: true
 
@@ -50,26 +70,36 @@ body:
     attributes:
       label: Variants, sizes & states
       placeholder: |
-        - layout: inline | stacked
-        - states: default, focus, error, disabled, loading
+        - layout: Inline | Stacked
+        - states: default, focused, error, disabled, loading
 
   - type: textarea
     id: api
     attributes:
-      label: Proposed props / API
-      render: typescript
+      label: Proposed API
+      description: Composable signature, parameter types, defaults, callbacks, slots.
+      render: kotlin
+      placeholder: |
+        @Composable
+        fun BasisSearchField(
+            query: String,
+            onQueryChange: (String) -> Unit,
+            onSearch: (String) -> Unit,
+            modifier: Modifier = Modifier,
+            enabled: Boolean = true,
+        )
 
   - type: textarea
     id: responsive
     attributes:
-      label: Responsive & layout rules
-      description: Breakpoint behavior, min/max widths, overflow and truncation.
+      label: Layout & adaptive rules
+      description: Width constraints, window size class behavior, RTL, font scale, overflow and truncation.
 
   - type: textarea
     id: a11y
     attributes:
       label: Accessibility requirements
-      description: Roles, labelling, focus order, keyboard interaction, live-region announcements.
+      description: Semantics (merged vs separate nodes), labelling, traversal and focus order, keyboard / D-pad interaction, live-region announcements.
     validations:
       required: true
 
@@ -78,15 +108,19 @@ body:
     attributes:
       label: Definition of done
       options:
-        - label: Design approved
+        - label: Governance sheet updated (Molecules tab, Decisions Log)
         - label: All required atoms exist or are tracked
         - label: Molecule implemented
-        - label: Unit & interaction tests written
-        - label: Accessibility tests pass
-        - label: Visual regression snapshots added
-        - label: Storybook stories & docs
-        - label: Exported from package index
-        - label: Changelog / changeset added
+        - label: Verified in light and dark themes
+        - label: Compose UI & interaction tests written
+        - label: Accessibility checks pass (TalkBack, focus order, font scale, contrast)
+        - label: "@Preview functions added"
+        - label: Screenshot tests added
+        - label: Demo app screen added or updated
+        - label: KDoc on all public API
+        - label: Public API reviewed (naming, visibility, binary compatibility)
+        - label: Docs page added (anatomy, live preview, usage)
+        - label: Changelog entry added
         - label: Released
 
   - type: dropdown

@@ -1,29 +1,49 @@
-name: "New Component Tracking"
-description: Track the design, build, and release of a new component (organism / feature-level UI built from molecules and atoms)
+name: "New Component (maintainers only)"
+description: Maintainers only. Track the design, build, and release of a new Basis component (feature-level UI built from molecules and atoms)
 title: "[Component]: "
 labels: [ "area: component", "type: new", "status: triage" ]
 body:
   - type: markdown
     attributes:
       value: |
-        Use this template to **track** a new higher-level component (e.g. Header, DataTable, LoginForm, Card grid).
-        Components compose molecules and atoms and may own layout, data, and state.
+        > 🔒 **Maintainers only.** Issues opened with this form by anyone without write access are closed automatically.
+        > If you'd like to suggest something new, please use the **Report / Request** form instead.
+
+        Use this template to **track** a new higher-level component (e.g. TopBar, BottomSheet, Dialog, LoginForm).
+        Components compose molecules and atoms and may own layout, state, and data handling.
+
+        **Title format:** `[Component]: BasisBottomSheet`. Type the component's name after the prefix.
 
   - type: input
     id: name
     attributes:
       label: Component name
-      placeholder: "e.g. DataTable"
+      description: PascalCase with the Basis prefix, as it will appear in code.
+      placeholder: "e.g. BasisBottomSheet"
     validations:
       required: true
+
+  - type: input
+    id: governance
+    attributes:
+      label: Governance sheet reference
+      description: Row in the Components tab plus any related Decisions Log entries. The sheet is the source of truth, so update it alongside this issue.
+      placeholder: "e.g. Components tab, row 7"
 
   - type: textarea
     id: purpose
     attributes:
       label: Purpose & use cases
-      description: What does this component do, who uses it, and in which product areas?
+      description: What does this component do, who uses it, and in which kinds of screens?
     validations:
       required: true
+
+  - type: input
+    id: design
+    attributes:
+      label: Design reference
+      description: Figma / sketch / screenshot URL, if there is one
+      placeholder: "https://..."
 
   - type: textarea
     id: composition
@@ -32,10 +52,11 @@ body:
       description: Molecules and atoms used. Link tracking issues for anything that doesn't exist yet.
       placeholder: |
         Molecules:
-        - [ ] SearchField (exists)
-        - [ ] Pagination (needs new → #200)
+        - [ ] BasisSearchField (exists)
+        - [ ] BasisListItem (needs new → #200)
         Atoms:
-        - [ ] Checkbox (exists)
+        - [ ] BasisSurface (exists)
+        - [ ] BasisIconButton (exists)
     validations:
       required: true
 
@@ -43,7 +64,7 @@ body:
     id: behavior
     attributes:
       label: Behavior & interactions
-      description: Core behaviors, user flows, edge cases.
+      description: Core behaviors, user flows, gestures, edge cases.
     validations:
       required: true
 
@@ -51,50 +72,56 @@ body:
     id: state-data
     attributes:
       label: State & data requirements
-      description: Controlled/uncontrolled state, async data, loading/empty/error states, context or store dependencies.
+      description: State hoisting approach, state holder classes, async data, loading / empty / error states, CompositionLocal dependencies, state restoration across config changes and process death.
 
   - type: textarea
     id: api
     attributes:
-      label: Proposed props / API
-      render: typescript
+      label: Proposed API
+      description: Composable signature, parameter types, defaults, callbacks, slots.
+      render: kotlin
 
   - type: textarea
     id: responsive
     attributes:
-      label: Responsive & layout behavior
-      description: Breakpoints, container queries, overflow, virtualization, print styles.
+      label: Adaptive & layout behavior
+      description: Window size classes, orientation, foldables, RTL, edge-to-edge and insets, scrolling and overflow.
 
   - type: textarea
     id: a11y
     attributes:
       label: Accessibility requirements
-      description: Landmarks, roles, keyboard navigation, focus management, screen reader announcements.
+      description: Semantics and roles, traversal order, focus management, TalkBack announcements, keyboard / D-pad navigation, back handling.
     validations:
       required: true
 
   - type: textarea
     id: performance
     attributes:
-      label: Performance & bundle considerations
-      description: Lazy loading, memoization, bundle size budget, large-data handling.
+      label: Performance & size considerations
+      description: Parameter stability and skippability, lazy layouts, allocations during composition, animation cost, added dependencies, library size.
 
   - type: checkboxes
     id: dod
     attributes:
       label: Definition of done
       options:
-        - label: Design approved
+        - label: Governance sheet updated (Components tab, Decisions Log)
         - label: All molecules/atoms exist or are tracked
         - label: Component implemented
-        - label: Unit, integration & interaction tests written
-        - label: Accessibility tests pass
-        - label: Visual regression snapshots added
-        - label: Performance / bundle size checked
-        - label: Storybook stories & docs (incl. usage guidelines)
-        - label: Exported from package index
+        - label: Verified in light and dark themes
+        - label: Compose UI, integration & interaction tests written
+        - label: Accessibility checks pass (TalkBack, focus order, font scale, contrast)
+        - label: Adaptive layouts verified (window sizes, landscape, RTL, insets)
+        - label: Recomposition / stability checked
+        - label: "@Preview functions added"
+        - label: Screenshot tests added
+        - label: Demo app screen added or updated
+        - label: KDoc on all public API
+        - label: Public API reviewed (naming, visibility, binary compatibility)
+        - label: Docs page added (anatomy, live preview, usage guidelines)
         - label: Migration notes (if replacing an existing component)
-        - label: Changelog / changeset added
+        - label: Changelog entry added
         - label: Released
 
   - type: dropdown

@@ -1,30 +1,70 @@
-name: "New Atom Tracking"
-description: Track the design, build, and release of a new atom (button, input, icon, badge…)
+name: "New Atom (maintainers only)"
+description: Maintainers only. Track the design, build, and release of a new Basis atom (button, checkbox, badge…)
 title: "[Atom]: "
 labels: [ "area: atom", "type: new", "status: triage" ]
 body:
   - type: markdown
     attributes:
       value: |
+        > 🔒 **Maintainers only.** Issues opened with this form by anyone without write access are closed automatically.
+        > If you'd like to suggest something new, please use the **Report / Request** form instead.
+
         Use this template to **track** a new atom from design to release.
-        Atoms are the smallest, indivisible UI building blocks and must not depend on other components.
+        Atoms are the smallest, indivisible UI building blocks. They build only on `basis-tokens`, the foundational
+        atoms (surface, focusable, overlay), and Compose Foundation. Never on molecules or components.
+
+        **Title format:** `[Atom]: BasisBadge`. Type the atom's name after the prefix.
 
   - type: input
     id: name
     attributes:
       label: Atom name
-      description: PascalCase name as it will appear in code.
+      description: PascalCase with the Basis prefix, as it will appear in code.
       placeholder: "e.g. BasisBadge"
     validations:
       required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Atom kind
+      options:
+        - Visual atom
+        - Foundational primitive (surface, focus, overlay…)
+        - Preset of an existing atom (e.g. Card on BasisSurface)
+    validations:
+      required: true
+
+  - type: input
+    id: governance
+    attributes:
+      label: Governance sheet reference
+      description: Row in the Atoms tab plus any related Decisions Log entries. The sheet is the source of truth, so update it alongside this issue.
+      placeholder: "e.g. Atoms tab, row 12"
 
   - type: textarea
     id: purpose
     attributes:
       label: Purpose & use cases
-      description: What problem does this atom solve? Where will it be used?
+      description: What problem does this atom solve? Where will consumers use it?
     validations:
       required: true
+
+  - type: textarea
+    id: built-on
+    attributes:
+      label: Built on
+      description: Foundational atoms, interaction hooks (e.g. `Modifier.basisClickable`) and tokens it builds on. For presets, name the base atom.
+      placeholder: |
+        - BasisSurface
+        - Modifier.basisClickable
+
+  - type: input
+    id: design
+    attributes:
+      label: Design reference
+      description: Figma / sketch / screenshot URL, if there is one
+      placeholder: "https://..."
 
   - type: textarea
     id: variants
@@ -32,8 +72,8 @@ body:
       label: Variants & sizes
       description: List every variant, size, and visual style.
       placeholder: |
-        - variant: primary | secondary | ghost
-        - size: sm | md | lg
+        - variant: Primary | Secondary | Ghost
+        - size: Sm | Md | Lg
     validations:
       required: true
 
@@ -41,40 +81,43 @@ body:
     id: states
     attributes:
       label: States
-      description: Interactive and data states the atom must support.
+      description: Interactive and data states the atom must support. Delete the ones that don't apply.
       value: |
-        - [ ] default
-        - [ ] hover
-        - [ ] focus
-        - [ ] active / pressed
+        - [ ] enabled / default
+        - [ ] pressed
+        - [ ] focused (keyboard / D-pad)
+        - [ ] hovered (mouse / stylus)
         - [ ] disabled
+        - [ ] selected / checked
         - [ ] loading
         - [ ] error
 
   - type: textarea
     id: api
     attributes:
-      label: Proposed props / API
-      description: Props, types, defaults, events, slots.
-      render: typescript
+      label: Proposed API
+      description: Composable signature, parameter types, defaults, callbacks, slots.
+      render: kotlin
       placeholder: |
-        interface BadgeProps {
-          variant?: 'neutral' | 'success' | 'warning' | 'danger';
-          size?: 'sm' | 'md';
-          children: ReactNode;
-        }
+        @Composable
+        fun BasisBadge(
+            text: String,
+            modifier: Modifier = Modifier,
+            variant: BasisBadgeVariant = BasisBadgeVariant.Neutral,
+            size: BasisBadgeSize = BasisBadgeSize.Md,
+        )
 
   - type: textarea
     id: tokens
     attributes:
       label: Design tokens
-      description: Existing tokens to use, and any new tokens required (color, spacing, typography, radius, motion).
+      description: Existing tokens to use, and any new ones required (color roles, spacing, shape, typography slot, elevation, motion, sizing). No hardcoded literals in the atom.
 
   - type: textarea
     id: a11y
     attributes:
       label: Accessibility requirements
-      description: Semantic element, ARIA attributes, keyboard behavior, contrast, reduced motion.
+      description: Semantics role, TalkBack labels and state descriptions, 48dp touch target, keyboard / D-pad behavior, contrast in light and dark, font scale up to 200%, reduced motion.
     validations:
       required: true
 
@@ -83,14 +126,19 @@ body:
     attributes:
       label: Definition of done
       options:
-        - label: Design approved and tokens defined
-        - label: Component implemented (all variants & states)
-        - label: Unit tests written
-        - label: Accessibility tests pass (axe / keyboard / screen reader)
-        - label: Visual regression snapshots added
-        - label: Storybook stories with controls & docs
-        - label: Exported from package index
-        - label: Changelog / changeset added
+        - label: Governance sheet updated (Atoms tab, Decisions Log)
+        - label: Tokens defined or reused, no hardcoded literals
+        - label: Atom implemented (all variants & states)
+        - label: Verified in light and dark themes
+        - label: Compose UI tests written
+        - label: Accessibility checks pass (TalkBack, touch target, font scale, contrast)
+        - label: "@Preview functions added"
+        - label: Screenshot tests added
+        - label: Demo app screen added or updated
+        - label: KDoc on all public API
+        - label: Public API reviewed (naming, visibility, binary compatibility)
+        - label: Docs page added (anatomy, live preview, usage)
+        - label: Changelog entry added
         - label: Released
 
   - type: dropdown

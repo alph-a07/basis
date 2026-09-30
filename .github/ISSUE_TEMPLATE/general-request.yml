@@ -1,12 +1,12 @@
 name: "Report or Request"
-description: Report a bug, request a feature, suggest an enhancement, or share something else
-title: "{{type}}: "
+description: Report a bug, request a feature, suggest an enhancement, or share something else about Basis
+title: "[Feature | Bug | Enhancement | Others] <title>"
 labels: [ "status: triage" ]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to contribute! Pick the **type** below, then fill in the summary and
+        Thanks for taking the time to contribute to **Basis**! Pick the **type** below, then fill in the summary and
         the section(s) that apply to it. You can leave the other sections blank.
 
   - type: dropdown
@@ -27,12 +27,16 @@ body:
     attributes:
       label: Which area does this relate to?
       options:
-        - Atom (button, input, icon…)
+        - Atom (button, checkbox, badge…)
         - Molecule (search field, form group…)
-        - Component (table, header, modal…)
-        - Design tokens / theming
-        - Documentation / Storybook
-        - Build / tooling / packaging
+        - Component (bottom sheet, top bar, dialog…)
+        - Pattern
+        - Design tokens (basis-tokens)
+        - Theming (BasisThemeConfig, light / dark)
+        - Accessibility (TalkBack, touch targets, font scale)
+        - Demo app
+        - Documentation site
+        - Build / publishing (Gradle, Maven)
         - Not sure
     validations:
       required: true
@@ -41,7 +45,7 @@ body:
     id: name
     attributes:
       label: Component or item name (if known)
-      placeholder: "e.g. Button, DataTable"
+      placeholder: "e.g. BasisButton, BasisTextField"
 
   - type: textarea
     id: summary
@@ -61,10 +65,10 @@ body:
     id: repro
     attributes:
       label: Steps to reproduce
-      description: A minimal reproduction (CodeSandbox / StackBlitz link) is the fastest way to get a fix.
+      description: A minimal Composable snippet, or a fork of the demo app that reproduces it, is the fastest way to get a fix.
       placeholder: |
-        1. Go to '...'
-        2. Click on '...'
+        1. Render '...'
+        2. Tap on '...'
         3. See error
 
   - type: textarea
@@ -75,53 +79,75 @@ body:
         Expected: ...
         Actual: ...
 
+  - type: checkboxes
+    id: conditions
+    attributes:
+      label: Reproduces under
+      description: Tick everything that applies. Leave blank if unsure.
+      options:
+        - label: Light theme
+        - label: Dark theme
+        - label: Large font scale
+        - label: TalkBack enabled
+        - label: RTL layout
+        - label: Only on a specific API level or device (add details below)
+
+  - type: textarea
+    id: theme-config
+    attributes:
+      label: BasisThemeConfig in use
+      description: For theming or color related bugs, paste the config you're passing to the theme.
+      render: kotlin
+
   - type: textarea
     id: logs
     attributes:
-      label: Logs, errors, or screenshots
-      description: Paste console output or drag in screenshots / recordings.
+      label: Logs, stack traces, or screenshots
+      description: Paste Logcat output or drag in screenshots / screen recordings.
       render: shell
 
   - type: input
     id: version
     attributes:
-      label: Library version
-      placeholder: "e.g. 2.4.1"
+      label: Basis version
+      placeholder: "e.g. 0.3.0"
 
   - type: textarea
     id: environment
     attributes:
       label: Environment
-      description: Browser, OS, framework and version, Node version, package manager.
+      description: Device or emulator, Android version / API level, and your build toolchain.
       placeholder: |
-        - Browser: Chrome 130
-        - OS: macOS 15
-        - Framework: React 19
-        - Node: 22
+        - Device: Pixel 8 (emulator)
+        - Android: 15 (API 35)
+        - Kotlin: 2.x
+        - Compose BOM: 20xx.xx.xx
+        - AGP: 8.x
+        - Gradle: 8.x
 
   - type: markdown
     attributes:
       value: |
         ---
-        ### Feature requests & 🔧 enhancements only
+        ### Feature requests & enhancements only
 
   - type: textarea
     id: problem
     attributes:
       label: Problem or motivation
-      description: What are you trying to do, and what's getting in your way? For enhancements, what is the current behavior?
+      description: What are you trying to build, and what's getting in your way? For enhancements, what is the current behavior?
 
   - type: textarea
     id: proposal
     attributes:
       label: Proposed solution
-      description: Describe what you'd like to see. Sketches, mockups, or API examples are welcome.
+      description: Describe what you'd like to see. Sketches, mockups, or API examples (Kotlin signatures) are welcome.
 
   - type: textarea
     id: alternatives
     attributes:
       label: Alternatives considered
-      description: Workarounds or other approaches you've tried.
+      description: Workarounds or other approaches you've tried, including customizing it on your side.
 
   - type: dropdown
     id: impact
@@ -161,7 +187,7 @@ body:
       options:
         - label: I searched existing issues and this is not a duplicate.
           required: true
-        - label: I checked the documentation and Storybook.
+        - label: I checked the documentation site and the demo app.
           required: true
         - label: I agree to follow the project's Code of Conduct.
           required: true

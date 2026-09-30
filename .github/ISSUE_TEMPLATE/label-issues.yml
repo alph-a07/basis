@@ -36,13 +36,17 @@ jobs:
               ['other', 'type: question'],
             ].forEach(([key, label]) => { if (type.includes(key)) labels.add(label); });
 
-            // Area (external form)
+            // Area (external form). Keys must match the start of the dropdown option text.
             const area = field('Which area does this relate to\\?').toLowerCase();
             [
               ['atom', 'area: atom'],
               ['molecule', 'area: molecule'],
               ['component', 'area: component'],
+              ['pattern', 'area: pattern'],
               ['design tokens', 'area: tokens'],
+              ['theming', 'area: theming'],
+              ['accessibility', 'area: a11y'],
+              ['demo app', 'area: demo'],
               ['documentation', 'area: docs'],
               ['build', 'area: tooling'],
             ].forEach(([key, label]) => { if (area.startsWith(key)) labels.add(label); });

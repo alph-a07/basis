@@ -1,0 +1,66 @@
+name: Restrict tracking issues to maintainers
+
+# The "New Atom / Molecule / Component" forms are for maintainers only.
+# GitHub can't hide a template per user, so this closes any such issue opened by someone
+# without write access and points them to the public request form.
+on:
+  issues:
+    types: [ opened ]
+
+permissions:
+  issues: write
+
+jobs:
+  restrict:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+
+            // Only act on issues created from the three tracking forms
+            const isTracking = /###\s+(Atom|Molecule|Component) name/i.test(body);
+            if (!isTracking) return;
+
+            // Allow anyone with write access or higher
+            let allowed = issue.author_association === 'OWNER';
+            if (!allowed) {
+              try {
+                const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+                  ...context.repo,
+                  username: issue.user.login,
+                });
+                allowed = ['admin', 'maintain', 'write'].includes(data.role_name);
+              } catch (e) {
+                allowed = false;
+              }
+            }
+            if (allowed) return;
+
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: issue.number,
+              body:
+                `Hi @${issue.user.login}, thanks for your interest! ` +
+                `The **New Atom / Molecule / Component** forms are reserved for maintainers to track planned work, ` +
+                `so I'm closing this one.\n\n` +
+                `If you'd like to propose something new, please open a **Report / Request** issue instead: ` +
+                `${context.payload.repository.html_url}/issues/new/choose\n\n` +
+                `If it's accepted, a maintainer will create the tracking issue and link it back to your request.`,
+            });
+
+            // Remove maintainer-only labels the template applied
+            for (const name of ['type: new', 'area: atom', 'area: molecule', 'area: component', 'status: triage']) {
+              try {
+                await github.rest.issues.removeLabel({ ...context.repo, issue_number: issue.number, name });
+              } catch (e) { /* label not present */ }
+            }
+
+            await github.rest.issues.update({
+              ...context.repo,
+              issue_number: issue.number,
+              state: 'closed',
+              state_reason: 'not_planned',
+            });
