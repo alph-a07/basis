@@ -1,0 +1,120 @@
+name: "🧬 New Atom (tracking)"
+description: Track the design, build, and release of a new atom (button, input, icon, badge…)
+title: "[Atom]: "
+labels: [ "area: atom", "type: new", "status: triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to **track** a new atom from design to release.
+        Atoms are the smallest, indivisible UI building blocks and must not depend on other components.
+
+  - type: input
+    id: name
+    attributes:
+      label: Atom name
+      description: PascalCase name as it will appear in code.
+      placeholder: "e.g. Badge"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose & use cases
+      description: What problem does this atom solve? Where will it be used?
+    validations:
+      required: true
+
+  - type: input
+    id: design
+    attributes:
+      label: Design link
+      description: Figma / design spec URL
+      placeholder: "https://figma.com/..."
+
+  - type: textarea
+    id: variants
+    attributes:
+      label: Variants & sizes
+      description: List every variant, size, and visual style.
+      placeholder: |
+        - variant: primary | secondary | ghost
+        - size: sm | md | lg
+    validations:
+      required: true
+
+  - type: textarea
+    id: states
+    attributes:
+      label: States
+      description: Interactive and data states the atom must support.
+      value: |
+        - [ ] default
+        - [ ] hover
+        - [ ] focus
+        - [ ] active / pressed
+        - [ ] disabled
+        - [ ] loading
+        - [ ] error
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed props / API
+      description: Props, types, defaults, events, slots.
+      render: typescript
+      placeholder: |
+        interface BadgeProps {
+          variant?: 'neutral' | 'success' | 'warning' | 'danger';
+          size?: 'sm' | 'md';
+          children: ReactNode;
+        }
+
+  - type: textarea
+    id: tokens
+    attributes:
+      label: Design tokens
+      description: Existing tokens to use, and any new tokens required (color, spacing, typography, radius, motion).
+
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibility requirements
+      description: Semantic element, ARIA attributes, keyboard behavior, contrast, reduced motion.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: Definition of done
+      options:
+        - label: Design approved and tokens defined
+        - label: Component implemented (all variants & states)
+        - label: Unit tests written
+        - label: Accessibility tests pass (axe / keyboard / screen reader)
+        - label: Visual regression snapshots added
+        - label: Storybook stories with controls & docs
+        - label: Exported from package index
+        - label: Changelog / changeset added
+        - label: Released
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 – Blocking
+        - P1 – High
+        - P2 – Medium
+        - P3 – Low
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related issues / blocked by
+      placeholder: "#123, #456"

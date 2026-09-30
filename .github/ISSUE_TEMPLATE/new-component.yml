@@ -1,0 +1,123 @@
+name: "🧩 New Component (tracking)"
+description: Track the design, build, and release of a new component (organism / feature-level UI built from molecules and atoms)
+title: "[Component]: "
+labels: [ "area: component", "type: new", "status: triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to **track** a new higher-level component (e.g. Header, DataTable, LoginForm, Card grid).
+        Components compose molecules and atoms and may own layout, data, and state.
+
+  - type: input
+    id: name
+    attributes:
+      label: Component name
+      placeholder: "e.g. DataTable"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose & use cases
+      description: What does this component do, who uses it, and in which product areas?
+    validations:
+      required: true
+
+  - type: input
+    id: design
+    attributes:
+      label: Design link
+      placeholder: "https://figma.com/..."
+
+  - type: textarea
+    id: composition
+    attributes:
+      label: Composition
+      description: Molecules and atoms used. Link tracking issues for anything that doesn't exist yet.
+      placeholder: |
+        Molecules:
+        - [ ] SearchField (exists)
+        - [ ] Pagination (needs new → #200)
+        Atoms:
+        - [ ] Checkbox (exists)
+    validations:
+      required: true
+
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior & interactions
+      description: Core behaviors, user flows, edge cases.
+    validations:
+      required: true
+
+  - type: textarea
+    id: state-data
+    attributes:
+      label: State & data requirements
+      description: Controlled/uncontrolled state, async data, loading/empty/error states, context or store dependencies.
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed props / API
+      render: typescript
+
+  - type: textarea
+    id: responsive
+    attributes:
+      label: Responsive & layout behavior
+      description: Breakpoints, container queries, overflow, virtualization, print styles.
+
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibility requirements
+      description: Landmarks, roles, keyboard navigation, focus management, screen reader announcements.
+    validations:
+      required: true
+
+  - type: textarea
+    id: performance
+    attributes:
+      label: Performance & bundle considerations
+      description: Lazy loading, memoization, bundle size budget, large-data handling.
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: Definition of done
+      options:
+        - label: Design approved
+        - label: All molecules/atoms exist or are tracked
+        - label: Component implemented
+        - label: Unit, integration & interaction tests written
+        - label: Accessibility tests pass
+        - label: Visual regression snapshots added
+        - label: Performance / bundle size checked
+        - label: Storybook stories & docs (incl. usage guidelines)
+        - label: Exported from package index
+        - label: Migration notes (if replacing an existing component)
+        - label: Changelog / changeset added
+        - label: Released
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 – Blocking
+        - P1 – High
+        - P2 – Medium
+        - P3 – Low
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related issues / blocked by
+      placeholder: "#123, #456"

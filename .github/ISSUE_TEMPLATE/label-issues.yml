@@ -1,0 +1,60 @@
+name: Label issues from form
+
+# Reads the dropdown answers in issue forms and applies matching labels.
+on:
+  issues:
+    types: [ opened ]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || '';
+
+            // Issue forms render as "### Field label\n\nAnswer"
+            const field = (heading) => {
+              const re = new RegExp(`###\\s+${heading}\\s*\\n+([^\\n]+)`, 'i');
+              const m = body.match(re);
+              return m ? m[1].trim() : '';
+            };
+
+            const labels = new Set();
+
+            // Type (external form)
+            const type = field('What kind of issue is this\\?').toLowerCase();
+            [
+              ['bug', 'type: bug'],
+              ['feature', 'type: feature'],
+              ['enhancement', 'type: enhancement'],
+              ['documentation', 'type: docs'],
+              ['other', 'type: question'],
+            ].forEach(([key, label]) => { if (type.includes(key)) labels.add(label); });
+
+            // Area (external form)
+            const area = field('Which area does this relate to\\?').toLowerCase();
+            [
+              ['atom', 'area: atom'],
+              ['molecule', 'area: molecule'],
+              ['component', 'area: component'],
+              ['design tokens', 'area: tokens'],
+              ['documentation', 'area: docs'],
+              ['build', 'area: tooling'],
+            ].forEach(([key, label]) => { if (area.startsWith(key)) labels.add(label); });
+
+            // Priority (tracking forms)
+            const p = field('Priority').match(/^P([0-3])/i);
+            if (p) labels.add(`priority: P${p[1]}`);
+
+            if (labels.size) {
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: context.issue.number,
+                labels: [...labels],
+              });
+            }

@@ -1,0 +1,115 @@
+name: "🧪 New Molecule (tracking)"
+description: Track the design, build, and release of a new molecule (a group of atoms working together)
+title: "[Molecule]: "
+labels: [ "area: molecule", "type: new", "status: triage" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to **track** a new molecule: a small, reusable group of atoms that does one job
+        (e.g. search field = label + input + button).
+
+  - type: input
+    id: name
+    attributes:
+      label: Molecule name
+      placeholder: "e.g. SearchField"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose & use cases
+      description: The single job this molecule performs and where it will be used.
+    validations:
+      required: true
+
+  - type: input
+    id: design
+    attributes:
+      label: Design link
+      placeholder: "https://figma.com/..."
+
+  - type: textarea
+    id: atoms
+    attributes:
+      label: Composed atoms
+      description: List the atoms used. Flag any that don't exist yet and link their tracking issues.
+      placeholder: |
+        - [ ] Label (exists)
+        - [ ] Input (exists)
+        - [ ] IconButton (needs new atom → #123)
+    validations:
+      required: true
+
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior & interactions
+      description: How the atoms interact (validation, focus flow, clear/submit actions, controlled vs uncontrolled).
+    validations:
+      required: true
+
+  - type: textarea
+    id: variants
+    attributes:
+      label: Variants, sizes & states
+      placeholder: |
+        - layout: inline | stacked
+        - states: default, focus, error, disabled, loading
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed props / API
+      render: typescript
+
+  - type: textarea
+    id: responsive
+    attributes:
+      label: Responsive & layout rules
+      description: Breakpoint behavior, min/max widths, overflow and truncation.
+
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibility requirements
+      description: Roles, labelling, focus order, keyboard interaction, live-region announcements.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: Definition of done
+      options:
+        - label: Design approved
+        - label: All required atoms exist or are tracked
+        - label: Molecule implemented
+        - label: Unit & interaction tests written
+        - label: Accessibility tests pass
+        - label: Visual regression snapshots added
+        - label: Storybook stories & docs
+        - label: Exported from package index
+        - label: Changelog / changeset added
+        - label: Released
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 – Blocking
+        - P1 – High
+        - P2 – Medium
+        - P3 – Low
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: related
+    attributes:
+      label: Related issues / blocked by
+      placeholder: "#123, #456"

@@ -1,0 +1,61 @@
+name: Label pull requests from template
+
+# Applies labels based on the boxes checked in the PR template.
+# Uses pull_request_target so it also works for PRs from forks.
+# It never checks out or runs PR code; it only reads the PR description.
+on:
+  pull_request_target:
+    types: [ opened, edited, reopened, ready_for_review ]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+
+            // Lower-cased text of every ticked checkbox
+            const checked = [...body.matchAll(/^\s*[-*]\s*\[[xX]\]\s*(.+?)\s*$/gm)]
+              .map((m) => m[1].toLowerCase());
+
+            const map = {
+              // Type of change
+              'bug fix': 'type: bug',
+              'new feature': 'type: feature',
+              'new atom / molecule / component': 'type: new',
+              'enhancement': 'type: enhancement',
+              'documentation': 'type: docs',
+              'chore / refactor / dependencies': 'type: chore',
+              'breaking change': 'breaking change',
+              // Area
+              'atom': 'area: atom',
+              'molecule': 'area: molecule',
+              'component': 'area: component',
+              'design tokens': 'area: tokens',
+              'docs / storybook': 'area: docs',
+              'tooling / build / ci': 'area: tooling',
+              'accessibility': 'area: a11y',
+            };
+
+            const labels = new Set();
+            for (const item of checked) if (map[item]) labels.add(map[item]);
+
+            // Non-draft PRs are ready for review
+            if (!pr.draft && ['opened', 'reopened', 'ready_for_review'].includes(context.payload.action)) {
+              labels.add('status: in-review');
+            }
+
+            if (labels.size) {
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: pr.number,
+                labels: [...labels],
+              });
+            }
