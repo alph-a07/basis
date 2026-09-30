@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.compose.compiler)
     id("detekt-conventions")
     id("ktlint-conventions")
     alias(libs.plugins.binary.compatibility.validator)
@@ -21,6 +22,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 kotlin {
@@ -32,6 +37,13 @@ androidBcvBridge {
 }
 
 dependencies {
+    api(project(":basis:tokens"))
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.ui)
+
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
