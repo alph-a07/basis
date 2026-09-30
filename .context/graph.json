@@ -4,15 +4,15 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt",
-          "sha": "5781dcc28baccded162e885262fed1da55bc0b4b"
+          "sha": "9b82471bc61ff0b6733908cb6dee5b4f33332107"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/OklchDerivation.kt",
-          "sha": "d9dac0b8c3927837b3b193c6c9b40e971b7135c6"
+          "sha": "2502b49eddc1144cdfd9927f207bb3e4c2234288"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/CategoricalColor.kt",
-          "sha": "4155b1ffb5c31a4caa22aee4c9b9aa2613e708dc"
+          "sha": "da61b3b8c1de81f9ba440947c94483422eacbf57"
         }
       ],
       "depends_on": [
@@ -54,11 +54,11 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/DerivationTuning.kt",
-          "sha": "8675bb8c2ad2dd812715b283e75e8feccdb77994"
+          "sha": "6a0f281ea2dac7f3b9097d3fd520d9ad607e95b0"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/BasisThemeConfig.kt",
-          "sha": "c9d81c6de259fb164f6a5cf7620a0140a91fdc02"
+          "sha": "660d7d60a9dcd8d2088dee31705fe011cbc71135"
         }
       ],
       "depends_on": [
@@ -110,7 +110,7 @@
       "anchors": [
         {
           "path": "basis/build.gradle.kts",
-          "sha": "27d2ff7a788571cc59acbdf8a1e91b21c0d028ec"
+          "sha": "216f87292c5da925effd55113e78d5d45108e3ee"
         },
         {
           "path": "basis/api/basis.api",
@@ -168,7 +168,7 @@
       "anchors": [
         {
           "path": "basis-lint/build.gradle.kts",
-          "sha": "efd5c88099f852c15c7882300b6115c5a4fc9457"
+          "sha": "6b8ff306e3099a3e9b4c31ba69fe577319fe0d4a"
         }
       ],
       "depends_on": [],
@@ -202,7 +202,7 @@
       "anchors": [
         {
           "path": "basis/tokens/build.gradle.kts",
-          "sha": "39b51a22c5725a73d387545b54d6be90919da903"
+          "sha": "be17a56c58b3926e33514aeb9b3365c88710b865"
         }
       ],
       "depends_on": [],
@@ -252,81 +252,60 @@
       "anchors": [
         {
           "path": "demo/build.gradle.kts",
-          "sha": "077e337520c803eaf05e4e184ae4a5dbc9b8f4ac"
-        },
-        {
-          "path": "demo/src/main/java/io/github/alph_a07/basis/demo/MainActivity.kt",
-          "sha": "57035859ef5b92f9d2d78f89e934a3bab7a132a8"
+          "sha": "98c51e76ed3273705aea22bd3fcbfb66ff81ee4b"
         }
       ],
       "depends_on": [],
       "gotchas": [
         "The build file declares no project dependency on the library or tokens modules, so the demo compiles without Basis on the classpath.",
-        "The composable in the demo's ui/theme package is named BasisTheme but wraps Material3's MaterialTheme with hardcoded Material3 colors; it is template code, not a Basis theme."
+        "The module has no Compose-enabled source files currently; the demo app is a placeholder waiting for implementation."
       ],
       "invariants": [
         {
           "rule": "Depends only toward the main library, which in turn points at the tokens module",
-          "source": "AGENTS.md §2"
+          "source": "AGENTS.md 2"
         },
         {
           "rule": "No new third-party dependencies without asking",
-          "source": "AGENTS.md §2"
+          "source": "AGENTS.md 2"
         }
       ],
       "kind": "module",
-      "public_surface": [
-        {
-          "note": "single activity, launcher entry point",
-          "symbol": "MainActivity"
-        },
-        {
-          "note": "template composable",
-          "symbol": "Greeting"
-        },
-        {
-          "note": "preview wrapper",
-          "symbol": "GreetingPreview"
-        },
-        {
-          "note": "applicationId and namespace",
-          "symbol": "io.github.alph_a07.basis.demo"
-        }
-      ],
-      "purpose": "Hosts the sample app used to exercise Basis visually. It is the only module with Compose enabled and the only Android application, and it currently renders a template greeting rather than any Basis component.",
+      "public_surface": [],
+      "purpose": "Android application module for a demo app that exercises Basis visually. Currently an empty shell; source code will be added as components are built. It is the only module with Compose enabled and the only Android application.",
       "rationale": null,
       "related": [
         "module-basis",
         "module-basis-tokens"
       ],
-      "summary": "Android app module that hosts the Basis demo; still the Compose template",
+      "summary": "Android app module for Basis demo; currently an empty shell awaiting implementation",
       "title": "Basis demo module"
     },
     "pkg-tokens-color": {
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/BasisColor.kt",
-          "sha": "7aeb9302546bf84128810e0c3f9e33f5b6aec56a"
+          "sha": "fe9c5dce4ecbd797e060a0ae4a4f81d24ebd13e6"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/ColorTokens.kt",
-          "sha": "c48bf858ac7282fae1e9db8c7d35ca32b8f2d360"
+          "sha": "7130ae8dc5138d24bec2bc2b65e2c37c729afafa"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt",
-          "sha": "5781dcc28baccded162e885262fed1da55bc0b4b"
+          "sha": "9b82471bc61ff0b6733908cb6dee5b4f33332107"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/CategoricalColor.kt",
-          "sha": "4155b1ffb5c31a4caa22aee4c9b9aa2613e708dc"
+          "sha": "da61b3b8c1de81f9ba440947c94483422eacbf57"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Gradient.kt",
-          "sha": "b0d1c0100b7a44c3b081706f4c628fe9f1f9f7a1"
+          "sha": "9a73ec84c11069b0fdd5fbe13ccccb67a9728956"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/GradientPresets.kt",
-          "sha": "69c98e6df292262e15b5d8a5f825cf5b250106b5"
+          "sha": "45fe8096c07be566a11d3d7388321d52650d5874"
         }
       ],
       "depends_on": [],
@@ -505,7 +484,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/elevation/ElevationTokens.kt",
-          "sha": "61a156fb1dfb092f841194e20a9cc2be79443e65"
+          "sha": "fc6ed7e9be0c4977251ae59e52ac007daf67a04c"
         }
       ],
       "depends_on": [],
@@ -563,7 +542,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/MotionTokens.kt",
-          "sha": "38ef59b80f0bc61fb33831f0be8c83eb03c1fda2"
+          "sha": "003952103ab225291efc708d69c090dd7821fa97"
         }
       ],
       "depends_on": [],
@@ -634,7 +613,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/shape/ShapeTokens.kt",
-          "sha": "13c89e2d70ef854b6c8f85ba1db5482e757afe8d"
+          "sha": "7a74c4650fe483ebc3d3498af377a4eb1541adae"
         }
       ],
       "depends_on": [],
@@ -714,7 +693,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/sizing/SizingTokens.kt",
-          "sha": "5a04221a6aef1f232b1bdbfcdd545d19c950a036"
+          "sha": "7b2f6d6abbb7644690e355cc1c241ee08ccb083a"
         }
       ],
       "depends_on": [],
@@ -793,7 +772,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/spacing/SpacingTokens.kt",
-          "sha": "95d9e6458793692821c33a552b364ed70b058f35"
+          "sha": "14b043931d2539ee5d867ae01b80b5fec863cd42"
         }
       ],
       "depends_on": [],
@@ -843,15 +822,15 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/BasisThemeConfig.kt",
-          "sha": "c9d81c6de259fb164f6a5cf7620a0140a91fdc02"
+          "sha": "660d7d60a9dcd8d2088dee31705fe011cbc71135"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/DerivationTuning.kt",
-          "sha": "8675bb8c2ad2dd812715b283e75e8feccdb77994"
+          "sha": "6a0f281ea2dac7f3b9097d3fd520d9ad607e95b0"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/theme/OklchDerivation.kt",
-          "sha": "d9dac0b8c3927837b3b193c6c9b40e971b7135c6"
+          "sha": "2502b49eddc1144cdfd9927f207bb3e4c2234288"
         }
       ],
       "depends_on": [
@@ -948,7 +927,7 @@
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/TypographyTokens.kt",
-          "sha": "e8dd3b8b724af02ecf2bbd701ee19afb35235c3b"
+          "sha": "368655e2423c908ce8e4248170885b9d05f2d660"
         }
       ],
       "depends_on": [],
