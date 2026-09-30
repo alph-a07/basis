@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Blocks a commit that ktlint would reject, so unformatted code cannot reach a branch even when the
+# contributor's IDE has reformat-on-save disabled. Skipped when no Kotlin file is staged, so
+# unrelated commits stay fast.
+#
+# `ktlintCheck` inspects the working tree rather than the index. That is deliberate: a check scoped to
+# staged content would need a scratch index to avoid also flagging unstaged work, and the tree is what
+# `ktlintFormat` rewrites anyway. CI re-runs the same rule over the whole tree and is the authority.
+# Bypass locally with `git commit --no-verify`.
+
+staged_kotlin=$(git diff --cached --name-only --diff-filter=ACMR -- '*.kt' '*.kts')
+
+if [ -z "$staged_kotlin" ]; then
+  exit 0
+fi
+
+# `build-logic` is an included build, so the root `ktlintCheck` does not reach it. Its own check is
+# only run when one of its files is actually staged, which keeps the common case fast while still
+# covering the convention plugins. CI runs it unconditionally and remains the authority.
+build_logic_check=()
+if printf '%s\n' "$staged_kotlin" | grep -q '^build-logic/'; then
+  build_logic_check=(-p build-logic)
+fi
+
+repo_root=$(git rev-parse --show-toplevel)
+
+# ktlint resolves `.editorconfig` relative to each file, so the build must run from the root.
+cd "$repo_root" || exit 1
+
+# Report only: never rewrite the index or the working tree, so a failed check cannot alter what is
+# about to be committed. `ktlintFormat` is the fix-it command, run deliberately by the contributor.
+#
+# The two invocations are sequenced explicitly rather than relying on the substitution's exit status,
+# which would only reflect the last command in the block.
+output=$(./gradlew --quiet ktlintCheck --console=plain 2>&1)
+status=$?
+
+if [ $status -eq 0 ] && [ ${#build_logic_check[@]} -gt 0 ]; then
+  output=$(./gradlew --quiet "${build_logic_check[@]}" ktlintCheck --console=plain 2>&1)
+  status=$?
+fi
+
+if [ $status -ne 0 ]; then
+  echo "❌ ktlint found formatting violations."
+  echo
+  echo "$output"
+  echo
+  echo "  Fix with:  ./gradlew ktlintFormat"
+  echo "  Then re-stage the reformatted files and commit again."
+  exit 1
+fi
+
+exit 0

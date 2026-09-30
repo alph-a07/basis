@@ -59,6 +59,6 @@ tasks.register("installGitHooks") {
         check(exitCode == 0) { "git config core.hooksPath failed (exit code $exitCode)" }
 
         hookFiles.forEach { it.setExecutable(true) }
-        println("✅ Git hooks installed — commit-msg and pre-push are now active.")
+        println("✅ Git hooks installed — commit-msg, pre-commit and pre-push are now active.")
     }
 }
