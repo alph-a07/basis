@@ -1,29 +1,19 @@
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.jvm)
+    id("detekt-conventions")
+    id("ktlint-conventions")
 }
 
-android {
-    namespace = "io.github.alph_a07.basis_lint"
-    compileSdk {
-        version = release(37)
-    }
+val lintApi: Configuration by configurations.creating
 
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+configurations {
+    compileOnly { extendsFrom(lintApi) }
+    testImplementation { extendsFrom(lintApi) }
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
+    lintApi(libs.androidx.lint.api)
+
+    testImplementation(libs.androidx.lint.tests)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
 }
