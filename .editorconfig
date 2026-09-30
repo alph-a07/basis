@@ -1,0 +1,39 @@
+root = true
+
+# Read by two independent consumers: the IDE (reformat on save, whitespace actions) and ktlint
+# (`./gradlew ktlintCheck` in CI, `./gradlew ktlintFormat` locally).
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{kt,kts}]
+ktlint_code_style = android_studio
+# Disabled to allow underscore in package names, due to `alph_a07` in group id
+ktlint_standard_package-name = disabled
+max_line_length = 120
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+
+# Disabled to keep in sync with detekt's limitations
+ktlint_standard_class-signature = disabled
+ktlint_standard_function-signature = disabled
+ktlint_standard_blank-line-between-when-conditions = disabled
+
+# Owned by detekt, which is used to check for unused imports
+ktlint_standard_no-unused-imports = disabled
+ktlint_standard_no-wildcard-imports = disabled
+
+# standard_filename enforces that the file name matches the class name, which is not true for tokens module
+[basis/tokens/**/{*.kt,*.kts}]
+ktlint_standard_filename = disabled
+
+[*.{xml,yml,yaml,json}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
