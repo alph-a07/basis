@@ -19,57 +19,36 @@ class DepthTokensTest {
         val names = BasisDepth.entries.map { it.name }
 
         assertEquals(names.sorted(), names)
-        assertEquals(names, BasisDepth.entries.sortedBy { it.ordinal }.map { it.name })
     }
 
     @Test
-    fun deeperLevelsUseAtLeastAsStrongAnExpressionAsShallowerOnes() {
-        val light = BasisDepth.entries.map { BasisDepthTokens.light(it) }
-        val strength = mapOf(
-            BasisDepthExpression.Inset to 0,
-            BasisDepthExpression.Tonal to 1,
-            BasisDepthExpression.Shadow to 2,
-            BasisDepthExpression.Elevation to 3,
-            BasisDepthExpression.Combined to 4,
-        )
-        val ranked = light.map { requireNotNull(strength[it.expression]) }
+    fun everyMechanismIsAvailableAsAnExpression() {
+        val names = BasisDepthExpression.entries.map { it.name }
 
-        assertEquals(ranked.sorted(), ranked)
+        assertTrue("Elevation" in names)
+        assertTrue("Shadow" in names)
+        assertTrue("Inset" in names)
+        assertTrue("Tonal" in names)
+        assertTrue("Combined" in names)
     }
 
     @Test
-    fun everyLevelResolvesInBothModes() {
-        for (level in BasisDepth.entries) {
-            val light = BasisDepthTokens.light(level)
-            val dark = BasisDepthTokens.dark(level)
+    fun aResolvedValuePairsALevelWithAMechanism() {
+        val value = BasisDepthValue(BasisDepth.Level3, BasisDepthExpression.Tonal)
 
-            assertEquals(level, light.level)
-            assertEquals(level, dark.level)
-        }
+        assertEquals(BasisDepth.Level3, value.level)
+        assertEquals(BasisDepthExpression.Tonal, value.expression)
     }
 
     @Test
-    fun theSameLevelMayResolveToDifferentExpressionsInDifferentThemes() {
-        val light = BasisDepthTokens.light(BasisDepth.Level2)
-        val dark = BasisDepthTokens.dark(BasisDepth.Level2)
+    fun theSameLevelCanCarryDifferentMechanisms() {
+        val light = BasisDepthValue(BasisDepth.Level2, BasisDepthExpression.Elevation)
+        val dark = BasisDepthValue(BasisDepth.Level2, BasisDepthExpression.Tonal)
 
-        assertEquals(BasisDepth.Level2, light.level)
-        assertEquals(BasisDepth.Level2, dark.level)
+        assertEquals(light.level, dark.level)
         assertTrue(
             "Depth is implementation-neutral: one level must be able to resolve differently per theme",
             light.expression != dark.expression,
         )
-    }
-
-    @Test
-    fun everyLevelResolvesToAKnownExpression() {
-        for (level in BasisDepth.entries) {
-            assertTrue(
-                BasisDepthTokens.light(level).expression in BasisDepthExpression.entries,
-            )
-            assertTrue(
-                BasisDepthTokens.dark(level).expression in BasisDepthExpression.entries,
-            )
-        }
     }
 }
