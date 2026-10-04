@@ -3,20 +3,53 @@ commit_msg_file="$1"
 commit_msg=$(head -n1 "$commit_msg_file")
 
 # Let git's own generated messages through untouched
-if echo "$commit_msg" | grep -qE '^(Merge |Revert "|fixup!|squash!)'; then
+generated_message='^(Merge |Revert "|fixup!|squash!)'
+if [[ "$commit_msg" =~ $generated_message ]]; then
   exit 0
 fi
 
-pattern='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z0-9._-]+\))?!?: .{1,88}$'
+allowed_types='feat fix docs style refactor perf test build ci chore'
+commit_format='^([a-z]+)(\(([a-z0-9._-]+)\))?(!)?: (.+)$'
 
-if ! echo "$commit_msg" | grep -qE "$pattern"; then
-  echo "❌ Commit message doesn't follow Conventional Commits."
+if [[ -z "$commit_msg" ]]; then
+  echo "Commit rejected: the commit message is empty."
   echo
-  echo "  Got:      $commit_msg"
-  echo "  Expected: <type>(<optional scope>): <description>"
-  echo "  Types:    feat fix docs style refactor perf test build ci chore"
-  echo "  Example:  feat(button): add pill-shaped variant"
-  echo "  Breaking: add '!' after type/scope, e.g. feat!: ..."
+  echo "Use: <type>(<optional scope>): <description>"
+  echo "Example: feat(button): add pill-shaped variant"
   exit 1
 fi
+
+if [[ ! "$commit_msg" =~ $commit_format ]]; then
+  echo "Commit rejected: invalid Conventional Commit format."
+  echo
+  printf '  Received: "%s"\n' "$commit_msg"
+  echo "  Expected: <type>(<optional scope>): <description>"
+  echo "  Types:    $allowed_types"
+  echo "  Scope:    lowercase letters, numbers, dots, underscores, or hyphens"
+  echo "  Example:  feat(button): add pill-shaped variant"
+  echo "  Breaking: add '!' after the type or scope, e.g. feat!: ..."
+  exit 1
+fi
+
+type="${BASH_REMATCH[1]}"
+description="${BASH_REMATCH[5]}"
+
+if [[ ! " $allowed_types " == *" $type "* ]]; then
+  echo "Commit rejected: unsupported commit type '$type'."
+  echo
+  echo "  Allowed types: $allowed_types"
+  echo "  Example:      test: add coverage for theme inputs"
+  exit 1
+fi
+
+description_length=${#description}
+if (( description_length > 88 )); then
+  echo "Commit rejected: the description is too long."
+  echo
+  printf '  Description length: %d characters (maximum: 88)\n' "$description_length"
+  printf '  Received: "%s"\n' "$commit_msg"
+  echo "  Tip: shorten the description while keeping the change and intent clear."
+  exit 1
+fi
+
 exit 0
