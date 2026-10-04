@@ -110,17 +110,20 @@
       "anchors": [
         {
           "path": "basis/build.gradle.kts",
-          "sha": "216f87292c5da925effd55113e78d5d45108e3ee"
+          "sha": "24d28c0f0d38cb204a85ba3d8dec67cac13f3434"
         },
         {
           "path": "basis/api/basis.api",
           "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
         }
       ],
-      "depends_on": [],
+      "depends_on": [
+        "module-basis-tokens"
+      ],
       "gotchas": [
         "The tracked API baseline file is empty, so the binary compatibility check currently passes trivially and would not catch a first public symbol until the baseline is regenerated.",
-        "The build file declares no project dependency on the tokens module, so tokens are not yet on this module's compile classpath."
+        "Tokens are on the compile classpath as an api dependency, so a token type used in a public signature becomes part of this module's own API surface.",
+        "Compose is enabled in the build file but there are still no Kotlin sources, so the atoms, molecules and components this module is meant to own do not exist yet."
       ],
       "invariants": [
         {
@@ -153,9 +156,17 @@
         {
           "note": "maven group",
           "symbol": "io.github.alph_a07"
+        },
+        {
+          "note": "compose compiler plugin, with the compose build feature enabled",
+          "symbol": "compose.compiler"
+        },
+        {
+          "note": "api project dependency exposing token types to consumers",
+          "symbol": "tokens"
         }
       ],
-      "purpose": "The published library where the atoms, molecules and public components live. It currently has no Kotlin sources at all: its only tracked content is an empty API baseline, so everything it is meant to own is not written yet.",
+      "purpose": "The published library where the atoms, molecules and public components live. It still has no Kotlin sources: its only tracked content is an empty API baseline and a keep-rules file. It now depends on the tokens module and has Compose enabled, so everything it is meant to own is still unwritten.",
       "rationale": null,
       "related": [
         "module-basis-tokens",
@@ -202,15 +213,20 @@
       "anchors": [
         {
           "path": "basis/tokens/build.gradle.kts",
-          "sha": "be17a56c58b3926e33514aeb9b3365c88710b865"
+          "sha": "c8e65358ed58307022808d91e6b61aa712181732"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "The build file applies the Android library plugin and pulls in appcompat, core-ktx and material, so this is an Android library, not the pure Kotlin/JVM module AGENTS.md section 2 describes. It does not use Compose.",
-        "No module declares a project dependency on this one, so the tokens are not yet on any consumer's compile classpath."
+        "The module applies the Kotlin JVM plugin with a toolchain and has no android block, no namespace and no Android or AndroidX dependency at all, so any such import is a layering violation rather than a missing dependency.",
+        "Its only declared dependency is the JUnit test library, so nothing in main source may need a runtime library beyond the JDK and the Kotlin standard library.",
+        "The main library consumes this module as an api dependency, so the tokens on this module's public surface are re-exported to consumers of the library."
       ],
       "invariants": [
+        {
+          "rule": "Pure Kotlin/JVM: no Compose, Android or AndroidX dependency, ever",
+          "source": "AGENTS.md §2"
+        },
         {
           "rule": "Holds token definitions and derivation engines only, never concrete brand or palette values; concrete preset values belong to the main library module",
           "source": "AGENTS.md §2"
@@ -231,15 +247,15 @@
       "kind": "module",
       "public_surface": [
         {
-          "note": "plugin alias applied",
-          "symbol": "android.library"
+          "note": "plugin alias applied, not the Android library plugin",
+          "symbol": "kotlin.jvm"
         },
         {
-          "note": "namespace",
-          "symbol": "io.github.alph_a07.basis.tokens"
+          "note": "JVM toolchain 21, the module's only build configuration",
+          "symbol": "jvmToolchain"
         }
       ],
-      "purpose": "Owns every Basis token value and the engines that turn seed hues into a scheme. Holds no concrete brand palette and no Compose UI code. It is the only module in the repo with substantial source today.",
+      "purpose": "Owns every Basis token value and the engines that turn seed hues into a scheme. Holds no concrete brand palette and no Compose UI code. It is a pure Kotlin/JVM module on toolchain 21 with no Android, AndroidX or Compose dependency, and the only module in the repo with substantial source today.",
       "rationale": null,
       "related": [
         "module-basis",
@@ -288,8 +304,16 @@
           "sha": "fe9c5dce4ecbd797e060a0ae4a4f81d24ebd13e6"
         },
         {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/BasisColorRole.kt",
+          "sha": "2ae59ba509f8d31ee6f548e6640b2610792e18a4"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/BasisColorScheme.kt",
+          "sha": "1af7d894220a3aae459990877f34ef6f3b0a5751"
+        },
+        {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/ColorTokens.kt",
-          "sha": "7130ae8dc5138d24bec2bc2b65e2c37c729afafa"
+          "sha": "ee5d42ad3bf266cc97a37854e925be6855d5e0f8"
         },
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/color/Oklch.kt",
@@ -310,7 +334,9 @@
       ],
       "depends_on": [],
       "gotchas": [
-        "This node is the union of the whole color package plus the two gradient presets, which live in the theme package because presets consume a derived scheme. A change to GradientPresets.kt makes this node stale, not the theme node.",
+        "This node is the union of the whole color package plus GradientPresets.kt, which lives in the theme package because presets consume a derived scheme. A change to GradientPresets.kt makes this node stale, not the theme node.",
+        "Selection and focus are resolved through their own sets rather than through the border set, so a role lookup for a boundary role branches separately from the surface and content groups.",
+        "A status role carries both a status meaning and a slot, and the scheme resolves it from those two fields, so adding a status means adding entries rather than new when branches.",
         "OKLCH has no alpha channel: the conversion out drops it and the conversion in takes alpha as a separate argument, so round-tripping a translucent color loses its alpha.",
         "The ink-picking helper returns pure black or pure white only, choosing whichever contrasts higher; it is not a tinted ink.",
         "Conversion back to BasisColor clamps each channel into sRGB, so out-of-gamut OKLCH values silently lose chroma.",
@@ -352,7 +378,19 @@
           "symbol": "fromArgb"
         },
         {
-          "note": "complete scheme, all color tokens",
+          "note": "the catalogue naming one semantic color decision",
+          "symbol": "BasisColorRole"
+        },
+        {
+          "note": "positive, negative, caution, info",
+          "symbol": "BasisStatus"
+        },
+        {
+          "note": "surface, content, icon, border",
+          "symbol": "BasisStatusSlot"
+        },
+        {
+          "note": "complete scheme, every role resolved to a value",
           "symbol": "BasisColorScheme"
         },
         {
@@ -360,11 +398,11 @@
           "symbol": "SurfaceColors"
         },
         {
-          "note": "text and content role set",
+          "note": "text role set",
           "symbol": "ContentColors"
         },
         {
-          "note": "icon role set, aliasing of content",
+          "note": "icon role set",
           "symbol": "IconColors"
         },
         {
@@ -372,24 +410,24 @@
           "symbol": "BorderColors"
         },
         {
-          "note": "interactive and state role set",
-          "symbol": "InteractiveColors"
+          "note": "selection is a context, not a color role of its own",
+          "symbol": "SelectionColors"
         },
         {
-          "note": "selected role set",
-          "symbol": "SelectedColors"
+          "note": "focus ring as its own token, not a border state",
+          "symbol": "FocusColors"
         },
         {
-          "note": "one status tone",
+          "note": "one status tone across four slots",
           "symbol": "StatusColorSet"
         },
         {
-          "note": "positive, negative, caution, info",
+          "note": "the four status meanings a scheme expresses",
           "symbol": "StatusColors"
         },
         {
-          "note": "loading skeleton role set",
-          "symbol": "SkeletonColors"
+          "note": "brand and surface gradients",
+          "symbol": "GradientColors"
         },
         {
           "note": "perceptual working color space",
@@ -468,7 +506,7 @@
           "symbol": "gradientSurface"
         }
       ],
-      "purpose": "Owns the BasisColor ARGB value class, the full BasisColorScheme and its per-role color sets, the OKLCH working space with conversion and WCAG contrast helpers, categorical palette generation, and the gradient type with its builders and scheme-derived presets. It does not derive a scheme from seed hues; that lives in the theme package.",
+      "purpose": "Owns the BasisColor ARGB value class, the BasisColorRole catalogue and the BasisColorScheme with its per-role color sets, the OKLCH working space with conversion and WCAG contrast helpers, categorical palette generation, and the gradient type with its builders and scheme-derived presets. It does not derive a scheme from seed hues; that lives in the theme package.",
       "rationale": {
         "source": "KDoc on Oklch",
         "text": "OKLCH is the single working space for every derived Basis color because it is perceptually uniform, so lightness and chroma steps and hue rotations behave predictably regardless of hue, unlike HSL"
@@ -480,23 +518,27 @@
       "summary": "ARGB color type, scheme data classes, OKLCH math, WCAG contrast, categorical palettes and gradients",
       "title": "Color tokens"
     },
-    "pkg-tokens-elevation": {
+    "pkg-tokens-depth": {
       "anchors": [
         {
-          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/elevation/ElevationTokens.kt",
-          "sha": "fc6ed7e9be0c4977251ae59e52ac007daf67a04c"
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/depth/DepthTokens.kt",
+          "sha": "4aa25c06da7c604d14907388d10a671359343b71"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "The shadow alpha helper always returns 0f for a dark theme regardless of level, so passing the wrong dark-theme flag silently removes all elevation.",
-        "The press helper is ordinal arithmetic over the enum entries, so inserting a level anywhere but the end silently changes what every level presses to.",
-        "The per-level shadow alpha values are literals in a when expression, not fields on the enum, unlike the dp and tonal values."
+        "There is no pressed or pressed-level step as there was in the previous elevation scale: a component's press response is expressed through the motion family, not by indexing down the depth scale.",
+        "DEPTH_LEVEL_COUNT is a separate top-level constant rather than BasisDepth.entries.size, so adding or removing an entry without updating the constant leaves the two disagreeing.",
+        "BasisDepthValue pairs the two concepts rather than letting an enum entry carry its mechanism, which is what keeps the level implementation-neutral; a component adapter must read expression and render accordingly instead of assuming a level implies a particular effect."
       ],
       "invariants": [
         {
-          "rule": "Sizes come from the token scale rather than per-component private constants",
-          "source": "AGENTS.md §2"
+          "rule": "A depth level names a magnitude of separation, not a rendering mechanism, so a consumer chooses the level and never the expression",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/depth/DepthTokens.kt"
+        },
+        {
+          "rule": "The vocabulary fixes which levels exist, not the numbers they resolve to; Theme Resolution produces the magnitudes",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/depth/DepthTokens.kt"
         },
         {
           "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
@@ -510,51 +552,59 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "Level0 to Level5, dp and darkTonalPercent",
-          "symbol": "BasisElevation"
+          "note": "Level1 through Level6",
+          "symbol": "BasisDepth"
         },
         {
-          "note": "resting cards and raised rows",
-          "symbol": "Level1"
+          "note": "number of levels in the scale",
+          "symbol": "DEPTH_LEVEL_COUNT"
         },
         {
-          "note": "alpha for this level, 0 in dark mode",
-          "symbol": "shadowAlpha"
+          "note": "elevation, shadow, inset, tonal, combined",
+          "symbol": "BasisDepthExpression"
         },
         {
-          "note": "one level down, floored at Level0",
-          "symbol": "pressed"
+          "note": "a level paired with the mechanism that renders it",
+          "symbol": "BasisDepthValue"
         }
       ],
-      "purpose": "Owns the six-level elevation scale, the per-level shadow alpha, and the pressed-state step down. Each level pairs a light-mode dp depth with a dark-mode tonal percentage so the same enum serves both modes.",
-      "rationale": {
-        "source": "KDoc on BasisElevation",
-        "text": "Per the locked dark-mode rule, shadow alpha fades toward 0 as the theme goes dark and the tonal percentage carries the visual weight instead"
-      },
+      "purpose": "Owns the depth scale as a perceptual layering relationship: the six levels, the mechanisms a resolved theme may use to render a level, and the composite pairing a level with its chosen mechanism. It declares no magnitudes and no drawing code, so the same level can read as elevation in one theme and as a tonal shift in another.",
+      "rationale": null,
       "related": [
-        "pkg-tokens-shape",
+        "pkg-tokens-radius",
         "pkg-tokens-motion"
       ],
-      "summary": "Elevation scale carrying both a light shadow depth and a dark tonal shift, with press behavior",
-      "title": "Elevation tokens"
+      "summary": "Six-level depth scale, the mechanisms that may express it and the pair that resolves to",
+      "title": "Depth tokens"
     },
     "pkg-tokens-motion": {
       "anchors": [
         {
-          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/MotionTokens.kt",
-          "sha": "003952103ab225291efc708d69c090dd7821fa97"
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/BasisMotionToken.kt",
+          "sha": "f6d4a1174255e55cbda45c88cb3ce330b0bce742"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/BasisResolvedMotion.kt",
+          "sha": "0d6fdb292446c8fc2d9f0e4c3475fabe148d3477"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "Durations are Int milliseconds while easing control points and spring parameters are Float, so the scale is not uniformly typed.",
-        "The easing and spring token objects use lowerCamelCase values while the duration constants are SCREAMING_SNAKE_CASE; this predates the convention and should not be mass-renamed.",
-        "The reduced-motion path returns 1 rather than 0, a deliberate non-zero duration for animation APIs that reject zero."
+        "Immediate is modelled as its own timing rather than as a zero duration, because a zero-length animation still schedules frames and completes asynchronously whereas Immediate completes at the point of application.",
+        "A resolved motion may hold several tracks that start, end and cancel together while keeping independent durations and curves, so a renderer must treat the list as one motion instance rather than as separate animations.",
+        "Reduced motion is an input to resolution rather than a Motion token, so there is no reduced-motion token to override; it is a constraint on the resolver.",
+        "Timings use Int milliseconds and Float spring parameters, so the package is not uniformly typed.",
+        "Every timing constructor and BasisResolvedMotion validate their arguments with require, so an invalid duration or spring parameter fails construction rather than surfacing later at animation time.",
+        "The tracks of a resolved motion are plain data, not Compose animation spec types, so mapping them to a platform is the renderer's job."
       ],
       "invariants": [
         {
-          "rule": "Durations come from the token scale rather than per-component private constants",
-          "source": "AGENTS.md §2"
+          "rule": "The motion vocabulary names intent only; duration, easing, spring behaviour and property choice are resolution details absent from the public vocabulary by design",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/BasisMotionToken.kt"
+        },
+        {
+          "rule": "Reduced motion is a constraint resolution must satisfy, not an overridable Motion token value",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/motion/BasisResolvedMotion.kt"
         },
         {
           "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
@@ -568,69 +618,81 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "instant through slower",
-          "symbol": "BasisMotionDurationTokens"
+          "note": "feedback, state transition, transformation, expansion, reposition, emphasis",
+          "symbol": "BasisMotionToken"
         },
         {
-          "note": "default duration step",
-          "symbol": "DURATION_NORMAL"
+          "note": "color, shape, size, position, opacity",
+          "symbol": "BasisMotionProperty"
         },
         {
-          "note": "cubic-bezier control points",
-          "symbol": "BasisEasing"
+          "note": "sealed timing: timed, spring, immediate",
+          "symbol": "BasisMotionTiming"
         },
         {
-          "note": "standard, decelerate, accelerate, emphasized",
-          "symbol": "BasisEasingTokens"
+          "note": "fixed length in milliseconds, requires positive",
+          "symbol": "Timed"
         },
         {
-          "note": "damping ratio and stiffness",
-          "symbol": "BasisSpring"
+          "note": "damping ratio and stiffness, both required positive",
+          "symbol": "Spring"
         },
         {
-          "note": "standard, bouncy, stiff",
-          "symbol": "BasisSpringTokens"
+          "note": "no interpolation, completes at the point of application",
+          "symbol": "Immediate"
         },
         {
-          "note": "per-element entrance delay",
-          "symbol": "STAGGER_DELAY"
+          "note": "one animatable property paired with its timing",
+          "symbol": "BasisMotionTrack"
         },
         {
-          "note": "reduced-motion aware duration",
-          "symbol": "motionDuration"
+          "note": "a token resolved to one or more tracks, requires non-empty",
+          "symbol": "BasisResolvedMotion"
+        },
+        {
+          "note": "accessibility constraints that resolution must satisfy",
+          "symbol": "BasisMotionConstraints"
         }
       ],
-      "purpose": "Owns the millisecond duration scale, cubic-bezier easing curves, spring configurations, the stagger delay, and the function that collapses durations under reduced motion. Curves are plain data, not Compose animation spec types.",
+      "purpose": "Owns the motion vocabulary: the semantic contracts a component asks for, the animatable properties a track drives, the timing shapes a resolved motion takes, the multi-track resolved value and the constraints resolution must satisfy. It exposes no durations, easings or spring presets, and there is no reduced-motion duration function.",
       "rationale": null,
       "related": [
         "pkg-tokens-spacing",
         "pkg-tokens-typography"
       ],
-      "summary": "Duration, easing, spring and stagger tokens plus reduced-motion duration handling",
+      "summary": "Semantic motion contracts, property and timing vocabulary, multi-track resolved motion, motion constraints",
       "title": "Motion tokens"
     },
-    "pkg-tokens-shape": {
+    "pkg-tokens-radius": {
       "anchors": [
         {
-          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/shape/ShapeTokens.kt",
-          "sha": "7a74c4650fe483ebc3d3498af377a4eb1541adae"
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/radius/RadiusTokens.kt",
+          "sha": "fc125f9302eef83126a71c233c819a410e183a1a"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/radius/BasisCornerShape.kt",
+          "sha": "42f9f96dc0dfb954201b2b724d69f14c5bf03c19"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "Radius values are dp typed as Int, not Float, unlike typography which uses Float sp.",
-        "The scale function is not purely proportional: under the pill roundness every radius except the none entry becomes full, and under the sharp roundness everything collapses to zero.",
-        "The factors behind Sharp, Soft and Round are literals inside the function, not token fields, so roundness strength is not tunable.",
-        "The pill branch in the factor expression is unreachable, since pill returns earlier."
+        "The scale carries no roundness knob and no scale function: there is no way here to collapse every level toward zero or push every level to full, so roundness is not a property of this package any more.",
+        "There is no border stroke width scale in this package, so a component that needs one has no token to reach for.",
+        "RADIUS_INDEXED_LEVEL_COUNT deliberately excludes None and Full, so it does not equal BasisRadius.entries.size and must not be used as an ordinal bound.",
+        "The corner order is top-start, top-end, bottom-end, bottom-start, so the two helpers that round only one pair of corners place the values in the non-obvious slots."
       ],
       "invariants": [
         {
-          "rule": "Sizes come from the token scale rather than per-component private constants",
-          "source": "AGENTS.md §2"
+          "rule": "A radius level is an identity rather than a number, so the same level resolves to different magnitudes in different themes without becoming a different decision",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/radius/RadiusTokens.kt"
         },
         {
-          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
-          "source": "AGENTS.md §2"
+          "rule": "None and Full are boundary concepts, not indexed magnitudes: Full is derived from the bounds being drawn rather than from a distance",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/radius/RadiusTokens.kt"
+        },
+        {
+          "rule": "Basis does not need a separate public token per component-shaped outline for asymmetric shapes to be expressible",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/radius/BasisCornerShape.kt"
         },
         {
           "rule": "Public API names carry the Basis prefix",
@@ -640,76 +702,66 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "sealed set, fixed dp or full",
+          "note": "None and Full around Level1 through Level8",
           "symbol": "BasisRadius"
         },
         {
-          "note": "none through xl, plus full",
-          "symbol": "BasisRadiusTokens"
+          "note": "indexed levels, excluding the boundary concepts",
+          "symbol": "RADIUS_INDEXED_LEVEL_COUNT"
         },
         {
-          "note": "none, thin, medium, thick",
-          "symbol": "BasisBorderWidthTokens"
-        },
-        {
-          "note": "four independent corner radii",
+          "note": "one radius per corner, in start and end pairs",
           "symbol": "BasisCornerShape"
         },
         {
-          "note": "Sharp, Soft, Round, Pill",
-          "symbol": "BasisRoundness"
+          "note": "the same radius on all four corners",
+          "symbol": "uniform"
         },
         {
-          "note": "scaled radius set",
-          "symbol": "BasisRadiusScale"
+          "note": "top corners only, for a bottom sheet",
+          "symbol": "topRounded"
         },
         {
-          "note": "applies roundness to the scale",
-          "symbol": "radiusScale"
-        },
-        {
-          "note": "top corners only",
-          "symbol": "shapeTopRounded"
-        },
-        {
-          "note": "bottom corners only",
-          "symbol": "shapeBottomRounded"
-        },
-        {
-          "note": "all four corners independently",
-          "symbol": "cornerShape"
+          "note": "bottom corners only, for a top banner",
+          "symbol": "bottomRounded"
         }
       ],
-      "purpose": "Owns the corner radius scale, the border stroke width scale, the roundness knob, and the functions that scale a radius set by roundness or build a per-corner shape. It does not know about the Compose shape type.",
+      "purpose": "Owns the corner radius scale as an identity vocabulary plus the per-corner shape value that composes radius decisions into a concrete outline. It declares no magnitudes and no border stroke width scale, and it does not know about the Compose shape type. Full is a boundary concept derived from the bounds being drawn, not the largest step on the scale.",
       "rationale": null,
       "related": [
         "pkg-tokens-theme",
         "pkg-tokens-typography"
       ],
-      "summary": "Radius and border-width scales, the roundness enum and per-corner shape builders",
-      "title": "Shape tokens"
+      "summary": "Radius levels with two boundary concepts, and the per-corner shape that composes them",
+      "title": "Radius tokens"
     },
-    "pkg-tokens-sizing": {
+    "pkg-tokens-size": {
       "anchors": [
         {
-          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/sizing/SizingTokens.kt",
-          "sha": "7b2f6d6abbb7644690e355cc1c241ee08ccb083a"
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/size/SizeTokens.kt",
+          "sha": "73c1d938d74c3951468a061ef4add1904e519e2e"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "Every value is a plain Int, not a Dp, so a caller must append .dp; there is no typed scale object to hold the conversion.",
-        "The scales are separate top-level objects rather than one nested Sizing object, so importing the icon scale does not bring the touch target or control heights into scope.",
-        "MIN_TOUCH_TARGET and CONTROL_HEIGHT_LG are both 48 by design, so a control at the large height already meets the touch target floor."
+        "The KDoc names the units as density-independent pixels, but the level enums declare no magnitude at all and BasisControlSize uses Int, so there is no dp type anywhere in the package and a caller converting a level must append .dp itself.",
+        "This package has no minimum touch target token even though AGENTS.md section 2 refers to a Sizing token group that includes one, so the accessibility floor referenced by that rule is not currently a token.",
+        "Each scale is a separate top-level enum rather than entries of one nested group, so importing the icon levels does not bring avatar, dot or control levels into scope.",
+        "BasisControlSize is the shape of the composite rather than a filled-in value: which numbers it takes for a theme is a resolved decision, so constructing one here picks magnitudes a caller does not own.",
+        "Status meaning around a dot such as positive, negative or caution belongs to the Color family, so only the physical magnitude would live in this package."
       ],
       "invariants": [
         {
-          "rule": "Sizes come from the Sizing token group rather than per-component private size constants",
-          "source": "AGENTS.md §2"
+          "rule": "A control size is one coherent dimensional relationship: the height, both paddings and the icon size change together, which is why they are one token rather than separate spacing and icon tokens",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/size/SizeTokens.kt"
         },
         {
-          "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
-          "source": "AGENTS.md §2"
+          "rule": "The scalar families stop at the identity; the magnitude each level resolves to belongs to Theme Resolution",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/size/SizeTokens.kt"
+        },
+        {
+          "rule": "The control's minimum height says nothing about the interactive hit area, which is governed by accessibility requirements rather than by this token",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/size/SizeTokens.kt"
         },
         {
           "rule": "Public API names carry the Basis prefix",
@@ -719,71 +771,52 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "minimum size for any interactive element",
-          "symbol": "BasisTouchTargetTokens"
+          "note": "four icon size levels",
+          "symbol": "SizeIcon"
         },
         {
-          "note": "48, the accessibility floor",
-          "symbol": "MIN_TOUCH_TARGET"
+          "note": "five avatar size levels",
+          "symbol": "SizeAvatar"
         },
         {
-          "note": "the icon scale, 16 through 32",
-          "symbol": "BasisIconSizeTokens"
+          "note": "three dot size levels",
+          "symbol": "SizeDot"
         },
         {
-          "note": "representative step of the icon scale",
-          "symbol": "ICON_SIZE_MD"
+          "note": "three control size levels",
+          "symbol": "SizeControl"
         },
         {
-          "note": "heights for buttons, chips and similar controls",
-          "symbol": "BasisControlHeightTokens"
-        },
-        {
-          "note": "representative step of the control scale",
-          "symbol": "CONTROL_HEIGHT_MD"
-        },
-        {
-          "note": "the avatar scale, 24 through 72",
-          "symbol": "BasisAvatarSizeTokens"
-        },
-        {
-          "note": "representative step of the avatar scale",
-          "symbol": "AVATAR_SIZE_MD"
-        },
-        {
-          "note": "the status dot scale, 6 through 10",
-          "symbol": "BasisDotSizeTokens"
-        },
-        {
-          "note": "representative step of the dot scale",
-          "symbol": "DOT_SIZE_MD"
+          "note": "min height, horizontal and vertical padding, icon size",
+          "symbol": "BasisControlSize"
         }
       ],
-      "purpose": "Owns the Sizing token group referenced by AGENTS.md §2: the minimum interactive touch target plus the icon, control height, avatar and status dot scales. Each scale is its own object of Int dp constants, so a component depends only on the scale it actually uses. It holds no behavior and no per-component size constants.",
+      "purpose": "Owns the size scale vocabularies: separate level enums for icon, avatar, status dot and control sizes, plus the composite value a control size resolves to. The scalar families stop at the identity and carry no magnitudes, which Theme Resolution supplies. There is no minimum touch target token here, so the accessibility hit-area floor is not a property of this package.",
       "rationale": null,
       "related": [
         "pkg-tokens-spacing",
-        "pkg-tokens-shape"
+        "pkg-tokens-radius"
       ],
-      "summary": "The sizing group: minimum touch target, icon, control height, avatar and status dot scales, all in dp",
-      "title": "Sizing tokens"
+      "summary": "Level vocabularies for icon, avatar, dot and control sizes, plus the composite control dimensions",
+      "title": "Size tokens"
     },
     "pkg-tokens-spacing": {
       "anchors": [
         {
           "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/spacing/SpacingTokens.kt",
-          "sha": "14b043931d2539ee5d867ae01b80b5fec863cd42"
+          "sha": "00e423da6e2dd5fba61c81dd73ad9305ba7df382"
         }
       ],
       "depends_on": [],
       "gotchas": [
-        "The scale function clamps the factor to a narrow range and rounds to the nearest Int, so spacing is integer dp and small values can collapse to the same number.",
-        "The clamp bounds are literals inside the function, so they are not tunable without editing this file."
+        "The levels are named ordinally and carry no magnitude, so a consumer reading only this package cannot tell how wide Level4 is; that number comes from Theme Resolution.",
+        "Level indices are shared with the radius and typography scales as a naming convention but are unrelated decisions, so Level4 here is not the same width as Level4 in the radius package.",
+        "SPACING_LEVEL_COUNT is a separate top-level constant rather than BasisSpacing.entries.size, so adding or removing an entry without updating the constant leaves the two disagreeing."
       ],
       "invariants": [
         {
-          "rule": "Sizes come from the token scale rather than per-component private constants",
-          "source": "AGENTS.md §2"
+          "rule": "A level is an identity, not a magnitude: the dp value each level resolves to is not declared in the tokens module",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/spacing/SpacingTokens.kt"
         },
         {
           "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
@@ -797,25 +830,29 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "the dp scale, 2 through 64",
-          "symbol": "BasisSpacingTokens"
+          "note": "one level of the scale, Level1 through Level8",
+          "symbol": "BasisSpacing"
         },
         {
-          "note": "representative step of the scale",
-          "symbol": "SPACE_16"
+          "note": "the smallest step, for tight pairings within a group",
+          "symbol": "Level1"
         },
         {
-          "note": "scales and rounds a dp value",
-          "symbol": "spacingScale"
+          "note": "the largest step, for hero separation and empty-state margins",
+          "symbol": "Level8"
+        },
+        {
+          "note": "number of levels in the scale",
+          "symbol": "SPACING_LEVEL_COUNT"
         }
       ],
-      "purpose": "Owns the spacing scale in dp and the function that scales a spacing value by a user-driven factor within fixed bounds. It is the whole package: one file, one object, one function.",
+      "purpose": "Owns the spacing scale as an eight-level identity vocabulary and the count of those levels. The package holds no dp magnitude and no scaling function; which distance a level resolves to is a decision made by Theme Resolution, not by this token.",
       "rationale": null,
       "related": [
         "pkg-tokens-typography",
-        "pkg-tokens-shape"
+        "pkg-tokens-size"
       ],
-      "summary": "The dp spacing scale and the bounded function that scales a spacing value for user settings",
+      "summary": "The indexed spacing scale: eight levels plus its level count, with no magnitudes of its own",
       "title": "Spacing tokens"
     },
     "pkg-tokens-theme": {
@@ -835,14 +872,9 @@
       ],
       "depends_on": [
         "pkg-tokens-color",
-        "pkg-tokens-shape",
         "pkg-tokens-typography"
       ],
       "gotchas": [
-        "The theme config validates in its own init block: at least one seed hue is required, and the two-tone and three-tone vibes additionally require 2 and 3 seed hues.",
-        "The scheme derivation returns a Pair ordered light first, dark second, not a data class with named fields.",
-        "Defaults reproduce the library's stock look; the config's KDoc says tuning is only worth touching when the stock look needs retuning, not for ordinary theming.",
-        "The contrast validator only checks five foreground/background pairs, so a passing result is not a full accessibility audit.",
         "This node's directory holds four files, but the fourth (GradientPresets.kt) is anchored by the color node, so a for-path query on this directory returns this node and the color node."
       ],
       "invariants": [
@@ -926,20 +958,42 @@
     "pkg-tokens-typography": {
       "anchors": [
         {
-          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/TypographyTokens.kt",
-          "sha": "368655e2423c908ce8e4248170885b9d05f2d660"
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisFontFamily.kt",
+          "sha": "f3c934ac07a5269c5ede6156c4047fe19ec4815b"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisFontFamilyAssignment.kt",
+          "sha": "7847fa49861cca04a821382a9395ac472405a95f"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisTextStyle.kt",
+          "sha": "f07cb8dac31ac074520278ae77c801a63554455a"
+        },
+        {
+          "path": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisTypographyRole.kt",
+          "sha": "bbdefe8f3f7015cbf5d9b04a008b833b02723971"
         }
       ],
-      "depends_on": [],
+      "depends_on": [
+        "pkg-tokens-color"
+      ],
       "gotchas": [
-        "The type scale uses sp for size, line height and letter spacing, unlike spacing, shape and elevation which are dp.",
-        "The font family field of the text style is nullable and null means resolve from weight, so setting it to null does not force the default family.",
-        "The custom font family entry carries only a name string; resolving it to a real font is the main library's job."
+        "The color on a text style is a BasisColorRole, not a resolved color, so typography references the Color family rather than owning a color system; re-theming changes the values without the type scale changing.",
+        "A level index is ordinal within its own role and carries no cross-role meaning, so structure level 1 and content level 1 are unrelated decisions.",
+        "A level index is not bounds-checked by the constructor, which only rejects values below 1; whether the level exists is the separate exists property, and it is what the font-family assignment validates.",
+        "BasisFontFamilyAssignment rejects byLevel entries naming levels that do not exist, so constructing one is where an out-of-range index fails.",
+        "familyFor returns null when neither scope covers a token, meaning the resolver supplies a default rather than that no family applies.",
+        "The family reference carries only a name; resolving it to a renderable typeface is the platform layer's job, which is what keeps this package platform-independent.",
+        "The font weight constants are plain Int, not a platform weight type, and the text style sizes are Float sp."
       ],
       "invariants": [
         {
-          "rule": "Sizes come from the token scale rather than per-component private constants",
-          "source": "AGENTS.md §2"
+          "rule": "A level index is ordinal within its own role and carries no cross-role meaning",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisTypographyRole.kt"
+        },
+        {
+          "rule": "The vocabulary fixes which tokens exist, not the numbers they resolve to; Theme Resolution produces the magnitudes",
+          "source": "basis/tokens/src/main/java/io/github/alph_a07/basis/tokens/typography/BasisTextStyle.kt"
         },
         {
           "rule": "Token values are owned by the Basis Governance sheet and must not be invented or tweaked",
@@ -953,45 +1007,61 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "sealed set including a named custom entry",
+          "note": "value class over a family name, requires non-blank",
           "symbol": "BasisFontFamily"
         },
         {
-          "note": "default, display, mono references",
-          "symbol": "BasisFontFamilyTokens"
+          "note": "families by role and by level, level refines role",
+          "symbol": "BasisFontFamilyAssignment"
         },
         {
-          "note": "the four locked weights",
+          "note": "level scope over role scope, null defers to the resolver",
+          "symbol": "familyFor"
+        },
+        {
+          "note": "every level of a role with its family or null",
+          "symbol": "familiesFor"
+        },
+        {
+          "note": "structure, content, metadata",
+          "symbol": "BasisTypographyRole"
+        },
+        {
+          "note": "a role paired with a level index starting at 1",
+          "symbol": "BasisTypographyLevel"
+        },
+        {
+          "note": "whether the index falls within its role's level count",
+          "symbol": "exists"
+        },
+        {
+          "note": "levels in the structure role",
+          "symbol": "STRUCTURE_LEVEL_COUNT"
+        },
+        {
+          "note": "levels in the content role",
+          "symbol": "CONTENT_LEVEL_COUNT"
+        },
+        {
+          "note": "levels in the metadata role",
+          "symbol": "METADATA_LEVEL_COUNT"
+        },
+        {
+          "note": "the four locked weights, 400 through 700",
           "symbol": "BasisFontWeightTokens"
         },
         {
-          "note": "default display threshold",
-          "symbol": "WEIGHT_SEMIBOLD"
-        },
-        {
-          "note": "size, line height, weight, family, spacing",
+          "note": "family, size, line height, weight, letter spacing, color role",
           "symbol": "BasisTextStyle"
-        },
-        {
-          "note": "weight-driven family resolution",
-          "symbol": "resolvedFontFamily"
-        },
-        {
-          "note": "applies mono family and tabular figures",
-          "symbol": "tabularNums"
-        },
-        {
-          "note": "display through caption styles",
-          "symbol": "BasisTypeScale"
         }
       ],
-      "purpose": "Owns the closed set of font family references, the four font weights, the text style type with its resolution helpers, and the named type scale in sp. It holds no font resources and no Compose text style.",
+      "purpose": "Owns the typography vocabulary: what a family reference is, which roles and levels exist, how a theme assigns families across those tokens, the four font weights and the composite text style type. The vocabulary is complete here, but no magnitudes are; it holds no font resources, no Compose text style and no type scale.",
       "rationale": null,
       "related": [
         "pkg-tokens-theme",
-        "pkg-tokens-shape"
+        "pkg-tokens-radius"
       ],
-      "summary": "Font family set, locked weights, text style type and the sp type scale",
+      "summary": "Font family references, role and level vocabulary, font-family assignment and the composite text style type",
       "title": "Typography tokens"
     }
   },
