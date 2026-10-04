@@ -389,18 +389,84 @@ the Basis Color system.
 
 ## 3.3 Font family
 
-Basis has access to the Google Fonts collection.
+Basis supports multiple font families within one resolved theme.
 
-Theme Resolution derives assignment of one or more font families to
-typography tokens.
+A resolved theme may assign different font families to different
+typography roles and/or individual typography levels. For example:
 
-Font assignment may conceptually occur per role, per level, or both.
-Exact precedence between role-level and level-level assignment remains
-an implementation/detail question rather than a silently assumed
-hierarchy.
+``` text
+Structure  → expressive/display family
+Content    → reading/UI family
+Metadata   → compact/UI family
+```
 
-Consumers may override font assignment through Appearance, including
-consumer-provided fonts/BYOF.
+Multiple families are values of the existing typography tokens; they do
+not introduce additional typography roles.
+
+Theme Resolution derives the font-family assignment of typography
+tokens. Font-family assignment is therefore part of the resolved design
+decision rather than a rendering-only post-processing step.
+
+Font-family assignment supports two conceptual scopes:
+
+``` text
+Role scope
+    Typography.Structure
+    Typography.Content
+    Typography.Metadata
+
+Level scope
+    Typography.Structure.Level1
+    Typography.Structure.Level2
+    ...
+```
+
+For font-family assignment, the more-specific level scope refines a
+role-scoped assignment:
+
+``` text
+Level scope > Role scope > resolver default
+```
+
+For example:
+
+``` text
+Typography.Structure → DisplaySans
+Typography.Structure.Level1 → DisplaySerif
+```
+
+produces:
+
+``` text
+Structure.Level1 → DisplaySerif
+Structure.Level2 → DisplaySans
+Structure.Level3 → DisplaySans
+...
+```
+
+This specificity rule applies to font-family assignment. It does not
+create a universal precedence hierarchy for all Appearance properties.
+
+Identity, Mood, and Domain may influence font-family candidate generation
+or preference when the relevant typography node contract declares them
+applicable. In particular, `Mood.typographicExpressiveness` may influence
+the degree of typographic distinctiveness considered appropriate.
+
+Environment may constrain candidates when font availability or related
+capabilities are relevant to validity.
+
+Consumers may explicitly override exposed font-family assignments through
+Appearance, including consumer-provided fonts/BYOF. An explicit
+Appearance requirement remains subject to mandatory Constraints.
+
+Basis may use Google Fonts and consumer-provided font families as
+candidate sources. The token model remains platform-independent: it
+represents font-family decisions/references and does not own Android
+`Typeface`, Compose `FontFamily`, font loading, or platform registration.
+
+Semantic font-family assignment is distinct from platform glyph fallback.
+A fallback chain used for script/glyph coverage is not automatically a
+second semantic typography-family assignment.
 
 # 4. Spacing
 
