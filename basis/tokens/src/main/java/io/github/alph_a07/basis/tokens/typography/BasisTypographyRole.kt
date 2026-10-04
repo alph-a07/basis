@@ -64,4 +64,31 @@ data class BasisTypographyLevel(
             BasisTypographyRole.Content -> index <= CONTENT_LEVEL_COUNT
             BasisTypographyRole.Metadata -> index <= METADATA_LEVEL_COUNT
         }
+
+    companion object {
+        /**
+         * Every typography level the catalogue defines, in a stable order.
+         *
+         * Resolution and any value that must cover the whole catalogue iterate this list rather
+         * than assembling levels from each role's count separately, so a role that gains a level
+         * cannot be left out of a resolved scheme by accident.
+         */
+        fun all(): List<BasisTypographyLevel> =
+            BasisTypographyRole.entries.flatMap { role -> levelsOf(role) }
+
+        /**
+         * Every level of one role, in ascending level order.
+         *
+         * @param role The role whose levels to list.
+         * @return The levels that role defines.
+         */
+        fun levelsOf(role: BasisTypographyRole): List<BasisTypographyLevel> {
+            val count = when (role) {
+                BasisTypographyRole.Structure -> STRUCTURE_LEVEL_COUNT
+                BasisTypographyRole.Content -> CONTENT_LEVEL_COUNT
+                BasisTypographyRole.Metadata -> METADATA_LEVEL_COUNT
+            }
+            return (1..count).map { BasisTypographyLevel(role, it) }
+        }
+    }
 }
