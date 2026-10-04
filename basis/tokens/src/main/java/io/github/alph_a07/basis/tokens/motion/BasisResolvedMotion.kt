@@ -73,17 +73,3 @@ data class BasisResolvedMotion(
         }
     }
 }
-
-/**
- * Accessibility constraints that apply when resolving motion.
- *
- * These are inputs to resolution rather than tokens. Reduced motion is a requirement the user or
- * the platform imposes, not a design decision Basis offers for customization, so it is modeled
- * here as a constraint that resolution must satisfy rather than as a Motion token whose value can
- * be overridden.
- *
- * @property reducedMotion Whether the user has asked for reduced motion.
- */
-data class BasisMotionConstraints(
-    val reducedMotion: Boolean = false,
-)

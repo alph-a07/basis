@@ -86,18 +86,6 @@ class MotionTokensTest {
     }
 
     @Test
-    fun reducedMotionIsAnInputConstraintRatherThanAToken() {
-        assertTrue(BasisMotionConstraints(reducedMotion = true).reducedMotion)
-
-        val names = BasisMotionToken.entries.map { it.name.lowercase() }
-
-        assertTrue(
-            "Reduced motion is an accessibility constraint, not a motion contract",
-            names.none { "reduced" in it },
-        )
-    }
-
-    @Test
     fun immediateIsItsOwnTimingRatherThanAZeroDuration() {
         // Reduced motion must not be expressed as a zero-length animation, which is why Immediate is a
         // separate timing rather than Timed(0).
