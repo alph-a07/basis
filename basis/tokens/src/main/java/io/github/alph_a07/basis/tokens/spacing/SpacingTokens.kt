@@ -1,53 +1,39 @@
 package io.github.alph_a07.basis.tokens.spacing
 
-import kotlin.math.roundToInt
-
 /**
- * The spacing scale, in dp.
+ * One level of the spacing scale.
  *
- * Pairing convention: closely related items (an icon and its label, a chip and its badge) sit at
- * [SPACE_2] to [SPACE_8], while distinct groups are separated by [SPACE_16] or more.
+ * Spacing is an indexed hierarchy of reusable spatial magnitudes, and a level is the identity of
+ * one step in it. The identity is deliberately not a number: a name such as `Spacing16` would
+ * encode one concrete magnitude and stop being a design decision the moment a theme resolved that
+ * level differently. Components choose which magnitude applies where; Basis does not name spacing
+ * tokens after the places they are used.
  */
-object BasisSpacingTokens {
-    /** Micro spatial step (2dp) for tight element pairings, icon-text spacing, and compact badges. */
-    const val SPACE_2 = 2
+enum class BasisSpacing {
+    /** The smallest step, for tight pairings within a single group. */
+    Level1,
 
-    /** Extra-compact spatial step (4dp) for inline tag padding, nested chips, and tight form gutters. */
-    const val SPACE_4 = 4
+    /** The second step, for inline padding and nested groups. */
+    Level2,
 
-    /** Compact spatial step (8dp) for icon button padding, related element gaps, and list item spacing. */
-    const val SPACE_8 = 8
+    /** The third step, for icon-to-label spacing and button interior padding. */
+    Level3,
 
-    /** Moderate spatial step (12dp) for button padding, card interior spacing, and grouped form items. */
-    const val SPACE_12 = 12
+    /** The fourth step, for standard screen margins and card padding. */
+    Level4,
 
-    /** Base spatial step (16dp) for standard screen margins, card padding, and container separation. */
-    const val SPACE_16 = 16
+    /** The fifth step, for separation between distinct groups. */
+    Level5,
 
-    /** Generous spatial step (24dp) for major section spacing, header gaps, and card group separation. */
-    const val SPACE_24 = 24
+    /** The sixth step, for layout gutters and content section breaks. */
+    Level6,
 
-    /** Large spatial step (32dp) for layout gutters and prominent content section breaks. */
-    const val SPACE_32 = 32
+    /** The seventh step, for major section transitions and expansive padding. */
+    Level7,
 
-    /** Extra-large spatial step (48dp) for major screen section transitions and expansive view padding. */
-    const val SPACE_48 = 48
-
-    /** Maximum spatial step (64dp) for hero header separation and empty-state layout margins. */
-    const val SPACE_64 = 64
+    /** The largest step, for hero separation and empty-state margins. */
+    Level8,
 }
 
-/**
- * Responsive spatial utility that scales a layout interval based on a user-driven factor.
- *
- * The factor is bounded so that a single call can never collapse related elements together or blow
- * apart a layout, no matter what the platform reports.
- *
- * @param space The base spacing value in dp.
- * @param factor The scaling factor, typically derived from user settings such as font size or display zoom.
- * @return The scaled spacing value in dp, rounded to the nearest integer.
- */
-fun spacingScale(space: Int, factor: Float): Int {
-    val bounded = factor.coerceIn(0.85f, 1.3f)
-    return (space * bounded).roundToInt()
-}
+/** The number of levels in the spacing scale. */
+const val SPACING_LEVEL_COUNT = 8
