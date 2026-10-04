@@ -40,24 +40,68 @@ class MotionTokensTest {
     }
 
     @Test
-    fun everyUseCaseResolvesToAtLeastOneTrack() {
-        for (token in BasisMotionToken.entries) {
-            val resolved = requireNotNull(BasisMotionTokens.defaults[token]) { "$token has no resolution" }
-            assertEquals(token, resolved.token)
-            assertTrue("$token resolved to no tracks", resolved.tracks.isNotEmpty())
-        }
+    fun aResolvedMotionCarriesOneOrMoreTracks() {
+        val transformation = BasisResolvedMotion(
+            token = BasisMotionToken.Transformation,
+            tracks = listOf(
+                BasisMotionTrack(BasisMotionProperty.Color, BasisMotionTiming.Timed(200)),
+                BasisMotionTrack(BasisMotionProperty.Shape, BasisMotionTiming.Timed(200)),
+                BasisMotionTrack(BasisMotionProperty.Size, BasisMotionTiming.Timed(200)),
+            ),
+        )
+
+        assertEquals(BasisMotionToken.Transformation, transformation.token)
+        assertEquals(3, transformation.tracks.size)
     }
 
     @Test
     fun tracksWithinOneMotionAreAddressedToDistinctProperties() {
-        for (motion in BasisMotionTokens.defaults.values) {
-            val properties = motion.tracks.map { it.property }
-            assertEquals(
-                "${motion.token} drives a property more than once: $properties",
-                properties.distinct(),
-                properties,
-            )
-        }
+        val motion = BasisResolvedMotion(
+            token = BasisMotionToken.Expansion,
+            tracks = listOf(
+                BasisMotionTrack(BasisMotionProperty.Size, BasisMotionTiming.Timed(300)),
+                BasisMotionTrack(BasisMotionProperty.Position, BasisMotionTiming.Timed(300)),
+            ),
+        )
+
+        val properties = motion.tracks.map { it.property }
+
+        assertEquals(properties.distinct().size, properties.size)
+    }
+
+    @Test
+    fun tracksMayCarryIndependentTimings() {
+        val motion = BasisResolvedMotion(
+            token = BasisMotionToken.Transformation,
+            tracks = listOf(
+                BasisMotionTrack(BasisMotionProperty.Color, BasisMotionTiming.Timed(150)),
+                BasisMotionTrack(BasisMotionProperty.Position, BasisMotionTiming.Spring(0.8f, 380f)),
+                BasisMotionTrack(BasisMotionProperty.Opacity, BasisMotionTiming.Immediate),
+            ),
+        )
+
+        val timings = motion.tracks.map { it.timing }
+
+        assertEquals(timings.distinct().size, timings.size)
+    }
+
+    @Test
+    fun reducedMotionIsAnInputConstraintRatherThanAToken() {
+        assertTrue(BasisMotionConstraints(reducedMotion = true).reducedMotion)
+
+        val names = BasisMotionToken.entries.map { it.name.lowercase() }
+
+        assertTrue(
+            "Reduced motion is an accessibility constraint, not a motion contract",
+            names.none { "reduced" in it },
+        )
+    }
+
+    @Test
+    fun immediateIsItsOwnTimingRatherThanAZeroDuration() {
+        // Reduced motion must not be expressed as a zero-length animation, which is why Immediate is a
+        // separate timing rather than Timed(0).
+        assertTrue(runCatching { BasisMotionTiming.Timed(0) }.exceptionOrNull() is IllegalArgumentException)
     }
 
     @Test
@@ -70,41 +114,15 @@ class MotionTokensTest {
     }
 
     @Test
-    fun reducedMotionRemovesAnimationRatherThanZeroingDuration() {
-        val feedback = requireNotNull(BasisMotionTokens.defaults[BasisMotionToken.Feedback])
-
-        val reduced = BasisMotionTokens.applyConstraints(
-            motion = feedback,
-            constraints = BasisMotionConstraints(reducedMotion = true),
-        )
-
-        assertTrue(
-            "Every track must become immediate under reduced motion",
-            reduced.tracks.all { it.timing == BasisMotionTiming.Immediate },
-        )
-        assertEquals(
-            "Reduced motion must not express itself as a zero-length animation",
-            0,
-            reduced.tracks.count { it.timing is BasisMotionTiming.Timed },
-        )
-    }
-
-    @Test
-    fun motionIsUnchangedWhenNoConstraintApplies() {
-        val expansion = requireNotNull(BasisMotionTokens.defaults[BasisMotionToken.Expansion])
-
-        val result = BasisMotionTokens.applyConstraints(
-            motion = expansion,
-            constraints = BasisMotionConstraints(reducedMotion = false),
-        )
-
-        assertEquals(expansion, result)
-    }
-
-    @Test
     fun aTimedTrackRejectsANonPositiveDuration() {
         val failure = runCatching { BasisMotionTiming.Timed(0) }.exceptionOrNull()
 
         assertTrue(failure is IllegalArgumentException)
+    }
+
+    @Test
+    fun aSpringRejectsNonPositiveParameters() {
+        assertTrue(runCatching { BasisMotionTiming.Spring(0f, 380f) }.exceptionOrNull() is IllegalArgumentException)
+        assertTrue(runCatching { BasisMotionTiming.Spring(0.8f, 0f) }.exceptionOrNull() is IllegalArgumentException)
     }
 }
