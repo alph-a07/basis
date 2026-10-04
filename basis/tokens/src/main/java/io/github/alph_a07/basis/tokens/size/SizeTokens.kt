@@ -85,12 +85,3 @@ data class BasisControlSize(
     val verticalPadding: Int,
     val iconSize: Int,
 )
-
-/*
- * The scalar families deliberately stop at the identity. The magnitude each level resolves to
- * belongs to Theme Resolution: a level names a reusable dimension, and which dimension that is for
- * a given theme is a resolved decision rather than a property of the token.
- *
- * Status meaning around a dot — positive, negative, caution — belongs to the Color family; only
- * the physical magnitude would live here.
- */
