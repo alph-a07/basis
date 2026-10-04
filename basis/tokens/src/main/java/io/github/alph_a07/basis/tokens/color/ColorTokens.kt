@@ -1,170 +1,109 @@
 package io.github.alph_a07.basis.tokens.color
 
-/** A set of colors for the surface of the UI. */
+/** The background colors of a scheme, one per surface role. */
 data class SurfaceColors(
-    /** Default background color for baseline application screens and primary containers. */
+    /** Baseline background for application screens and primary containers. */
     val surface: BasisColor,
-    /** Raised container background color for cards, bottom sheets, and dialog surfaces. */
-    val surfaceElevated: BasisColor,
-    /** Recessed background color for search inputs, well containers, and sunken tracks. */
-    val surfaceRecessed: BasisColor,
-    /** Contrasting dark or inverted surface color for snackbars, banners, and floating tooltips. */
-    val surfaceInverse: BasisColor,
-    /** Container background color applied to disabled or inactive interactive components. */
-    val surfaceDisabled: BasisColor,
-    /** Semi-transparent backdrop color used to dim background content beneath modal windows. */
-    val overlayBackdrop: BasisColor,
-    /** Semi-transparent hover state tint layered over container surfaces on cursor hover. */
-    val overlayHover: BasisColor,
-    /** Starting color and opacity for progressive backdrop gradients on hero media surfaces. */
-    val backdropGradientStart: BasisColor,
-    /** Ending color and opacity for progressive backdrop gradients to maintain text contrast. */
-    val backdropGradientEnd: BasisColor,
+    /** Raised container background for cards, bottom sheets and dialog surfaces. */
+    val elevated: BasisColor,
+    /** Recessed background for search inputs, well containers and sunken tracks. */
+    val recessed: BasisColor,
+    /** Contrasting background for snackbars, banners and floating tooltips. */
+    val inverse: BasisColor,
 )
 
-/** A set of colors for content (text, etc.) in the UI. */
+/** The text colors of a scheme, one per content role. */
 data class ContentColors(
-    /** Primary typography and iconography color for maximum hierarchy and legibility. */
+    /** Primary text color, for maximum hierarchy and legibility. */
     val content: BasisColor,
-    /** Secondary text color for supporting descriptions, subtitles, and secondary labels. */
-    val contentMuted: BasisColor,
-    /** Tertiary text color for placeholders, metadata captions, and disabled hints. */
-    val contentSubtle: BasisColor,
-    /** Low-contrast text color applied to inactive, non-interactive typography. */
-    val contentDisabled: BasisColor,
-    /** High-contrast text color designed for display on dark or inverted surface containers. */
-    val contentInverse: BasisColor,
-    /** Text and icon color providing high-contrast readability over primary action fills. */
-    val contentOnInteractive: BasisColor,
-    /** Text and icon color displayed on top of selected container backgrounds. */
-    val contentOnSelected: BasisColor,
+    /** Supporting text color for secondary descriptions, subtitles and labels. */
+    val muted: BasisColor,
+    /** High-contrast text color for use on [SurfaceColors.inverse]. */
+    val inverse: BasisColor,
 )
 
-/** A set of colors for icons in the UI. */
+/** The icon colors of a scheme, one per icon role. */
 data class IconColors(
-    /** Primary color for standalone, navigation, and functional icons. */
+    /** Primary color for standalone, navigation and functional icons. */
     val icon: BasisColor,
     /** Secondary icon color for supporting actions and non-critical glyphs. */
-    val iconMuted: BasisColor,
-    /** Low-emphasis icon color for tertiary visual cues and decorative icons. */
-    val iconSubtle: BasisColor,
-    /** Muted icon color indicating disabled or inactive functionality. */
-    val iconDisabled: BasisColor,
-    /** High-contrast icon color for use against inverted or dark surface backgrounds. */
-    val iconInverse: BasisColor,
-    /** Icon color ensuring optimal contrast when placed atop primary interactive buttons. */
-    val iconOnInteractive: BasisColor,
-    /** Icon color providing visual clarity when placed within selected container states. */
-    val iconOnSelected: BasisColor,
-) {
-    companion object {
-        /** Creates an [IconColors] instance by aliasing the corresponding colors from a [ContentColors] instance. */
-        fun aliasing(content: ContentColors) = IconColors(
-            icon = content.content,
-            iconMuted = content.contentMuted,
-            iconSubtle = content.contentSubtle,
-            iconDisabled = content.contentDisabled,
-            iconInverse = content.contentInverse,
-            iconOnInteractive = content.contentOnInteractive,
-            iconOnSelected = content.contentOnSelected,
-        )
-    }
-}
+    val muted: BasisColor,
+    /** High-contrast icon color for use on [SurfaceColors.inverse]. */
+    val inverse: BasisColor,
+)
 
-/** A set of colors for borders in the UI. */
+/** The border colors of a scheme, one per border role. */
 data class BorderColors(
-    /** Default stroke color for structural dividers, container outlines, and boundaries. */
+    /** Default stroke color for structural dividers, outlines and boundaries. */
     val border: BasisColor,
-    /** Subtle border color for hairline dividers and secondary component outlines. */
-    val borderMuted: BasisColor,
-    /** High-contrast border color for input borders, focused containers, and prominent frames. */
-    val borderStrong: BasisColor,
-    /** Muted boundary stroke color indicating disabled component perimeters. */
-    val borderDisabled: BasisColor,
-)
-
-/** A set of colors for interactive elements in the UI. */
-data class InteractiveColors(
-    /** Primary brand action color for key call-to-action buttons and interactive controls. */
-    val interactive: BasisColor,
-    /** State tint applied to primary action surfaces on pointer hover. */
-    val interactiveHover: BasisColor,
-    /** State tint applied to primary action surfaces on click or press. */
-    val interactivePressed: BasisColor,
-    /** Inactive background fill color for disabled buttons and controls. */
-    val interactiveDisabled: BasisColor,
-    /** Tonal, low-emphasis background fill for secondary and tertiary action buttons. */
-    val interactiveMuted: BasisColor,
-)
-
-/** A set of colors for selected elements in the UI. */
-data class SelectedColors(
-    /** Fill color highlighting active selection across tabs, filter chips, and segmented controls. */
-    val selected: BasisColor,
-    /** Soft tonal background fill for secondary selected items and resting active pills. */
-    val selectedMuted: BasisColor,
-    /** Border stroke accentuating active selection on cards, chips, and input controls. */
-    val selectedBorder: BasisColor,
-)
-
-/** A set of colors for status indicators in the UI. */
-data class StatusColorSet(
-    /** Icon color for the status. */
-    val icon: BasisColor,
-    /** Text color for the status. */
-    val text: BasisColor,
-    /** Tinted background surface fill for the status. */
-    val surface: BasisColor,
-    /** Border stroke framing the status. */
-    val border: BasisColor,
-)
-
-/** A set of colors for different status types in the UI. */
-data class StatusColors(
-    /** Colors indicating successful operations, completion, and positive feedback. */
-    val positive: StatusColorSet,
-    /** Colors signaling destructive actions, errors, and system failure warnings. */
-    val negative: StatusColorSet,
-    /** Colors representing warnings, non-blocking cautions, and attention alerts. */
-    val caution: StatusColorSet,
-    /** Colors indicating general information, neutral tips, and help guidance. */
-    val info: StatusColorSet,
-)
-
-/** A set of colors for skeleton loading states in the UI. */
-data class SkeletonColors(
-    /**
-     * Base placeholder background color for loading skeletons before content resolves.
-     *
-     * The derived scheme sets this to [SurfaceColors.surfaceRecessed], so a skeleton reads as a
-     * genuine container rather than as a hole in the layout.
-     */
-    val skeleton: BasisColor,
-    /** Animated shimmer highlight band sweeping across loading skeleton shapes. */
-    val skeletonHighlight: BasisColor,
+    /** Hairline divider color for secondary outlines. */
+    val muted: BasisColor,
+    /** High-contrast stroke color for input borders and prominent frames. */
+    val strong: BasisColor,
+    /** High-contrast stroke color for boundaries drawn on [SurfaceColors.inverse]. */
+    val inverse: BasisColor,
 )
 
 /**
- * The complete color scheme for a Basis theme.
- * This includes all the color tokens used in the design system.
+ * The colors marking a selected item.
+ *
+ * Selection is a context rather than a color role: the colors themselves are ordinary roles, and
+ * a component reaches for them by describing "the selected item" rather than by naming a
+ * component-shaped color.
  */
-data class BasisColorScheme(
-    /** A set of colors for the surface of the UI. */
-    val surface: SurfaceColors,
-    /** A set of colors for the content (text, etc.) of the UI. */
-    val content: ContentColors,
-    /** A set of colors for the icons in the UI. */
-    val icon: IconColors,
-    /** A set of colors for the borders in the UI. */
-    val border: BorderColors,
-    /** A set of colors for the interactive elements in the UI. */
-    val interactive: InteractiveColors,
-    /** A set of colors for the selected elements in the UI. */
-    val selected: SelectedColors,
-    /** High-visibility accessibility outline indicating active keyboard or assistive focus. */
-    val focusRing: BasisColor,
-    /** A set of colors for different status types in the UI. */
-    val status: StatusColors,
-    /** A set of colors for skeleton loading states in the UI. */
-    val skeleton: SkeletonColors,
+data class SelectionColors(
+    /** Fill color marking the selected item. */
+    val surface: BasisColor,
+    /** Content color drawn on top of [surface]. */
+    val content: BasisColor,
+    /** Stroke color emphasizing the selected item's boundary. */
+    val border: BasisColor,
+)
+
+/** The focus indicator color of a scheme. */
+data class FocusColors(
+    /**
+     * High-visibility outline indicating active keyboard or assistive-technology focus.
+     *
+     * Focus is its own token rather than a border state because an indicator must be able to
+     * appear on any component without depending on that component's border color.
+     */
+    val ring: BasisColor,
+)
+
+/**
+ * The colors expressing one status.
+ *
+ * A status is semantic meaning and is distinct from interaction state, so it carries its own
+ * presentation roles rather than borrowing the surface and content roles.
+ */
+data class StatusColorSet(
+    /** Background surface tinting a region as carrying this status. */
+    val surface: BasisColor,
+    /** Text color for a label carrying this status. */
+    val content: BasisColor,
+    /** Icon color for a glyph carrying this status. */
+    val icon: BasisColor,
+    /** Border color framing this status. */
+    val border: BasisColor,
+)
+
+/** The four status meanings a scheme expresses. */
+data class StatusColors(
+    /** Successful completion and positive feedback. */
+    val positive: StatusColorSet,
+    /** Failure, errors and destructive outcomes. */
+    val negative: StatusColorSet,
+    /** Non-blocking warnings and attention alerts. */
+    val caution: StatusColorSet,
+    /** Neutral information, tips and help. */
+    val info: StatusColorSet,
+)
+
+/** The gradient tokens of a scheme. */
+data class GradientColors(
+    /** The brand gradient, carrying the theme's identity. */
+    val brand: BasisGradient,
+    /** The subtle surface wash, for large fills that would otherwise read as flat. */
+    val surface: BasisGradient,
 )
