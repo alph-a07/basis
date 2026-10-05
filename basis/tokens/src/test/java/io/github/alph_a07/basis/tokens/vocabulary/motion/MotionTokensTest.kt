@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.motion
+package io.github.alph_a07.basis.tokens.vocabulary.motion
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -41,7 +41,7 @@ class MotionTokensTest {
 
     @Test
     fun aResolvedMotionCarriesOneOrMoreTracks() {
-        val transformation = BasisResolvedMotion(
+        val transformation = ResolvedMotion(
             token = BasisMotionToken.Transformation,
             tracks = listOf(
                 BasisMotionTrack(BasisMotionProperty.Color, BasisMotionTiming.Timed(200)),
@@ -56,7 +56,7 @@ class MotionTokensTest {
 
     @Test
     fun tracksWithinOneMotionAreAddressedToDistinctProperties() {
-        val motion = BasisResolvedMotion(
+        val motion = ResolvedMotion(
             token = BasisMotionToken.Expansion,
             tracks = listOf(
                 BasisMotionTrack(BasisMotionProperty.Size, BasisMotionTiming.Timed(300)),
@@ -71,7 +71,7 @@ class MotionTokensTest {
 
     @Test
     fun tracksMayCarryIndependentTimings() {
-        val motion = BasisResolvedMotion(
+        val motion = ResolvedMotion(
             token = BasisMotionToken.Transformation,
             tracks = listOf(
                 BasisMotionTrack(BasisMotionProperty.Color, BasisMotionTiming.Timed(150)),
@@ -95,7 +95,7 @@ class MotionTokensTest {
     @Test
     fun aResolvedMotionWithoutTracksIsRejected() {
         val failure = runCatching {
-            BasisResolvedMotion(BasisMotionToken.Feedback, emptyList())
+            ResolvedMotion(BasisMotionToken.Feedback, emptyList())
         }.exceptionOrNull()
 
         assertTrue(failure is IllegalArgumentException)

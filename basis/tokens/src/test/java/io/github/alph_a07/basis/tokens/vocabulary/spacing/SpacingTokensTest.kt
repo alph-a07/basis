@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.spacing
+package io.github.alph_a07.basis.tokens.vocabulary.spacing
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

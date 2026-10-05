@@ -1,6 +1,6 @@
-package io.github.alph_a07.basis.tokens.typography
+package io.github.alph_a07.basis.tokens.vocabulary.typography
 
-import io.github.alph_a07.basis.tokens.color.BasisColorRole
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColorRole
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue

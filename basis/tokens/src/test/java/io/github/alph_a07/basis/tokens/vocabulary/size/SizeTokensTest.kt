@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.size
+package io.github.alph_a07.basis.tokens.vocabulary.size
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -10,19 +10,19 @@ import org.junit.Test
 class SizeTokensTest {
     @Test
     fun theFourFamiliesAreTheWholeVocabulary() {
-        assertTrue(SizeIcon.entries.isNotEmpty())
-        assertTrue(SizeAvatar.entries.isNotEmpty())
-        assertTrue(SizeDot.entries.isNotEmpty())
-        assertTrue(SizeControl.entries.isNotEmpty())
+        assertTrue(BasisIconSize.entries.isNotEmpty())
+        assertTrue(BasisAvatarSize.entries.isNotEmpty())
+        assertTrue(BasisDotSize.entries.isNotEmpty())
+        assertTrue(BasisControlSize.entries.isNotEmpty())
     }
 
     @Test
     fun eachFamilyCarriesItsOwnLevelCount() {
         val counts = listOf(
-            SizeIcon.entries.size,
-            SizeAvatar.entries.size,
-            SizeDot.entries.size,
-            SizeControl.entries.size,
+            BasisIconSize.entries.size,
+            BasisAvatarSize.entries.size,
+            BasisDotSize.entries.size,
+            BasisControlSize.entries.size,
         )
 
         assertTrue(
@@ -33,7 +33,7 @@ class SizeTokensTest {
 
     @Test
     fun levelsAreNamedByIndex() {
-        val names = SizeIcon.entries.map { it.name }
+        val names = BasisIconSize.entries.map { it.name }
 
         assertEquals(names.sorted(), names)
         assertTrue(names.all { it.startsWith("Level") })
@@ -41,7 +41,7 @@ class SizeTokensTest {
 
     @Test
     fun controlSizeCarriesItsWholeConstituentSet() {
-        val control = BasisControlSize(
+        val control = ResolvedControlSize(
             minHeight = 40,
             horizontalPadding = 16,
             verticalPadding = 8,
@@ -56,7 +56,7 @@ class SizeTokensTest {
 
     @Test
     fun controlConstituentsAreCarriedTogetherRatherThanSeparately() {
-        val control = BasisControlSize(
+        val control = ResolvedControlSize(
             minHeight = 48,
             horizontalPadding = 20,
             verticalPadding = 12,

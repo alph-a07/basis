@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.depth
+package io.github.alph_a07.basis.tokens.vocabulary.depth
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
