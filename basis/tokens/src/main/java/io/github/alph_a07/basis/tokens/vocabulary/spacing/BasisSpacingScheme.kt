@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.spacing
+package io.github.alph_a07.basis.tokens.vocabulary.spacing
 
 /**
  * The complete set of resolved spacing magnitudes for one theme.

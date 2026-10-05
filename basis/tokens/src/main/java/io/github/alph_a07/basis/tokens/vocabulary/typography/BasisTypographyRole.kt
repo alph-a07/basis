@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.typography
+package io.github.alph_a07.basis.tokens.vocabulary.typography
 
 /**
  * The typography role a token belongs to.

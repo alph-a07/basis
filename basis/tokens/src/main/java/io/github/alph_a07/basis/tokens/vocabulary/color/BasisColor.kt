@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.color
+package io.github.alph_a07.basis.tokens.vocabulary.color
 
 /**
  * Represents a color in ARGB format, where each channel is 8 bits.

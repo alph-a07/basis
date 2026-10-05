@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.color
+package io.github.alph_a07.basis.tokens.vocabulary.color
 
 /** The status meanings a scheme expresses. */
 enum class BasisStatus {

@@ -1,7 +1,7 @@
-package io.github.alph_a07.basis.tokens.size
+package io.github.alph_a07.basis.tokens.vocabulary.size
 
 /** One level of the icon size scale, in density-independent pixels. */
-enum class SizeIcon {
+enum class BasisIconSize {
     /** Dense rows, chips and inline glyphs. */
     Level1,
 
@@ -16,7 +16,7 @@ enum class SizeIcon {
 }
 
 /** One level of the avatar size scale, in density-independent pixels. */
-enum class SizeAvatar {
+enum class BasisAvatarSize {
     /** Dense lists and overlapping avatar groups. */
     Level1,
 
@@ -34,7 +34,7 @@ enum class SizeAvatar {
 }
 
 /** One level of the dot size scale, in density-independent pixels. */
-enum class SizeDot {
+enum class BasisDotSize {
     /** Badges and typing indicators. */
     Level1,
 
@@ -46,7 +46,7 @@ enum class SizeDot {
 }
 
 /** One level of the control size scale. */
-enum class SizeControl {
+enum class BasisControlSize {
     /** Compact controls, for chips and dense buttons. */
     Level1,
 
@@ -66,9 +66,11 @@ enum class SizeControl {
  * constituents therefore change together, which is what justifies modelling them as one token
  * rather than as separate spacing and icon tokens.
  *
- * This type is the shape of that composite, not a filled-in value. The magnitudes are produced by
- * Theme Resolution; which numbers they take for a given theme is a resolved decision rather than a
- * property of the token.
+ * The dimensions one control size level resolved to, as a single decision.
+ *
+ * These four magnitudes are produced by Theme Resolution as one value rather than independently,
+ * because changing one without the others is what produces a control whose contents no longer sit
+ * correctly inside its height.
  *
  * All magnitudes are in density-independent pixels. [minHeight] is the control's visual height and
  * says nothing about the interactive hit area, which is governed by accessibility requirements
@@ -79,7 +81,7 @@ enum class SizeControl {
  * @property verticalPadding The interior padding on the top and bottom edges.
  * @property iconSize The icon size the control renders a leading or trailing icon at.
  */
-data class BasisControlSize(
+data class ResolvedControlSize(
     val minHeight: Int,
     val horizontalPadding: Int,
     val verticalPadding: Int,

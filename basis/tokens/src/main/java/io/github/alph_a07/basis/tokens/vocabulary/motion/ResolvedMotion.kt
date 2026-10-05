@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.motion
+package io.github.alph_a07.basis.tokens.vocabulary.motion
 
 /**
  * How one track of a resolved motion progresses over time.
@@ -63,7 +63,7 @@ data class BasisMotionTrack(
  * @property token The motion contract this value was resolved from.
  * @property tracks The tracks that together express the contract.
  */
-data class BasisResolvedMotion(
+data class ResolvedMotion(
     val token: BasisMotionToken,
     val tracks: List<BasisMotionTrack>,
 ) {

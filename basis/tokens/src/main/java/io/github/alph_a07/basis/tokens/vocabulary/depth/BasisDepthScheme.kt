@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.depth
+package io.github.alph_a07.basis.tokens.vocabulary.depth
 
 /**
  * The complete set of resolved depth values for one theme.

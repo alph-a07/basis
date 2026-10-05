@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.color
+package io.github.alph_a07.basis.tokens.vocabulary.color
 
 /**
  * Tuning parameters for categorical color generation.

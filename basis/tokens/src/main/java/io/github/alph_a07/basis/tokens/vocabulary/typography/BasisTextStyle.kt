@@ -1,6 +1,6 @@
-package io.github.alph_a07.basis.tokens.typography
+package io.github.alph_a07.basis.tokens.vocabulary.typography
 
-import io.github.alph_a07.basis.tokens.color.BasisColorRole
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColorRole
 
 /** The font weights available to typography roles. */
 object BasisFontWeightTokens {

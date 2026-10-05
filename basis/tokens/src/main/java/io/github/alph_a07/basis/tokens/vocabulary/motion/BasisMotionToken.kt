@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.motion
+package io.github.alph_a07.basis.tokens.vocabulary.motion
 
 /**
  * One semantic motion contract.

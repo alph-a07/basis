@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.spacing
+package io.github.alph_a07.basis.tokens.vocabulary.spacing
 
 /**
  * One level of the spacing scale.

@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.motion
+package io.github.alph_a07.basis.tokens.vocabulary.motion
 
 /**
  * The complete set of resolved motion values for one theme.
@@ -9,7 +9,7 @@ package io.github.alph_a07.basis.tokens.motion
  * @property values The resolved value per motion contract.
  */
 data class BasisMotionScheme(
-    val values: Map<BasisMotionToken, BasisResolvedMotion>,
+    val values: Map<BasisMotionToken, ResolvedMotion>,
 ) {
     init {
         require(values.keys.containsAll(BasisMotionToken.entries)) {
@@ -23,6 +23,6 @@ data class BasisMotionScheme(
      * @param token The motion contract to look up.
      * @return The tracks that express that contract.
      */
-    operator fun get(token: BasisMotionToken): BasisResolvedMotion =
+    operator fun get(token: BasisMotionToken): ResolvedMotion =
         requireNotNull(values[token]) { "No resolved motion for $token." }
 }

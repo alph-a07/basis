@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.size
+package io.github.alph_a07.basis.tokens.vocabulary.size
 
 /**
  * The complete set of resolved size values for one theme.
@@ -13,22 +13,22 @@ package io.github.alph_a07.basis.tokens.size
  * @property controls The resolved dimensions per control level.
  */
 data class BasisSizeScheme(
-    val icons: Map<SizeIcon, Int>,
-    val avatars: Map<SizeAvatar, Int>,
-    val dots: Map<SizeDot, Int>,
-    val controls: Map<SizeControl, BasisControlSize>,
+    val icons: Map<BasisIconSize, Int>,
+    val avatars: Map<BasisAvatarSize, Int>,
+    val dots: Map<BasisDotSize, Int>,
+    val controls: Map<BasisControlSize, ResolvedControlSize>,
 ) {
     init {
-        require(icons.keys.containsAll(SizeIcon.entries)) {
+        require(icons.keys.containsAll(BasisIconSize.entries)) {
             "A resolved size scheme must cover every icon level."
         }
-        require(avatars.keys.containsAll(SizeAvatar.entries)) {
+        require(avatars.keys.containsAll(BasisAvatarSize.entries)) {
             "A resolved size scheme must cover every avatar level."
         }
-        require(dots.keys.containsAll(SizeDot.entries)) {
+        require(dots.keys.containsAll(BasisDotSize.entries)) {
             "A resolved size scheme must cover every dot level."
         }
-        require(controls.keys.containsAll(SizeControl.entries)) {
+        require(controls.keys.containsAll(BasisControlSize.entries)) {
             "A resolved size scheme must cover every control level."
         }
     }
@@ -39,7 +39,7 @@ data class BasisSizeScheme(
      * @param level The icon level to look up.
      * @return The resolved magnitude in density-independent pixels.
      */
-    operator fun get(level: SizeIcon): Int = requireNotNull(icons[level]) { "No resolved icon size for $level." }
+    operator fun get(level: BasisIconSize): Int = requireNotNull(icons[level]) { "No resolved icon size for $level." }
 
     /**
      * Returns the magnitude [level] resolved to.
@@ -47,7 +47,7 @@ data class BasisSizeScheme(
      * @param level The avatar level to look up.
      * @return The resolved magnitude in density-independent pixels.
      */
-    fun avatar(level: SizeAvatar): Int =
+    fun avatar(level: BasisAvatarSize): Int =
         requireNotNull(avatars[level]) { "No resolved avatar size for $level." }
 
     /**
@@ -56,7 +56,7 @@ data class BasisSizeScheme(
      * @param level The dot level to look up.
      * @return The resolved magnitude in density-independent pixels.
      */
-    fun dot(level: SizeDot): Int = requireNotNull(dots[level]) { "No resolved dot size for $level." }
+    fun dot(level: BasisDotSize): Int = requireNotNull(dots[level]) { "No resolved dot size for $level." }
 
     /**
      * Returns the dimensions [level] resolved to.
@@ -64,6 +64,6 @@ data class BasisSizeScheme(
      * @param level The control level to look up.
      * @return The resolved control dimensions.
      */
-    fun control(level: SizeControl): BasisControlSize =
+    fun control(level: BasisControlSize): ResolvedControlSize =
         requireNotNull(controls[level]) { "No resolved control size for $level." }
 }

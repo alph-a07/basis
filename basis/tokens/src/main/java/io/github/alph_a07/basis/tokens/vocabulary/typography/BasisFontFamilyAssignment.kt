@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.typography
+package io.github.alph_a07.basis.tokens.vocabulary.typography
 
 /**
  * The font families a resolved theme assigns to its typography tokens.

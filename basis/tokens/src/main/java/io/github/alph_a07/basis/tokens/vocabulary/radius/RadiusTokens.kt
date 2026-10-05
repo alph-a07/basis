@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.radius
+package io.github.alph_a07.basis.tokens.vocabulary.radius
 
 /**
  * One level of the radius scale.
