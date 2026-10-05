@@ -1,31 +1,19 @@
 package io.github.alph_a07.basis.tokens.theme
 
-import io.github.alph_a07.basis.tokens.color.BasisColorScheme
-import io.github.alph_a07.basis.tokens.depth.BasisDepthScheme
-import io.github.alph_a07.basis.tokens.motion.BasisMotionScheme
-import io.github.alph_a07.basis.tokens.radius.BasisRadiusScheme
-import io.github.alph_a07.basis.tokens.size.BasisSizeScheme
-import io.github.alph_a07.basis.tokens.spacing.BasisSpacingScheme
-import io.github.alph_a07.basis.tokens.typography.BasisTypographyScheme
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColorScheme
+import io.github.alph_a07.basis.tokens.vocabulary.depth.BasisDepthScheme
+import io.github.alph_a07.basis.tokens.vocabulary.motion.BasisMotionScheme
+import io.github.alph_a07.basis.tokens.vocabulary.radius.BasisRadiusScheme
+import io.github.alph_a07.basis.tokens.vocabulary.size.BasisSizeScheme
+import io.github.alph_a07.basis.tokens.vocabulary.spacing.BasisSpacingScheme
+import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTypographyScheme
 
 /**
- * Every public Basis design decision, resolved.
+ * Contains every public Basis design decision resolved for one set of inputs, constraints, and
+ * environment.
  *
- * A resolved theme is the complete output of Theme Resolution: the semantic decisions the token
- * catalogue defines, with the values one set of inputs, constraints and environment produced. It is
- * a theme-time value only. Component state, layout outcomes and platform rendering choices are not
- * decided here, and a component never assembles values of its own — it reads them from the resolved
- * theme it is given.
- *
- * Complete means complete against the public token contract: every color role, typography level,
- * spacing level, radius level, depth level, size level and motion contract has a value. It does not
- * mean every eventual pixel is predetermined. A resolved depth value, for instance, names the
- * magnitude of separation and the expression drawing it, and leaves the platform adapter to render
- * that expression.
- *
- * Because each family type refuses to exist without full coverage of its own catalogue, a
- * `BasisResolvedTheme` cannot be constructed in a partially resolved state. The completeness
- * guarantee is therefore structural rather than something a caller has to remember to check.
+ * The theme contains semantic token values only. Component state, layout, and platform rendering
+ * remain outside theme resolution. Each scheme requires complete coverage of its token family.
  *
  * @property color The resolved semantic colors.
  * @property typography The resolved type scale and the families assigned to it.
