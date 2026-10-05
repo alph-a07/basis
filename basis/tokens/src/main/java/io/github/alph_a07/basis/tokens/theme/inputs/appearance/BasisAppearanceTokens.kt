@@ -2,6 +2,12 @@ package io.github.alph_a07.basis.tokens.theme.inputs.appearance
 
 import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColor
 import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColorRole
+import io.github.alph_a07.basis.tokens.vocabulary.motion.BasisMotionTimingSpec
+import io.github.alph_a07.basis.tokens.vocabulary.motion.BasisMotionToken
+import io.github.alph_a07.basis.tokens.vocabulary.radius.BasisRadius
+import io.github.alph_a07.basis.tokens.vocabulary.size.BasisControlSize
+import io.github.alph_a07.basis.tokens.vocabulary.size.BasisControlSizeSpec
+import io.github.alph_a07.basis.tokens.vocabulary.spacing.BasisSpacing
 import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisFontFamily
 import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTextStyleSpec
 import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTypographyLevel
@@ -86,3 +92,57 @@ data class BasisFontFamilyAppearance(
     fun resolve(role: BasisTypographyRole, index: Int): BasisFontFamily? =
         byLevel[BasisTypographyLevel(role, index)] ?: byRole[role]
 }
+
+/**
+ * Explicitly assigned spacing magnitudes, keyed by the level they apply to.
+ *
+ * An entry states the magnitude a level resolves to rather than naming a new level or a use for it.
+ * Spacing remains an indexed hierarchy: components still choose which level applies where, and
+ * Basis still owns which levels exist.
+ *
+ * Magnitudes are stated in density-independent pixels, matching the unit the resolved theme uses.
+ *
+ * @property overrides The assigned magnitude per level, in density-independent pixels.
+ */
+data class BasisSpacingAppearance(
+    val overrides: Map<BasisSpacing, Int> = emptyMap(),
+)
+
+/**
+ * Explicitly assigned radius magnitudes, keyed by the level they apply to.
+ *
+ * [BasisRadius.Full] is a boundary concept rather than an indexed magnitude: it means enough
+ * curvature to render fully rounded relative to the bounds being drawn, so a fixed magnitude cannot
+ * express it. It is therefore not a valid key.
+ *
+ * Magnitudes are stated in density-independent pixels, matching the unit the resolved theme uses.
+ *
+ * @property overrides The assigned magnitude per level, in density-independent pixels.
+ */
+data class BasisRadiusAppearance(
+    val overrides: Map<BasisRadius, Int> = emptyMap(),
+)
+
+/**
+ * Explicitly assigned control dimensions, keyed by the control size level they apply to.
+ *
+ * An entry pins down any subset of a level's dimensions and leaves the rest to resolution.
+ *
+ * @property overrides The pinned-down dimensions per control size level.
+ */
+data class BasisSizeAppearance(
+    val overrides: Map<BasisControlSize, BasisControlSizeSpec> = emptyMap(),
+)
+
+/**
+ * Explicitly assigned motion timing, keyed by the motion contract they apply to.
+ *
+ * Customization happens at the level of the motion contract. An entry states how that contract
+ * progresses and leaves which properties it animates to Basis, which preserves the abstraction that
+ * makes Motion more than a set of animation knobs.
+ *
+ * @property overrides The assigned timing per contract.
+ */
+data class BasisMotionAppearance(
+    val overrides: Map<BasisMotionToken, BasisMotionTimingSpec> = emptyMap(),
+)
