@@ -1,11 +1,11 @@
-package io.github.alph_a07.basis.tokens.theme.appearance
+package io.github.alph_a07.basis.tokens.theme.inputs.appearance
 
-import io.github.alph_a07.basis.tokens.color.BasisColor
-import io.github.alph_a07.basis.tokens.color.BasisColorRole
-import io.github.alph_a07.basis.tokens.typography.BasisFontFamily
-import io.github.alph_a07.basis.tokens.typography.BasisTextStyle
-import io.github.alph_a07.basis.tokens.typography.BasisTypographyLevel
-import io.github.alph_a07.basis.tokens.typography.BasisTypographyRole
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColor
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColorRole
+import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisFontFamily
+import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTextStyleSpec
+import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTypographyLevel
+import io.github.alph_a07.basis.tokens.vocabulary.typography.BasisTypographyRole
 
 /**
  * Explicitly assigned color values, keyed by the semantic role they apply to.
@@ -24,18 +24,20 @@ data class BasisColorAppearance(
 /**
  * Explicitly assigned typography values.
  *
- * [tokens] replaces a whole composite typography token: the font family, size, weight, line
- * height, letter spacing and color role move together, because they form one coherent decision and
- * overriding them individually would leave the token internally inconsistent.
+ * [tokens] pins down one or more constituents of a composite typography token. Every constituent
+ * the consumer leaves unspecified stays with Theme Resolution, so specifying
+ * `Typography.Content.Level2 = { fontSize = 20 }` states one requirement without also dictating the
+ * line height that should accompany it.
  *
- * [fontFamilies] is the one place where Basis deliberately exposes a constituent rather than a whole
- * composite, because font-family assignment has its own role-scope and level-scope contract.
+ * [fontFamilies] is the one place where Basis deliberately exposes family assignment rather than the
+ * family as part of a whole token, because font-family assignment has its own role-scope and
+ * level-scope contract.
  *
- * @property tokens The assigned composite value per typography level.
+ * @property tokens The explicitly pinned-down constituents per typography level.
  * @property fontFamilies The font-family assignment, at role and level scope.
  */
 data class BasisTypographyAppearance(
-    val tokens: Map<BasisTypographyLevel, BasisTextStyle> = emptyMap(),
+    val tokens: Map<BasisTypographyLevel, BasisTextStyleSpec> = emptyMap(),
     val fontFamilies: BasisFontFamilyAppearance = BasisFontFamilyAppearance(),
 )
 
@@ -46,13 +48,22 @@ data class BasisTypographyAppearance(
  * family for content, and a compact family for metadata is a typical arrangement. Consumers may
  * express that here, including families of their own.
  *
- * The two scopes have one established relationship, which [resolve] implements: a level-scoped
- * assignment refines the role-scoped assignment for that level. Assigning a family at
- * [BasisTypographyRole.Structure] and a different one at Structure level 1 gives level 1 the
- * level-specific family and leaves levels 2 to 6 with the role family.
+ * The two scopes have one established relationship, which [resolve] implements:
+ *
+ * ```text
+ * Level scope > Role scope > resolver default
+ * ```
+ *
+ * Assigning a family at [BasisTypographyRole.Structure] and a different one at Structure level 1
+ * gives level 1 the level-specific family and leaves levels 2 to 6 with the role family.
  *
  * This specificity rule is specific to font-family assignment. It is not a general precedence
  * order for Appearance, and it does not imply how overlapping scopes resolve for any other token.
+ *
+ * These are the only two scopes a consumer may state a family at. Family assignment is deliberately
+ * not also reachable per typography token: a second, equally specific route to the same decision
+ * would mean that stating two families differently has no correct resolution, so the surface avoids
+ * creating that question rather than answering it with a further precedence rule.
  *
  * @property byRole The family assigned to a typography role as a whole.
  * @property byLevel The family assigned to one typography level, refining [byRole].
@@ -66,7 +77,7 @@ data class BasisFontFamilyAppearance(
      *
      * A level-scoped assignment wins over the role-scoped assignment for that level. `null` means
      * this Appearance expresses no preference for the level, and Theme Resolution remains free to
-     * decide the family from Identity, Mood, Domain and the fonts available in the environment.
+     * decide the family from Mood, Domain and the fonts available in the environment.
      *
      * @param role The role the level belongs to.
      * @param index The level index within that role, starting at 1.

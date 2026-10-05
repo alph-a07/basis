@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.theme.mood
+package io.github.alph_a07.basis.tokens.theme.inputs.mood
 
 /**
  * A named starting position in the Mood dimensional space.
@@ -61,18 +61,6 @@ data class BasisMoodDimensions(
     val depth: Float = NEUTRAL,
     val visualComplexity: Float = NEUTRAL,
 ) {
-    init {
-        require(colorfulness in MIN..MAX) { "colorfulness must be $MIN..$MAX, got $colorfulness." }
-        require(shapeSoftness in MIN..MAX) { "shapeSoftness must be $MIN..$MAX, got $shapeSoftness." }
-        require(typographicExpressiveness in MIN..MAX) {
-            "typographicExpressiveness must be $MIN..$MAX, got $typographicExpressiveness."
-        }
-        require(depth in MIN..MAX) { "depth must be $MIN..$MAX, got $depth." }
-        require(visualComplexity in MIN..MAX) {
-            "visualComplexity must be $MIN..$MAX, got $visualComplexity."
-        }
-    }
-
     companion object {
         /** The low end of every dimension: the most restrained position. */
         const val MIN = 0f

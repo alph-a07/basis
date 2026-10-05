@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.theme.constraints
+package io.github.alph_a07.basis.tokens.theme.inputs.constraints
 
 /**
  * Accessibility requirements that a resolved theme must satisfy.
@@ -24,13 +24,6 @@ data class BasisAccessibilityConstraints(
     val reducedMotion: Boolean = false,
     val minimumContrastRatio: Float? = null,
 ) {
-    init {
-        require(minimumContrastRatio == null || minimumContrastRatio in MIN_CONTRAST_RATIO..MAX_CONTRAST_RATIO) {
-            "minimumContrastRatio must be null or " +
-                "$MIN_CONTRAST_RATIO..$MAX_CONTRAST_RATIO, got $minimumContrastRatio."
-        }
-    }
-
     companion object {
         /**
          * The lowest meaningful contrast ratio: the two colors are indistinguishable.
@@ -46,6 +39,33 @@ data class BasisAccessibilityConstraints(
 }
 
 /**
+ * Minimum magnitudes that legibly rendered text must reach in a resolved theme.
+ *
+ * These are mandatory validity requirements of the same kind as the accessibility requirements, not
+ * a styling preference: a theme that renders text below them is invalid regardless of how it was
+ * asked for. Where an explicit customization and one of these floors disagree, resolution either
+ * satisfies both or reports that the requested theme is unsatisfiable. It never silently raises the
+ * requested value and reports success.
+ *
+ * A consumer supplies these when they must accommodate an unusual environment, such as an
+ * accessibility text-size setting or a minimum legibility standard that applies to their product.
+ * A consumer with no such requirement omits them, leaving every text magnitude to the resolver.
+ *
+ * The relationship between the two floors is Basis-owned rather than consumer-controlled. A
+ * consumer who requires a large minimum font size does not thereby choose the line height that
+ * goes with it: line height stays a resolver decision unless it is specified explicitly too.
+ *
+ * @property minimumFontSizeSp The smallest text size any typography token may resolve to, in
+ *   scale-independent pixels, or `null` to impose no floor beyond the resolved theme's own scale.
+ * @property minimumLineHeightSp The smallest line height any typography token may resolve to, in
+ *   scale-independent pixels, or `null` to impose no floor of its own.
+ */
+data class BasisValueConstraints(
+    val minimumFontSizeSp: Float? = null,
+    val minimumLineHeightSp: Float? = null,
+)
+
+/**
  * The requirements a resolved theme must satisfy to be valid.
  *
  * Constraints are authoritative in a way the other inputs are not. Mood states desired character
@@ -54,11 +74,12 @@ data class BasisAccessibilityConstraints(
  * because another input happens to be more explicit, more specific or more strongly expressed.
  *
  * When no constraint is declared, this type defaults to no requirement beyond what a valid theme
- * satisfies on its own, so a consumer who has no accessibility requirements to express can simply
- * omit it.
+ * satisfies on its own, so a consumer who has no requirements to express can simply omit it.
  *
  * @property accessibility The accessibility requirements that resolution must satisfy.
+ * @property values The minimum magnitudes legible text must reach.
  */
 data class BasisConstraints(
     val accessibility: BasisAccessibilityConstraints = BasisAccessibilityConstraints(),
+    val values: BasisValueConstraints = BasisValueConstraints(),
 )

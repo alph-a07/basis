@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.theme.domain
+package io.github.alph_a07.basis.tokens.theme.inputs.domain
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -10,7 +10,6 @@ class BasisDomainTest {
     @Test
     fun theCatalogueCoversTheBroadProductContexts() {
         val names = BasisDomainKind.entries.map { it.name }
-
         assertEquals(
             listOf(
                 "Finance",
@@ -33,7 +32,6 @@ class BasisDomainTest {
     @Test
     fun domainIsOneProductLevelKindRatherThanAHierarchy() {
         val domain = BasisDomain(BasisDomainKind.Finance)
-
         assertEquals(BasisDomainKind.Finance, domain.kind)
     }
 
@@ -43,7 +41,6 @@ class BasisDomainTest {
             .mapNotNull { it.name.takeIf { name -> name.startsWith("get") && it.parameterCount == 0 } }
             .map { it.removePrefix("get").lowercase() }
             .filter { it != "class" }
-
         assertEquals(listOf("kind"), properties)
     }
 }

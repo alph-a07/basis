@@ -1,6 +1,6 @@
-package io.github.alph_a07.basis.tokens.theme.identity
+package io.github.alph_a07.basis.tokens.theme.inputs.identity
 
-import io.github.alph_a07.basis.tokens.color.BasisColor
+import io.github.alph_a07.basis.tokens.vocabulary.color.BasisColor
 
 /**
  * How prominently a product's identity should manifest in a resolved theme.

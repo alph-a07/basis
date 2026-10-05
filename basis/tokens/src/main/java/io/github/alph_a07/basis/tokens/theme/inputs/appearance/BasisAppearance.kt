@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.theme.appearance
+package io.github.alph_a07.basis.tokens.theme.inputs.appearance
 
 /**
  * Explicit visual customization of the public Basis token vocabulary.
@@ -31,6 +31,9 @@ package io.github.alph_a07.basis.tokens.theme.appearance
  * @property radius Assigned radius magnitudes per level.
  * @property size Assigned control dimensions per control size level.
  * @property motion Assigned motion expressions per motion contract.
+ *
+ * A target the catalogue does not expose, or a magnitude it cannot take, is reported by Theme
+ * Resolution rather than refused here.
  */
 data class BasisAppearance(
     val color: BasisColorAppearance = BasisColorAppearance(),

@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.tokens.theme.domain
+package io.github.alph_a07.basis.tokens.theme.inputs.domain
 
 /**
  * A broad product context that is relevant to design resolution.
