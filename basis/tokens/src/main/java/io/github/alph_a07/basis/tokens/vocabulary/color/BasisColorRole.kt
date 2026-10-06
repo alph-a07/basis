@@ -33,13 +33,6 @@ enum class BasisStatusSlot {
 /**
  * Identifies one semantic color role in the Basis color catalogue.
  *
- * A role names a design decision, not a color. Two themes may resolve [ContentDefault] to very
- * different values while both continue to express "the primary content color of this theme".
- *
- * Roles exist so that other token families can reference a color decision without copying its
- * resolved value. Typography is the current consumer: a typography token carries a role rather
- * than a color, so re-theming a scheme updates the typography without touching the type scale.
- *
  * The entries below are exactly the roles the color catalogue defines. Basis does not publish a
  * role for every combination of presentation role, context, state and status; disabled, hovered,
  * pressed and similar conditions are state applied to a role rather than roles of their own.
