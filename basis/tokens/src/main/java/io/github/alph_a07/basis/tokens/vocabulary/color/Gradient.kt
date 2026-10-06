@@ -28,11 +28,6 @@ data class BasisGradient(
 /**
  * Renders a two-point gradient along [direction].
  *
- * The stops are placed at the two extremes of the direction. For [GradientDirection.Horizontal],
- * [GradientDirection.Vertical], and [GradientDirection.Diagonal] the result is a linear gradient; for
- * [GradientDirection.Radial] the renderer reads the same two stops as the center and the outer edge,
- * so the stops are not interpolated along a line.
- *
  * @param from The color at the start of the gradient.
  * @param to The color at the end of the gradient.
  * @param direction The direction along which the gradient runs.
