@@ -1,12 +1,6 @@
 package io.github.alph_a07.basis.tokens.vocabulary.color
 
-/**
- * The complete set of resolved color values for one theme.
- *
- * This is the value side of the Color family: [BasisColorRole] names each decision and this
- * scheme holds the concrete value each one resolved to. Theme Resolution produces the scheme;
- * components consume it and never assemble colors of their own.
- */
+/** The complete set of resolved color values for one theme. */
 data class BasisColorScheme(
     /** The background colors. */
     val surface: SurfaceColors,
@@ -27,10 +21,6 @@ data class BasisColorScheme(
 ) {
     /**
      * Returns the color this scheme resolved [role] to.
-     *
-     * Every role in [BasisColorRole] has a value, so this never fails: the catalogue and the
-     * scheme are declared together and cannot drift apart. Use it when a token carries a role
-     * rather than a color, so the role is looked up in the resolved scheme at the point of use.
      *
      * @param role The role to look up.
      * @return The resolved color for that role.
