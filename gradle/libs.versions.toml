@@ -11,7 +11,7 @@ material = "1.14.0"
 detekt = "1.23.8"
 ktlint = "1.8.0"
 ktlintGradle = "14.2.0"
-lint = "32.2.1"
+lint = "32.4.1"
 vanniktechMavenPublish = "0.37.0"
 bcv = "0.18.2"
 bcvBridge = "0.2.0"
@@ -31,12 +31,7 @@ androidx-lint-api = { group = "com.android.tools.lint", name = "lint-api", versi
 androidx-lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "lint" }
 androidx-lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-# The Gradle plugin's implementation artifact. A plugin *marker* cannot be used in a
-# `dependencies` block, and `build-logic` needs this on its compile classpath to configure
-# detekt's extension and task types from the convention plugin.
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-# The Gradle plugin's implementation artifact, for `build-logic` to configure the `ktlint`
-# extension from the convention plugin. Same reasoning as `detekt-gradle-plugin` above.
 ktlint-gradle = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlintGradle" }
 
 [plugins]
