@@ -37,7 +37,6 @@ androidBcvBridge {
 }
 
 dependencies {
-    api(project(":basis:tokens"))
 
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.foundation)
