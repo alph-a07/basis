@@ -45,10 +45,46 @@ val detektTasks = tasks.withType<Detekt>()
 
 var moduleJvmTarget: Provider<String> = provider { defaultJvmTarget }
 
-fun wireClasspath(vararg names: String) {
+// Define the exact attribute Gradle is complaining about in the error log
+val artifactTypeAttr = Attribute.of("artifactType", String::class.java)
+
+fun wireAndroidClasspath(configName: String) {
     detektTasks.configureEach {
         jvmTarget = moduleJvmTarget.get()
-        classpath.setFrom(names.mapNotNull { configurations.findByName(it) })
+        val config = configurations.findByName(configName)
+        if (config != null) {
+            // Explicitly extract ONLY the classes jar to prevent AGP ambiguity in app modules
+            val classFiles = config.incoming.artifactView {
+                attributes {
+                    attribute(artifactTypeAttr, "android-classes-jar")
+                }
+            }.files
+            classpath.setFrom(classFiles)
+        }
+
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(false)
+            sarif.required.set(false)
+        }
+    }
+}
+
+fun wireJvmClasspath(configName: String) {
+    detektTasks.configureEach {
+        jvmTarget = moduleJvmTarget.get()
+        val config = configurations.findByName(configName)
+        if (config != null) {
+            classpath.setFrom(config)
+        }
+
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(false)
+            sarif.required.set(false)
+        }
     }
 }
 
@@ -62,14 +98,16 @@ pluginManager.withPlugin("com.android.application") {
     val compileOptions = extensions.getByType<ApplicationExtension>().compileOptions
     applyJvmRelease(compileOptions)
     resolveJvmTargetFrom(compileOptions)
-    wireClasspath("debugCompileClasspath", "debugRuntimeClasspath")
+    wireAndroidClasspath("debugCompileClasspath")
 }
+
 pluginManager.withPlugin("com.android.library") {
     val compileOptions = extensions.getByType<LibraryExtension>().compileOptions
     applyJvmRelease(compileOptions)
     resolveJvmTargetFrom(compileOptions)
-    wireClasspath("debugCompileClasspath", "debugRuntimeClasspath")
+    wireAndroidClasspath("debugCompileClasspath")
 }
+
 pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
-    wireClasspath("compileClasspath", "runtimeClasspath")
+    wireJvmClasspath("compileClasspath")
 }
