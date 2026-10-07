@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 includeBuild("build-logic")
 
 rootProject.name = "Basis"
-include(":demo")
-include(":basis")
+include(":demo-app")
+include(":basis-theme")
+include(":basis-components")
 include(":basis-lint")
