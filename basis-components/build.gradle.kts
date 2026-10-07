@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "io.github.alph_a07.basis"
+    namespace = "io.github.alph_a07.basis.components"
     group = "io.github.alph_a07"
 
     version = "0.1.0"
