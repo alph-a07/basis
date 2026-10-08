@@ -29,3 +29,17 @@ public data class OklchStop(
     public val color: Oklch,
     public val offset: Float,
 )
+
+/**
+ * Direction of an [OklchGradient].
+ */
+public enum class GradientDirection {
+    /** Angular direction in degrees; reserved for angled brand gradients. */
+    AngleDeg,
+
+    /** Top-to-bottom gradient. */
+    Vertical,
+
+    /** Start-to-end gradient. */
+    Horizontal,
+}
