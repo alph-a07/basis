@@ -1,5 +1,53 @@
 {
   "nodes": {
+    "cmp-categorical": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Categorical.kt",
+          "sha": "f70c62ae9e6acc0d417df3289b837d9215691753"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-color",
+        "pkg-theme-core",
+        "pkg-theme-tokens-core"
+      ],
+      "gotchas": [
+        "The chosen strategy only shifts the base hue; chroma and lightness per mode are the same for every strategy"
+      ],
+      "invariants": [
+        {
+          "rule": "Returns exactly the requested count, which must be at least 1",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Categorical.kt"
+        },
+        {
+          "rule": "Series are derived from the theme's brand primary hue and mode, not from static tokens",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Categorical.kt"
+        }
+      ],
+      "kind": "component",
+      "public_surface": [
+        {
+          "note": "ResolvedTheme extension returning swatches",
+          "symbol": "categorical"
+        },
+        {
+          "note": "EvenHue, BrandAnchored, AccessibleQualitative",
+          "symbol": "CategoricalStrategy"
+        },
+        {
+          "note": "main, soft, muted, onMain",
+          "symbol": "CategoricalSwatch"
+        }
+      ],
+      "purpose": "Owns the on-demand derivation of categorical chart series from a resolved theme: the selection strategy and the main, soft, muted and onMain variants of each swatch. Owns no token storage, because the static tree never carries chart series.",
+      "rationale": null,
+      "related": [
+        "pkg-theme-tokens-color"
+      ],
+      "summary": "On-demand categorical chart series derived per theme, never stored in the token tree",
+      "title": "Categorical chart series"
+    },
     "module-basis-components": {
       "anchors": [
         {
@@ -8,15 +56,20 @@
         }
       ],
       "depends_on": [
-        "module-basis-theme"
+        "module-basis-theme",
+        "module-basis-lint"
       ],
       "gotchas": [
-        "Former basis library split; this is not the same node as the deleted module-basis."
+        "Former basis library split; this is not the same node as the deleted module-basis"
       ],
       "invariants": [
         {
-          "rule": "Depends only on theme and lint; no tokens module remains",
+          "rule": "Depends on theme and lint only; no tokens module remains",
           "source": "settings.gradle.kts"
+        },
+        {
+          "rule": "The public binary API is validated on the release variant",
+          "source": "basis-components/build.gradle.kts"
         }
       ],
       "kind": "module",
@@ -24,15 +77,18 @@
         {
           "note": "io.github.alph_a07.basis.components",
           "symbol": "namespace"
+        },
+        {
+          "note": "applies :basis-lint",
+          "symbol": "lintChecks"
         }
       ],
-      "purpose": "New library module split from the former basis library. Owns component-level code, depends on theme, and links lint checks.",
+      "purpose": "Owns the component-level code of the library: Compose components that consume the theme module's tokens, the lint checks applied to them, and the binary compatibility API file that pins the published surface.",
       "rationale": null,
       "related": [
-        "module-basis-theme",
-        "module-basis-lint"
+        "module-demo-app"
       ],
-      "summary": "Android library module owning Basis components; includes theme dependency",
+      "summary": "Android library module owning Basis components, theme consumers and binary API",
       "title": "Basis components module"
     },
     "module-basis-lint": {
@@ -44,12 +100,12 @@
       ],
       "depends_on": [],
       "gotchas": [
-        "The build file declares no lint plugin and no dependency on the main library, so the module currently produces no checks."
+        "This module is a producer of checks, not a consumer of the library it checks, so it has no dependency on :basis-components"
       ],
       "invariants": [
         {
-          "rule": "A lint plugin for the main library, not a consumer of it",
-          "source": "AGENTS.md §2"
+          "rule": "The lint API is compileOnly, never api or implementation",
+          "source": "basis-lint/build.gradle.kts"
         },
         {
           "rule": "No new third-party dependencies without asking",
@@ -57,21 +113,26 @@
         }
       ],
       "kind": "module",
-      "public_surface": [],
-      "purpose": "Reserved home for lint rules about Basis usage. It applies only com.android.library and contains no Kotlin sources, no issue registry and no lint plugin, so nothing is checked yet.",
-      "rationale": {
-        "source": "AGENTS.md §2",
-        "text": "Intentionally left empty to be filled as lint rules are needed"
-      },
-      "related": [],
-      "summary": "Placeholder Gradle module for Basis lint checks; no rules implemented",
+      "public_surface": [
+        {
+          "note": "compileOnly configuration for the lint API",
+          "symbol": "lintApi"
+        }
+      ],
+      "purpose": "Owns the Gradle module that builds Basis' own lint checks. The lint API arrives on a compileOnly lintApi configuration, so checks compile against lint without leaking it to consumers, and the components module applies this module as lintChecks.",
+      "rationale": null,
+      "related": [
+        "pkg-basis-lint-checks",
+        "module-basis-components"
+      ],
+      "summary": "Gradle module owning Basis lint checks, consumed by the components module",
       "title": "Basis lint module"
     },
     "module-basis-theme": {
       "anchors": [
         {
           "path": "basis-theme/build.gradle.kts",
-          "sha": "a321430fab0f45302b04b3330b548a607edc3c39"
+          "sha": "661eca33c949928d9472a214e9ba33ef3223a473"
         }
       ],
       "depends_on": [],
@@ -85,16 +146,30 @@
       "kind": "module",
       "public_surface": [
         {
+          "note": "explicit API mode is on",
+          "symbol": "explicitApi"
+        },
+        {
           "note": "21",
           "symbol": "jvmToolchain"
         }
       ],
-      "purpose": "Owns theme and design tokens for the library; pure Kotlin/JVM with jvmToolchain 21.",
+      "purpose": "Owns the theme and design token model of the library: the resolved theme tree, the token groups it aggregates, and the value wrappers and OKLCH primitives those are built from. Pure Kotlin/JVM, so nothing here knows about Android or Compose.",
       "rationale": null,
       "related": [
+        "pkg-theme-color",
+        "pkg-theme-core",
+        "pkg-theme-motion",
+        "pkg-theme-report",
+        "pkg-theme-tokens-color",
+        "pkg-theme-tokens-core",
+        "pkg-theme-tokens-motion",
+        "pkg-theme-tokens-scalars",
+        "pkg-theme-tokens-typography",
+        "cmp-categorical",
         "module-basis-components"
       ],
-      "summary": "Theme module for Basis",
+      "summary": "Pure Kotlin/JVM module owning theme structure and design tokens",
       "title": "Basis theme module"
     },
     "module-demo-app": {
@@ -123,6 +198,593 @@
       ],
       "summary": "Android app module demonstrating Basis",
       "title": "Demo app module"
+    },
+    "pkg-basis-lint-checks": {
+      "anchors": [
+        {
+          "path": "basis-lint/src/main/java/io/github/alph_a07/basis_lint/BasisIssueRegistry.kt",
+          "sha": "109c4ff6d66de3709cabff2c4851192b1a32005f"
+        },
+        {
+          "path": "basis-lint/src/main/java/io/github/alph_a07/basis_lint/SpOnlyFontSizeDetector.kt",
+          "sha": "74ddf76f43b45c5e6dd95e7d3cc8678ecdd7a5f8"
+        },
+        {
+          "path": "basis-lint/src/main/resources/META-INF/services/com.android.tools.lint.client.api.IssueRegistry",
+          "sha": "89b24a68c89e6c8146418ca099928ecf3f102546"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "Callees are resolved through UAST rather than sourcePsi, because a Kotlin call expression is not a PsiMethodCallExpression"
+      ],
+      "invariants": [
+        {
+          "rule": "The registry is discovered through META-INF/services, so its class name and package must not be renamed",
+          "source": "basis-lint/src/main/resources/META-INF/services/com.android.tools.lint.client.api.IssueRegistry"
+        },
+        {
+          "rule": "Font size, line height and letter spacing must be expressed in sp so text follows the OS font scale",
+          "source": "basis-lint/src/main/java/io/github/alph_a07/basis_lint/SpOnlyFontSizeDetector.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "registers the checks; name and package are lint's contract",
+          "symbol": "BasisIssueRegistry"
+        },
+        {
+          "note": "reports dp bound to font size parameters",
+          "symbol": "SpOnlyFontSizeDetector"
+        },
+        {
+          "note": "the SpOnlyFontSize issue",
+          "symbol": "ISSUE"
+        }
+      ],
+      "purpose": "Owns the lint checks Basis applies to its own sources: the issue registry lint discovers through META-INF services and the detectors it registers. Does not depend on the library it checks.",
+      "rationale": {
+        "source": "KDoc on SpOnlyFontSizeDetector.kt",
+        "text": "A font size in dp is measured in physical units and stays the same size no matter how large the user has set their system font, which defeats the purpose of that setting"
+      },
+      "related": [
+        "module-basis-lint",
+        "pkg-theme-tokens-typography"
+      ],
+      "summary": "Issue registry and the sp-only font size detector that Basis runs on its own code",
+      "title": "Basis lint checks"
+    },
+    "pkg-theme-color": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Oklch.kt",
+          "sha": "79ba2128a14d47231f3f114106671c54704344f6"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/OklchGradient.kt",
+          "sha": "148ffb153b4be58509b8cdead9410d028f8bc538"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "Lightness, chroma, hue and alpha are range-checked at construction",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Oklch.kt"
+        },
+        {
+          "rule": "A gradient carries at least two stops sorted ascending by offset",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/OklchGradient.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "lightness, chroma, hue, alpha",
+          "symbol": "Oklch"
+        },
+        {
+          "note": "sorted stops plus a direction",
+          "symbol": "OklchGradient"
+        },
+        {
+          "note": "a color at an offset",
+          "symbol": "OklchStop"
+        },
+        {
+          "note": "AngleDeg, Vertical, Horizontal",
+          "symbol": "GradientDirection"
+        }
+      ],
+      "purpose": "Owns the OKLCH color primitives every token leaf is expressed in: single colors, gradient stops and gradient directions. Holds no theme structure and imports nothing from the rest of Basis.",
+      "rationale": null,
+      "related": [
+        "cmp-categorical"
+      ],
+      "summary": "OKLCH color, stop and gradient primitives shared by every token tree",
+      "title": "OKLCH color primitives"
+    },
+    "pkg-theme-core": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/DpValue.kt",
+          "sha": "c43db3258e65474cf03b1b19ff3293b15d8deb31"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/DurationValue.kt",
+          "sha": "452c741fcc2704a3a30a774e2df9a94cd4f6fa96"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/EmValue.kt",
+          "sha": "53d054a4f58e6db2fe4a45a41e05efa0260aa2fc"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/FontWeightValue.kt",
+          "sha": "e9a088dfd8286f449cb8a6e0401625d62067b0ee"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/LineHeightValue.kt",
+          "sha": "318e8cab5a95f9d36d81b629a2dccb6540baa7d4"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/ThemeMode.kt",
+          "sha": "f03c12140f3e5be2e593b6d40e8bc946c7298a0c"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [
+        "ThemeMode imports ResolvedTheme for a KDoc link, and tokens/core imports ThemeMode, so the two packages are mutually referential at the source level; only the tokens/core to core direction is recorded as an edge"
+      ],
+      "invariants": [
+        {
+          "rule": "Every wrapper rejects invalid input at construction rather than coercing it",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/DpValue.kt"
+        },
+        {
+          "rule": "Font weight is limited to 100..900 in steps of 100",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/FontWeightValue.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "non-negative dp",
+          "symbol": "DpValue"
+        },
+        {
+          "note": "non-negative milliseconds",
+          "symbol": "DurationValue"
+        },
+        {
+          "note": "finite em",
+          "symbol": "EmValue"
+        },
+        {
+          "note": "100..900 in steps of 100",
+          "symbol": "FontWeightValue"
+        },
+        {
+          "note": "positive multiplier",
+          "symbol": "LineHeightValue"
+        },
+        {
+          "note": "Light, Dark",
+          "symbol": "ThemeMode"
+        }
+      ],
+      "purpose": "Owns the unit value wrappers token trees are built from (dp, milliseconds, em, font weight, line height) and the light/dark mode a tree is resolved for. Owns no token trees and no color representation.",
+      "rationale": null,
+      "related": [
+        "pkg-theme-tokens-core"
+      ],
+      "summary": "Validated value wrappers for token units plus the light/dark mode enum",
+      "title": "Core value wrappers"
+    },
+    "pkg-theme-motion": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/EasingKind.kt",
+          "sha": "b678574e9db3619194ff8361f615cd29acfe03c7"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/MotionSpec.kt",
+          "sha": "f5422887b98f49675ea0d7012e7ab329ba1c6e94"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-core"
+      ],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "Spring parameters apply only when easing is EasingKind.Spring",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/EasingKind.kt"
+        },
+        {
+          "rule": "Durations are DurationValue, never raw numbers",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/MotionSpec.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "Linear, Standard, Emphasized, Decelerate, Accelerate, Spring",
+          "symbol": "EasingKind"
+        },
+        {
+          "note": "duration, easing, delay, spring",
+          "symbol": "MotionSpec"
+        },
+        {
+          "note": "stiffness and damping ratio",
+          "symbol": "SpringParams"
+        }
+      ],
+      "purpose": "Owns the easing families and the timing specification of a single motion purpose, expressed with the core duration wrapper. Carries no platform animation type; the components module maps it at the Compose boundary.",
+      "rationale": null,
+      "related": [
+        "pkg-theme-tokens-motion"
+      ],
+      "summary": "Easing families and the timing spec for one semantic motion purpose",
+      "title": "Motion primitives"
+    },
+    "pkg-theme-report": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionReport.kt",
+          "sha": "562d2c9eee00b872a0c21a6d56b3a1ee8fccc51a"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionStageId.kt",
+          "sha": "a901982ee30e1b2adeeb301bfc88004599a82c50"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-core",
+        "pkg-theme-tokens-typography"
+      ],
+      "gotchas": [
+        "Imports ResolvedThemePair and ThemeMode for KDoc links only; no code here reads a theme"
+      ],
+      "invariants": [
+        {
+          "rule": "Every specified intent field maps to an entry; nothing is silently dropped",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionReport.kt"
+        },
+        {
+          "rule": "Requested and enforced snapshots appear only where they differ meaningfully",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionReport.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "entries, seed version, modes, font assignments",
+          "symbol": "ResolutionReport"
+        },
+        {
+          "note": "path, stage, status, message",
+          "symbol": "ReportEntry"
+        },
+        {
+          "note": "Honored through Absent",
+          "symbol": "ReportStatus"
+        },
+        {
+          "note": "Normalize through Emit",
+          "symbol": "ResolutionStageId"
+        },
+        {
+          "note": "family per ladder plus unused candidates",
+          "symbol": "FontAssignmentReport"
+        }
+      ],
+      "purpose": "Owns the diagnostics emitted alongside a resolved theme pair: what happened to each specified input, which pipeline stage decided it, and how font families were assigned. Owns no resolution logic of its own.",
+      "rationale": null,
+      "related": [
+        "pkg-theme-tokens-core"
+      ],
+      "summary": "Public diagnostics for one resolution: entries, stage ids and font assignments",
+      "title": "Resolution report"
+    },
+    "pkg-theme-tokens-color": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/color/ColorTokens.kt",
+          "sha": "549da0d52d993a574dd8354fdf6d4f2a29a8d9c1"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-color"
+      ],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "Every color leaf is an Oklch value, never a raw triple or a platform color",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/color/ColorTokens.kt"
+        },
+        {
+          "rule": "Brand secondary, tertiary and quaternary are null when unspecified",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/color/ColorTokens.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "root of the semantic color tree",
+          "symbol": "ColorTokens"
+        },
+        {
+          "note": "default, elevated, recessed, inverse",
+          "symbol": "SurfaceColors"
+        },
+        {
+          "note": "default, muted, inverse",
+          "symbol": "ContentColors"
+        },
+        {
+          "note": "content-mirroring tints",
+          "symbol": "IconColors"
+        },
+        {
+          "note": "default, muted, strong, inverse",
+          "symbol": "BorderColors"
+        },
+        {
+          "note": "surface, content, border",
+          "symbol": "SelectionColors"
+        },
+        {
+          "note": "focus ring",
+          "symbol": "FocusColors"
+        },
+        {
+          "note": "shared positive, negative, caution, info shape",
+          "symbol": "StatusColors"
+        },
+        {
+          "note": "brand and surface gradients",
+          "symbol": "GradientColors"
+        },
+        {
+          "note": "primary plus nullable supporting anchors",
+          "symbol": "BrandColors"
+        }
+      ],
+      "purpose": "Owns the semantic color tree: surface, content, icon, border, selection, focus, status, gradient and brand groups, each an OKLCH leaf. Owns the naming and grouping of roles, not the color space itself.",
+      "rationale": null,
+      "related": [
+        "cmp-categorical"
+      ],
+      "summary": "Semantic color tree with OKLCH leaves for surfaces, content, roles and brand",
+      "title": "Semantic color tokens"
+    },
+    "pkg-theme-tokens-core": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedTheme.kt",
+          "sha": "2e727184e23fd02c0a0a552da64f8b3a92bc96d4"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair.kt",
+          "sha": "2af1a567eaace05f833a8ad47a3f375efa432642"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/TokenPath.kt",
+          "sha": "5b87619c6cda728065e6a5a5ad7a4eb4369c447a"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-core",
+        "pkg-theme-report",
+        "pkg-theme-tokens-color",
+        "pkg-theme-tokens-motion",
+        "pkg-theme-tokens-scalars",
+        "pkg-theme-tokens-typography"
+      ],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "A pair carries at least one of light or dark",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair.kt"
+        },
+        {
+          "rule": "Token paths are the dotted form used by Control overrides and the report",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/TokenPath.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "one tree per mode, all token groups",
+          "symbol": "ResolvedTheme"
+        },
+        {
+          "note": "light, dark, report",
+          "symbol": "ResolvedThemePair"
+        },
+        {
+          "note": "sealed interface of dotted token paths",
+          "symbol": "TokenPath"
+        }
+      ],
+      "purpose": "Owns the aggregate a resolution emits: one fully resolved tree per mode, the light/dark pair with its report, and the typed dotted token paths used by overrides and diagnostics. Owns no token group definitions.",
+      "rationale": null,
+      "related": [
+        "cmp-categorical"
+      ],
+      "summary": "Resolved theme per mode, the light/dark pair, and stable token path identifiers",
+      "title": "Resolved theme tree"
+    },
+    "pkg-theme-tokens-motion": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/motion/MotionTokens.kt",
+          "sha": "a91b34fc7fb78feabdbb09b9c6bb6a63d44430ab"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-motion"
+      ],
+      "gotchas": [
+        "Imports ResolvedTheme only to link it from KDoc; no code here reads a theme"
+      ],
+      "invariants": [
+        {
+          "rule": "Each purpose is a MotionSpec, so reduced-motion enforcement rewrites a whole purpose",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/motion/MotionTokens.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "feedback through emphasis",
+          "symbol": "MotionTokens"
+        }
+      ],
+      "purpose": "Owns the semantic motion token group: the named purposes a resolved theme exposes, each backed by a motion spec from the motion package. Owns the purpose naming, not the easing or duration types.",
+      "rationale": null,
+      "related": [
+        "pkg-theme-tokens-core"
+      ],
+      "summary": "Six semantic motion purposes for a resolved theme",
+      "title": "Semantic motion tokens"
+    },
+    "pkg-theme-tokens-scalars": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens.kt",
+          "sha": "e92faecbe3f55cb8b5b8446c9362a8b35ea7277e"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens.kt",
+          "sha": "318fbe67177c0d49295705c78f250b42c331bbdd"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/DepthTokens.kt",
+          "sha": "a97aea0a395373d96b828c0ed5c39cbf23eb3b79"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/SizeTokens.kt",
+          "sha": "efc5ee93d6f045afc47a781407d060b78cea91cd"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-core"
+      ],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "Shadow alpha is constrained to 0..1",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/DepthTokens.kt"
+        },
+        {
+          "rule": "Radius carries explicit none and full sentinels rather than a numeric ladder alone",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "level1 through level8",
+          "symbol": "SpacingTokens"
+        },
+        {
+          "note": "none, level1-8, full",
+          "symbol": "RadiusTokens"
+        },
+        {
+          "note": "level1 through level4",
+          "symbol": "DepthTokens"
+        },
+        {
+          "note": "elevation, shadow alpha, blur, y offset",
+          "symbol": "DepthSpec"
+        },
+        {
+          "note": "icon, avatar, control, dot groups",
+          "symbol": "SizeTokens"
+        },
+        {
+          "note": "raised to the touch target floor",
+          "symbol": "ControlSizes"
+        }
+      ],
+      "purpose": "Owns the scalar ladders of a resolved theme: spacing, radius, depth and the icon, avatar, control and dot size groups, every level a dp value or a small composite of them. Owns the ladder shapes, not the dp unit itself.",
+      "rationale": null,
+      "related": [],
+      "summary": "Spacing, radius, depth and size ladders as dp-valued levels",
+      "title": "Scalar token ladders"
+    },
+    "pkg-theme-tokens-typography": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/TypographyTokens.kt",
+          "sha": "dc68116578d59a430f8913a0f2cc66278673de27"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/FontFamilyRef.kt",
+          "sha": "42e4003b8c91d2470edf5ab14b7c4744e2e27715"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/FontKeys.kt",
+          "sha": "7d9b78bb2371a561d672c7bd0c0a993736e60c85"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/TypeColorRef.kt",
+          "sha": "2877c795da43adf55a6a30abbc7ff4935e0fd858"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-color",
+        "pkg-theme-core"
+      ],
+      "gotchas": [],
+      "invariants": [
+        {
+          "rule": "A role's color is a semantic reference resolved against ColorTokens, not an inline color",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/TypeColorRef.kt"
+        },
+        {
+          "rule": "Font ids and consumer keys are non-blank",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/FontKeys.kt"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "structure, content, metadata",
+          "symbol": "TypographyTokens"
+        },
+        {
+          "note": "family, size, weight, line height, letter spacing, color",
+          "symbol": "TypeRole"
+        },
+        {
+          "note": "Catalog or Custom",
+          "symbol": "FontFamilyRef"
+        },
+        {
+          "note": "catalog family id",
+          "symbol": "GoogleFontId"
+        },
+        {
+          "note": "consumer-registered key",
+          "symbol": "CustomFontKey"
+        },
+        {
+          "note": "semantic role or explicit OKLCH",
+          "symbol": "TypeColorRef"
+        }
+      ],
+      "purpose": "Owns the typography token group: the structure, content and metadata ladders of composite roles, the catalog or consumer-registered font reference each role carries, and the semantic color a role resolves to. Owns no type unit definitions.",
+      "rationale": null,
+      "related": [
+        "pkg-basis-lint-checks"
+      ],
+      "summary": "Role-centric type ladders, font references and semantic type color references",
+      "title": "Typography tokens"
     }
   },
   "schema_version": 1
