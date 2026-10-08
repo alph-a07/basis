@@ -27,6 +27,7 @@
 #   CYCLE           depends_on cycle (lists nodes in or beneath it)
 #   UNKNOWN-SYMBOL  public_surface symbol not found in the node's anchors
 #   NO-MODULE-NODE  Gradle module in settings has no module-<slug> node
+#   UNCOVERED-SOURCE  a src/main source package dir has no node anchoring a file inside it
 # Not checked (needs a human): whether the prose is actually true.
 # Exit: 0 clean | 1 problems | 2 setup error
 
@@ -216,7 +217,7 @@ cmd_check() {
   done
 
   if [ "$full" -eq 1 ]; then
-    local sf m slug
+    local sf m slug d
     for sf in settings.gradle.kts settings.gradle; do
       [ -f "$sf" ] || continue
       while IFS= read -r m; do
@@ -226,6 +227,15 @@ cmd_check() {
           || report "NO-MODULE-NODE module-$slug: Gradle module :$m has no node"
       done < <(grep -oE "[\"']:[A-Za-z0-9_.:-]+[\"']" "$sf" | sed -E "s/^[\"']://; s/[\"']\$//" | sort -u)
     done
+    while IFS= read -r d; do
+      [ -n "$d" ] || continue
+      out=$(jq -r --arg d "$d" \
+        '[.nodes[].anchors[]?.path]
+         | if any(startswith($d + "/")) then empty
+           else "UNCOVERED-SOURCE \($d): no node anchors a file inside this package dir" end' "$G")
+      [ -z "$out" ] || report "$out"
+    done < <(git ls-tree -r HEAD --name-only \
+      | grep -E '^[^/]+/src/main/(kotlin|java)/.+\.(kt|java)$' | sed 's|/[^/]*$||' | sort -u)
   fi
 
   [ "$bad" -eq 0 ] && echo "OK $count node(s) checked"
