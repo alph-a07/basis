@@ -1,4 +1,4 @@
-package com.basis.theme.primitives
+package io.github.alph_a07.basis.theme.core
 
 /**
  * Value wrapper for a magnitude in dp (density-independent pixels).
