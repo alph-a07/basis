@@ -5,7 +5,7 @@ package io.github.alph_a07.basis.theme.color
  *
  * @property l Lightness in `0..1`.
  * @property c Chroma, `>= 0`.
- * @property h Hue in degrees, `[0, 360)`.
+ * @property h Hue in degrees, `[0, 360]`.
  * @property a Alpha in `0..1`. defaults to `1` (opaque).
  */
 @Suppress("MagicNumber")
