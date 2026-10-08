@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.tokens.motion
 
 import io.github.alph_a07.basis.theme.motion.MotionSpec
+import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
 
 /**
  * Semantic motion tokens for a [ResolvedTheme].
