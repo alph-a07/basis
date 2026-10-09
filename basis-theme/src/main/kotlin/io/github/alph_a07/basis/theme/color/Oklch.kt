@@ -3,6 +3,8 @@ package io.github.alph_a07.basis.theme.color
 /**
  * A color in the OKLCH color space, the single color representation used in the theme system.
  *
+ * Doubles as the OKLCH intake variant of [ColorSpec].
+ *
  * @property l Lightness in `0..1`.
  * @property c Chroma, `>= 0`.
  * @property h Hue in degrees, `[0, 360]`.
@@ -14,7 +16,7 @@ public data class Oklch(
     public val c: Float,
     public val h: Float,
     public val a: Float = 1f,
-) {
+) : ColorSpec {
     init {
         require(l.isFinite() && l in 0f..1f) { "Oklch.l must be in 0..1, was $l." }
         require(c.isFinite() && c >= 0f) { "Oklch.c must be finite and >= 0, was $c." }
