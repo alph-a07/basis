@@ -4,7 +4,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Categorical.kt",
-          "sha": "f70c62ae9e6acc0d417df3289b837d9215691753"
+          "sha": "8693721d35de3f036856e5f143a9ba991a5d70fc"
         }
       ],
       "depends_on": [
@@ -91,6 +91,24 @@
       "summary": "Android library module owning Basis components, theme consumers and binary API",
       "title": "Basis components module"
     },
+    "module-basis-detekt-rules": {
+      "anchors": [
+        {
+          "path": "build-logic/basis-detekt-rules/build.gradle.kts",
+          "sha": "6076bef15cc8e1a48c6db4fb00cd89e972ff4ca5"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "module",
+      "public_surface": [],
+      "purpose": "Gradle module owning Basis detekt lint rules (Issue registry, SpOnlyFontSizeDetector). Consumed by components module.",
+      "rationale": null,
+      "related": [],
+      "summary": "Detekt lint checks for Basis",
+      "title": "Basis detekt rules"
+    },
     "module-basis-lint": {
       "anchors": [
         {
@@ -132,7 +150,7 @@
       "anchors": [
         {
           "path": "basis-theme/build.gradle.kts",
-          "sha": "661eca33c949928d9472a214e9ba33ef3223a473"
+          "sha": "b821b6f9615eae5a23d25ebe4d59dece1cea641e"
         }
       ],
       "depends_on": [],
@@ -203,11 +221,11 @@
       "anchors": [
         {
           "path": "basis-lint/src/main/java/io/github/alph_a07/basis_lint/BasisIssueRegistry.kt",
-          "sha": "109c4ff6d66de3709cabff2c4851192b1a32005f"
+          "sha": "2db9fc7d6aeeac8d40ae11ef8e5021876c14a0e0"
         },
         {
           "path": "basis-lint/src/main/java/io/github/alph_a07/basis_lint/SpOnlyFontSizeDetector.kt",
-          "sha": "74ddf76f43b45c5e6dd95e7d3cc8678ecdd7a5f8"
+          "sha": "5a23801a5b8db6e70da971cdbdf122323d014c48"
         },
         {
           "path": "basis-lint/src/main/resources/META-INF/services/com.android.tools.lint.client.api.IssueRegistry",
@@ -259,11 +277,11 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Oklch.kt",
-          "sha": "79ba2128a14d47231f3f114106671c54704344f6"
+          "sha": "c4d936b62381c41774159e4486e9b97a6b5c4e63"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/OklchGradient.kt",
-          "sha": "148ffb153b4be58509b8cdead9410d028f8bc538"
+          "sha": "df9e9c8fa9a1ce4a32d7cc4c38cdc8719f319723"
         }
       ],
       "depends_on": [],
@@ -381,6 +399,86 @@
       "summary": "Validated value wrappers for token units plus the light/dark mode enum",
       "title": "Core value wrappers"
     },
+    "pkg-theme-core-codegen": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/codegen/BasisKnobEntries.kt",
+          "sha": "a8e7a0c09a3fa6eae9a27ce16508a886d35d80c7"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/codegen/BasisTokenPathFamily.kt",
+          "sha": "4e366115dfe34bc5e115b85d752ae4627a4789d5"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [],
+      "purpose": "Theme core codegen package.",
+      "rationale": null,
+      "related": [],
+      "summary": "Codegen package",
+      "title": "Core codegen"
+    },
+    "pkg-theme-intent": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/BasisIntent.kt",
+          "sha": "1a96db686694191370b594d1278f529ad2148468"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [],
+      "purpose": "Theme intent package.",
+      "rationale": null,
+      "related": [],
+      "summary": "Intent package",
+      "title": "Theme intent"
+    },
+    "pkg-theme-intent-controls": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/controls/ConstraintsControl.kt",
+          "sha": "c58964abd43d5f63d0fdf73dbf72caeda95f26af"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [],
+      "purpose": "Intent controls package.",
+      "rationale": null,
+      "related": [],
+      "summary": "Controls package",
+      "title": "Intent controls"
+    },
+    "pkg-theme-intent-controls-overrides": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/controls/overrides/ColorOverrides.kt",
+          "sha": "3330e2263696e195922519b3a231bceb3451879a"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides.kt",
+          "sha": "67fed36551e082a6cf785707fd214b99aa38b423"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [],
+      "purpose": "Intent controls overrides package.",
+      "rationale": null,
+      "related": [],
+      "summary": "Overrides package",
+      "title": "Intent controls overrides"
+    },
     "pkg-theme-motion": {
       "anchors": [
         {
@@ -492,7 +590,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/color/ColorTokens.kt",
-          "sha": "549da0d52d993a574dd8354fdf6d4f2a29a8d9c1"
+          "sha": "91b10da37be4e02dc36587f513fab3cb8a59fe36"
         }
       ],
       "depends_on": [
@@ -569,10 +667,6 @@
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair.kt",
           "sha": "2af1a567eaace05f833a8ad47a3f375efa432642"
-        },
-        {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/TokenPath.kt",
-          "sha": "5b87619c6cda728065e6a5a5ad7a4eb4369c447a"
         }
       ],
       "depends_on": [
@@ -588,10 +682,6 @@
         {
           "rule": "A pair carries at least one of light or dark",
           "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair.kt"
-        },
-        {
-          "rule": "Token paths are the dotted form used by Control overrides and the report",
-          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/TokenPath.kt"
         }
       ],
       "kind": "package",
@@ -603,25 +693,21 @@
         {
           "note": "light, dark, report",
           "symbol": "ResolvedThemePair"
-        },
-        {
-          "note": "sealed interface of dotted token paths",
-          "symbol": "TokenPath"
         }
       ],
-      "purpose": "Owns the aggregate a resolution emits: one fully resolved tree per mode, the light/dark pair with its report, and the typed dotted token paths used by overrides and diagnostics. Owns no token group definitions.",
+      "purpose": "Owns the aggregate a resolution emits: one fully resolved tree per mode, the light/dark pair with its report. Owns no token group definitions.",
       "rationale": null,
       "related": [
         "cmp-categorical"
       ],
-      "summary": "Resolved theme per mode, the light/dark pair, and stable token path identifiers",
+      "summary": "Resolved theme per mode and the light/dark pair",
       "title": "Resolved theme tree"
     },
     "pkg-theme-tokens-motion": {
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/motion/MotionTokens.kt",
-          "sha": "a91b34fc7fb78feabdbb09b9c6bb6a63d44430ab"
+          "sha": "5cac341b023a300a34a0a03a1ef8580753000b3a"
         }
       ],
       "depends_on": [
@@ -655,19 +741,19 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens.kt",
-          "sha": "e92faecbe3f55cb8b5b8446c9362a8b35ea7277e"
+          "sha": "b254911b6918795f14d75f6ad3a75ba7a6b64010"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens.kt",
-          "sha": "318fbe67177c0d49295705c78f250b42c331bbdd"
+          "sha": "55ec3a8f3e3a2240d8c9b2b4574cbec043706777"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/DepthTokens.kt",
-          "sha": "a97aea0a395373d96b828c0ed5c39cbf23eb3b79"
+          "sha": "1045b43955feffd815848125bd292f318c6bb07e"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/SizeTokens.kt",
-          "sha": "efc5ee93d6f045afc47a781407d060b78cea91cd"
+          "sha": "cffd070771d328cfa104cb3e0072e96de2f4b456"
         }
       ],
       "depends_on": [
@@ -721,7 +807,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/TypographyTokens.kt",
-          "sha": "dc68116578d59a430f8913a0f2cc66278673de27"
+          "sha": "5c40be6555ae3424fa6eb46d6ed3b4993b587cbc"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/FontFamilyRef.kt",
