@@ -16,8 +16,9 @@ private const val NULLABLE_FLOAT = "kotlin.Float"
 internal object KnobEntriesWalker {
 
     fun walk(receiver: KSClassDeclaration, prefix: String): KnobWalkResult {
-        val qualifiedName = receiver.qualifiedName?.asString()
-            ?: throw WalkFailure("Knob entries receiver has no qualified name.")
+        val qualifiedName =
+            receiver.qualifiedName?.asString()
+                ?: throw WalkFailure("Knob entries receiver has no qualified name.")
         checkPrefix(prefix)
         val entries = entriesOf(receiver, qualifiedName, prefix)
         val sources = mutableSetOf<KSFile>()
@@ -33,7 +34,9 @@ internal object KnobEntriesWalker {
     }
 
     private fun checkPrefix(prefix: String) {
-        if (prefix.isEmpty()) throw WalkFailure("Knob entries prefix must not be empty.")
+        if (prefix.isEmpty()) {
+            throw WalkFailure("Knob entries prefix must not be empty.")
+        }
     }
 
     private fun entriesOf(
@@ -41,11 +44,13 @@ internal object KnobEntriesWalker {
         qualifiedName: String,
         prefix: String,
     ): List<KnobEntry> {
-        val constructor = receiver.primaryConstructor
-            ?: throw WalkFailure("Knob entries type '$qualifiedName' has no primary constructor.")
-        val entries = constructor.parameters.map { parameter ->
-            walkParameter(parameter, qualifiedName, prefix)
-        }
+        val constructor =
+            receiver.primaryConstructor
+                ?: throw WalkFailure("Knob entries type '$qualifiedName' has no primary constructor.")
+        val entries =
+            constructor.parameters.map { parameter ->
+                walkParameter(parameter, qualifiedName, prefix)
+            }
         if (entries.isEmpty()) {
             throw WalkFailure("Knob entries '$qualifiedName' has no properties.")
         }
@@ -57,8 +62,9 @@ internal object KnobEntriesWalker {
         qualifiedName: String,
         prefix: String,
     ): KnobEntry {
-        val name = parameter.name?.asString()
-            ?: throw WalkFailure("Unnamed constructor parameter on '$qualifiedName'.")
+        val name =
+            parameter.name?.asString()
+                ?: throw WalkFailure("Unnamed constructor parameter on '$qualifiedName'.")
         val resolved = parameter.type.resolve()
         val declaration = resolved.declaration.qualifiedName?.asString()
         if (declaration != NULLABLE_FLOAT || resolved.nullability != Nullability.NULLABLE) {

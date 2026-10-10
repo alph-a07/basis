@@ -72,6 +72,7 @@ internal class IntentContractsTest {
         assertNull(BasisIntent().identity)
         assertNull(BasisIntent().mood)
         assertNull(BasisIntent().domain)
+
         assertNull(BasisIntent().control)
     }
 
@@ -79,12 +80,14 @@ internal class IntentContractsTest {
     fun axesSetIndependently() {
         val identity = BasisIntent(identity = IdentityIntent(brandColor = ColorSpec.Hex("#6750A4")))
         val mood = BasisIntent(mood = MoodIntent(preset = MoodPreset.Calm, knobs = MoodKnobs(warmth = 0.5f)))
-        val domain = BasisIntent(
-            domain = DomainIntent(
-                domains = setOf(ProductDomain.Finance),
-                interactions = setOf(InteractionPattern.DataNavigation),
-            ),
-        )
+        val domain =
+            BasisIntent(
+                domain =
+                    DomainIntent(
+                        domains = setOf(ProductDomain.Finance),
+                        interactions = setOf(InteractionPattern.DataNavigation),
+                    ),
+            )
         val control = BasisIntent(control = ControlIntent(mode = ModeControl(preferred = ThemeMode.Dark)))
 
         assertNull(identity.mood)
@@ -94,6 +97,7 @@ internal class IntentContractsTest {
         assertEquals(identity, BasisIntent(identity = identity.identity))
         assertEquals(mood, BasisIntent(mood = mood.mood))
         assertEquals(domain, BasisIntent(domain = domain.domain))
+
         assertEquals(control, BasisIntent(control = control.control))
     }
 
@@ -107,6 +111,7 @@ internal class IntentContractsTest {
         assertFalse(ColorSpec.Hex("").isWellFormed())
         assertTrue(ColorSpec.Argb(0xFF6750A4.toInt()).isWellFormed())
         assertFalse(ColorSpec.Hsl(h = Float.NaN, s = 0.5f, l = 0.5f).isWellFormed())
+
         assertTrue(Oklch(l = 0.6f, c = 0.1f, h = 250f).isWellFormed())
     }
 
@@ -124,6 +129,7 @@ internal class IntentContractsTest {
             setOf("mood.knobs.warmth", "mood.knobs.chroma", "mood.knobs.density"),
             violations.keys,
         )
+
         assertEquals(2f, violations["mood.knobs.warmth"])
     }
 
@@ -133,11 +139,13 @@ internal class IntentContractsTest {
         assertEquals(0, anchored.excessSupportingColorCount())
         assertFalse(anchored.hasPresenceWithoutBrand())
 
-        val unanchored = IdentityIntent(
-            supportingColors = List(6) { ColorSpec.Argb(it) },
-            presence = BrandPresence.Strong,
-        )
+        val unanchored =
+            IdentityIntent(
+                supportingColors = List(6) { ColorSpec.Argb(it) },
+                presence = BrandPresence.Strong,
+            )
         assertEquals(2, unanchored.excessSupportingColorCount())
+
         assertTrue(unanchored.hasPresenceWithoutBrand())
     }
 
@@ -145,6 +153,7 @@ internal class IntentContractsTest {
     fun typographyIdentityDedupesCandidatesAgainstPins() {
         val identity = TypographyIdentity(candidates = listOf(INTER, ROBOTO, INTER), content = ROBOTO)
         assertEquals(listOf(INTER), identity.dedupedCandidates())
+
         assertEquals(
             listOf(INTER, ROBOTO),
             TypographyIdentity(candidates = listOf(INTER, ROBOTO, INTER)).dedupedCandidates(),
@@ -159,6 +168,7 @@ internal class IntentContractsTest {
         assertFailsWith<IllegalArgumentException> {
             WeightClamp(min = FontWeightValue(600), max = FontWeightValue(400))
         }
+
         assertFailsWith<IllegalArgumentException> { FontFeatureSpec(setOf(" ")) }
     }
 
@@ -171,26 +181,30 @@ internal class IntentContractsTest {
         assertFailsWith<IllegalArgumentException> { MinMaxLevels(min = DpValue(16f), max = DpValue(8f)) }
         assertFailsWith<IllegalArgumentException> { MotionConstraint(maxDurationBias = 2f) }
         assertFailsWith<IllegalArgumentException> { TypographyConstraints(scaleFloor = Float.NaN) }
+
         ConstraintsControl(minContrast = ContrastConstraint(7f), motion = MotionConstraint(preferReducedMotion = true))
     }
 
     @Test
     fun controlShellsCarryOverridesAndDeepTypeLocks() {
-        val patch = ComponentStylePatch(
-            universal = UniversalStylePatch(
-                prominence = ProminenceTier.Primary,
-                treatment = Treatment.Fill,
-                surface = ColorTokenPath.SurfaceDefault,
-            ),
-            extra = ComponentExtraPatch.Button(controlSize = ControlSizeTokenPath.Level3),
-        )
+        val patch =
+            ComponentStylePatch(
+                universal =
+                    UniversalStylePatch(
+                        prominence = ProminenceTier.Primary,
+                        treatment = Treatment.Fill,
+                        surface = ColorTokenPath.SurfaceDefault,
+                    ),
+                extra = ComponentExtraPatch.Button(controlSize = ControlSizeTokenPath.Level3),
+            )
         val key = VariantStateKey(VariantId("primary"), StateId("pressed"))
-        val overrideSet = ComponentOverride(
-            all = patch,
-            byVariant = mapOf(VariantId("primary") to patch),
-            byState = mapOf(StateId("pressed") to patch),
-            byVariantState = mapOf(key to patch),
-        )
+        val overrideSet =
+            ComponentOverride(
+                all = patch,
+                byVariant = mapOf(VariantId("primary") to patch),
+                byState = mapOf(StateId("pressed") to patch),
+                byVariantState = mapOf(key to patch),
+            )
         val components = ComponentOverrides(byComponent = mapOf(ComponentId("button") to overrideSet))
         assertEquals(overrideSet, components.byComponent[ComponentId("button")])
         assertEquals(patch, overrideSet.byVariantState[key])
@@ -198,32 +212,37 @@ internal class IntentContractsTest {
         assertEquals("color.surface.default", ColorTokenPath.SurfaceDefault.path)
         assertEquals("size.control.level3", ControlSizeTokenPath.Level3.path)
 
-        val tokens = TokenOverrides(
-            color = ColorTokenOverrides(
-                surface = SurfaceColorOverrides(default = OverrideMode.Both(Oklch(0.98f, 0.01f, 255f))),
-            ),
-            spacing = LevelSpacingOverrides(level4 = DpValue(20f)),
-        )
+        val tokens =
+            TokenOverrides(
+                color =
+                    ColorTokenOverrides(
+                        surface = SurfaceColorOverrides(default = OverrideMode.Both(Oklch(0.98f, 0.01f, 255f))),
+                    ),
+                spacing = LevelSpacingOverrides(level4 = DpValue(20f)),
+            )
         assertEquals(OverrideMode.Both(Oklch(0.98f, 0.01f, 255f)), tokens.color?.surface?.default)
         assertEquals(DpValue(20f), tokens.spacing?.level4)
         assertNull(tokens.radius)
         assertTrue(tokens.paths.isEmpty())
 
-        val fromPaths = TokenOverrides.fromPaths(
-            "color.surface.default" to OverrideValue.Color(Oklch(0.98f, 0.01f, 255f)),
-            "spacing.level4" to OverrideValue.Dp(DpValue(20f)),
-        )
+        val fromPaths =
+            TokenOverrides.fromPaths(
+                "color.surface.default" to OverrideValue.Color(Oklch(0.98f, 0.01f, 255f)),
+                "spacing.level4" to OverrideValue.Dp(DpValue(20f)),
+            )
         assertEquals(2, fromPaths.paths.size)
         val dp = fromPaths.paths["spacing.level4"] as OverrideValue.Dp
         assertEquals(DpValue(20f), dp.value)
 
-        val fonts = FontControl(
-            levelFamilies = mapOf(TypographyTokenPath.StructureLevel3 to ROBOTO),
-            weightClamps = mapOf(TypographyTokenPath.ContentLevel1 to WeightClamp(max = FontWeightValue(600))),
-        )
+        val fonts =
+            FontControl(
+                levelFamilies = mapOf(TypographyTokenPath.StructureLevel3 to ROBOTO),
+                weightClamps = mapOf(TypographyTokenPath.ContentLevel1 to WeightClamp(max = FontWeightValue(600))),
+            )
         val control = ControlIntent(tokens = tokens, components = components, fonts = fonts)
         assertEquals(ROBOTO, control.fonts?.levelFamilies?.get(TypographyTokenPath.StructureLevel3))
         assertEquals(tokens, control.tokens)
+
         assertEquals(components, control.components)
     }
 
@@ -231,12 +250,13 @@ internal class IntentContractsTest {
     fun modeScopedOverridesExpressAllFourStates() {
         val light = Oklch(0.98f, 0.01f, 255f)
         val dark = Oklch(0.16f, 0.02f, 255f)
-        val surface = SurfaceColorOverrides(
-            default = OverrideMode.Both(light),
-            elevated = OverrideMode.LightOnly(light),
-            recessed = OverrideMode.DarkOnly(dark),
-            inverse = OverrideMode.Split(light = light, dark = dark),
-        )
+        val surface =
+            SurfaceColorOverrides(
+                default = OverrideMode.Both(light),
+                elevated = OverrideMode.LightOnly(light),
+                recessed = OverrideMode.DarkOnly(dark),
+                inverse = OverrideMode.Split(light = light, dark = dark),
+            )
         assertEquals(OverrideMode.Both(light), surface.default)
         assertEquals(OverrideMode.LightOnly(light), surface.elevated)
         assertEquals(OverrideMode.DarkOnly(dark), surface.recessed)
@@ -249,6 +269,7 @@ internal class IntentContractsTest {
         val shared = OverrideValue.Color(light)
         assertEquals(OverrideMode.Both(light), shared.value)
         val scoped = OverrideValue.Color(OverrideMode.DarkOnly(dark))
+
         assertEquals(OverrideMode.DarkOnly(dark), scoped.value)
     }
 }

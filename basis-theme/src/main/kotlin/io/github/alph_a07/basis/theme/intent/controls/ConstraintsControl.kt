@@ -88,6 +88,7 @@ public data class MotionConstraint(
 ) {
     init {
         val bias = maxDurationBias
+
         require(bias == null || (bias.isFinite() && bias in MIN_BIAS..MAX_BIAS)) {
             "MotionConstraint.maxDurationBias must be null or in $MIN_BIAS..$MAX_BIAS, was $bias."
         }
@@ -112,6 +113,7 @@ public data class TypographyConstraints(
 ) {
     init {
         val floor = scaleFloor
+
         require(floor == null || (floor.isFinite() && floor >= 0f)) {
             "TypographyConstraints.scaleFloor must be null or finite and >= 0, was $floor."
         }

@@ -10,28 +10,30 @@ import kotlin.test.assertTrue
  */
 internal class FamilyEmitterTest {
 
-    private val motionModel = FamilyModel(
-        enumName = "MotionTokenPath",
-        kind = "motion purpose",
-        prefix = "motion",
-        paramName = "motion",
-        enumDocNote = "",
-        resolveDocNote = "",
-        receiverSimpleName = "MotionTokens",
-        receiverFqn = "io.github.alph_a07.basis.theme.motion.MotionTokens",
-        returnSimpleName = "MotionSpec",
-        returnFqn = "io.github.alph_a07.basis.theme.motion.MotionSpec",
-        returnNullable = false,
-        resolveNoun = "spec",
-        members = listOf(
-            PathMember("Feedback", "motion.feedback", listOf("feedback")),
-            PathMember("StateTransition", "motion.stateTransition", listOf("stateTransition")),
-            PathMember("Transformation", "motion.transformation", listOf("transformation")),
-            PathMember("Expansion", "motion.expansion", listOf("expansion")),
-            PathMember("Reposition", "motion.reposition", listOf("reposition")),
-            PathMember("Emphasis", "motion.emphasis", listOf("emphasis")),
-        ),
-    )
+    private val motionModel =
+        FamilyModel(
+            enumName = "MotionTokenPath",
+            kind = "motion purpose",
+            prefix = "motion",
+            paramName = "motion",
+            enumDocNote = "",
+            resolveDocNote = "",
+            receiverSimpleName = "MotionTokens",
+            receiverFqn = "io.github.alph_a07.basis.theme.motion.MotionTokens",
+            returnSimpleName = "MotionSpec",
+            returnFqn = "io.github.alph_a07.basis.theme.motion.MotionSpec",
+            returnNullable = false,
+            resolveNoun = "spec",
+            members =
+                listOf(
+                    PathMember("Feedback", "motion.feedback", listOf("feedback")),
+                    PathMember("StateTransition", "motion.stateTransition", listOf("stateTransition")),
+                    PathMember("Transformation", "motion.transformation", listOf("transformation")),
+                    PathMember("Expansion", "motion.expansion", listOf("expansion")),
+                    PathMember("Reposition", "motion.reposition", listOf("reposition")),
+                    PathMember("Emphasis", "motion.emphasis", listOf("emphasis")),
+                ),
+        )
 
     @Test
     fun emitsPackageImportsAndEnumHeader() {
@@ -49,9 +51,10 @@ internal class FamilyEmitterTest {
     @Test
     fun emitsEveryPathLiteralInDeclarationOrder() {
         val source = FamilyEmitter.emit(motionModel)
-        val entries = source.lineSequence()
-            .filter { it.startsWith("    ") && it.contains("(\"motion.") }
-            .toList()
+        val entries =
+            source.lineSequence()
+                .filter { it.startsWith("    ") && it.contains("(\"motion.") }
+                .toList()
         assertEquals(
             listOf(
                 "    Feedback(\"motion.feedback\"),",
@@ -86,29 +89,32 @@ internal class FamilyEmitterTest {
 
     @Test
     fun colorStyleDocNotesAndNullableReturnRender() {
-        val colorModel = motionModel.copy(
-            enumName = "ColorTokenPath",
-            kind = "color token",
-            prefix = "color",
-            paramName = "colors",
-            enumDocNote = "Gradient paths are not referenceable here and remain string-level for " +
-                "reports and the secondary map.",
-            resolveDocNote = "brand anchors absent from the theme resolve to null.",
-            receiverSimpleName = "ColorTokens",
-            receiverFqn = "io.github.alph_a07.basis.theme.tokens.color.ColorTokens",
-            returnSimpleName = "Oklch",
-            returnFqn = "io.github.alph_a07.basis.theme.color.Oklch",
-            returnNullable = true,
-            resolveNoun = "leaf",
-            members = listOf(
-                PathMember("SurfaceDefault", "color.surface.default", listOf("surface", "default")),
-                PathMember(
-                    "BrandSecondary",
-                    "color.brand.secondary",
-                    listOf("brand", "secondary"),
-                ),
-            ),
-        )
+        val colorModel =
+            motionModel.copy(
+                enumName = "ColorTokenPath",
+                kind = "color token",
+                prefix = "color",
+                paramName = "colors",
+                enumDocNote =
+                    "Gradient paths are not referenceable here and remain string-level for " +
+                        "reports and the secondary map.",
+                resolveDocNote = "brand anchors absent from the theme resolve to null.",
+                receiverSimpleName = "ColorTokens",
+                receiverFqn = "io.github.alph_a07.basis.theme.tokens.color.ColorTokens",
+                returnSimpleName = "Oklch",
+                returnFqn = "io.github.alph_a07.basis.theme.color.Oklch",
+                returnNullable = true,
+                resolveNoun = "leaf",
+                members =
+                    listOf(
+                        PathMember("SurfaceDefault", "color.surface.default", listOf("surface", "default")),
+                        PathMember(
+                            "BrandSecondary",
+                            "color.brand.secondary",
+                            listOf("brand", "secondary"),
+                        ),
+                    ),
+            )
         val source = FamilyEmitter.emit(colorModel)
         assertTrue(
             source.contains(

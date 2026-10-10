@@ -15,6 +15,7 @@ public data class OklchGradient(
         require(stops.zipWithNext().all { (a, b) -> a.offset <= b.offset }) {
             "OklchGradient stops must be sorted ascending by offset."
         }
+
         require(stops.all { it.offset in 0f..1f }) { "OklchGradient offsets must be in 0..1." }
     }
 }

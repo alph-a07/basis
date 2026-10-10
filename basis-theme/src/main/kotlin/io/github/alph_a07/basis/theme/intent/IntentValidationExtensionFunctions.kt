@@ -39,15 +39,24 @@ internal fun MoodKnobs.violatingKnobs(): Map<String, Float> = knobEntries()
 
 /** Whether a color spec carries enough signal to be converted during normalization. */
 internal fun ColorSpec.isWellFormed(): Boolean = when (this) {
-    is ColorSpec.Hex -> value.matches(HEX_PATTERN)
-    is ColorSpec.Argb -> true
-    is ColorSpec.Hsl -> h.isFinite() && s.isFinite() && l.isFinite() && a.isFinite()
-    is Oklch -> true
+    is ColorSpec.Hex -> {
+        value.matches(HEX_PATTERN)
+    }
+    is ColorSpec.Argb -> {
+        true
+    }
+    is ColorSpec.Hsl -> {
+        h.isFinite() && s.isFinite() && l.isFinite() && a.isFinite()
+    }
+    is Oklch -> {
+        true
+    }
 }
 
 /** Candidates in order, deduplicated and with role pins removed; pins win over duplicates. */
 internal fun TypographyIdentity.dedupedCandidates(): List<FontFamilyRef> {
     val pins = setOfNotNull(structure, content, metadata)
+
     return candidates.distinct().filterNot { it in pins }
 }
 
@@ -60,7 +69,13 @@ internal fun IdentityIntent.excessSupportingColorCount(): Int =
     (supportingColors.size - MAX_SUPPORTING_COLORS).coerceAtLeast(0)
 
 private fun clampKnob(value: Float?): Float? = when {
-    value == null -> null
-    !value.isFinite() -> null
-    else -> value.coerceIn(KNOB_MIN, KNOB_MAX)
+    value == null -> {
+        null
+    }
+    !value.isFinite() -> {
+        null
+    }
+    else -> {
+        value.coerceIn(KNOB_MIN, KNOB_MAX)
+    }
 }

@@ -9,9 +9,15 @@ private const val KDOC_WIDTH = 112
  * `ColorTokenPath` and `IconSizes` becomes `IconSizeTokenPath`.
  */
 internal fun enumNameFor(receiverSimpleName: String): String = when {
-    receiverSimpleName.endsWith(TOKENS_SUFFIX) -> receiverSimpleName.removeSuffix(TOKENS_SUFFIX) + "TokenPath"
-    receiverSimpleName.endsWith(SIZES_SUFFIX) -> receiverSimpleName.removeSuffix(SIZES_SUFFIX) + "SizeTokenPath"
-    else -> error("Cannot derive a token path enum name from '$receiverSimpleName'.")
+    receiverSimpleName.endsWith(TOKENS_SUFFIX) -> {
+        receiverSimpleName.removeSuffix(TOKENS_SUFFIX) + "TokenPath"
+    }
+    receiverSimpleName.endsWith(SIZES_SUFFIX) -> {
+        receiverSimpleName.removeSuffix(SIZES_SUFFIX) + "SizeTokenPath"
+    }
+    else -> {
+        error("Cannot derive a token path enum name from '$receiverSimpleName'.")
+    }
 }
 
 /**
@@ -20,7 +26,11 @@ internal fun enumNameFor(receiverSimpleName: String): String = when {
  */
 internal fun memberNameFor(segments: List<String>): String =
     segments.joinToString(separator = "") { segment ->
-        if (segment.isEmpty()) segment else segment[0].uppercaseChar() + segment.substring(1)
+        if (segment.isEmpty()) {
+            segment
+        } else {
+            segment[0].uppercaseChar() + segment.substring(1)
+        }
     }
 
 /**
@@ -48,9 +58,13 @@ internal fun wrapKdocParagraph(text: String, width: Int = KDOC_WIDTH): List<Stri
             lines += current.toString()
             current.setLength(0)
         }
-        if (current.isNotEmpty()) current.append(' ')
+        if (current.isNotEmpty()) {
+            current.append(' ')
+        }
         current.append(word)
     }
-    if (current.isNotEmpty()) lines += current.toString()
+    if (current.isNotEmpty()) {
+        lines += current.toString()
+    }
     return lines.ifEmpty { listOf("") }
 }

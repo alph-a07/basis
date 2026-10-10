@@ -37,12 +37,18 @@ internal class BasisTokenPathFamilyProcessor(
                 logger.error("Symbol does not resolve @BasisTokenPathFamily.", symbol)
             } else {
                 when (symbol) {
-                    is KSClassDeclaration -> generate(symbol, annotation, symbol)
-                    is KSPropertyDeclaration -> generateFromProperty(symbol, annotation)
-                    else -> logger.error(
-                        "@BasisTokenPathFamily must annotate a class or a property.",
-                        symbol,
-                    )
+                    is KSClassDeclaration -> {
+                        generate(symbol, annotation, symbol)
+                    }
+                    is KSPropertyDeclaration -> {
+                        generateFromProperty(symbol, annotation)
+                    }
+                    else -> {
+                        logger.error(
+                            "@BasisTokenPathFamily must annotate a class or a property.",
+                            symbol,
+                        )
+                    }
                 }
             }
         }
@@ -72,12 +78,13 @@ internal class BasisTokenPathFamilyProcessor(
     ): KSClassDeclaration? {
         val propertyName = symbol.simpleName.asString()
 
-        val config = try {
-            annotation.toConfig()
-        } catch (failure: WalkFailure) {
-            logger.error(failure.reason, symbol)
-            return null
-        }
+        val config =
+            try {
+                annotation.toConfig()
+            } catch (failure: WalkFailure) {
+                logger.error(failure.reason, symbol)
+                return null
+            }
 
         return when {
             !config.prefix.endsWith(".$propertyName") -> {
@@ -100,20 +107,22 @@ internal class BasisTokenPathFamilyProcessor(
 
     @Suppress("SpreadOperator")
     private fun generate(receiver: KSClassDeclaration, annotation: KSAnnotation, origin: KSAnnotated) {
-        val result = try {
-            val receiverFqn = receiver.qualifiedName?.asString()
-                ?: throw WalkFailure("Token path receiver has no qualified name.")
-            val config = annotation.toConfig()
+        val result =
+            try {
+                val receiverFqn =
+                    receiver.qualifiedName?.asString()
+                        ?: throw WalkFailure("Token path receiver has no qualified name.")
+                val config = annotation.toConfig()
 
-            if (processed.add("$receiverFqn#${config.prefix}")) {
-                TokenFamilyWalker.walk(receiver, config)
-            } else {
-                null
+                if (processed.add("$receiverFqn#${config.prefix}")) {
+                    TokenFamilyWalker.walk(receiver, config)
+                } else {
+                    null
+                }
+            } catch (failure: WalkFailure) {
+                logger.error(failure.reason, origin)
+                return
             }
-        } catch (failure: WalkFailure) {
-            logger.error(failure.reason, origin)
-            return
-        }
 
         if (result == null) {
             return
@@ -132,14 +141,17 @@ internal class BasisTokenPathFamilyProcessor(
 
     @Suppress("SpreadOperator")
     private fun generateKnobEntries(receiver: KSClassDeclaration) {
-        val result = try {
-            knobWalkResult(receiver)
-        } catch (failure: WalkFailure) {
-            logger.error(failure.reason, receiver)
+        val result =
+            try {
+                knobWalkResult(receiver)
+            } catch (failure: WalkFailure) {
+                logger.error(failure.reason, receiver)
+                return
+            }
+
+        if (result == null) {
             return
         }
-
-        if (result == null) return
 
         codeGenerator.createNewFile(
             Dependencies(aggregating = false, *result.sources.toTypedArray()),
@@ -160,16 +172,18 @@ internal class BasisTokenPathFamilyProcessor(
 
     private fun knobRequestOf(receiver: KSClassDeclaration): Pair<String, String> {
         val prefix = knobPrefixOf(receiver)
-        val receiverFqn = receiver.qualifiedName?.asString()
-            ?: throw WalkFailure("Knob entries receiver has no qualified name.")
+        val receiverFqn =
+            receiver.qualifiedName?.asString()
+                ?: throw WalkFailure("Knob entries receiver has no qualified name.")
 
         return receiverFqn to prefix
     }
 
     private fun knobPrefixOf(receiver: KSClassDeclaration): String {
-        val annotation = receiver.annotations.firstOrNull { entry ->
-            entry.annotationType.resolve().declaration.qualifiedName?.asString() == KNOB_ANNOTATION
-        } ?: throw WalkFailure("Symbol does not resolve @BasisKnobEntries.")
+        val annotation =
+            receiver.annotations.firstOrNull { entry ->
+                entry.annotationType.resolve().declaration.qualifiedName?.asString() == KNOB_ANNOTATION
+            } ?: throw WalkFailure("Symbol does not resolve @BasisKnobEntries.")
 
         return annotation.arguments.firstOrNull { it.name?.asString() == "prefix" }?.value as? String
             ?: throw WalkFailure("@BasisKnobEntries requires a non-null 'prefix'.")
@@ -177,10 +191,12 @@ internal class BasisTokenPathFamilyProcessor(
 
     private fun KSAnnotation.toConfig(): FamilyConfig {
         fun arg(name: String): Any? = arguments.firstOrNull { it.name?.asString() == name }?.value
-        val prefix = arg("prefix") as? String
-            ?: throw WalkFailure("@BasisTokenPathFamily requires a non-null 'prefix'.")
-        val kind = arg("kind") as? String
-            ?: throw WalkFailure("@BasisTokenPathFamily requires a non-null 'kind'.")
+        val prefix =
+            arg("prefix") as? String
+                ?: throw WalkFailure("@BasisTokenPathFamily requires a non-null 'prefix'.")
+        val kind =
+            arg("kind") as? String
+                ?: throw WalkFailure("@BasisTokenPathFamily requires a non-null 'kind'.")
 
         return FamilyConfig(
             prefix = prefix,

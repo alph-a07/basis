@@ -10,8 +10,9 @@ import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
     kind = "color token",
     excludes = ["gradient"],
     paramName = "colors",
-    enumDocNote = "Gradient paths are not referenceable here and remain string-level for reports " +
-        "and the secondary map.",
+    enumDocNote =
+        "Gradient paths are not referenceable here and remain string-level for reports " +
+            "and the secondary map.",
     resolveDocNote = "brand anchors absent from the theme resolve to null.",
 )
 public data class ColorTokens(

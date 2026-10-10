@@ -45,12 +45,16 @@ internal object TokenFamilyWalker {
         fun descend(type: KSClassDeclaration, segments: List<String>) {
             type.containingFile?.let(sources::add)
             val qualifiedName = type.qualifiedName?.asString() ?: "?"
-            val constructor = type.primaryConstructor
-                ?: throw WalkFailure("Token path type '$qualifiedName' has no primary constructor.")
+            val constructor =
+                type.primaryConstructor
+                    ?: throw WalkFailure("Token path type '$qualifiedName' has no primary constructor.")
             constructor.parameters.forEach { parameter ->
-                val name = parameter.name?.asString()
-                    ?: throw WalkFailure("Unnamed constructor parameter on '$qualifiedName'.")
-                if (name !in config.excludes) visit(parameter, type, segments, name)
+                val name =
+                    parameter.name?.asString()
+                        ?: throw WalkFailure("Unnamed constructor parameter on '$qualifiedName'.")
+                if (name !in config.excludes) {
+                    visit(parameter, type, segments, name)
+                }
             }
         }
 
@@ -65,15 +69,19 @@ internal object TokenFamilyWalker {
             val fqn = declaration?.qualifiedName?.asString()
             val noun = fqn?.let(TokenLeafTypes.nouns::get)
             when {
-                declaration != null && fqn != null && noun != null ->
+                declaration != null && fqn != null && noun != null -> {
                     addLeaf(declaration, fqn, resolved, segments + name)
-                declaration != null && declaration.primaryConstructor != null ->
+                }
+                declaration != null && declaration.primaryConstructor != null -> {
                     descend(declaration, segments + name)
-                else -> throw WalkFailure(
-                    "Token path walk reached '" + (fqn ?: resolved.toString()) + "' beneath '" +
-                        (owner.qualifiedName?.asString() ?: "?") +
-                        "', which is neither a known token leaf nor a walkable token group.",
-                )
+                }
+                else -> {
+                    throw WalkFailure(
+                        "Token path walk reached '" + (fqn ?: resolved.toString()) + "' beneath '" +
+                            (owner.qualifiedName?.asString() ?: "?") +
+                            "', which is neither a known token leaf nor a walkable token group.",
+                    )
+                }
             }
         }
 
@@ -89,13 +97,16 @@ internal object TokenFamilyWalker {
             } else if (current != fqn) {
                 throw WalkFailure("A path family must have one leaf type, found '$current' and '$fqn'.")
             }
-            if (resolved.nullability == Nullability.NULLABLE) leafNullable = true
+            if (resolved.nullability == Nullability.NULLABLE) {
+                leafNullable = true
+            }
             declaration.containingFile?.let(sources::add)
-            members += PathMember(
-                entryName = memberNameFor(segments),
-                path = pathFor(config.prefix, segments),
-                segments = segments,
-            )
+            members +=
+                PathMember(
+                    entryName = memberNameFor(segments),
+                    path = pathFor(config.prefix, segments),
+                    segments = segments,
+                )
         }
 
         fun checkComplete() {
@@ -110,8 +121,9 @@ internal object TokenFamilyWalker {
 
         fun modelFor(receiver: KSClassDeclaration): FamilyModel {
             val leaf = checkNotNull(leafFqn) { "Family '${config.prefix}' has no leaf type." }
-            val receiverFqn = receiver.qualifiedName?.asString()
-                ?: throw WalkFailure("Token path receiver has no qualified name.")
+            val receiverFqn =
+                receiver.qualifiedName?.asString()
+                    ?: throw WalkFailure("Token path receiver has no qualified name.")
             return FamilyModel(
                 enumName = enumNameFor(receiver.simpleName.asString()),
                 kind = config.kind,

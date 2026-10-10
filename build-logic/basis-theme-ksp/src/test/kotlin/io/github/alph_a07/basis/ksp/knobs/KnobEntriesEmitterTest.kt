@@ -10,14 +10,16 @@ import kotlin.test.assertTrue
  */
 internal class KnobEntriesEmitterTest {
 
-    private val moodModel = KnobEntriesModel(
-        packageName = "io.github.alph_a07.basis.theme.intent",
-        receiverSimpleName = "MoodKnobs",
-        entries = listOf(
-            KnobEntry("warmth", "mood.knobs.warmth"),
-            KnobEntry("chroma", "mood.knobs.chroma"),
-        ),
-    )
+    private val moodModel =
+        KnobEntriesModel(
+            packageName = "io.github.alph_a07.basis.theme.intent",
+            receiverSimpleName = "MoodKnobs",
+            entries =
+                listOf(
+                    KnobEntry("warmth", "mood.knobs.warmth"),
+                    KnobEntry("chroma", "mood.knobs.chroma"),
+                ),
+        )
 
     @Test
     fun emitsInternalExtensionInReceiverPackage() {
@@ -29,10 +31,11 @@ internal class KnobEntriesEmitterTest {
     @Test
     fun emitsOneNullSkippingEntryPerAxisInOrder() {
         val source = KnobEntriesEmitter.emit(moodModel)
-        val puts = source.lineSequence()
-            .map { it.trim() }
-            .filter { it.startsWith("warmth?.let") || it.startsWith("chroma?.let") }
-            .toList()
+        val puts =
+            source.lineSequence()
+                .map { it.trim() }
+                .filter { it.startsWith("warmth?.let") || it.startsWith("chroma?.let") }
+                .toList()
         assertEquals(
             listOf(
                 "warmth?.let { put(\"mood.knobs.warmth\", it) }",

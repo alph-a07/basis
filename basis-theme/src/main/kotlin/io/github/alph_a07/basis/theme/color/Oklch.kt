@@ -21,6 +21,7 @@ public data class Oklch(
         require(l.isFinite() && l in 0f..1f) { "Oklch.l must be in 0..1, was $l." }
         require(c.isFinite() && c >= 0f) { "Oklch.c must be finite and >= 0, was $c." }
         require(h.isFinite() && h in 0f..360f) { "Oklch.h must be in [0, 360], was $h." }
+
         require(a.isFinite() && a in 0f..1f) { "Oklch.a must be in 0..1, was $a." }
     }
 }

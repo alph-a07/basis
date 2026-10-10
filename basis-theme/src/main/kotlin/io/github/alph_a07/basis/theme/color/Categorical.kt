@@ -54,22 +54,47 @@ public fun ResolvedTheme.categorical(
 
     val baseHue = color.brand.primary.h
     val baseIsDark = mode == ThemeMode.Dark
+
     return List(count) { index ->
-        val hue = when (strategy) {
-            CategoricalStrategy.EvenHue -> (index * (360f / count)) % 360f
-            CategoricalStrategy.BrandAnchored -> (baseHue + index * (360f / count)) % 360f
-            CategoricalStrategy.AccessibleQualitative -> (baseHue + 40f + index * (360f / count)) % 360f
-        }
-        val main = Oklch(
-            l = if (baseIsDark) 0.68f else 0.62f,
-            c = 0.14f,
-            h = hue,
-        )
+        val hue =
+            when (strategy) {
+                CategoricalStrategy.EvenHue -> {
+                    (index * (360f / count)) % 360f
+                }
+                CategoricalStrategy.BrandAnchored -> {
+                    (baseHue + index * (360f / count)) % 360f
+                }
+                CategoricalStrategy.AccessibleQualitative -> {
+                    (baseHue + 40f + index * (360f / count)) % 360f
+                }
+            }
+        val main =
+            Oklch(
+                l =
+                    if (baseIsDark) {
+                        0.68f
+                    } else {
+                        0.62f
+                    },
+                c = 0.14f,
+                h = hue,
+            )
+
         CategoricalSwatch(
             main = main,
             soft = main.copy(l = (main.l + 0.18f).coerceAtMost(0.95f), c = main.c * 0.55f),
             muted = main.copy(c = main.c * 0.45f),
-            onMain = Oklch(l = if (baseIsDark) 0.16f else 0.96f, c = 0.01f, h = hue),
+            onMain =
+                Oklch(
+                    l =
+                        if (baseIsDark) {
+                            0.16f
+                        } else {
+                            0.96f
+                        },
+                    c = 0.01f,
+                    h = hue,
+                ),
         )
     }
 }

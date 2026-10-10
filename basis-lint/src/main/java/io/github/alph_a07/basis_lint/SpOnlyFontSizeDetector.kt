@@ -55,15 +55,20 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
         // Resolved through UAST rather than through `sourcePsi`: for a Kotlin file the underlying
         // element is a `KtCallExpression`, which is not a `PsiMethodCallExpression` and cannot be
         // resolved with the Java PSI API.
+
         val method = node.resolve() ?: return
         val mapping = context.evaluator.computeArgumentMapping(node, method)
 
         for ((argument, parameter) in mapping) {
             val name = parameter.name
-            if (name !in FONT_SIZE_PARAMETERS) continue
+            if (name !in FONT_SIZE_PARAMETERS) {
+                continue
+            }
 
             val reported = unwrap(argument) ?: continue
-            if (!isDpTyped(reported)) continue
+            if (!isDpTyped(reported)) {
+                continue
+            }
 
             context.report(
                 ISSUE,
@@ -77,8 +82,12 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
 
     /** Strips parentheses so the reported range is the value itself. */
     private fun unwrap(expression: UExpression): UExpression? = when (expression) {
-        is UParenthesizedExpression -> unwrap(expression.expression)
-        else -> expression
+        is UParenthesizedExpression -> {
+            unwrap(expression.expression)
+        }
+        else -> {
+            expression
+        }
     }
 
     /**
@@ -91,8 +100,13 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
      * matched by any other expression yielding a `Dp`.
      */
     private fun isDpTyped(expression: UExpression): Boolean {
-        if (expression.getExpressionType()?.isDp() == true) return true
-        if (isDpDeclaration(expression)) return true
+        if (expression.getExpressionType()?.isDp() == true) {
+            return true
+        }
+        if (isDpDeclaration(expression)) {
+            return true
+        }
+
         return referencesDpExtension(expression)
     }
 
@@ -107,14 +121,18 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
     private fun referencesDpExtension(expression: UExpression): Boolean {
         val qualified = expression as? UQualifiedReferenceExpression
 
-        val resolved = listOfNotNull(expression, qualified?.selector)
-            .filterIsInstance<UResolvable>()
-            .mapNotNull { it.resolve() }
-            .any { resolved -> resolved.isDpExtensionProperty() }
-        if (resolved) return true
+        val resolved =
+            listOfNotNull(expression, qualified?.selector)
+                .filterIsInstance<UResolvable>()
+                .mapNotNull { it.resolve() }
+                .any { resolved -> resolved.isDpExtensionProperty() }
+        if (resolved) {
+            return true
+        }
 
         val selector = qualified?.selector ?: return false
         val isDpCall = (selector as? USimpleNameReferenceExpression)?.identifier == DP_EXTENSION
+
         return isDpCall && qualified.receiver.getExpressionType()?.isNumeric() == true
     }
 
@@ -126,14 +144,24 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
      * declaration instead, which keeps the diagnosis with the code that chose the unit.
      */
     private fun isDpDeclaration(expression: UExpression): Boolean {
-        if (expression !is UResolvable) return false
+        if (expression !is UResolvable) {
+            return false
+        }
+
         val resolved = expression.resolve() ?: return false
 
-        val declaredType = when (resolved) {
-            is PsiVariable -> resolved.type
-            is PsiMethod -> resolved.returnType
-            else -> null
-        } ?: return false
+        val declaredType =
+            when (resolved) {
+                is PsiVariable -> {
+                    resolved.type
+                }
+                is PsiMethod -> {
+                    resolved.returnType
+                }
+                else -> {
+                    null
+                }
+            } ?: return false
 
         return declaredType.isDp()
     }
@@ -150,8 +178,13 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
      * property name and its Java accessor form are matched.
      */
     private fun PsiElement.isDpExtensionProperty(): Boolean {
-        if (this !is PsiMember) return false
-        if (name != DP_EXTENSION && name != DP_EXTENSION_ACCESSOR) return false
+        if (this !is PsiMember) {
+            return false
+        }
+        if (name != DP_EXTENSION && name != DP_EXTENSION_ACCESSOR) {
+            return false
+        }
+
         return packageNameOfDeclaration() == DP_PACKAGE
     }
 
@@ -172,12 +205,21 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
         val qualified = expression as? UQualifiedReferenceExpression
         val literal = (qualified?.receiver ?: expression) as? ULiteralExpression
         val value = literal?.value
-        return if (value is Number) "${literalText(value)}.sp" else "the equivalent sp value"
+
+        return if (value is Number) {
+            "${literalText(value)}.sp"
+        } else {
+            "the equivalent sp value"
+        }
     }
 
     /** The literal exactly as written, so `16` stays `16` and `0.5` stays `0.5`. */
     private fun literalText(value: Number): String =
-        if (value is Float || value is Double) "${value}f" else value.toString()
+        if (value is Float || value is Double) {
+            "${value}f"
+        } else {
+            value.toString()
+        }
 
     companion object {
         private const val DP_FQN = "androidx.compose.ui.unit.Dp"
@@ -185,22 +227,24 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
         private const val DP_EXTENSION = "dp"
         private const val DP_EXTENSION_ACCESSOR = "getDp"
 
-        private val FONT_SIZE_PARAMETERS = setOf(
-            "fontSize",
-            "fontSizeSp",
-            "lineHeight",
-            "lineHeightSp",
-            "letterSpacing",
-            "letterSpacingSp",
-        )
+        private val FONT_SIZE_PARAMETERS =
+            setOf(
+                "fontSize",
+                "fontSizeSp",
+                "lineHeight",
+                "lineHeightSp",
+                "letterSpacing",
+                "letterSpacingSp",
+            )
 
         private val NUMERIC_TYPES = setOf("int", "long", "float", "double", "short", "byte")
 
         @JvmField
-        val ISSUE: Issue = Issue.create(
-            id = "SpOnlyFontSize",
-            briefDescription = "Font size must be expressed in sp",
-            explanation = """
+        val ISSUE: Issue =
+            Issue.create(
+                id = "SpOnlyFontSize",
+                briefDescription = "Font size must be expressed in sp",
+                explanation = """
                 Basis requires every font size to be expressed in scale-independent pixels so that \
                 text responds to the user's OS-level font scale setting.
 
@@ -210,13 +254,14 @@ class SpOnlyFontSizeDetector : Detector(), SourceCodeScanner {
 
                 Use `sp` (for example `16.sp`) for font size, line height, and letter spacing.
             """,
-            category = Category.CORRECTNESS,
-            priority = 7,
-            severity = Severity.ERROR,
-            implementation = Implementation(
-                SpOnlyFontSizeDetector::class.java,
-                Scope.JAVA_FILE_SCOPE,
-            ),
-        )
+                category = Category.CORRECTNESS,
+                priority = 7,
+                severity = Severity.ERROR,
+                implementation =
+                    Implementation(
+                        SpOnlyFontSizeDetector::class.java,
+                        Scope.JAVA_FILE_SCOPE,
+                    ),
+            )
     }
 }

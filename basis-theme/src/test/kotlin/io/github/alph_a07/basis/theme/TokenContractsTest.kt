@@ -71,6 +71,7 @@ private fun colorTokens(): ColorTokens {
     val border = BorderColors(oklch(), oklch(), oklch(), oklch(20f))
     val selection = SelectionColors(oklch(), oklch(20f), oklch())
     val status = StatusColors(oklch(), oklch(20f), oklch(), oklch(20f))
+
     return ColorTokens(
         surface = surface,
         content = content,
@@ -94,58 +95,64 @@ private fun typographyTokens(): TypographyTokens = TypographyTokens(
 )
 
 private fun sizeTokens(): SizeTokens = SizeTokens(
-    icon = IconSizes(
-        level1 = DpValue(12f),
-        level2 = DpValue(16f),
-        level3 = DpValue(20f),
-        level4 = DpValue(24f),
-        level5 = DpValue(32f),
-    ),
-    avatar = AvatarSizes(
-        level1 = DpValue(24f),
-        level2 = DpValue(32f),
-        level3 = DpValue(40f),
-        level4 = DpValue(56f),
-        level5 = DpValue(72f),
-    ),
-    control = ControlSizes(
-        level1 = DpValue(32f),
-        level2 = DpValue(40f),
-        level3 = DpValue(48f),
-        level4 = DpValue(56f),
-        level5 = DpValue(64f),
-    ),
+    icon =
+        IconSizes(
+            level1 = DpValue(12f),
+            level2 = DpValue(16f),
+            level3 = DpValue(20f),
+            level4 = DpValue(24f),
+            level5 = DpValue(32f),
+        ),
+    avatar =
+        AvatarSizes(
+            level1 = DpValue(24f),
+            level2 = DpValue(32f),
+            level3 = DpValue(40f),
+            level4 = DpValue(56f),
+            level5 = DpValue(72f),
+        ),
+    control =
+        ControlSizes(
+            level1 = DpValue(32f),
+            level2 = DpValue(40f),
+            level3 = DpValue(48f),
+            level4 = DpValue(56f),
+            level5 = DpValue(64f),
+        ),
     dot = DotSizes(level1 = DpValue(6f), level2 = DpValue(8f), level3 = DpValue(10f)),
 )
 
 private fun theme(mode: ThemeMode): ResolvedTheme {
     val color = colorTokens()
     val typography = typographyTokens()
-    val spacing = SpacingTokens(
-        level1 = DpValue(4f),
-        level2 = DpValue(8f),
-        level3 = DpValue(12f),
-        level4 = DpValue(16f),
-        level5 = DpValue(24f),
-        level6 = DpValue(32f),
-        level7 = DpValue(40f),
-        level8 = DpValue(48f),
-    )
-    val radius = RadiusTokens(
-        none = DpValue(0f),
-        level1 = DpValue(2f),
-        level2 = DpValue(4f),
-        level3 = DpValue(6f),
-        level4 = DpValue(8f),
-        level5 = DpValue(12f),
-        level6 = DpValue(16f),
-        level7 = DpValue(24f),
-        level8 = DpValue(32f),
-        full = DpValue(9999f),
-    )
+    val spacing =
+        SpacingTokens(
+            level1 = DpValue(4f),
+            level2 = DpValue(8f),
+            level3 = DpValue(12f),
+            level4 = DpValue(16f),
+            level5 = DpValue(24f),
+            level6 = DpValue(32f),
+            level7 = DpValue(40f),
+            level8 = DpValue(48f),
+        )
+    val radius =
+        RadiusTokens(
+            none = DpValue(0f),
+            level1 = DpValue(2f),
+            level2 = DpValue(4f),
+            level3 = DpValue(6f),
+            level4 = DpValue(8f),
+            level5 = DpValue(12f),
+            level6 = DpValue(16f),
+            level7 = DpValue(24f),
+            level8 = DpValue(32f),
+            full = DpValue(9999f),
+        )
     val depthSpec = DepthSpec(DpValue(2f), 0.2f, DpValue(4f), DpValue(1f))
     val size = sizeTokens()
     val spec = MotionSpec(DurationValue(200L), EasingKind.Standard)
+
     return ResolvedTheme(
         mode = mode,
         color = color,
@@ -162,6 +169,7 @@ internal class TokenContractsTest {
     @Test
     fun representativeTreeConstructsAndComparesEqual() {
         assertEquals(theme(ThemeMode.Light), theme(ThemeMode.Light))
+
         assertTrue(theme(ThemeMode.Light) != theme(ThemeMode.Dark))
     }
 
@@ -172,6 +180,7 @@ internal class TokenContractsTest {
         assertEquals(4, series.size)
         val even = light.categorical(3, CategoricalStrategy.EvenHue)
         assertEquals(3, even.size)
+
         assertFailsWith<IllegalArgumentException> { light.categorical(0) }
     }
 
@@ -179,6 +188,7 @@ internal class TokenContractsTest {
     fun primitivesRejectOutOfRange() {
         assertFailsWith<IllegalArgumentException> { Oklch(l = 2f, c = 0.1f, h = 10f) }
         assertFailsWith<IllegalArgumentException> { DpValue(-1f) }
+
         assertFailsWith<IllegalArgumentException> { FontWeightValue(450) }
     }
 }
