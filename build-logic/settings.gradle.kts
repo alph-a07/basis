@@ -33,3 +33,4 @@ dependencyResolutionManagement {
 }
 
 include(":basis-theme-ksp")
+include(":basis-detekt-rules")
