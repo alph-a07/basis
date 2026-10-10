@@ -4,6 +4,7 @@ import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.intent.controls.FontControl
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.TypeColorRef
 
