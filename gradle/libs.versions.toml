@@ -12,6 +12,7 @@ detekt = "1.23.8"
 ktlint = "1.8.0"
 ktlintGradle = "14.2.0"
 lint = "32.4.1"
+ksp = "2.3.12"
 vanniktechMavenPublish = "0.37.0"
 bcv = "0.18.2"
 bcvBridge = "0.2.0"
@@ -32,6 +33,7 @@ androidx-lint-checks = { group = "com.android.tools.lint", name = "lint-checks",
 androidx-lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ktlint-gradle = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlintGradle" }
 
 [plugins]
@@ -45,3 +47,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
 android-bcv-bridge = { id = "io.github.tjokinen.android-bcv-bridge", version.ref = "bcvBridge" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ksp)
     id("detekt-conventions")
     id("ktlint-conventions")
 }
@@ -12,4 +13,5 @@ kotlin {
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.junit)
+    ksp("io.github.alph-a07:basis-theme-ksp")
 }

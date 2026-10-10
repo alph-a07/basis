@@ -178,6 +178,11 @@ gradle.projectsEvaluated {
     }
 
     val buildLogic = gradle.includedBuild("build-logic")
-    verifyAll.configure { dependsOn(buildLogic.task(":detekt"), buildLogic.task(":ktlintCheck")) }
+    verifyAll.configure {
+        dependsOn(buildLogic.task(":detekt"), buildLogic.task(":ktlintCheck"))
+        dependsOn(buildLogic.task(":basis-theme-ksp:detekt"))
+        dependsOn(buildLogic.task(":basis-theme-ksp:ktlintCheck"))
+        dependsOn(buildLogic.task(":basis-theme-ksp:test"))
+    }
     fixAll.configure { dependsOn(buildLogic.task(":ktlintFormat")) }
 }
