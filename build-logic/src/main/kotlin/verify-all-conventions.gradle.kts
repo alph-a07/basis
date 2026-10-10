@@ -14,15 +14,17 @@ import org.gradle.tooling.events.task.TaskSuccessResult
 val verifyAllChecks = listOf("assemble", "test", "lint", "detekt", "ktlintCheck", "releaseApiCheck")
 val fixAllChecks = listOf("ktlintFormat", "lintFix")
 
-val verifyAll = tasks.register("verifyAll") {
-    group = "verification"
-    description = "Runs assemble, test, lint, detekt, ktlint and releaseApiCheck across every build."
-}
+val verifyAll =
+    tasks.register("verifyAll") {
+        group = "verification"
+        description = "Runs assemble, test, lint, detekt, ktlint and releaseApiCheck across every build."
+    }
 
-val fixAll = tasks.register("fixAll") {
-    group = "formatting"
-    description = "Attempts to auto-fix formatting and linting issues (ktlintFormat, lintFix)."
-}
+val fixAll =
+    tasks.register("fixAll") {
+        group = "formatting"
+        description = "Attempts to auto-fix formatting and linting issues (ktlintFormat, lintFix)."
+    }
 
 interface ReporterParams : BuildServiceParameters {
     val rootDirPath: Property<String>
@@ -39,10 +41,20 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
         if (event is TaskFinishEvent) {
             val path = event.descriptor.taskPath
             when (val result = event.result) {
-                is TaskFailureResult -> errors.add(path)
-                is TaskSkippedResult -> skipped.add(path)
+                is TaskFailureResult -> {
+                    errors.add(path)
+                }
+
+                is TaskSkippedResult -> {
+                    skipped.add(path)
+                }
+
                 is TaskSuccessResult -> {
-                    if (result.isUpToDate || result.isFromCache) cached.add(path) else successes.add(path)
+                    if (result.isUpToDate || result.isFromCache) {
+                        cached.add(path)
+                    } else {
+                        successes.add(path)
+                    }
                 }
             }
         }
@@ -92,16 +104,32 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
 
     private fun resolveBasePath(taskPath: String): String {
         val modulePath = taskPath.substringBeforeLast(":")
-        val relativeDir = if (modulePath.isEmpty()) "" else modulePath.replace(":", "/")
+        val relativeDir =
+            if (modulePath.isEmpty()) {
+                ""
+            } else {
+                modulePath.replace(":", "/")
+            }
         val rootDir = parameters.rootDirPath.get()
-        return if (relativeDir.isEmpty()) rootDir else "$rootDir/$relativeDir"
+
+        return if (relativeDir.isEmpty()) {
+            rootDir
+        } else {
+            "$rootDir/$relativeDir"
+        }
     }
 
     private fun printTaskTrace(taskName: String, absoluteBase: String) {
         try {
             when {
-                taskName.contains("detekt") -> printDetektTrace(absoluteBase)
-                taskName.contains("ktlint") -> printKtlintTrace(absoluteBase)
+                taskName.contains("detekt") -> {
+                    printDetektTrace(absoluteBase)
+                }
+
+                taskName.contains("ktlint") -> {
+                    printKtlintTrace(absoluteBase)
+                }
+
                 taskName.contains("test") -> {
                     println("    | ↳ There were failing tests. See the full trace at:")
                     println("    |   file://$absoluteBase/build/reports/tests/test/index.html")
@@ -112,7 +140,9 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
                     println("    |   file://$absoluteBase/build/reports/lint-results.html")
                 }
 
-                else -> println("    | ↳ Task failed. Scroll up for standard stacktrace.")
+                else -> {
+                    println("    | ↳ Task failed. Scroll up for standard stacktrace.")
+                }
             }
         } catch (e: java.io.IOException) {
             println("    | ↳ Failed to read trace file: ${e.message}")
@@ -161,9 +191,10 @@ if (isPipelineActive) {
     gradle.startParameter.isContinueOnFailure = true
 
     val listenerRegistry = project.objects.newInstance(InjectedRegistry::class.java).registry
-    val reporter = gradle.sharedServices.registerIfAbsent("verificationReporter", VerificationReporter::class.java) {
-        parameters.rootDirPath.set(project.rootDir.absolutePath)
-    }
+    val reporter =
+        gradle.sharedServices.registerIfAbsent("verificationReporter", VerificationReporter::class.java) {
+            parameters.rootDirPath.set(project.rootDir.absolutePath)
+        }
     listenerRegistry.onTaskCompletion(reporter)
 }
 

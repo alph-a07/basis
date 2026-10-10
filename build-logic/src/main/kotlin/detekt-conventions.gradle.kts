@@ -11,11 +11,21 @@ plugins {
 val projectJvmRelease = JavaVersion.VERSION_21
 
 fun javaReleaseOf(value: Any): String? = when (value) {
-    is JavaVersion ->
-        if (value == JavaVersion.VERSION_1_8) "1.8" else value.toString().removePrefix("VERSION_")
+    is JavaVersion -> {
+        if (value == JavaVersion.VERSION_1_8) {
+            "1.8"
+        } else {
+            value.toString().removePrefix("VERSION_")
+        }
+    }
 
-    is String -> value.takeIf { it.isNotBlank() }
-    else -> null
+    is String -> {
+        value.takeIf { it.isNotBlank() }
+    }
+
+    else -> {
+        null
+    }
 }
 
 fun applyJvmRelease(compileOptions: CompileOptions) {
@@ -24,6 +34,11 @@ fun applyJvmRelease(compileOptions: CompileOptions) {
 }
 
 val defaultJvmTarget = javaReleaseOf(projectJvmRelease)!!
+
+@Suppress("basis.VersionCatalogUsage")
+dependencies {
+    detektPlugins("io.github.alph-a07:basis-detekt-rules:0.1.0")
+}
 
 extensions.configure<DetektExtension> {
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
@@ -54,11 +69,12 @@ fun wireAndroidClasspath(configName: String) {
         val config = configurations.findByName(configName)
         if (config != null) {
             // Explicitly extract ONLY the classes jar to prevent AGP ambiguity in app modules
-            val classFiles = config.incoming.artifactView {
-                attributes {
-                    attribute(artifactTypeAttr, "android-classes-jar")
-                }
-            }.files
+            val classFiles =
+                config.incoming.artifactView {
+                    attributes {
+                        attribute(artifactTypeAttr, "android-classes-jar")
+                    }
+                }.files
             classpath.setFrom(classFiles)
         }
 
@@ -89,9 +105,10 @@ fun wireJvmClasspath(configName: String) {
 }
 
 fun resolveJvmTargetFrom(androidCompileOptions: CompileOptions) {
-    moduleJvmTarget = provider {
-        javaReleaseOf(androidCompileOptions.targetCompatibility) ?: defaultJvmTarget
-    }
+    moduleJvmTarget =
+        provider {
+            javaReleaseOf(androidCompileOptions.targetCompatibility) ?: defaultJvmTarget
+        }
 }
 
 pluginManager.withPlugin("com.android.application") {
