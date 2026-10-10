@@ -11,8 +11,7 @@ config:
   validation: true
   warningsAsErrors: false
   checkExhaustiveness: false
-  # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
-  excludes: ''
+  excludes: 'basis|basis>.*'
 
 processors:
   active: true
@@ -517,17 +516,17 @@ style:
   AlsoCouldBeApply:
     active: false
   BracesOnIfStatements:
-    active: false
-    singleLine: 'never'
+    active: true
+    singleLine: 'always'
     multiLine: 'always'
   BracesOnWhenStatements:
-    active: false
-    singleLine: 'necessary'
-    multiLine: 'consistent'
+    active: true
+    singleLine: 'always'
+    multiLine: 'always'
   CanBeNonNullable:
     active: false
   CascadingCallWrapping:
-    active: false
+    active: true
     includeElvis: true
   ClassOrdering:
     active: false
@@ -644,26 +643,23 @@ style:
     ignoreRanges: false
     ignoreExtensionFunctions: true
   MandatoryBracesLoops:
-    active: false
+    active: true
   MaxChainedCallsOnSameLine:
-    active: false
+    active: true
     maxChainedCalls: 5
   MaxLineLength:
-    # ktlint owns line length, via `max_line_length` in the root `.editorconfig`. Two reporters for
-    # one problem is noise, and only one of them can be the single place the limit is declared.
-    # ktlint's rule reads that same property, so the two cannot disagree.
-    active: false
+    active: true
     maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
-    excludeRawStrings: true
+    excludeRawStrings: false
   MayBeConst:
     active: true
   ModifierOrder:
     active: true
   MultilineLambdaItParameter:
-    active: false
+    active: true
   MultilineRawStringIndentation:
     active: false
     indentSize: 4
@@ -843,3 +839,17 @@ style:
 #
 # The split follows whether a rule can be fixed mechanically: ktlint owns what it can rewrite, and
 # detekt keeps the two import rules because they need type resolution rather than text layout.
+
+# Custom Basis ruleset. Defined here so detekt enables the rules supplied by
+# `BasisRuleSetProvider` (ruleSetId = "basis") with the correct per-rule active flags.
+basis:
+  active: true
+  MandatoryBraces:
+    active: true
+  BlankLineBeforeReturn:
+    active: true
+    excludes: [ '**/basis-lint/src/**' ]
+  BlankLineBeforeLastStatement:
+    active: true
+  VersionCatalogUsage:
+    active: true
