@@ -51,6 +51,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+
 /**
  * Asserts that each token path identifier maps to exactly one leaf of the theme tree and that
  * every member of a path family resolves to a distinct leaf.
@@ -59,7 +60,7 @@ internal class TokenPathsTest {
 
     private val pathFormat = Regex("""^[a-z][A-Za-z0-9]*(\.[a-z][A-Za-z0-9]*)*$""")
 
-    private inner class LeafSequence {
+    private class LeafSequence {
         private var n = 0
         fun oklch(): Oklch {
             n += 1
