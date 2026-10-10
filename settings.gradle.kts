@@ -1,4 +1,8 @@
+@file:Suppress("basis.VersionCatalogUsage")
+
 pluginManagement {
+    includeBuild("build-logic")
+
     repositories {
         google {
             content {
@@ -10,12 +14,19 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    plugins {
+        id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    }
 }
+
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("org.gradle.toolchains.foojay-resolver-convention")
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
     repositories {
         google()
         mavenCentral()
@@ -23,7 +34,12 @@ dependencyResolutionManagement {
 }
 
 // Contains the build logic for the project and custom plugins
-includeBuild("build-logic")
+includeBuild("build-logic") {
+    dependencySubstitution {
+        substitute(module("io.github.alph-a07:basis-detekt-rules"))
+            .using(project(":basis-detekt-rules"))
+    }
+}
 
 rootProject.name = "Basis"
 include(":demo-app")
