@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.intent
 
+import io.github.alph_a07.basis.theme.core.codegen.BasisKnobEntries
+
 /**
  * Intent to drive a mood profile, expressed as a preset and optional per-axis knobs.
  *
@@ -51,6 +53,7 @@ public enum class MoodPreset {
  * @property motionEnergy Quiet toward lively.
  * @property playfulness Serious toward playful.
  */
+@BasisKnobEntries(prefix = "mood.knobs")
 public data class MoodKnobs(
     public val warmth: Float? = null,
     public val chroma: Float? = null,
