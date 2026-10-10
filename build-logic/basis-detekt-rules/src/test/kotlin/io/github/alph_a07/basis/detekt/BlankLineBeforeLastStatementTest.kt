@@ -3,6 +3,7 @@ package io.github.alph_a07.basis.detekt
 import io.gitlab.arturbosch.detekt.api.Config
 import io.gitlab.arturbosch.detekt.test.assertThat
 import io.gitlab.arturbosch.detekt.test.lint
+import java.nio.file.Files
 import kotlin.test.Test
 
 class BlankLineBeforeLastStatementTest {
@@ -105,8 +106,11 @@ class BlankLineBeforeLastStatementTest {
     }
 
     @Test
-    fun `does not report statements in configuration lambdas`() {
-        val code =
+    fun `does not report statements in Gradle scripts`() {
+        val path =
+            Files.createTempFile("settings", ".gradle.kts")
+        Files.writeString(
+            path,
             """
             publishing {
                 licenses {
@@ -122,22 +126,18 @@ class BlankLineBeforeLastStatementTest {
                     developerConnection.set("scm:git:ssh://git@github.com/alph-a07/basis.git")
                 }
             }
-            """.trimIndent()
-
-        assertThat(subject.lint(code)).isEmpty()
-    }
-
-    @Test
-    fun `does not report the last statement in a Gradle script`() {
-        val code =
-            """
             rootProject.name = "Basis"
             include(":demo-app")
             include(":basis-theme")
             include(":basis-components")
             include(":basis-lint")
-            """.trimIndent()
+            """.trimIndent(),
+        )
 
-        assertThat(subject.lint(code)).isEmpty()
+        try {
+            assertThat(subject.lint(path)).isEmpty()
+        } finally {
+            Files.deleteIfExists(path)
+        }
     }
 }

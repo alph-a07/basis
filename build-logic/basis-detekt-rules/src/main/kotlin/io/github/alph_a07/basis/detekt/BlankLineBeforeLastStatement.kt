@@ -9,9 +9,8 @@ import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.kotlin.psi.KtBlockExpression
-import org.jetbrains.kotlin.psi.KtLambdaExpression
+import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtReturnExpression
-import org.jetbrains.kotlin.psi.KtScript
 
 /** Reports the final statement of a non-lambda block being packed against the preceding statements. */
 class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
@@ -25,10 +24,13 @@ class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
             debt = Debt.FIVE_MINS,
         )
 
+    override fun visitKtFile(file: KtFile) {
+        if (file.name.endsWith(".gradle.kts")) return
+        super.visitKtFile(file)
+    }
+
     override fun visitBlockExpression(block: KtBlockExpression) {
         super.visitBlockExpression(block)
-
-        if (block.parent is KtScript) return
 
         val statements = block.statements
         if (statements.size < 2) return
@@ -48,6 +50,4 @@ class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
             )
         }
     }
-
-    override fun visitLambdaExpression(lambdaExpression: KtLambdaExpression) = Unit
 }

@@ -47,10 +47,6 @@ class MandatoryBraces(config: Config) : Rule(config) {
     override fun visitTryExpression(tryExpression: KtTryExpression) {
         super.visitTryExpression(tryExpression)
 
-        if (tryExpression.tryBlock !is KtBlockExpression) {
-            reportBraces(tryExpression.tryBlock, Entity.from(tryExpression))
-        }
-
         for (catchClause in tryExpression.catchClauses) {
             if (catchClause.catchBody !is KtBlockExpression) {
                 reportBraces(catchClause.catchBody, Entity.from(catchClause))
