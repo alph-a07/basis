@@ -12,7 +12,8 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property brandColor Primary brand color, in any supported intake color space.
  * @property supportingColors Secondary brand anchors; at most four are honored and extras are
  * rejected during normalization.
- * @property presence How evident the brand color should be in semantic roles. `null` equivalents to [BrandPresence.Balanced].
+ * @property presence How evident the brand color should be in semantic roles. `null` equivalents
+ * to [BrandPresence.Balanced].
  * @property typography Brand typeface intent, as candidates, role pins, or both.
  */
 public data class IdentityIntent(
