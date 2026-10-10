@@ -4,12 +4,14 @@ import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 
 /**
  * Role-centric typography tree of composite roles.
  * Structure carries hierarchy, Content carries readable body, Metadata carries captions and labels.
  */
+@BasisTokenPathFamily(prefix = "typography", kind = "typography role")
 public data class TypographyTokens(
     public val structure: StructureType,
     public val content: ContentType,

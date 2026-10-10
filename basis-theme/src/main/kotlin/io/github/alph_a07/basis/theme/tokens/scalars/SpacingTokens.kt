@@ -1,8 +1,10 @@
 package io.github.alph_a07.basis.theme.tokens.scalars
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 
 /** Spacing ladder, tightest to loosest as level increases. */
+@BasisTokenPathFamily(prefix = "spacing", kind = "spacing level")
 public data class SpacingTokens(
     public val level1: DpValue,
     public val level2: DpValue,

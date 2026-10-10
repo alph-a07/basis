@@ -2,8 +2,18 @@ package io.github.alph_a07.basis.theme.tokens.color
 
 import io.github.alph_a07.basis.theme.color.Oklch
 import io.github.alph_a07.basis.theme.color.OklchGradient
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 
 /** Semantic color tree with OKLCH leaves. */
+@BasisTokenPathFamily(
+    prefix = "color",
+    kind = "color token",
+    excludes = ["gradient"],
+    paramName = "colors",
+    enumDocNote = "Gradient paths are not referenceable here and remain string-level for reports " +
+        "and the secondary map.",
+    resolveDocNote = "brand anchors absent from the theme resolve to null.",
+)
 public data class ColorTokens(
     public val surface: SurfaceColors,
     public val content: ContentColors,

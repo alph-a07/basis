@@ -1,8 +1,10 @@
 package io.github.alph_a07.basis.theme.tokens.scalars
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 
 /** Depth ladders. */
+@BasisTokenPathFamily(prefix = "depth", kind = "depth level")
 public data class DepthTokens(
     public val level1: DepthSpec,
     public val level2: DepthSpec,

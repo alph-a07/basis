@@ -1,11 +1,14 @@
 package io.github.alph_a07.basis.theme.tokens.scalars
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 
 /** Size ladders: Icons, Avatars, Controls and Dots. */
 public data class SizeTokens(
+    @BasisTokenPathFamily(prefix = "size.icon", kind = "icon size level")
     public val icon: IconSizes,
     public val avatar: AvatarSizes,
+    @BasisTokenPathFamily(prefix = "size.control", kind = "control size level")
     public val control: ControlSizes,
     public val dot: DotSizes,
 )

@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.tokens.scalars
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 
 /**
  * Corner radius ladder.
@@ -8,6 +9,7 @@ import io.github.alph_a07.basis.theme.core.DpValue
  * @property none Always zero.
  * @property full Sentinel pill/circle value (e.g. 9999dp).
  */
+@BasisTokenPathFamily(prefix = "radius", kind = "radius level")
 public data class RadiusTokens(
     public val none: DpValue,
     public val level1: DpValue,

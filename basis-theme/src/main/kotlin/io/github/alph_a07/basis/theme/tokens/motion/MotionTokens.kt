@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.theme.tokens.motion
 
+import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 import io.github.alph_a07.basis.theme.motion.MotionSpec
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
 
@@ -15,6 +16,7 @@ import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
  * @property reposition Moves and reorders.
  * @property emphasis Attention pulses and highlights.
  */
+@BasisTokenPathFamily(prefix = "motion", kind = "motion purpose")
 public data class MotionTokens(
     public val feedback: MotionSpec,
     public val stateTransition: MotionSpec,
