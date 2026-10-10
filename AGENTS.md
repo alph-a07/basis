@@ -1,165 +1,122 @@
 # AGENTS.md: Basis
 
-Basis is a stable, simple, configurable design system for Jetpack Compose. Public API is `Basis`
--prefixed (`BasisButton`, `BasisTextField`). Apache 2.0. minSdk 24, targetSdk 36, compileSdk 37 (
-library, lint and demo app).
+Basis — Jetpack Compose design system. Public API `Basis`-prefixed. Apache 2.0. minSdk 24, targetSdk 36, compileSdk 37.
 
-These rules are hard constraints, not suggestions. Where a rule and a request conflict, see §5.
+Hard constraints. Conflict → §5.
 
-## 1. Use the context graph before searching
+---
 
-The graph is `.context/graph.json`, a map of the codebase: modules, packages, components and
-concepts, with what each is for, its public surface, its invariants, and what depends on what. Query
-it with `bash .context/graph.sh` (format: `.context/SCHEMA.md`). Don't open or `cat` `graph.json`
-itself.
+## 1. Graph first (navigation is graph-handled)
 
-For any task involving code you haven't already read:
+Trigger branches: `Graph` (not read yet), `Stale` (node old / `ORPHAN`), `Red` (`graph.sh` fails / `SETUP`).
 
-1. **Orient.** `graph.sh overview` lists every node in one line each. If you already have a file
-   path, `graph.sh for-path <path>` tells you which nodes cover it.
-2. **Read narrowly.** `graph.sh node <id> purpose invariants` first; add `public_surface`,
-   `rationale`, `gotchas` only if needed. Follow edges only when the task crosses them: `deps <id>`
-   for what it relies on, `used-by <id> [--all]` for what your change could break.
-3. **Check freshness.** `graph.sh stale <id ...>` for the nodes you're relying on. A node reported
-   `STALE` or `ORPHAN` is a hint, not a fact: trust the code over the node.
-4. **Then read code**, only within the nodes' anchor paths.
-5. **Fall back** to grep / repo-wide file search only when (a) no node covers the area, (b) a node
-   you need is stale or orphaned, or (c) the node doesn't contain what you need. Say which, in one
-   line.
+- `.context/graph.json` is the index (`graph.sh` queries it; `.context/SCHEMA.md` formats).
+- Don't open `graph.json` directly.
+- If `graph.sh` unavailable (`SETUP`, no `jq`): say so, continue.
 
-If `graph.sh` fails with a `SETUP` error (for example, no `jq`), tell me, then continue with normal
-search and say the graph was unavailable.
+Sequence — complete when node read → code in anchor paths read → `Graph impact` reported:
 
-The graph is a map, not an authority. The code and this file win over any node claim. Don't cite a
-node as evidence for a rule; cite the code or this file.
+1. `graph.sh overview` / `for-path <path>` to find nodes.
+2. `graph.sh node <id> purpose invariants [public_surface]` — read narrowly.
+3. `graph.sh stale <id ...>` — check freshness; trust code over `STALE`/`ORPHAN`.
+4. Read code only within node anchor paths.
+5. Fallback (only when no node / stale / missing): grep / repo-wide. State which in one line.
 
-### Never write to the graph unless explicitly asked
+**Never edit `.context/`** unless explicitly asked (see `.context/prompts/`). When you change a file inside a node's anchor, report at message end: `Graph impact: <ids>` or `Graph impact: none`.
 
-Do not modify anything under `.context/`, and do not run `graph.sh put`, `rm`, `restamp` or `fmt`,
-unless my message explicitly asks you to build or update the graph (for example by running
-`.context/prompts/build.md` or `.context/prompts/update.md`). This holds even for a typo in a node,
-and even when your own change made a node stale.
+---
 
-Instead, when your change touches files inside any node's anchors, find the affected nodes with
-`graph.sh for-path <changed paths>` and end your final message with:
+## 2. Source-stage conventions (not re-state config files)
 
-`Graph impact: <node ids>` (or `Graph impact: none`)
+Enforcement lives in source — reference, don't copy:
 
-and stop there. Don't fix it. Also don't edit this file unless asked.
+- **Editor / format:** `.editorconfig` (`utf-8`, `lf`, 4-space indent, `ktlint_code_style = android_studio`,
+  `max_line_length = 120`, trailing commas allowed, `ktlint_standard_filename = disabled` for `basis/tokens/**`). Format
+  with `./gradlew ktlintFormat`; check with `ktlintCheck`.
+- **Detekt:** `config/detekt/detekt.yml` (build `maxIssues: 0`, exclusions `basis|basis>.*`, custom rulesets active).
+  Check with `./gradlew detekt`. Don't disable rules locally; fix or ask.
+- **Source of truth / tight scope:** One owner per constant / logic (`Single source`). Changes stay **tight** — scoped,
+  no drive-by renames / refactors. If a fix duplicates logic, fix the root or ask.
+- **Public API:** `Basis` prefix. Constants `SCREAMING_SNAKE_CASE`. Existing spacing/motion/shape constants predate
+  convention; don't mass-rename.
 
-IMPORTANT: Prioritize web search over unzipping gradle dependency files. If you need to read a
-third-party library, first check if the public API is documented online. Even in general prefer a
-quick web search over knowledge reliance due to dynamicity of rapidly evolving pieces of software.
+**Done when (conventions):** `Basis` prefix verified → `SCREAMING_SNAKE_CASE` for new constants → no duplication (single
+source) → tight, no drive-by.
 
-## 2. Code conventions
+---
 
-- Public API names carry the `Basis` prefix.
-- Constants are `SCREAMING_SNAKE_CASE` (e.g. `WEIGHT_SEMIBOLD`). Existing spacing/motion/shape
-  constants predate this; use the convention for anything new and don't mass-rename old ones unless
-  asked.
-- One source of truth. Every constant or piece of logic has one owner. If a fix would duplicate it,
-  patch around it, or work around a problem in a consumer instead of the owner, stop and say so. Fix
-  the root cause or ask.
-- Keep changes scoped to the task. No drive-by refactors or renames.
-- Keep comments sophisticated and production ready, do not add any explanatory or change-tracking
-  comments. If a comment is needed, it should be clear and concise, and not include any personal
-  notes or explanations.
-- Public API KDoc follows "KDoc for public API" below. The bar is the KDoc of Google, JetBrains and
-  AndroidX libraries: professional, self-contained and accurate. Don't leave a "TODO" or "FIXME" in
-  public KDoc. If you can't write KDoc that good, ask me to do it.
+## 3. KDoc (match committed patterns — brief, not over-engineered)
 
-### KDoc for public API
+Pointer `KDoc` branch: only when adding/changing public composables, tokens, or config.
 
-Basis is a library, so KDoc is the documentation most consumers will ever read: in IDE quick-doc, in
-autocomplete popups and in the generated API reference. Write it for a developer who has never seen
-this repo and won't open the source.
+Compliant pattern from source (`ThemeMode`, `ResolvedTheme`):
 
-**Structure**
+- `/** One-line standalone summary. */` for enums / simple types.
+- `/** ... */` + `@property` for primary-constructor properties; no redundant `@param` for same props.
+- Brief `@param` / `@return` / `@throws` when they carry non-obvious contracts (units, ranges, coercion vs reject,
+  `null` meaning).
+- Public KDoc must be release-ready (Google / JetBrains / AndroidX bar). If it isn't, ask.
+- Usage: minimal fenced `kotlin` example when adding new component; `@sample` if samples source set exists.
+- Voice: third person, present, neutral. No marketing.
 
-- The first sentence is a standalone summary. IDEs and Dokka show it alone in lists and popups, so
-  make it a complete sentence ending in a period that says something the name doesn't. Start
-  functions and composables with a verb ("Displays…", "Derives…"), types with a noun phrase ("Tuning
-  parameters for…"). Never "This class…" or "This function…", and never restate the name.
-- After the summary, in this order and only as needed: what it's for and when to prefer a sibling
-  API, behavior (states, theming, accessibility, failure modes), a usage example, then tags.
-- Tag order: `@param`, `@return`, `@throws`, `@sample`, `@see`.
+Reference (disclosed — only load on `KDoc` branch): `basis-components` / `basis-theme` source for live examples. Don't
+restate token values; Governance / token docs own them.
 
-**Where each fact lives.** One place per fact.
+---
 
-- Class-level KDoc: what the type is, why it exists, and cross-cutting behavior (how properties
-  interact, invariants, stability).
-- Primary-constructor properties (data classes, config and tuning types): an inline `/** */` on each
-  property. No `@param` or `@property` for the same properties in the header.
-- Functions and composables: `@param` for every parameter, in signature order.
-- Don't restate literal default values in prose. They live in the signature and drift. Describe the
-  effect instead. When a default is resolved at runtime (nullable falling back to a theme token),
-  say what it resolves from.
+## 4. Theme module / resolution framework
 
-```kotlin
-/**
- * Tuning parameters for categorical color generation.
- *
- * Covers the lightness the palette sits at in each mode, the chroma floor that keeps generated
- * series legible, and the scale factors that produce the muted "soft" variant.
- */
-data class BasisCategoricalTuning(
-    /** OKLCH lightness of generated colors in light mode, in `0..1`. */
-    val paletteLightnessLight: Float = 0.65f,
-    /** Lower bound on chroma, so a pale seed hue still yields a visible series. */
-    val paletteMinChroma: Float = 0.14f,
-)
-```
+Graph delegation + brief mention (explicit enough to find; details in graph):
 
-**What to document**
+- Framework: `ThemeMode` (`Light`/`Dark`) → `ResolvedTheme` (full tree for one mode, carries `ColorTokens`,
+  `MotionTokens`, `DepthTokens`, `RadiusTokens`, `SizeTokens`, `SpacingTokens`, `TypographyTokens`) →
+  `ResolvedThemePair`. Resolution / codegen lives in `basis-theme`; consult `graph.sh node theme-module` /
+  `tokens-module` for codegen rules.
+- When touching theme: mention `ThemeMode` / `ResolvedTheme` / `ResolvedThemePair` in changes; don't duplicate token
+  definitions — reference token nodes.
+- Theme resolution is graph-handled: navigation through `.context/graph.json`; don't write theme-lookup instructions
+  here.
 
-- Units, valid ranges and color space for every numeric value, and what the value affects. This
-  covers most of the tokens engine.
-- Composables: where `modifier` is applied; what a `content` slot receives, including its receiver
-  scope; who owns state and when a change callback fires; what `enabled = false` changes visually
-  and semantically.
-- Interactive components: the accessibility contract. State the semantics role exposed, whether a
-  content description is required, the minimum touch target (link the `Sizing` token, don't quote a
-  number) and keyboard/focus behavior.
-- Theming: name the token group or theme member that drives color, size, shape and typography, so
-  consumers know what to configure. Link to it; don't restate token values, since the Governance
-  sheet owns them.
-- Failure modes: `@throws` for `require`/`check` violations, how out-of-range input is handled (
-  coerced or rejected), and the meaning of `null`.
-- Document the contract, not the implementation. Write what callers can rely on; mention internals
-  only when they are part of the contract (ordering, allocation, threading).
+---
 
-**Examples and links**
+## 5. Conflict with a rule
 
-- Every public component gets a short usage example. Use `@sample` if the repo already has a samples
-  source set; don't create one without asking, since it's a new module. Otherwise use a minimal
-  fenced `kotlin` block that compiles against the current API.
-- Link with `[Name]` instead of repeating information. Links must resolve: fully qualify anything
-  not imported in the file. Use `@see` sparingly, for related APIs that don't fit naturally in
-  prose.
-- KDoc is Markdown, not HTML. Wrap to match neighboring files.
+Stop before writing. Name rule (§ and bullet). Say what the request breaks. Offer compliant alternative or options. Wait
+for answer. Don't silently comply, don't work around.
 
-**Voice**
+If you think a rule is wrong / outdated: say so. Don't edit this file to resolve it.
 
-- Third person, present tense, neutral. No first person, no marketing adjectives, no "simply", "
-  just" or "easily".
+---
 
-**Lifecycle**
+## 6. Project architecture (high-level)
 
-- When behavior changes, update the KDoc in the same change. Stale KDoc on public API is a bug. But
-  don't include the references to the process or intent behind the change; the KDoc is for
-  consumers, not maintainers.
-- `@Deprecated` carries a `ReplaceWith` where a mechanical replacement exists, and the KDoc says
-  what replaces it and why.
-- Once the library has a released version, new public API carries `@since <version>`. If you don't
-  know the version, ask.
-- Experimental or opt-in API states what is unstable and what may change.
-- `detekt` and `releaseApiCheck` don't judge KDoc quality. Before calling a task done, re-read every
-  KDoc you wrote or touched against this section. If the project has a Dokka task, run it and fix
-  unresolved links.
+Modules (from `settings.gradle.kts` / source):
 
-## 4. When a request conflicts with a rule
+- `basis-components`: Android library (`android.library`), Compose compiler, namespace
+  `io.github.alph_a07.basis.components`, public API `Basis*` composables.
+- `basis-theme`: Kotlin JVM (`kotlin.jvm`) + KSP (`ksp`), resolution / codegen (`ThemeMode`, `ResolvedTheme`, tokens),
+  conventions `detekt-conventions` / `ktlint-conventions`.
+- `basis-lint`: Kotlin JVM, detekt rules (`io.github.alph-a07:basis-detekt-rules`); custom ruleset at
+  `config/detekt/detekt.yml`.
+- `demo-app`: Android application (`android.application`), Compose compiler, namespace `io.github.alph_a07.basis.demo`;
+  SDK `compileSdk = 37`, `minSdk = 24`, `targetSdk = 36`.
+- `build-logic`: convention plugins (`verify-all-conventions`, `detekt-conventions`, `ktlint-conventions`).
 
-Stop before writing code. Name the rule (section and bullet), say what the request would break, and
-offer the compliant alternative or the options if there are several. Wait for my answer. Don't
-silently comply, and don't work around the rule. If you think a rule is wrong or outdated, say that
-too. Don't edit this file to resolve it.
+Build / runtime:
+
+- Gradle: 9.4.1 (`gradle/wrapper/gradle-wrapper.properties`); `gradle.properties` sets `configuration-cache = true`,
+  `org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8`.
+- SDK: `compileSdk 37`, `minSdk 24`, `targetSdk 36`; `local.properties` points `sdk.dir` to Android SDK (
+  `/Users/itsjeel01/Library/Android/sdk`).
+- Format / lint: `.editorconfig` (4-space, `android_studio`, 120 chars) + `gradlew ktlintFormat` / `ktlintCheck`;
+  `gradlew detekt` (maxIssues 0, exclusions `basis|basis>.*`).
+
+Navigation (no duplication here): use `.context/graph.json` + `graph.sh`; graph handles module dependencies, token
+nodes, theme-module/codegen nodes.
+
+---
+
+## 7. Comments & readability
+
+- Sophisticated, production-ready comments only when needed. Concise, no personal notes / change-tracking.
+- No explanatory comments tracking this edit.
