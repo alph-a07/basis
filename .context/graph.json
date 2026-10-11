@@ -586,6 +586,64 @@
       "summary": "Public diagnostics for one resolution: entries, stage ids and font assignments",
       "title": "Resolution report"
     },
+    "pkg-theme-seed": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/seed/BasisSeedCatalog.kt",
+          "sha": "06038015ce7c1fe6e8528a70ea74a4b0465071b7"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/seed/BasisSeedTables.kt",
+          "sha": "6df449595fdde9a17f0fbc436a798b7a08e6b5c3"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-tokens-scalars",
+        "pkg-theme-tokens-motion",
+        "pkg-theme-core"
+      ],
+      "gotchas": [
+        "New package; seed table edits must update CURRENT and version fields together per scratch rules"
+      ],
+      "invariants": [
+        {
+          "rule": "CURRENT stays locked until deliberate bump; tables() rejects unknown versions",
+          "source": "scratch/theme_resolution_engine_revised_plan.md §Numeric seed versioning"
+        },
+        {
+          "rule": "No silent edits to published version tables",
+          "source": "scratch/theme_resolution_engine_revised_plan.md"
+        }
+      ],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "versioned catalog, CURRENT=1",
+          "symbol": "BasisSeedCatalog"
+        },
+        {
+          "note": "v1 baseline tables",
+          "symbol": "BasisSeedTables"
+        },
+        {
+          "note": "default typography metrics",
+          "symbol": "TypeSeedMetrics"
+        },
+        {
+          "note": "light/dark neutral targets",
+          "symbol": "NeutralSeed"
+        },
+        {
+          "note": "light/dark status targets",
+          "symbol": "StatusSeed"
+        }
+      ],
+      "purpose": "Owns versioned numeric seed tables (BasisSeedCatalog / BasisSeedTables) for spacing, radius, depth, size ladders and default derivation targets (neutrals, status, type metrics, motion). CURRENT is intentionally locked; visual QA bumps to N+1.",
+      "rationale": null,
+      "related": [],
+      "summary": "Versioned baseline seed ladders and derivation targets",
+      "title": "Theme seed tables"
+    },
     "pkg-theme-tokens-color": {
       "anchors": [
         {
