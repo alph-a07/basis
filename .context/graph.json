@@ -531,7 +531,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionReport.kt",
-          "sha": "562d2c9eee00b872a0c21a6d56b3a1ee8fccc51a"
+          "sha": "ec3ea51ba25c42fa992b3b67393db1dac03efcdf"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionStageId.kt",
