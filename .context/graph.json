@@ -579,16 +579,28 @@
     "pkg-theme-res-domain": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/InteractionPatternProcessor.kt",
-          "sha": "89f643302dc8a0ef8f96bc87e25b1eb030c67d3e"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorBiases.kt",
+          "sha": "0f46921a69618502c228c8ac93e69c65adb41094"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorBlend.kt",
+          "sha": "161af8aff22567d05bfc12330d8234e8ee06a69d"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorCoupling.kt",
+          "sha": "bce3cb7130c1c0092e4ea9d450ca7aad2eb7d5e3"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorSeed.kt",
+          "sha": "93e4c9051d0e017bb091ddaedb8fbf3fe68dd27b"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorTables.kt",
+          "sha": "e9b804e5ac014e233c4a5ea2edb142f6134cf3fd"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt",
-          "sha": "8ab0d0a97ebd1029a8a62b18646e78eb3d4732b9"
-        },
-        {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/ProductDomainProcessor.kt",
-          "sha": "092f9ebcaef9b14f7d758aba7a3891b19495bc6b"
+          "sha": "4d8caa6268677f6096e3a79a68e78222b9b71bc7"
         }
       ],
       "depends_on": [],
@@ -597,15 +609,64 @@
       "kind": "package",
       "public_surface": [
         {
-          "note": "prior vector",
+          "note": "setpoint data class",
           "symbol": "PriorVector"
+        },
+        {
+          "note": "public blend function",
+          "symbol": "blendPriorVectors"
         }
       ],
-      "purpose": "Domain processing for theme resolution: interaction patterns and product domain processing.",
+      "purpose": "Prior vector blend domain for theme resolution. Owns PriorVector setpoints, blend weights (PriorBlend), coupling (PriorCoupling), seed derivation (PriorSeed), preset tables (PriorTables), and bias adjustments (PriorBiases). Maps domain/interaction enums to blended vectors; does not own intent definitions or the pipeline.",
       "rationale": null,
       "related": [],
-      "summary": "Resolution domain",
+      "summary": "Prior vector blend domain for theme resolution",
       "title": "Resolution domain"
+    },
+    "pkg-theme-res-mood": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodModulators.kt",
+          "sha": "1c5555b0d9ee1ee2eea078d2205cbcd01bf95f19"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProfile.kt",
+          "sha": "00d5d823af680501cf8757352f446bd03d631283"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProjection.kt",
+          "sha": "33ae49de48977a948efbd51104f83cf52db036a7"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodTables.kt",
+          "sha": "2d482a0ef2002f25720c22666393638455d13e85"
+        }
+      ],
+      "depends_on": [
+        "pkg-theme-res-domain"
+      ],
+      "gotchas": [
+        "References PriorAesthetic and PriorStructural from domain package; those types are not yet present in domain (source inconsistency)."
+      ],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "data class for resolved mood axes",
+          "symbol": "MoodProfile"
+        },
+        {
+          "note": "public resolution function",
+          "symbol": "resolveMood"
+        }
+      ],
+      "purpose": "Mood profiling and resolution for theme resolution. Owns MoodProfile setpoints, modulation logic (MoodModulators), projection functions (MoodProjection), preset tables (MoodTables), and preset profiles. Resolves MoodIntent and seed aesthetic to a MoodProfile pair; depends on domain prior structures (pkg-theme-res-domain).",
+      "rationale": null,
+      "related": [
+        "pkg-theme-res-domain"
+      ],
+      "summary": "Mood profiling and resolution from intent and aesthetic seed",
+      "title": "Mood resolution"
     },
     "pkg-theme-seed": {
       "anchors": [
