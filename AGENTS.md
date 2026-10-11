@@ -22,7 +22,8 @@ Sequence — complete when node read → code in anchor paths read → `Graph im
 4. Read code only within node anchor paths.
 5. Fallback (only when no node / stale / missing): grep / repo-wide. State which in one line.
 
-**Never edit `.context/`** unless explicitly asked (see `.context/prompts/`). When you change a file inside a node's anchor, report at message end: `Graph impact: <ids>` or `Graph impact: none`.
+**Never edit `.context/`** unless explicitly asked (see `.context/prompts/`). When you change a file inside a node's
+anchor, report at message end: `Graph impact: <ids>` or `Graph impact: none`.
 
 ---
 
@@ -45,22 +46,34 @@ source) → tight, no drive-by.
 
 ---
 
-## 3. KDoc (match committed patterns — brief, not over-engineered)
+## 3. KDoc (tight — observations from source)
 
 Pointer `KDoc` branch: only when adding/changing public composables, tokens, or config.
 
-Compliant pattern from source (`ThemeMode`, `ResolvedTheme`):
+Rules (tight):
 
-- `/** One-line standalone summary. */` for enums / simple types.
-- `/** ... */` + `@property` for primary-constructor properties; no redundant `@param` for same props.
-- Brief `@param` / `@return` / `@throws` when they carry non-obvious contracts (units, ranges, coercion vs reject,
-  `null` meaning).
-- Public KDoc must be release-ready (Google / JetBrains / AndroidX bar). If it isn't, ask.
-- Usage: minimal fenced `kotlin` example when adding new component; `@sample` if samples source set exists.
-- Voice: third person, present, neutral. No marketing.
+- **Coverage:** every public symbol (class, enum, interface, object, annotation, value/data class,
+  public fun with contract, public property) has KDoc. Zero exceptions. Internal / private excluded.
+- **Structure:** `/** One-line standalone summary. */` mandatory for enums / simple types. For complex
+  types, brief paragraph only if contract is non-obvious. `@property` for primary-constructor properties;
+  never redundant `@param` for same props. Brief `@param` / `@return` / `@throws` only when they carry
+  non-obvious contracts (units, ranges, coercion vs reject, `null` meaning, required vs optional).
+- **Contracts at property level:** `@property` must include unit (`dp`, `em`, `ms`), range (`>= 0`),
+  coercion (`Float` truncated), or `null` meaning when applicable — observe `DpValue` (`>= 0`, finite).
+- **Init / require:** `@throws` documents every `require` / `check` condition in init block.
+- **References:** references to other sources must be explicitly put between squared braces (`[DpValue]`), not just
+  mentioned in text. Don't invent references; only reference existing public symbols. Add import to the referenced
+  symbol if needed, do not put entire path inline in KDoc.
+- **Usage examples:** minimal fenced `kotlin` when adding new public component; `@sample` only if
+  `build-logic` samples source set exists (observed: none yet — do not invent).
+- **Voice:** third person, present, neutral (`Reports loop bodies...`, `Value wrapper for...`).
+  Never first/second person (`we`, `your`), never imperative (`Use this...`), never marketing
+  (`beautiful`, `elegant`).
+- **Release-ready:** must pass Google / JetBrains / AndroidX KDoc bar. If not, ask.
 
-Reference (disclosed — only load on `KDoc` branch): `basis-components` / `basis-theme` source for live examples. Don't
-restate token values; Governance / token docs own them.
+Reference (disclosed — only load on `KDoc` branch): `basis-theme` source (`DpValue`, `ThemeMode`,
+`BasisTokenPathFamily`) and `basis-components` / `basis-lint` public detectors for live patterns.
+Don't restate token values; Governance / token docs own them.
 
 ---
 
