@@ -1,19 +1,19 @@
 package io.github.alph_a07.basis.theme
 
-import io.github.alph_a07.basis.theme.color.CategoricalStrategy
-import io.github.alph_a07.basis.theme.color.GradientDirection
-import io.github.alph_a07.basis.theme.color.Oklch
-import io.github.alph_a07.basis.theme.color.OklchGradient
-import io.github.alph_a07.basis.theme.color.OklchStop
-import io.github.alph_a07.basis.theme.color.categorical
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.DurationValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
 import io.github.alph_a07.basis.theme.core.ThemeMode
-import io.github.alph_a07.basis.theme.motion.EasingKind
-import io.github.alph_a07.basis.theme.motion.MotionSpec
+import io.github.alph_a07.basis.theme.core.color.CategoricalStrategy
+import io.github.alph_a07.basis.theme.core.color.GradientDirection
+import io.github.alph_a07.basis.theme.core.color.Oklch
+import io.github.alph_a07.basis.theme.core.color.OklchGradient
+import io.github.alph_a07.basis.theme.core.color.OklchStop
+import io.github.alph_a07.basis.theme.core.color.categorical
+import io.github.alph_a07.basis.theme.core.motion.EasingKind
+import io.github.alph_a07.basis.theme.core.motion.MotionSpec
 import io.github.alph_a07.basis.theme.tokens.color.BorderColors
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens

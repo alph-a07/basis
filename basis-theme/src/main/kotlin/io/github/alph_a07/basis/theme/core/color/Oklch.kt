@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.color
+package io.github.alph_a07.basis.theme.core.color
 
 /**
  * A color in the OKLCH color space, the single color representation used in the theme system.

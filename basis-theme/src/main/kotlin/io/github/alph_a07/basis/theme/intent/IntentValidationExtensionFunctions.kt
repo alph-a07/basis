@@ -1,7 +1,7 @@
 package io.github.alph_a07.basis.theme.intent
 
-import io.github.alph_a07.basis.theme.color.ColorSpec
-import io.github.alph_a07.basis.theme.color.Oklch
+import io.github.alph_a07.basis.theme.core.color.ColorSpec
+import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
 /** Maximum number of supporting colors honored from [IdentityIntent.supportingColors]. */
@@ -42,12 +42,15 @@ internal fun ColorSpec.isWellFormed(): Boolean = when (this) {
     is ColorSpec.Hex -> {
         value.matches(HEX_PATTERN)
     }
+
     is ColorSpec.Argb -> {
         true
     }
+
     is ColorSpec.Hsl -> {
         h.isFinite() && s.isFinite() && l.isFinite() && a.isFinite()
     }
+
     is Oklch -> {
         true
     }
@@ -72,9 +75,11 @@ private fun clampKnob(value: Float?): Float? = when {
     value == null -> {
         null
     }
+
     !value.isFinite() -> {
         null
     }
+
     else -> {
         value.coerceIn(KNOB_MIN, KNOB_MAX)
     }

@@ -1,7 +1,7 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
-import io.github.alph_a07.basis.theme.color.Oklch
-import io.github.alph_a07.basis.theme.color.OklchGradient
+import io.github.alph_a07.basis.theme.core.color.Oklch
+import io.github.alph_a07.basis.theme.core.color.OklchGradient
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 
 /**

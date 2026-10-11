@@ -1,6 +1,6 @@
 package io.github.alph_a07.basis.theme.intent
 
-import io.github.alph_a07.basis.theme.color.ColorSpec
+import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
 /**

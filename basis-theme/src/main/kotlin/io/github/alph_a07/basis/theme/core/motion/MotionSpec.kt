@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.motion
+package io.github.alph_a07.basis.theme.core.motion
 
 import io.github.alph_a07.basis.theme.core.DurationValue
 

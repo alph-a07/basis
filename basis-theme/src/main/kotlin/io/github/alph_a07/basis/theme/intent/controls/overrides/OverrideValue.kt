@@ -1,8 +1,8 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
-import io.github.alph_a07.basis.theme.color.Oklch
 import io.github.alph_a07.basis.theme.core.DpValue
-import io.github.alph_a07.basis.theme.motion.MotionSpec
+import io.github.alph_a07.basis.theme.core.color.Oklch
+import io.github.alph_a07.basis.theme.core.motion.MotionSpec
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 import io.github.alph_a07.basis.theme.tokens.typography.TypeRole

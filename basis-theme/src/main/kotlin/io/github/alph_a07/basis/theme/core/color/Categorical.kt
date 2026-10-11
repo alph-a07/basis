@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.color
+package io.github.alph_a07.basis.theme.core.color
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
@@ -61,9 +61,11 @@ public fun ResolvedTheme.categorical(
                 CategoricalStrategy.EvenHue -> {
                     (index * (360f / count)) % 360f
                 }
+
                 CategoricalStrategy.BrandAnchored -> {
                     (baseHue + index * (360f / count)) % 360f
                 }
+
                 CategoricalStrategy.AccessibleQualitative -> {
                     (baseHue + 40f + index * (360f / count)) % 360f
                 }

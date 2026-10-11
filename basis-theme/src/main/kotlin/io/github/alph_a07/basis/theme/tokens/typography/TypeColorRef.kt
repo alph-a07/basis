@@ -1,6 +1,6 @@
 package io.github.alph_a07.basis.theme.tokens.typography
 
-import io.github.alph_a07.basis.theme.color.Oklch
+import io.github.alph_a07.basis.theme.core.color.Oklch
 
 /** Semantic color reference of a [TypeRole]. */
 public sealed interface TypeColorRef {

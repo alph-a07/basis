@@ -4,11 +4,11 @@ package io.github.alph_a07.basis.ksp.family
 internal object TokenLeafTypes {
     val nouns: Map<String, String> =
         mapOf(
-            "io.github.alph_a07.basis.theme.color.Oklch" to "leaf",
+            "io.github.alph_a07.basis.theme.core.color.Oklch" to "leaf",
             "io.github.alph_a07.basis.theme.tokens.typography.TypeRole" to "role",
             "io.github.alph_a07.basis.theme.core.DpValue" to "level",
             "io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec" to "spec",
-            "io.github.alph_a07.basis.theme.motion.MotionSpec" to "spec",
+            "io.github.alph_a07.basis.theme.core.motion.MotionSpec" to "spec",
         )
 }
 

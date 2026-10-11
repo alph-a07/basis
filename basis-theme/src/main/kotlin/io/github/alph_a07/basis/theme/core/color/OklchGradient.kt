@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.color
+package io.github.alph_a07.basis.theme.core.color
 
 /**
  * OKLCH gradient built from sorted stops.

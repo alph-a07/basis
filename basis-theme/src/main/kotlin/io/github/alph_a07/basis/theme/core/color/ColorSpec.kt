@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.color
+package io.github.alph_a07.basis.theme.core.color
 
 /**
  * Consumer-supplied color in any supported intake space, converted to [Oklch] during normalization.

@@ -1,9 +1,9 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
 import io.github.alph_a07.basis.theme.core.DurationValue
-import io.github.alph_a07.basis.theme.motion.EasingKind
-import io.github.alph_a07.basis.theme.motion.MotionSpec
-import io.github.alph_a07.basis.theme.motion.SpringParams
+import io.github.alph_a07.basis.theme.core.motion.EasingKind
+import io.github.alph_a07.basis.theme.core.motion.MotionSpec
+import io.github.alph_a07.basis.theme.core.motion.SpringParams
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
 
 /**

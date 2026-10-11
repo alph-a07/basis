@@ -1,10 +1,10 @@
 package io.github.alph_a07.basis.theme
 
-import io.github.alph_a07.basis.theme.color.ColorSpec
-import io.github.alph_a07.basis.theme.color.Oklch
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.ThemeMode
+import io.github.alph_a07.basis.theme.core.color.ColorSpec
+import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.BrandPresence
 import io.github.alph_a07.basis.theme.intent.ControlIntent

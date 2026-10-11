@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.motion
+package io.github.alph_a07.basis.theme.core.motion
 
 /** Easing function family for a motion purpose. */
 public enum class EasingKind {
