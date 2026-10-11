@@ -71,6 +71,51 @@ class BlankLineBeforeLastStatementTest {
     }
 
     @Test
+    fun `reports a standalone assertion as the last statement`() {
+        val code =
+            """
+            class A {
+                fun f() {
+                    val x = 1
+                    assertEquals(1, x)
+                }
+            }
+            """.trimIndent()
+
+        assertThat(subject.lint(code)).hasSize(1)
+    }
+
+    @Test
+    fun `reports a call as the last statement`() {
+        val code =
+            """
+            class A {
+                fun f() {
+                    val tables = Tables()
+                    tables.validate()
+                }
+            }
+            """.trimIndent()
+
+        assertThat(subject.lint(code)).hasSize(1)
+    }
+
+    @Test
+    fun `does not report an assertion following another assertion`() {
+        val code =
+            """
+            class A {
+                fun f() {
+                    assertEquals(1, 1)
+                    assertEquals(3, Tables().dotSizes.size)
+                }
+            }
+            """.trimIndent()
+
+        assertThat(subject.lint(code)).isEmpty()
+    }
+
+    @Test
     fun `reports a last statement packed against the preceding statement in an if body`() {
         val code =
             """

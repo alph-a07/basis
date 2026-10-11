@@ -9,10 +9,15 @@ import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.kotlin.psi.KtBlockExpression
+import org.jetbrains.kotlin.psi.KtCallExpression
+import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtReturnExpression
 
-/** Reports the final statement of a non-lambda block being packed against the preceding statements. */
+/**
+ * Reports the final statement of a non-lambda block being packed against the preceding statements.
+ * Consecutive assertion calls are treated as one assertion group.
+ */
 class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
 
     override val issue =
@@ -39,6 +44,8 @@ class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
         if (last is KtReturnExpression) return // already covered by BlankLineBeforeReturn
 
         val previous = last.prevSibling
+        val previousStatement = statements[statements.lastIndex - 1]
+        if (isAssertion(last) && isAssertion(previousStatement)) return
 
         if (previous is PsiWhiteSpace && previous.text.count { it == '\n' } < 2) {
             report(
@@ -50,4 +57,8 @@ class BlankLineBeforeLastStatement(config: Config) : Rule(config) {
             )
         }
     }
+
+    private fun isAssertion(statement: KtElement): Boolean =
+        statement is KtCallExpression &&
+            statement.calleeExpression?.text?.startsWith("assert") == true
 }
