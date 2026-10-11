@@ -3,8 +3,8 @@
     "cmp-categorical": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Categorical.kt",
-          "sha": "8693721d35de3f036856e5f143a9ba991a5d70fc"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/Categorical.kt",
+          "sha": "d6986717f653c815d50ffae9595359074565843b"
         }
       ],
       "depends_on": [
@@ -276,12 +276,12 @@
     "pkg-theme-color": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/Oklch.kt",
-          "sha": "c4d936b62381c41774159e4486e9b97a6b5c4e63"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/Oklch.kt",
+          "sha": "e6ae654bc1f51bb49d8b67a2e2bba0025b5a4d16"
         },
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/color/OklchGradient.kt",
-          "sha": "df9e9c8fa9a1ce4a32d7cc4c38cdc8719f319723"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/OklchGradient.kt",
+          "sha": "9749e766f8461cf5f68d853bd04a41283151ed6f"
         }
       ],
       "depends_on": [],
@@ -461,7 +461,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/controls/overrides/ColorOverrides.kt",
-          "sha": "3330e2263696e195922519b3a231bceb3451879a"
+          "sha": "b8805f793169a2857d25076cd07c437126e85ee6"
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides.kt",
@@ -482,60 +482,50 @@
     "pkg-theme-motion": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/EasingKind.kt",
-          "sha": "b678574e9db3619194ff8361f615cd29acfe03c7"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/motion/EasingKind.kt",
+          "sha": "e6338b9ba13b4a898b71bfe666f682247c76bfbd"
         },
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/MotionSpec.kt",
-          "sha": "f5422887b98f49675ea0d7012e7ab329ba1c6e94"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/motion/MotionSpec.kt",
+          "sha": "b72916d9454dde7d2eaeaaab32599f119ec16355"
         }
       ],
-      "depends_on": [
-        "pkg-theme-core"
-      ],
+      "depends_on": [],
       "gotchas": [],
       "invariants": [
         {
-          "rule": "Spring parameters apply only when easing is EasingKind.Spring",
-          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/EasingKind.kt"
-        },
-        {
-          "rule": "Durations are DurationValue, never raw numbers",
-          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/motion/MotionSpec.kt"
+          "rule": "Spring parameters honored only when easing is Spring",
+          "source": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/motion/MotionSpec.kt"
         }
       ],
       "kind": "package",
       "public_surface": [
         {
-          "note": "Linear, Standard, Emphasized, Decelerate, Accelerate, Spring",
+          "note": "easing family",
           "symbol": "EasingKind"
         },
         {
-          "note": "duration, easing, delay, spring",
+          "note": "timing spec",
           "symbol": "MotionSpec"
-        },
-        {
-          "note": "stiffness and damping ratio",
-          "symbol": "SpringParams"
         }
       ],
-      "purpose": "Owns the easing families and the timing specification of a single motion purpose, expressed with the core duration wrapper. Carries no platform animation type; the components module maps it at the Compose boundary.",
+      "purpose": "Owns the motion primitives shared by every token tree: easing families and timing specs.",
       "rationale": null,
       "related": [
         "pkg-theme-tokens-motion"
       ],
-      "summary": "Easing families and the timing spec for one semantic motion purpose",
+      "summary": "Motion primitives",
       "title": "Motion primitives"
     },
     "pkg-theme-report": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionReport.kt",
-          "sha": "ec3ea51ba25c42fa992b3b67393db1dac03efcdf"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/report/ResolutionReport.kt",
+          "sha": "ba8a46917533bded70947a63206a9b86fc8fa03a"
         },
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/report/ResolutionStageId.kt",
-          "sha": "a901982ee30e1b2adeeb301bfc88004599a82c50"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/report/ResolutionStageId.kt",
+          "sha": "b0d1867ded176ca53cda10243d0e3abd62f6c9d8"
         }
       ],
       "depends_on": [
@@ -586,15 +576,46 @@
       "summary": "Public diagnostics for one resolution: entries, stage ids and font assignments",
       "title": "Resolution report"
     },
+    "pkg-theme-res-domain": {
+      "anchors": [
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/InteractionPatternProcessor.kt",
+          "sha": "89f643302dc8a0ef8f96bc87e25b1eb030c67d3e"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt",
+          "sha": "8ab0d0a97ebd1029a8a62b18646e78eb3d4732b9"
+        },
+        {
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/ProductDomainProcessor.kt",
+          "sha": "092f9ebcaef9b14f7d758aba7a3891b19495bc6b"
+        }
+      ],
+      "depends_on": [],
+      "gotchas": [],
+      "invariants": [],
+      "kind": "package",
+      "public_surface": [
+        {
+          "note": "prior vector",
+          "symbol": "PriorVector"
+        }
+      ],
+      "purpose": "Domain processing for theme resolution: interaction patterns and product domain processing.",
+      "rationale": null,
+      "related": [],
+      "summary": "Resolution domain",
+      "title": "Resolution domain"
+    },
     "pkg-theme-seed": {
       "anchors": [
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/seed/BasisSeedCatalog.kt",
-          "sha": "06038015ce7c1fe6e8528a70ea74a4b0465071b7"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/seed/BasisSeedCatalog.kt",
+          "sha": "2dd6c60b0c3449221c41de16da1e284c750bf3ff"
         },
         {
-          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/seed/BasisSeedTables.kt",
-          "sha": "6df449595fdde9a17f0fbc436a798b7a08e6b5c3"
+          "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/seed/BasisSeedTables.kt",
+          "sha": "05c8817d3b5c56199d7903f3d99ba5f0d74b1bc8"
         }
       ],
       "depends_on": [
@@ -648,7 +669,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/color/ColorTokens.kt",
-          "sha": "91b10da37be4e02dc36587f513fab3cb8a59fe36"
+          "sha": "89687f8267ed44fbdce6d18f1faa1a37da43e98e"
         }
       ],
       "depends_on": [
@@ -724,7 +745,7 @@
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair.kt",
-          "sha": "2af1a567eaace05f833a8ad47a3f375efa432642"
+          "sha": "7efa8ea3ee1ed7fc2dd73b7817b1347f9b3e6973"
         }
       ],
       "depends_on": [
@@ -765,7 +786,7 @@
       "anchors": [
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/motion/MotionTokens.kt",
-          "sha": "5cac341b023a300a34a0a03a1ef8580753000b3a"
+          "sha": "9d59361137e6910c410b7e4f981a14dac29be6ec"
         }
       ],
       "depends_on": [
@@ -877,7 +898,7 @@
         },
         {
           "path": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/tokens/typography/TypeColorRef.kt",
-          "sha": "2877c795da43adf55a6a30abbc7ff4935e0fd858"
+          "sha": "7afac6b795aa1aea79708b3e6737a79e5a44948b"
         }
       ],
       "depends_on": [
