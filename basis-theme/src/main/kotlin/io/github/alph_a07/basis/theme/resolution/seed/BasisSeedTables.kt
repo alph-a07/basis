@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.seed
+package io.github.alph_a07.basis.theme.resolution.seed
 
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
@@ -24,6 +24,7 @@ public data class BasisSeedTables(
     override fun toString(): String = "BasisSeedTables(v=$version)"
 
     /** Equality compares version + content; arrays compared structurally. */
+    @Suppress("CyclomaticComplexMethod")
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true

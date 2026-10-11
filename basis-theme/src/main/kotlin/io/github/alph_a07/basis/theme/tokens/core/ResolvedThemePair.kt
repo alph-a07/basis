@@ -1,6 +1,6 @@
 package io.github.alph_a07.basis.theme.tokens.core
 
-import io.github.alph_a07.basis.theme.report.ResolutionReport
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
 
 /**
  * Engine emit for a single intent: paired light/dark themes plus diagnostics.

@@ -1,10 +1,10 @@
-package io.github.alph_a07.basis.theme.seed
+package io.github.alph_a07.basis.theme.resolution.seed
 
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.DurationValue
-import io.github.alph_a07.basis.theme.motion.EasingKind
-import io.github.alph_a07.basis.theme.motion.MotionSpec
-import io.github.alph_a07.basis.theme.seed.BasisSeedCatalog.CURRENT
+import io.github.alph_a07.basis.theme.core.motion.EasingKind
+import io.github.alph_a07.basis.theme.core.motion.MotionSpec
+import io.github.alph_a07.basis.theme.resolution.seed.BasisSeedCatalog.CURRENT
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 
@@ -20,6 +20,7 @@ public object BasisSeedCatalog {
      * @return The versioned [BasisSeedTables].
      * @throws IllegalArgumentException if the version is unknown.
      */
+    @Suppress("LongMethod", "MagicNumber")
     public fun tables(version: Int = CURRENT): BasisSeedTables {
         require(version == CURRENT) { "Unknown BasisSeedCatalog version: $version" }
 

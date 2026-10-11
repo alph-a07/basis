@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.report
+package io.github.alph_a07.basis.theme.resolution.report
 
 /** Pipeline stage that produced a [ReportEntry]. */
 public enum class ResolutionStageId {

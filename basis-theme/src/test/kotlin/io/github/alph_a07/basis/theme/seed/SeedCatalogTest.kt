@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.theme.seed
 
+import io.github.alph_a07.basis.theme.resolution.seed.BasisSeedCatalog
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
