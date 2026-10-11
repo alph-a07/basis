@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.report
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
+import io.github.alph_a07.basis.theme.seed.BasisSeedCatalog
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedThemePair
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
@@ -17,7 +18,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  */
 public data class ResolutionReport(
     public val entries: List<ReportEntry>,
-    public val seedVersion: Int,
+    public val seedVersion: Int = BasisSeedCatalog.CURRENT,
     public val modesGenerated: Set<ThemeMode>,
     public val fontAssignments: FontAssignmentReport,
 )
