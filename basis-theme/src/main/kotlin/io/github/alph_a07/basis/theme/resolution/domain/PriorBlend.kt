@@ -4,12 +4,6 @@ import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain
 
-/** Weight of the product domains when both domains and interaction patterns contribute. */
-private const val DOMAIN_BLEND_WEIGHT: Float = 0.45f
-
-/** Weight of the interaction patterns when both domain and interaction patterns contribute. */
-private const val INTERACTION_BLEND_WEIGHT: Float = 0.55f
-
 /**
  * Deterministic multi-select blend of product domain and interaction patterns priors.
  *
@@ -42,6 +36,11 @@ public fun blendPriorVectors(intent: DomainIntent): PriorVector {
 
     return blended.clamped()
 }
+
+/** Contributing [DomainIntent] labels behind a blended [PriorVector], for resolution reports. */
+public fun DomainIntent.contributors(): List<String> =
+    domains.map { ProductDomain::class.simpleName + "." + it.name } +
+        interactions.map { InteractionPattern::class.simpleName + "." + it.name }
 
 private fun List<PriorVector>.mergePriorsOrNull(): PriorVector? {
     val risks = map { it.riskSensitivity }
@@ -111,7 +110,8 @@ private fun PriorVector.clamped(): PriorVector = PriorVector(
     inputHeaviness = inputHeaviness.coerceIn(-1f, 1f),
 )
 
-/** Contributing [DomainIntent] labels behind a blended [PriorVector], for resolution reports. */
-public fun DomainIntent.contributors(): List<String> =
-    domains.map { ProductDomain::class.simpleName + "." + it.name } +
-        interactions.map { InteractionPattern::class.simpleName + "." + it.name }
+/** Weight of the product domains when both domains and interaction patterns contribute. */
+private const val DOMAIN_BLEND_WEIGHT: Float = 0.45f
+
+/** Weight of the interaction patterns when both domain and interaction patterns contribute. */
+private const val INTERACTION_BLEND_WEIGHT: Float = 0.55f
