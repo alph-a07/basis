@@ -53,14 +53,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * Asserts that each token path identifier maps to exactly one leaf of the theme tree and that
- * every member of a path family resolves to a distinct leaf.
+ * Asserts that each token path identifier maps to exactly one token of the theme tree and that
+ * every member of a path family resolves to a distinct token.
  */
 internal class TokenPathsTest {
 
     private val pathFormat = Regex("""^[a-z][A-Za-z0-9]*(\.[a-z][A-Za-z0-9]*)*$""")
 
-    private class LeafSequence {
+    private class TokenSequence {
         private var n = 0
 
         fun oklch(): Oklch {
@@ -289,57 +289,57 @@ internal class TokenPathsTest {
     }
 
     @Test
-    fun eachColorPathResolvesExactlyOneLeaf() {
+    fun eachColorPathResolvesExactlyOneToken() {
         val resolved: Map<ColorTokenPath, Oklch?> =
-            ColorTokenPath.entries.associateWith { it.resolveIn(colorTree(LeafSequence())) }
+            ColorTokenPath.entries.associateWith { it.resolveIn(colorTree(TokenSequence())) }
 
         assertEquals(ColorTokenPath.entries.size, resolved.values.distinct().size)
     }
 
-    private fun colorTree(leaves: LeafSequence): ColorTokens = ColorTokens(
-        surface = SurfaceColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        content = ContentColors(leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        icon = IconColors(leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        border = BorderColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        selection = SelectionColors(leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        focus = FocusColors(leaves.oklch()),
-        positive = StatusColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        negative = StatusColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        caution = StatusColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        info = StatusColors(leaves.oklch(), leaves.oklch(), leaves.oklch(), leaves.oklch()),
-        gradient = GradientColors(leaves.gradient(), leaves.gradient()),
+    private fun colorTree(tokens: TokenSequence): ColorTokens = ColorTokens(
+        surface = SurfaceColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        content = ContentColors(tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        icon = IconColors(tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        border = BorderColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        selection = SelectionColors(tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        focus = FocusColors(tokens.oklch()),
+        positive = StatusColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        negative = StatusColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        caution = StatusColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        info = StatusColors(tokens.oklch(), tokens.oklch(), tokens.oklch(), tokens.oklch()),
+        gradient = GradientColors(tokens.gradient(), tokens.gradient()),
         brand =
             BrandColors(
-                primary = leaves.oklch(),
-                secondary = leaves.oklch(),
-                tertiary = leaves.oklch(),
-                quaternary = leaves.oklch(),
+                primary = tokens.oklch(),
+                secondary = tokens.oklch(),
+                tertiary = tokens.oklch(),
+                quaternary = tokens.oklch(),
             ),
     )
 
     @Test
-    fun eachTypographyPathResolvesExactlyOneLeaf() {
-        val leaves = LeafSequence()
+    fun eachTypographyPathResolvesExactlyOneToken() {
+        val tokens = TokenSequence()
         val typography =
             TypographyTokens(
                 structure =
                     StructureType(
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
                     ),
                 content =
                     ContentType(
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
-                        leaves.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
+                        tokens.role(),
                     ),
-                metadata = MetadataType(leaves.role(), leaves.role(), leaves.role()),
+                metadata = MetadataType(tokens.role(), tokens.role(), tokens.role()),
             )
         val resolved = TypographyTokenPath.entries.associateWith { it.resolveIn(typography) }
 
@@ -347,39 +347,39 @@ internal class TokenPathsTest {
     }
 
     @Test
-    fun eachScalarPathResolvesExactlyOneLeaf() {
-        val leaves = LeafSequence()
+    fun eachScalarPathResolvesExactlyOneToken() {
+        val tokens = TokenSequence()
         val spacing =
             SpacingTokens(
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
-                leaves.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
+                tokens.dp(),
             )
         val radius =
             RadiusTokens(
-                none = leaves.dp(),
-                level1 = leaves.dp(),
-                level2 = leaves.dp(),
-                level3 = leaves.dp(),
-                level4 = leaves.dp(),
-                level5 = leaves.dp(),
-                level6 = leaves.dp(),
-                level7 = leaves.dp(),
-                level8 = leaves.dp(),
-                full = leaves.dp(),
+                none = tokens.dp(),
+                level1 = tokens.dp(),
+                level2 = tokens.dp(),
+                level3 = tokens.dp(),
+                level4 = tokens.dp(),
+                level5 = tokens.dp(),
+                level6 = tokens.dp(),
+                level7 = tokens.dp(),
+                level8 = tokens.dp(),
+                full = tokens.dp(),
             )
-        val depth = DepthTokens(leaves.depth(), leaves.depth(), leaves.depth(), leaves.depth())
+        val depth = DepthTokens(tokens.depth(), tokens.depth(), tokens.depth(), tokens.depth())
         val size =
             SizeTokens(
-                icon = IconSizes(leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp()),
-                avatar = AvatarSizes(leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp()),
-                control = ControlSizes(leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp(), leaves.dp()),
-                dot = DotSizes(leaves.dp(), leaves.dp(), leaves.dp()),
+                icon = IconSizes(tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp()),
+                avatar = AvatarSizes(tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp()),
+                control = ControlSizes(tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp(), tokens.dp()),
+                dot = DotSizes(tokens.dp(), tokens.dp(), tokens.dp()),
             )
 
         val resolved =
@@ -401,16 +401,16 @@ internal class TokenPathsTest {
     }
 
     @Test
-    fun eachMotionPathResolvesExactlyOneLeaf() {
-        val leaves = LeafSequence()
+    fun eachMotionPathResolvesExactlyOneToken() {
+        val tokens = TokenSequence()
         val motion =
             MotionTokens(
-                leaves.motion(),
-                leaves.motion(),
-                leaves.motion(),
-                leaves.motion(),
-                leaves.motion(),
-                leaves.motion(),
+                tokens.motion(),
+                tokens.motion(),
+                tokens.motion(),
+                tokens.motion(),
+                tokens.motion(),
+                tokens.motion(),
             )
         val resolved =
             MotionTokenPath.entries.associateWith { path ->
