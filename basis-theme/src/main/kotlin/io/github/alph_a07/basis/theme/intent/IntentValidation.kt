@@ -13,8 +13,6 @@ internal const val KNOB_MIN: Float = -1f
 /** Upper bound of a valid mood knob value. */
 internal const val KNOB_MAX: Float = 1f
 
-private val HEX_PATTERN = Regex("^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
-
 /**
  * Mood knobs with values coerced into `[KNOB_MIN, KNOB_MAX]`; non-finite values become null so the
  * axis falls back to the preset.
@@ -84,3 +82,5 @@ private fun clampKnob(value: Float?): Float? = when {
         value.coerceIn(KNOB_MIN, KNOB_MAX)
     }
 }
+
+private val HEX_PATTERN = Regex("^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
