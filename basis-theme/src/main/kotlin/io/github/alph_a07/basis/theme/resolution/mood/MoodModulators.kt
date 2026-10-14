@@ -7,43 +7,6 @@ import io.github.alph_a07.basis.theme.resolution.domain.PriorStructural
 import io.github.alph_a07.basis.theme.resolution.domain.PriorVector
 import kotlin.math.roundToInt
 
-/** Lower bound of every modulator axis. */
-private const val AXIS_MIN: Float = -1f
-
-/** Upper bound of every modulator axis. */
-private const val AXIS_MAX: Float = 1f
-
-/** Per-family modulator constants. */
-private object ModulatorConstants {
-    const val NEUTRAL_HUE_DEGREES: Float = 25f
-    const val BRAND_HUE_DEGREES: Float = 6f
-    const val ACCENT_CHROMA: Float = 0.40f
-    const val NEUTRAL_CHROMA: Float = 0.15f
-    const val LIGHTNESS_DELTA: Float = 0.25f
-    const val BORDER_CONTRAST: Float = 0.20f
-    const val CLARITY_GAIN: Float = 0.25f
-    const val SPACING_AIRY: Float = 1.16f
-    const val SPACING_COMPACT: Float = 0.84f
-    const val RADIUS_SHARP: Float = 0.50f
-    const val RADIUS_ROUND: Float = 1.55f
-    const val DEPTH_CONTRAST: Float = 0.15f
-    const val DEPTH_EMPHASIS: Float = 0.25f
-    const val DEPTH_PLAY: Float = 0.05f
-    const val CONTROL_INPUT: Float = 0.06f
-    const val CONTROL_DENSITY: Float = 0.04f
-    const val AVATAR_BIAS: Float = 0.12f
-    const val ICON_DENSITY: Float = 0.03f
-    const val DISPLAY_SCALE: Float = 0.12f
-    const val RATIO_SCALE: Float = 0.08f
-    const val BODY_DENSITY: Float = 0.04f
-    const val TRACKING_SCALE: Float = 0.15f
-    const val WEIGHT_UNITS: Float = 100f
-    const val DURATION_QUIET: Float = 1.35f
-    const val DURATION_LIVELY: Float = 0.65f
-    const val EMPHASIS_MOTION: Float = 0.5f
-    const val EMPHASIS_PLAY: Float = 0.4f
-}
-
 /** Processable multipliers derived from [DomainIntent] and [MoodIntent] inputs. */
 public data class MoodModulators(
     /** Hue shift in degrees for non-anchor neutrals, borders and surfaces. */
@@ -159,3 +122,40 @@ public fun projectMoodModulators(
 }
 
 private fun lerp(a: Float, b: Float, t: Float): Float = a + (b - a) * t.coerceIn(0f, 1f)
+
+/** Lower bound of every modulator axis. */
+private const val AXIS_MIN: Float = -1f
+
+/** Upper bound of every modulator axis. */
+private const val AXIS_MAX: Float = 1f
+
+/** Per-family modulator constants. */
+private object ModulatorConstants {
+    const val NEUTRAL_HUE_DEGREES: Float = 25f
+    const val BRAND_HUE_DEGREES: Float = 6f
+    const val ACCENT_CHROMA: Float = 0.40f
+    const val NEUTRAL_CHROMA: Float = 0.15f
+    const val LIGHTNESS_DELTA: Float = 0.25f
+    const val BORDER_CONTRAST: Float = 0.20f
+    const val CLARITY_GAIN: Float = 0.25f
+    const val SPACING_AIRY: Float = 1.16f
+    const val SPACING_COMPACT: Float = 0.84f
+    const val RADIUS_SHARP: Float = 0.50f
+    const val RADIUS_ROUND: Float = 1.55f
+    const val DEPTH_CONTRAST: Float = 0.15f
+    const val DEPTH_EMPHASIS: Float = 0.25f
+    const val DEPTH_PLAY: Float = 0.05f
+    const val CONTROL_INPUT: Float = 0.06f
+    const val CONTROL_DENSITY: Float = 0.04f
+    const val AVATAR_BIAS: Float = 0.12f
+    const val ICON_DENSITY: Float = 0.03f
+    const val DISPLAY_SCALE: Float = 0.12f
+    const val RATIO_SCALE: Float = 0.08f
+    const val BODY_DENSITY: Float = 0.04f
+    const val TRACKING_SCALE: Float = 0.15f
+    const val WEIGHT_UNITS: Float = 100f
+    const val DURATION_QUIET: Float = 1.35f
+    const val DURATION_LIVELY: Float = 0.65f
+    const val EMPHASIS_MOTION: Float = 0.5f
+    const val EMPHASIS_PLAY: Float = 0.4f
+}

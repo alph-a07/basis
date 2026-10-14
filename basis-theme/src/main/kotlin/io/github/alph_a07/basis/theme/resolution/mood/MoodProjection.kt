@@ -6,12 +6,6 @@ import io.github.alph_a07.basis.theme.intent.MoodPreset
 import io.github.alph_a07.basis.theme.resolution.domain.PriorAesthetic
 import io.github.alph_a07.basis.theme.resolution.domain.PriorGain
 
-/** Lower bound of every mood axis. */
-private const val AXIS_MIN: Float = -1f
-
-/** Upper bound of every mood axis. */
-private const val AXIS_MAX: Float = 1f
-
 /** Preset base vector; unlisted presets fall back to neutral. */
 public fun MoodPreset.moodBaseVector(): MoodProfile = MOOD_PRESET_PROFILES[this] ?: MoodProfile.NEUTRAL
 
@@ -107,3 +101,9 @@ public fun MoodIntent?.isUnspecified(): Boolean {
 
     return !specified
 }
+
+/** Lower bound of every mood axis. */
+private const val AXIS_MIN: Float = -1f
+
+/** Upper bound of every mood axis. */
+private const val AXIS_MAX: Float = 1f
