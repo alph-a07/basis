@@ -3,7 +3,7 @@ package io.github.alph_a07.basis.theme.resolution.seed
 import io.github.alph_a07.basis.theme.core.color.GradientDirection
 import io.github.alph_a07.basis.theme.core.color.OklchGradient
 import io.github.alph_a07.basis.theme.core.color.OklchStop
-import io.github.alph_a07.basis.theme.resolution.color.safeOklch
+import io.github.alph_a07.basis.theme.core.color.safeOklch
 import io.github.alph_a07.basis.theme.tokens.color.BorderColors
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
@@ -118,13 +118,13 @@ private const val CAUTION_HUE: Float = 85f
 /** Hue of informational status roles, in degrees. */
 private const val INFO_HUE: Float = 250f
 
-/** Chroma of a status surface leaf. */
+/** Chroma of a status surface token. */
 private const val STATUS_SURFACE_CHROMA = 0.05f
 
-/** Chroma of a status content leaf. */
+/** Chroma of a status content token. */
 private const val STATUS_CONTENT_CHROMA = 0.13f
 
-/** Chroma of a status border leaf. */
+/** Chroma of a status border token. */
 private const val STATUS_BORDER_CHROMA = 0.09f
 
 /** Chroma of the seed focus ring. */
