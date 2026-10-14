@@ -17,7 +17,7 @@ import io.github.alph_a07.basis.theme.resolution.fonts.FontRolePlan
  * @param fonts Resolved font role plan shared by every mode.
  * @param brandPrimary Brand anchor already converted by normalization, or null when unspecified.
  * @param presence Presence as specified, meaningful only when [brandPrimary] is present.
- * @return A working tree whose color leaves are seed neutrals and status roles.
+ * @return A working tree whose color tokens are seed neutrals and status roles.
  */
 internal fun seedWorkingTheme(
     mode: ThemeMode,
