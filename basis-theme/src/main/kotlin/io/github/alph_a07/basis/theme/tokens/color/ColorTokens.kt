@@ -4,7 +4,7 @@ import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.core.color.OklchGradient
 
-/** Semantic color tree with OKLCH leaves. */
+/** Semantic color tree with OKLCH tokens. */
 @BasisTokenPathFamily(
     prefix = "color",
     kind = "color token",

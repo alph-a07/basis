@@ -104,7 +104,7 @@ internal class FamilyEmitterTest {
                 returnSimpleName = "Oklch",
                 returnFqn = "io.github.alph_a07.basis.theme.color.Oklch",
                 returnNullable = true,
-                resolveNoun = "leaf",
+                resolveNoun = "token",
                 members =
                     listOf(
                         PathMember("SurfaceDefault", "color.surface.default", listOf("surface", "default")),
@@ -122,7 +122,7 @@ internal class FamilyEmitterTest {
             ),
         )
         assertTrue(source.contains("    ColorTokenPath.SurfaceDefault -> colors.surface.default\n"))
-        assertTrue(source.contains(" * Resolves this identifier to its leaf in [colors];"))
+        assertTrue(source.contains(" * Resolves this identifier to its token in [colors];"))
         assertTrue(source.contains("brand anchors absent from the theme resolve to null."))
         assertTrue(source.contains("Gradient paths are not referenceable here"))
     }

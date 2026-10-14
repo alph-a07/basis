@@ -24,7 +24,7 @@ internal data class WalkResult(val model: FamilyModel, val sources: Set<KSFile>)
 
 /**
  * Depth-first walk over a token data-class tree that builds the enum entries: constructor
- * properties in declaration order, leaf types stop the descent, nested groups recurse, and any
+ * properties in declaration order, token types stop the descent, nested groups recurse, and any
  * other type fails the walk.
  */
 internal object TokenFamilyWalker {
@@ -39,8 +39,8 @@ internal object TokenFamilyWalker {
     private class WalkState(private val config: FamilyConfig) {
         val members = mutableListOf<PathMember>()
         val sources = mutableSetOf<KSFile>()
-        private var leafFqn: String? = null
-        private var leafNullable = false
+        private var tokenFqn: String? = null
+        private var tokenNullable = false
 
         fun descend(type: KSClassDeclaration, segments: List<String>) {
             type.containingFile?.let(sources::add)
@@ -67,10 +67,10 @@ internal object TokenFamilyWalker {
             val resolved = parameter.type.resolve()
             val declaration = resolved.declaration as? KSClassDeclaration
             val fqn = declaration?.qualifiedName?.asString()
-            val noun = fqn?.let(TokenLeafTypes.nouns::get)
+            val noun = fqn?.let(TokenValueTypes.nouns::get)
             when {
                 declaration != null && fqn != null && noun != null -> {
-                    addLeaf(declaration, fqn, resolved, segments + name)
+                    addToken(declaration, fqn, resolved, segments + name)
                 }
                 declaration != null && declaration.primaryConstructor != null -> {
                     descend(declaration, segments + name)
@@ -79,26 +79,26 @@ internal object TokenFamilyWalker {
                     throw WalkFailure(
                         "Token path walk reached '" + (fqn ?: resolved.toString()) + "' beneath '" +
                             (owner.qualifiedName?.asString() ?: "?") +
-                            "', which is neither a known token leaf nor a walkable token group.",
+                            "', which is neither a known token value nor a walkable token group.",
                     )
                 }
             }
         }
 
-        private fun addLeaf(
+        private fun addToken(
             declaration: KSClassDeclaration,
             fqn: String,
             resolved: KSType,
             segments: List<String>,
         ) {
-            val current = leafFqn
+            val current = tokenFqn
             if (current == null) {
-                leafFqn = fqn
+                tokenFqn = fqn
             } else if (current != fqn) {
-                throw WalkFailure("A path family must have one leaf type, found '$current' and '$fqn'.")
+                throw WalkFailure("A path family must have one token type, found '$current' and '$fqn'.")
             }
             if (resolved.nullability == Nullability.NULLABLE) {
-                leafNullable = true
+                tokenNullable = true
             }
             declaration.containingFile?.let(sources::add)
             members +=
@@ -111,7 +111,7 @@ internal object TokenFamilyWalker {
 
         fun checkComplete() {
             if (members.isEmpty()) {
-                throw WalkFailure("Family '${config.prefix}' has no leaves; check the token tree shape.")
+                throw WalkFailure("Family '${config.prefix}' has no tokens; check the token tree shape.")
             }
             val duplicate = members.groupBy { it.entryName }.filterValues { it.size > 1 }.keys
             if (duplicate.isNotEmpty()) {
@@ -120,7 +120,7 @@ internal object TokenFamilyWalker {
         }
 
         fun modelFor(receiver: KSClassDeclaration): FamilyModel {
-            val leaf = checkNotNull(leafFqn) { "Family '${config.prefix}' has no leaf type." }
+            val tokenType = checkNotNull(tokenFqn) { "Family '${config.prefix}' has no token type." }
             val receiverFqn =
                 receiver.qualifiedName?.asString()
                     ?: throw WalkFailure("Token path receiver has no qualified name.")
@@ -133,10 +133,10 @@ internal object TokenFamilyWalker {
                 resolveDocNote = config.resolveDocNote,
                 receiverSimpleName = receiver.simpleName.asString(),
                 receiverFqn = receiverFqn,
-                returnSimpleName = leaf.substringAfterLast('.'),
-                returnFqn = leaf,
-                returnNullable = leafNullable,
-                resolveNoun = TokenLeafTypes.nouns.getValue(leaf),
+                returnSimpleName = tokenType.substringAfterLast('.'),
+                returnFqn = tokenType,
+                returnNullable = tokenNullable,
+                resolveNoun = TokenValueTypes.nouns.getValue(tokenType),
                 members = members,
             )
         }

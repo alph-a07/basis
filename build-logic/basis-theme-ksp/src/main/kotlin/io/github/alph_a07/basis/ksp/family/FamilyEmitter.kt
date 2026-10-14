@@ -5,7 +5,7 @@ internal const val OUTPUT_PACKAGE: String = "io.github.alph_a07.basis.theme.toke
 
 /**
  * Renders one path family as Kotlin source: the typed identifier enum with its stable path
- * strings, followed by the `resolveIn` function that maps each entry to its token-tree leaf.
+ * strings, followed by the `resolveIn` function that maps each entry to its token-tree token.
  */
 internal object FamilyEmitter {
 

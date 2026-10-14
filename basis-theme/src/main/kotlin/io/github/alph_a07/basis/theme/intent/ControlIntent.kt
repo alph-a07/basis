@@ -9,7 +9,7 @@ import io.github.alph_a07.basis.theme.intent.controls.overrides.TokenOverrides
 /**
  * Intent to drive fine-grained control over a resolved theme.
  *
- * @property tokens Sparse typed leaf overrides mirroring the token tree; [TokenOverrides.paths] is
+ * @property tokens Sparse typed token overrides mirroring the token tree; [TokenOverrides.paths] is
  * the secondary path-map form for codegen and migrations.
  * @property components Per-component, variant, and state style patches.
  * @property mode Preferred color mode and which modes are generated.

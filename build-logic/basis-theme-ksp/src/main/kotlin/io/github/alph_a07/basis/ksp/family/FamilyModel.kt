@@ -1,10 +1,10 @@
 package io.github.alph_a07.basis.ksp.family
 
 /** Known token value types a path walk may stop at, mapped to their `resolveIn` KDoc noun. */
-internal object TokenLeafTypes {
+internal object TokenValueTypes {
     val nouns: Map<String, String> =
         mapOf(
-            "io.github.alph_a07.basis.theme.core.color.Oklch" to "leaf",
+            "io.github.alph_a07.basis.theme.core.color.Oklch" to "token",
             "io.github.alph_a07.basis.theme.tokens.typography.TypeRole" to "role",
             "io.github.alph_a07.basis.theme.core.DpValue" to "level",
             "io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec" to "spec",
@@ -35,7 +35,7 @@ internal data class FamilyModel(
     val resolveNoun: String,
     val members: List<PathMember>,
 ) {
-    /** The rendered return type, including a trailing `?` when any leaf is nullable. */
+    /** The rendered return type, including a trailing `?` when any token is nullable. */
     val returnType: String
         get() =
             returnSimpleName +

@@ -6,7 +6,7 @@ import com.google.devtools.ksp.symbol.KSValueParameter
 import com.google.devtools.ksp.symbol.Nullability
 import io.github.alph_a07.basis.ksp.family.WalkFailure
 
-/** Expected leaf type of every knob axis. */
+/** Expected value type of every knob axis. */
 private const val NULLABLE_FLOAT = "kotlin.Float"
 
 /**

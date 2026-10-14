@@ -3,7 +3,7 @@ package io.github.alph_a07.basis.theme.intent.controls.overrides
 /**
  * Theme specific override mode for overriding tokens.
  *
- * @param T Type of the overridden token leaf.
+ * @param T Type of the overridden token.
  */
 public sealed interface OverrideMode<out T> {
 
