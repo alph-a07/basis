@@ -64,15 +64,19 @@ private fun applyPath(
     is OverrideValue.Color -> {
         applyColorPath(theme, path, value, mode, entries)
     }
+
     is OverrideValue.Dp -> {
         applyDpPath(theme, path, value, entries)
     }
+
     is OverrideValue.Depth -> {
         applyDepthPath(theme, path, value, entries)
     }
+
     is OverrideValue.Motion -> {
         applyMotionPath(theme, path, value, entries)
     }
+
     is OverrideValue.Typography -> {
         applyTypographyPath(theme, path, value, entries)
     }
@@ -108,12 +112,12 @@ private fun applyDpPath(
     value: OverrideValue.Dp,
     entries: MutableList<ReportEntry>,
 ): WorkingTheme {
-    val spacingPath = SpacingTokenPath.values().firstOrNull { it.path == path }
+    val spacingPath = SpacingTokenPath.entries.firstOrNull { it.path == path }
     if (spacingPath != null) {
         return theme.copy(spacing = replaceSpacing(theme.spacing, spacingPath, value.value))
     }
 
-    val radiusPath = RadiusTokenPath.values().firstOrNull { it.path == path }
+    val radiusPath = RadiusTokenPath.entries.firstOrNull { it.path == path }
     if (radiusPath != null) {
         return theme.copy(radius = replaceRadius(theme.radius, radiusPath, value.value))
     }
@@ -128,7 +132,7 @@ private fun applyDepthPath(
     value: OverrideValue.Depth,
     entries: MutableList<ReportEntry>,
 ): WorkingTheme {
-    val token = DepthTokenPath.values().firstOrNull { it.path == path }
+    val token = DepthTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
         return theme
@@ -143,7 +147,7 @@ private fun applyMotionPath(
     value: OverrideValue.Motion,
     entries: MutableList<ReportEntry>,
 ): WorkingTheme {
-    val token = MotionTokenPath.values().firstOrNull { it.path == path }
+    val token = MotionTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
         return theme
@@ -158,7 +162,7 @@ private fun applyTypographyPath(
     value: OverrideValue.Typography,
     entries: MutableList<ReportEntry>,
 ): WorkingTheme {
-    val token = TypographyTokenPath.values().firstOrNull { it.path == path }
+    val token = TypographyTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
         return theme
