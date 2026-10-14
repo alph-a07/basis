@@ -2,6 +2,8 @@ package io.github.alph_a07.basis.theme.resolution.normalize
 
 import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.core.color.Oklch
+import io.github.alph_a07.basis.theme.core.color.gamutMapped
+import io.github.alph_a07.basis.theme.core.color.toOklchOrNull
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.IdentityIntent
@@ -14,8 +16,6 @@ import io.github.alph_a07.basis.theme.intent.excessSupportingColorCount
 import io.github.alph_a07.basis.theme.intent.hasPresenceWithoutBrand
 import io.github.alph_a07.basis.theme.intent.isWellFormed
 import io.github.alph_a07.basis.theme.intent.violatingKnobs
-import io.github.alph_a07.basis.theme.resolution.color.gamutMapped
-import io.github.alph_a07.basis.theme.resolution.color.toOklchOrNull
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
