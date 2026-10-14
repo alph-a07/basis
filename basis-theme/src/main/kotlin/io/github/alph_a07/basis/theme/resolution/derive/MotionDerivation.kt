@@ -11,7 +11,8 @@ import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
  *
  * @param motion Seeded motion tokens.
  * @param durationScale Multiplier on every motion duration.
- * @param emphasisBoost Emphasis boost in effect; if above the spring threshold, expansion and emphasis purposes take a spring easing.
+ * @param emphasisBoost Emphasis boost in effect; if above the spring threshold, expansion and
+ * emphasis purposes take a spring easing.
  * @return The scaled motion tokens.
  */
 internal fun deriveMotionTokens(
