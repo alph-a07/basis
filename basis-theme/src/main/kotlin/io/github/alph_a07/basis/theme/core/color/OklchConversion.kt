@@ -1,7 +1,7 @@
-package io.github.alph_a07.basis.theme.resolution.color
+@file:Suppress("MagicNumber")
 
-import io.github.alph_a07.basis.theme.core.color.ColorSpec
-import io.github.alph_a07.basis.theme.core.color.Oklch
+package io.github.alph_a07.basis.theme.core.color
+
 import kotlin.math.atan2
 import kotlin.math.cbrt
 import kotlin.math.pow

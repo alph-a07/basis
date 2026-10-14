@@ -1,21 +1,17 @@
-package io.github.alph_a07.basis.theme.resolution.color
+@file:Suppress("MagicNumber")
 
-import io.github.alph_a07.basis.theme.core.color.Oklch
+package io.github.alph_a07.basis.theme.core.color
+
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 
-/** Linear-sRGB triplet of an OKLCH color. */
-internal data class LinearSrgb(
-    val r: Float,
-    val g: Float,
-    val b: Float,
-)
-
 /**
  * Blends two OKLCH colors along the shortest hue arc.
- * @return The color at [amount] along the arc from [from] to [to], with lightness, chroma, and alpha linearly interpolated.
+ *
+ * @return The color at [amount] along the arc from [from] to [to], with lightness,
+ * chroma, and alpha linearly interpolated.
  */
 internal fun mixOklch(from: Oklch, to: Oklch, amount: Float): Oklch {
     val t = amount.coerceIn(0f, 1f)
@@ -45,6 +41,7 @@ internal fun Oklch.gamutMapped(): Oklch {
     repeat(GAMUT_STEPS) {
         val middle = (lower + upper) / 2f
         val candidate = copy(c = middle)
+
         if (candidate.isInGamut()) {
             lower = middle
         } else {
@@ -114,6 +111,7 @@ internal fun contrastRatio(first: Oklch, second: Oklch): Float {
 /** Wraps a hue into `[0, 360)`. */
 internal fun Float.wrapHue(): Float {
     val wrapped = this % HUE_FULL
+
     return if (wrapped < 0f) wrapped + HUE_FULL else wrapped
 }
 
@@ -124,6 +122,7 @@ internal fun Float.wrapHue(): Float {
  */
 internal fun Float.hueTowards(target: Float, amount: Float): Float {
     val delta = ((target - this + HUE_HALF + HUE_FULL) % HUE_FULL) - HUE_HALF
+
     return wrapHue() + delta * amount.coerceIn(0f, 1f)
 }
 
