@@ -7,6 +7,8 @@ plugins {
 extensions.configure<KtlintExtension> {
     version.set(
         extensions.getByType<VersionCatalogsExtension>().named("libs")
-            .findVersion("ktlint").get().requiredVersion,
+            .findVersion("ktlint")
+            .get()
+            .requiredVersion,
     )
 }

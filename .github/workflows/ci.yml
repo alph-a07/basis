@@ -23,27 +23,8 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4   # handles Gradle + dependency caching
 
-      - name: Assemble Project
-        run: ./gradlew assemble
-
-      - name: Run Unit Tests
-        run: ./gradlew test
-
-      - name: Android Lint Check
-        run: ./gradlew lint
-
-      - name: Detekt Compliance Check
-        run: |
-          ./gradlew detekt
-          ./gradlew -p build-logic detekt
-
-      - name: Kotlin Lint Check
-        run: |
-          ./gradlew ktlintCheck
-          ./gradlew -p build-logic ktlintCheck
-
-      - name: Binary compatibility check
-        run: ./gradlew releaseApiCheck
+      - name: Verify All (Assemble, Test, Lint, Detekt, Ktlint, API Check)
+        run: ./gradlew verifyAll
 
       - name: Upload reports on failure
         if: failure()

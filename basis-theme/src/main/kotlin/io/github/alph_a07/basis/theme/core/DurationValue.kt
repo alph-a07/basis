@@ -1,0 +1,13 @@
+package io.github.alph_a07.basis.theme.core
+
+/**
+ * Value wrapper for a magnitude in milliseconds.
+ *
+ * @property milliseconds Magnitude in milliseconds and must be non-negative.
+ */
+@JvmInline
+public value class DurationValue(public val milliseconds: Long) {
+    init {
+        require(milliseconds >= 0L) { "DurationValue must be non-negative, was $milliseconds." }
+    }
+}

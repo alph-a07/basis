@@ -11,7 +11,8 @@ material = "1.14.0"
 detekt = "1.23.8"
 ktlint = "1.8.0"
 ktlintGradle = "14.2.0"
-lint = "32.2.1"
+lint = "32.4.1"
+ksp = "2.3.12"
 vanniktechMavenPublish = "0.37.0"
 bcv = "0.18.2"
 bcvBridge = "0.2.0"
@@ -31,13 +32,12 @@ androidx-lint-api = { group = "com.android.tools.lint", name = "lint-api", versi
 androidx-lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "lint" }
 androidx-lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
-# The Gradle plugin's implementation artifact. A plugin *marker* cannot be used in a
-# `dependencies` block, and `build-logic` needs this on its compile classpath to configure
-# detekt's extension and task types from the convention plugin.
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
-# The Gradle plugin's implementation artifact, for `build-logic` to configure the `ktlint`
-# extension from the convention plugin. Same reasoning as `detekt-gradle-plugin` above.
+ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ktlint-gradle = { group = "org.jlleitschuh.gradle", name = "ktlint-gradle", version.ref = "ktlintGradle" }
+detekt-api = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", version.ref = "detekt" }
+detekt-test = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test", version.ref = "detekt" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.7" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -47,6 +47,8 @@ android-lint = { id = "com.android.lint", version.ref = "agp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+foojay-resolver = { id = "org.gradle.toolchains.foojay-resolver-convention", version = "1.0.0" }
 vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechMavenPublish" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
 android-bcv-bridge = { id = "io.github.tjokinen.android-bcv-bridge", version.ref = "bcvBridge" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

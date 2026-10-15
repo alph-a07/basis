@@ -15,9 +15,10 @@ class BasisIssueRegistry : IssueRegistry() {
 
     override val api: Int = CURRENT_API
 
-    override val vendor: Vendor = Vendor(
-        vendorName = "Basis",
-        identifier = "io.github.alph_a07:basis-lint",
-        feedbackUrl = "https://github.com/alph-a07/basis/issues",
-    )
+    override val vendor: Vendor =
+        Vendor(
+            vendorName = "Basis",
+            identifier = "io.github.alph_a07:basis-lint",
+            feedbackUrl = "https://github.com/alph-a07/basis/issues",
+        )
 }
