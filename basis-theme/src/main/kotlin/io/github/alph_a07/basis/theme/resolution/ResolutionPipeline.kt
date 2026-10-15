@@ -143,7 +143,7 @@ private fun buildContext(normalized: NormalizedIntent): ResolutionContext {
         moodProfile = profile,
         effectiveAesthetic = effective,
         modulators = projectMoodModulators(effective, seedBiases.structural, prior),
-        fonts = resolveFontRoles(normalized, effective),
+        fonts = resolveFontRoles(normalized, effective, prior),
         lockedPaths = normalized.control?.tokens?.paths?.keys ?: emptySet(),
     )
 }
