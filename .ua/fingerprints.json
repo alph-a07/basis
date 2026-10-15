@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "fa00c729f7f08cb23305abe17c94aceed676f08e",
-  "generatedAt": "2026-10-15T07:23:57.852Z",
+  "gitCommitHash": "4f3e1af41c51ca822a4d8e9740fbb238bc494f99",
+  "generatedAt": "2026-10-15T13:37:46.599Z",
   "files": {
     ".githooks/commit-msg": {
       "filePath": ".githooks/commit-msg",
@@ -2775,7 +2775,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/ResolutionPipeline.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/ResolutionPipeline.kt",
-      "contentHash": "bed042a46b5fd365e0d85b97e90237965d94baa5128e0e76585bf0b47f9f46a0",
+      "contentHash": "b59e66bc4407d01182c756c9a571fb32000351061439c219b46fae8831495b5f",
       "functions": [
         {
           "name": "resolve",
@@ -5326,7 +5326,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt",
-      "contentHash": "b5c2fb6c8adfd022aa7b5b0ccd9827fd2f4e29bb0cdf552a62e7930ddbc2bae3",
+      "contentHash": "ac9b8c30b7d5cba3ff0db918d25f2b73d23abc27f12b755f416bbf3f2f0d68ed",
       "functions": [],
       "classes": [
         {
@@ -5350,7 +5350,7 @@
       "exports": [
         "PriorVector"
       ],
-      "totalLines": 31,
+      "totalLines": 39,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/enforce/ColorContrastRepair.kt": {
@@ -5933,7 +5933,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/DefaultFontBias.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/DefaultFontBias.kt",
-      "contentHash": "a0e189295f262c4fa5b703be1acbc3700cb78b2d299cab5bc1b7b88438b45d29",
+      "contentHash": "92c9fe17074b673f830a3a1ea141e511466d33e85973b8ad7cd2a2d0df19ee28",
       "functions": [],
       "classes": [
         {
@@ -5970,22 +5970,91 @@
         "DISPLAY_THRESHOLD",
         "DefaultFontBias"
       ],
-      "totalLines": 26,
+      "totalLines": 21,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontAssignment.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontAssignment.kt",
-      "contentHash": "34591da9a39b6808205fff234f64960758b88d6a91096b20e10b1027c06005ff",
+      "contentHash": "ccb1795a55bdc930365deded75c652180f5e82b3c2bed56f1582f7180a736375",
       "functions": [
         {
           "name": "resolveFontRoles",
           "params": [
             "normalized",
-            "aesthetic"
+            "aesthetic",
+            "prior"
           ],
           "returnType": "FontRolePlan",
           "exported": true,
-          "lineCount": 41
+          "lineCount": 68
+        },
+        {
+          "name": "resolveLadderFallback",
+          "params": [
+            "ladder",
+            "intentSpecified",
+            "derived",
+            "canonical",
+            "entries"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "isIntentSpecified",
+          "params": [
+            "normalized"
+          ],
+          "returnType": "Boolean",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "assignCandidateRoles",
+          "params": [
+            "candidates",
+            "pinnedStructure",
+            "pinnedContent",
+            "pinnedMetadata",
+            "aesthetic",
+            "entries"
+          ],
+          "returnType": "AssignedLadders",
+          "exported": false,
+          "lineCount": 47
+        },
+        {
+          "name": "pickCandidate",
+          "params": [
+            "pool",
+            "scoreFn"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "scoreCandidate",
+          "params": [
+            "ref",
+            "ladder",
+            "aesthetic"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "candidateEntry",
+          "params": [
+            "ladder",
+            "candidate",
+            "isReuse"
+          ],
+          "returnType": "ReportEntry",
+          "exported": false,
+          "lineCount": 12
         },
         {
           "name": "pinned",
@@ -5998,25 +6067,15 @@
           "lineCount": 16
         },
         {
-          "name": "takeNext",
+          "name": "fallbackEntry",
           "params": [
             "ladder",
-            "entries"
-          ],
-          "returnType": "FontFamilyRef?",
-          "exported": false,
-          "lineCount": 14
-        },
-        {
-          "name": "derivedEntry",
-          "params": [
-            "ladder",
-            "assigned",
-            "fallback"
+            "fallback",
+            "isDynamic"
           ],
           "returnType": "List<ReportEntry>",
           "exported": false,
-          "lineCount": 15
+          "lineCount": 14
         },
         {
           "name": "lockEntries",
@@ -6026,21 +6085,51 @@
           "returnType": "List<ReportEntry>",
           "exported": false,
           "lineCount": 10
-        },
-        {
-          "name": "label",
-          "params": [],
-          "returnType": "String",
-          "exported": false,
-          "lineCount": 9
         }
       ],
-      "classes": [],
+      "classes": [
+        {
+          "name": "AssignedLadders",
+          "methods": [],
+          "properties": [
+            "structure",
+            "content",
+            "metadata",
+            "unusedCandidates"
+          ],
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
       "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodIntent",
+          "specifiers": [
+            "MoodIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.PriorVector",
+          "specifiers": [
+            "PriorVector"
+          ]
+        },
         {
           "source": "io.github.alph_a07.basis.theme.resolution.mood.MoodProfile",
           "specifiers": [
             "MoodProfile"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.isUnspecified",
+          "specifiers": [
+            "isUnspecified"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01",
+          "specifiers": [
+            "typographyExpressiveness01"
           ]
         },
         {
@@ -6078,12 +6167,343 @@
           "specifiers": [
             "FontFamilyRef"
           ]
+        },
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
         }
       ],
       "exports": [
         "resolveFontRoles"
       ],
-      "totalLines": 140,
+      "totalLines": 298,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogDerivation.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogDerivation.kt",
+      "contentHash": "38223787fc2721b0277e7b87dd65ca390e645c8e86720392fe696fa2626cbbe1",
+      "functions": [
+        {
+          "name": "deriveStructure",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "deriveContent",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "deriveMetadata",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "scoreStructureEntry",
+          "params": [
+            "entry",
+            "targetExpr",
+            "targetRound",
+            "trust"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "scoreContentEntry",
+          "params": [
+            "entry",
+            "targetRound",
+            "trust"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "scoreMetadataEntry",
+          "params": [
+            "entry",
+            "targetRound",
+            "density"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "isBetterCandidate",
+          "params": [
+            "score",
+            "bestEntry",
+            "bestScore"
+          ],
+          "returnType": "Boolean",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontCatalogDerivation",
+          "methods": [
+            "deriveStructure",
+            "deriveContent",
+            "deriveMetadata",
+            "scoreStructureEntry",
+            "scoreContentEntry",
+            "scoreMetadataEntry",
+            "isBetterCandidate"
+          ],
+          "properties": [
+            "STRUCTURE_DISPLAY_WEIGHT",
+            "STRUCTURE_EXPR_WEIGHT",
+            "STRUCTURE_ROUND_WEIGHT",
+            "STRUCTURE_TRUST_WEIGHT",
+            "STRUCTURE_MIN_WEIGHT_DEPTH",
+            "STRUCTURE_WEIGHT_DEPTH_PENALTY",
+            "STRUCTURE_RESTRAINED_EXPR_THRESHOLD",
+            "STRUCTURE_ELEVATED_TRUST_THRESHOLD",
+            "CONTENT_ROUND_WEIGHT",
+            "CONTENT_TRUST_WEIGHT",
+            "METADATA_ROUND_WEIGHT",
+            "METADATA_MONOSPACE_DENSITY_THRESHOLD",
+            "METADATA_MONOSPACE_BONUS",
+            "METADATA_DENSITY_WEIGHT",
+            "CATALOG_TIE_EPSILON"
+          ],
+          "exported": true,
+          "lineCount": 174
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.PriorVector",
+          "specifiers": [
+            "PriorVector"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.dataDensity01",
+          "specifiers": [
+            "dataDensity01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.trustStrictness01",
+          "specifiers": [
+            "trustStrictness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.MoodProfile",
+          "specifiers": [
+            "MoodProfile"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.roundness01",
+          "specifiers": [
+            "roundness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01",
+          "specifiers": [
+            "typographyExpressiveness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
+        }
+      ],
+      "exports": [
+        "deriveStructure",
+        "deriveContent",
+        "deriveMetadata",
+        "FontCatalogDerivation"
+      ],
+      "totalLines": 193,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogEntry.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogEntry.kt",
+      "contentHash": "62628b26c9e5d6409dd7134e42a133ade3382b38390ef0fda1ccb880dbe8ae82",
+      "functions": [],
+      "classes": [
+        {
+          "name": "FontCatalogEntry",
+          "methods": [],
+          "properties": [
+            "id",
+            "familyName",
+            "googleFontsKey",
+            "category",
+            "axes",
+            "displayAffinity",
+            "textAffinity",
+            "metaAffinity",
+            "expressiveness",
+            "roundness",
+            "serif",
+            "mono",
+            "weightsCount"
+          ],
+          "exported": true,
+          "lineCount": 38
+        },
+        {
+          "name": "FontAxis",
+          "methods": [],
+          "properties": [
+            "tag",
+            "min",
+            "max",
+            "defaultValue"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "GoogleFontsCategory",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        }
+      ],
+      "exports": [
+        "FontCatalogEntry",
+        "FontAxis",
+        "GoogleFontsCategory"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogReader.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogReader.kt",
+      "contentHash": "ce3f445a303942cdfd3f4cc66e2c43199a6245a803870d550625455900762e15",
+      "functions": [
+        {
+          "name": "readCatalog",
+          "params": [
+            "input"
+          ],
+          "returnType": "List<FontCatalogEntry>",
+          "exported": true,
+          "lineCount": 69
+        },
+        {
+          "name": "categoryFromCode",
+          "params": [
+            "code"
+          ],
+          "returnType": "GoogleFontsCategory",
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontCatalogReader",
+          "methods": [
+            "readCatalog",
+            "categoryFromCode"
+          ],
+          "properties": [
+            "MAGIC_BYTES",
+            "MAGIC_BYTES_LENGTH",
+            "FORMAT_VERSION",
+            "FLAG_SERIF",
+            "FLAG_MONO",
+            "CATEGORY_CODE_SANS_SERIF",
+            "CATEGORY_CODE_SERIF",
+            "CATEGORY_CODE_DISPLAY",
+            "CATEGORY_CODE_HANDWRITING",
+            "CATEGORY_CODE_MONOSPACE"
+          ],
+          "exported": true,
+          "lineCount": 101
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "java.io.BufferedInputStream",
+          "specifiers": [
+            "BufferedInputStream"
+          ]
+        },
+        {
+          "source": "java.io.DataInputStream",
+          "specifiers": [
+            "DataInputStream"
+          ]
+        },
+        {
+          "source": "java.io.InputStream",
+          "specifiers": [
+            "InputStream"
+          ]
+        },
+        {
+          "source": "java.util.zip.GZIPInputStream",
+          "specifiers": [
+            "GZIPInputStream"
+          ]
+        }
+      ],
+      "exports": [
+        "readCatalog",
+        "categoryFromCode",
+        "CATEGORY_CODE_SANS_SERIF",
+        "CATEGORY_CODE_SERIF",
+        "CATEGORY_CODE_DISPLAY",
+        "CATEGORY_CODE_HANDWRITING",
+        "CATEGORY_CODE_MONOSPACE",
+        "FontCatalogReader"
+      ],
+      "totalLines": 111,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontRolePlan.kt": {
@@ -6153,6 +6573,97 @@
         "FontRolePlan"
       ],
       "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/GoogleFontCatalog.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/GoogleFontCatalog.kt",
+      "contentHash": "4197ea398ecfdcba16ff07dc380b7b17096c770a6ae1bc6a3d65e1673659c43e",
+      "functions": [
+        {
+          "name": "find",
+          "params": [
+            "id"
+          ],
+          "returnType": "FontCatalogEntry?",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "contains",
+          "params": [
+            "id"
+          ],
+          "returnType": "Boolean",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "byCategory",
+          "params": [
+            "category"
+          ],
+          "returnType": "List<FontCatalogEntry>",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "normalizeKey",
+          "params": [
+            "raw"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 2
+        }
+      ],
+      "classes": [
+        {
+          "name": "GoogleFontCatalog",
+          "methods": [
+            "find",
+            "contains",
+            "byCategory",
+            "normalizeKey"
+          ],
+          "properties": [
+            "all",
+            "topStructureCandidates",
+            "topContentCandidates",
+            "topMetadataCandidates",
+            "byNormalizedKey",
+            "byCategoryMap",
+            "RESOURCE_PATH",
+            "TOP_CANDIDATE_POOL_SIZE",
+            "STRUCTURE_AFFINITY_FLOOR",
+            "CONTENT_AFFINITY_FLOOR",
+            "METADATA_AFFINITY_FLOOR"
+          ],
+          "exported": true,
+          "lineCount": 96
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        }
+      ],
+      "exports": [
+        "all",
+        "find",
+        "contains",
+        "byCategory",
+        "topStructureCandidates",
+        "topContentCandidates",
+        "topMetadataCandidates",
+        "STRUCTURE_AFFINITY_FLOOR",
+        "CONTENT_AFFINITY_FLOOR",
+        "METADATA_AFFINITY_FLOOR",
+        "GoogleFontCatalog"
+      ],
+      "totalLines": 102,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/identity/PresencePlan.kt": {
@@ -6385,7 +6896,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProfile.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProfile.kt",
-      "contentHash": "1b62c4c5b6939500422d9f412f37c946eb527710bd9124f59e98e555d14d8b23",
+      "contentHash": "59cde0ffb6cf2642939f14f7e503c92d8550b009dbc7d8b9ad268c7877298bcf",
       "functions": [],
       "classes": [
         {
@@ -6416,7 +6927,7 @@
       "exports": [
         "MoodProfile"
       ],
-      "totalLines": 30,
+      "totalLines": 42,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProjection.kt": {
@@ -9948,6 +10459,371 @@
       "totalLines": 158,
       "hasStructuralAnalysis": true
     },
+    "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/FontAssignmentTest.kt": {
+      "filePath": "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/FontAssignmentTest.kt",
+      "contentHash": "3ca6ecccdb4cc9298934cea1171e6f3ca857b379878201ed699066a78e01f8b9",
+      "functions": [
+        {
+          "name": "catalogLoadsAllVendoredFamilies",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "catalogLookupIsCaseAndWhitespaceInsensitive",
+          "params": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "categoryIndexAndAffinityPoolsArePopulated",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "pinsWinOverCandidates",
+          "params": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "singleCandidateReuseFillsUnpinnedLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "singleCandidateWithPinReusesForRemainingLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "candidateScoringAssignsByAffinities",
+          "params": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "unusedCandidatesAreRecordedInReport",
+          "params": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "emptyIntentDerivesDefaultSansFallbacks",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "dynamicCatalogDerivationRespondsToExpressiveness",
+          "params": [],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "dynamicCatalogDerivationRespondsToRoundness",
+          "params": [],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "dynamicDerivationIsIdempotentAndReliable",
+          "params": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "anyCatalogFamilyCanBePinnedViaIdentity",
+          "params": [],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "anyCatalogFamilyCanBePinnedViaControl",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "customFontKeysPreservedWithoutNetwork",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "dynamicDerivationRespondsToProductDomainPriors",
+          "params": [],
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "dynamicDerivationRespondsToArchetypePresets",
+          "params": [],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+          "params": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "dynamicDerivationWithPolarExtremeKnobs",
+          "params": [],
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "dynamicDerivationPriorsMultiSelectDomainBlend",
+          "params": [],
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "categoryFromCodeDecodesAllSupportedCodes",
+          "params": [],
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "weightsCountIsValidOnAllEntries",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "goldenDynamicDerivationStabilityAcrossArchetypes",
+          "params": [],
+          "exported": true,
+          "lineCount": 42
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontAssignmentTest",
+          "methods": [
+            "catalogLoadsAllVendoredFamilies",
+            "catalogLookupIsCaseAndWhitespaceInsensitive",
+            "categoryIndexAndAffinityPoolsArePopulated",
+            "pinsWinOverCandidates",
+            "singleCandidateReuseFillsUnpinnedLadders",
+            "singleCandidateWithPinReusesForRemainingLadders",
+            "candidateScoringAssignsByAffinities",
+            "unusedCandidatesAreRecordedInReport",
+            "emptyIntentDerivesDefaultSansFallbacks",
+            "dynamicCatalogDerivationRespondsToExpressiveness",
+            "dynamicCatalogDerivationRespondsToRoundness",
+            "dynamicDerivationIsIdempotentAndReliable",
+            "anyCatalogFamilyCanBePinnedViaIdentity",
+            "anyCatalogFamilyCanBePinnedViaControl",
+            "customFontKeysPreservedWithoutNetwork",
+            "dynamicDerivationRespondsToProductDomainPriors",
+            "dynamicDerivationRespondsToArchetypePresets",
+            "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+            "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+            "dynamicDerivationWithPolarExtremeKnobs",
+            "dynamicDerivationPriorsMultiSelectDomainBlend",
+            "categoryFromCodeDecodesAllSupportedCodes",
+            "weightsCountIsValidOnAllEntries",
+            "goldenDynamicDerivationStabilityAcrossArchetypes"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 569
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.ControlIntent",
+          "specifiers": [
+            "ControlIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.DomainIntent",
+          "specifiers": [
+            "DomainIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.IdentityIntent",
+          "specifiers": [
+            "IdentityIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.InteractionPattern",
+          "specifiers": [
+            "InteractionPattern"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodIntent",
+          "specifiers": [
+            "MoodIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodKnobs",
+          "specifiers": [
+            "MoodKnobs"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodPreset",
+          "specifiers": [
+            "MoodPreset"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.ProductDomain",
+          "specifiers": [
+            "ProductDomain"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.TypographyIdentity",
+          "specifiers": [
+            "TypographyIdentity"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.controls.FontControl",
+          "specifiers": [
+            "FontControl"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.DefaultFontBias",
+          "specifiers": [
+            "DefaultFontBias"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.FontCatalogReader",
+          "specifiers": [
+            "FontCatalogReader"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog",
+          "specifiers": [
+            "GoogleFontCatalog"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontsCategory",
+          "specifiers": [
+            "GoogleFontsCategory"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.report.ReportStatus",
+          "specifiers": [
+            "ReportStatus"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath",
+          "specifiers": [
+            "TypographyTokenPath"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "kotlin.test.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        }
+      ],
+      "exports": [
+        "catalogLoadsAllVendoredFamilies",
+        "catalogLookupIsCaseAndWhitespaceInsensitive",
+        "categoryIndexAndAffinityPoolsArePopulated",
+        "pinsWinOverCandidates",
+        "singleCandidateReuseFillsUnpinnedLadders",
+        "singleCandidateWithPinReusesForRemainingLadders",
+        "candidateScoringAssignsByAffinities",
+        "unusedCandidatesAreRecordedInReport",
+        "emptyIntentDerivesDefaultSansFallbacks",
+        "dynamicCatalogDerivationRespondsToExpressiveness",
+        "dynamicCatalogDerivationRespondsToRoundness",
+        "dynamicDerivationIsIdempotentAndReliable",
+        "anyCatalogFamilyCanBePinnedViaIdentity",
+        "anyCatalogFamilyCanBePinnedViaControl",
+        "customFontKeysPreservedWithoutNetwork",
+        "dynamicDerivationRespondsToProductDomainPriors",
+        "dynamicDerivationRespondsToArchetypePresets",
+        "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+        "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+        "dynamicDerivationWithPolarExtremeKnobs",
+        "dynamicDerivationPriorsMultiSelectDomainBlend",
+        "categoryFromCodeDecodesAllSupportedCodes",
+        "weightsCountIsValidOnAllEntries",
+        "goldenDynamicDerivationStabilityAcrossArchetypes",
+        "FontAssignmentTest"
+      ],
+      "totalLines": 598,
+      "hasStructuralAnalysis": true
+    },
     "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/ResolvePipelineTest.kt": {
       "filePath": "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/ResolvePipelineTest.kt",
       "contentHash": "86ff260e717a95a8b0092484fce77fb9b3dae36db5c57d447093464032d72cfd",
@@ -13044,6 +13920,94 @@
       "exports": [],
       "totalLines": 95,
       "hasStructuralAnalysis": false
+    },
+    "scripts/generate_font_catalog.py": {
+      "filePath": "scripts/generate_font_catalog.py",
+      "contentHash": "61ac52ed7c68b86f815f0efe19c2cee286c92736c2a991fac89d2e067b54f6df",
+      "functions": [
+        {
+          "name": "canonical_id",
+          "params": [
+            "name"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "read_existing_ids",
+          "params": [
+            "file_path"
+          ],
+          "returnType": "set",
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "write_utf",
+          "params": [
+            "buffer",
+            "value"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 266
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "gzip",
+          "specifiers": [
+            "gzip"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "struct",
+          "specifiers": [
+            "struct"
+          ]
+        },
+        {
+          "source": "urllib.request",
+          "specifiers": [
+            "urllib.request"
+          ]
+        }
+      ],
+      "exports": [
+        "canonical_id",
+        "read_existing_ids",
+        "write_utf",
+        "main"
+      ],
+      "totalLines": 362,
+      "hasStructuralAnalysis": true
     },
     "settings.gradle.kts": {
       "filePath": "settings.gradle.kts",
