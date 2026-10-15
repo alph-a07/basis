@@ -27,3 +27,15 @@ public data class MoodProfile(
             )
     }
 }
+
+/** Projects [MoodProfile.typographyExpressiveness] from `[-1, 1]` to the unit interval `[0, 1]`. */
+public val MoodProfile.typographyExpressiveness01: Float
+    get() = ((typographyExpressiveness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
+
+/** Projects [MoodProfile.roundness] from `[-1, 1]` to the unit interval `[0, 1]`. */
+public val MoodProfile.roundness01: Float
+    get() = ((roundness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
+
+/** Projects [MoodProfile.density] from `[-1, 1]` to the unit interval `[0, 1]`. */
+public val MoodProfile.density01: Float
+    get() = ((density + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)

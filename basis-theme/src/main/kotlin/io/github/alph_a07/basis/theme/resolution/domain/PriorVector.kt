@@ -28,3 +28,11 @@ public data class PriorVector(
         public val ZERO: PriorVector = PriorVector()
     }
 }
+
+/** Projects [PriorVector.trustStrictness] from `[-1, 1]` to the unit interval `[0, 1]`. */
+public val PriorVector.trustStrictness01: Float
+    get() = ((trustStrictness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
+
+/** Projects [PriorVector.dataDensity] from `[-1, 1]` to the unit interval `[0, 1]`. */
+public val PriorVector.dataDensity01: Float
+    get() = ((dataDensity + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
