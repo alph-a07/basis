@@ -3,12 +3,7 @@ package io.github.alph_a07.basis.theme.resolution.fonts
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
 
-/**
- * Derived font fallbacks used when no requested family fills a ladder.
- *
- * These are derivation defaults, not the vendored catalog: they stand in until the full Google
- * Fonts metadata corpus lands, at which point scoring replaces them with catalog picks.
- */
+/** Derived font fallbacks used when no requested family fills a ladder. */
 internal object DefaultFontBias {
 
     /** Text-leaning sans used for the content ladder and for restrained structure ladders. */
