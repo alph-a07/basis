@@ -2,51 +2,52 @@
 
 Basis — Jetpack Compose design system. Public API `Basis`-prefixed. Apache 2.0. minSdk 24, targetSdk 36, compileSdk 37.
 
-Hard constraints. Conflict → §5.
-
 ---
 
-## 1. Graph first (navigation is graph-handled)
+## 1. Source-stage conventions (tight — enforce at source, not config copy)
 
-Trigger branches: `Graph` (not read yet), `Stale` (node old / `ORPHAN`), `Red` (`graph.sh` fails / `SETUP`).
-
-- `.context/graph.json` is the index (`graph.sh` queries it; `.context/SCHEMA.md` formats).
-- Don't open `graph.json` directly.
-- If `graph.sh` unavailable (`SETUP`, no `jq`): say so, continue.
-
-Sequence — complete when node read → code in anchor paths read → `Graph impact` reported:
-
-1. `graph.sh overview` / `for-path <path>` to find nodes.
-2. `graph.sh node <id> purpose invariants [public_surface]` — read narrowly.
-3. `graph.sh stale <id ...>` — check freshness; trust code over `STALE`/`ORPHAN`.
-4. Read code only within node anchor paths.
-5. Fallback (only when no node / stale / missing): grep / repo-wide. State which in one line.
-
-**Never edit `.context/`** unless explicitly asked (see `.context/prompts/`). When you change a file inside a node's
-anchor, report at message end: `Graph impact: <ids>` or `Graph impact: none`.
-
----
-
-## 2. Source-stage conventions (not re-state config files)
+Pointer `Conventions` branch: always load; `KDoc` / `Architecture` branches: only on relevant tasks.
 
 Enforcement lives in source — reference, don't copy:
 
 - **Editor / format:** `.editorconfig` (`utf-8`, `lf`, 4-space indent, `ktlint_code_style = android_studio`,
   `max_line_length = 120`, trailing commas allowed, `ktlint_standard_filename = disabled` for `basis/tokens/**`). Format
   with `./gradlew ktlintFormat`; check with `ktlintCheck`.
-- **Detekt:** `config/detekt/detekt.yml` (build `maxIssues: 0`, exclusions `basis|basis>.*`, custom rulesets active).
-  Check with `./gradlew detekt`. Don't disable rules locally; fix or ask.
-- **Source of truth / tight scope:** One owner per constant / logic (`Single source`). Changes stay **tight** — scoped,
-  no drive-by renames / refactors. If a fix duplicates logic, fix the root or ask.
-- **Public API:** `Basis` prefix. Constants `SCREAMING_SNAKE_CASE`. Existing spacing/motion/shape constants predate
-  convention; don't mass-rename.
+- **Detekt (current rules):** `config/detekt/detekt.yml` — `maxIssues: 0`, exclusions `basis|basis>.*`, custom rulesets
+  active (see exclusions for `OklchDerivation.kt`, `FontAssignment.kt`, etc.). Check with `./gradlew detekt`. **Analyse
+  violations:** if source complies and rule looks wrong, treat as false positive; for custom rules, tweak the rule (
+  targeted but generalised) to avoid recurring false positives. If special-case exemptions are required, suppress or
+  except files in `detekt.yml` (best suited: `excludes` or module-level `exclude`). Don't disable rules locally; fix
+  source or update rule/config.
+- **Compliance gate:** conclude only after `./gradlew verifyAll` passes (assemble / test / lint / detekt / ktlintCheck /
+  releaseApiCheck across all modules + build-logic). Single command, not piecemeal.
+- **Source of truth / tight scope:** One owner per constant / logic (`Single source`). Changes stay tight — scoped, no
+  drive-by renames / refactors. If a fix duplicates logic, fix the root or ask.
+- **Public API & naming:** `Basis` prefix reserved strictly for public API root entrypoints, composables, and public
+  contracts. Internal types, pipeline stages, and internal files remain unprefixed. Constants `SCREAMING_SNAKE_CASE`.
+  Existing spacing/motion/shape constants predate convention; don't mass-rename.
+- **Files & declarations:** 1:1 match between file name and primary declaration (`ClassName.kt`). Extension and
+  top-level function files take the receiver type or cohesive domain noun (`IntentValidation.kt`,
+  `ColorConversions.kt`). Suffixes `*ExtensionFunctions`, `*Utils`, `*Helper` are banned.
+- **Suffix consistency:** Suffixes declare layer role: `<Domain>Tokens` (models), `<Dimension>Value` (units),
+  `<Domain>Intent` / `<Domain>Control` / `<Domain>Overrides` (contracts), `<Domain><Stage>` (pipeline), `Basis<Name>` /
+  `Basis<Name>Defaults` / `<Name>Tokens` (components).
+- **Extension Functions:** Prefer extension functions for single-parameter functions on existing types. Exceptions:
+  Primitive types (`Int`, `Float`, `Double`, `Long`, `Short`, `Byte`, `Char`, `Boolean`) and `String` — prefer top-level
+  functions.
+- **Terminology:** Use "token" — never "leaf" — across KDoc, comments, test names, identifiers, and compiler plugins.
+- **Comments & readability (co-located):** Sophisticated, production-ready comments only when needed; concise; no
+  personal notes / change-tracking. Order APIs public → internal → private; higher-level to lower-level; top to bottom.
+  Put private constants at bottom of file, after public API, to avoid cluttering the top. No explanatory comments
+  tracking this edit.
 
-**Done when (conventions):** `Basis` prefix verified → `SCREAMING_SNAKE_CASE` for new constants → no duplication (single
-source) → tight, no drive-by.
+**Done when (conventions):** `Basis` prefix verified for public API only → 1:1 declaration match → suffix consistency
+verified → no 'leaf' terminology (use 'token') → `SCREAMING_SNAKE_CASE` for new constants → no duplication (single
+source) → tight, no drive-by → `./gradlew verifyAll` passes.
 
 ---
 
-## 3. KDoc (tight — observations from source)
+## 2. KDoc (tight — observations from source)
 
 Pointer `KDoc` branch: only when adding/changing public composables, tokens, or config.
 
@@ -77,33 +78,12 @@ Don't restate token values; Governance / token docs own them.
 
 ---
 
-## 4. Theme module / resolution framework
+## 3. Architecture — module level (volatile deep structure; use graphs)
 
-Graph delegation + brief mention (explicit enough to find; details in graph):
+Pointer `Architecture deep-dive` branch: only when restructuring or cross-module dependency debates. Deeper layer/DAG,
+pipeline stage symmetry, and domain breakdown are volatile — do not restate here.
 
-- Framework: `ThemeMode` (`Light`/`Dark`) → `ResolvedTheme` (full tree for one mode, carries `ColorTokens`,
-  `MotionTokens`, `DepthTokens`, `RadiusTokens`, `SizeTokens`, `SpacingTokens`, `TypographyTokens`) →
-  `ResolvedThemePair`. Resolution / codegen lives in `basis-theme`; consult `graph.sh node theme-module` /
-  `tokens-module` for codegen rules.
-- When touching theme: mention `ThemeMode` / `ResolvedTheme` / `ResolvedThemePair` in changes; don't duplicate token
-  definitions — reference token nodes.
-- Theme resolution is graph-handled: navigation through `.context/graph.json`; don't write theme-lookup instructions
-  here.
-
----
-
-## 5. Conflict with a rule
-
-Stop before writing. Name rule (§ and bullet). Say what the request breaks. Offer compliant alternative or options. Wait
-for answer. Don't silently comply, don't work around.
-
-If you think a rule is wrong / outdated: say so. Don't edit this file to resolve it.
-
----
-
-## 6. Project architecture (high-level)
-
-Modules (from `settings.gradle.kts` / source):
+Modules (module-level only; see `build-logic` / `settings.gradle.kts` for exact roles):
 
 - `basis-components`: Android library (`android.library`), Compose compiler, namespace
   `io.github.alph_a07.basis.components`, public API `Basis*` composables.
@@ -115,21 +95,16 @@ Modules (from `settings.gradle.kts` / source):
   SDK `compileSdk = 37`, `minSdk = 24`, `targetSdk = 36`.
 - `build-logic`: convention plugins (`verify-all-conventions`, `detekt-conventions`, `ktlint-conventions`).
 
-Build / runtime:
-
-- Gradle: 9.4.1 (`gradle/wrapper/gradle-wrapper.properties`); `gradle.properties` sets `configuration-cache = true`,
-  `org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8`.
-- SDK: `compileSdk 37`, `minSdk 24`, `targetSdk 36`; `local.properties` points `sdk.dir` to Android SDK (
-  `/Users/itsjeel01/Library/Android/sdk`).
-- Format / lint: `.editorconfig` (4-space, `android_studio`, 120 chars) + `gradlew ktlintFormat` / `ktlintCheck`;
-  `gradlew detekt` (maxIssues 0, exclusions `basis|basis>.*`).
-
-Navigation (no duplication here): use `.context/graph.json` + `graph.sh`; graph handles module dependencies, token
-nodes, theme-module/codegen nodes.
+For live dependency graphs, domain symmetry, stage decomposition, and token-path structures: leverage `graphify` (
+context graph / import / batch extraction) and `understand-*` skills (knowledge graph, explain, diff, domain-model)
+rather than maintaining static descriptions here. Re-check with `./gradlew verifyAll` after any module move.
 
 ---
 
-## 7. Comments & readability
+## 4. Conflict with a rule
 
-- Sophisticated, production-ready comments only when needed. Concise, no personal notes / change-tracking.
-- No explanatory comments tracking this edit.
+Stop before writing. Name rule. Say what the request breaks. Offer compliant alternative or options. Wait
+for answer. Don't silently comply, don't work around.
+
+If you think a rule is wrong / outdated: say so. Don't edit this file to resolve it.
+
