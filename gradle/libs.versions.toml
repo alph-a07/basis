@@ -28,6 +28,9 @@ compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = 
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
 androidx-lint-checks = { group = "com.android.tools.lint", name = "lint-checks", version.ref = "lint" }
 androidx-lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
