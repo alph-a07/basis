@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "fa00c729f7f08cb23305abe17c94aceed676f08e",
-  "generatedAt": "2026-10-15T07:23:57.852Z",
+  "gitCommitHash": "37acb80ec71062c4c802f71cd2fe102f47b8150c",
+  "generatedAt": "2026-10-16T13:02:37.036Z",
   "files": {
     ".githooks/commit-msg": {
       "filePath": ".githooks/commit-msg",
@@ -175,12 +175,12 @@
     },
     "AGENTS.md": {
       "filePath": "AGENTS.md",
-      "contentHash": "100c40efff8d37d29eb391d7dd549b5dce2302a65c070f4cb6d3ab526c6e725c",
+      "contentHash": "dcc07e2b7edcb15d5ae922c3382863f9861d30c253b80874b7a680e86823b9ac",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 111,
+      "totalLines": 113,
       "hasStructuralAnalysis": false
     },
     "CONTRIBUTING.md": {
@@ -195,22 +195,225 @@
     },
     "basis-components/api/basis-components.api": {
       "filePath": "basis-components/api/basis-components.api",
-      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "contentHash": "6bb22acc87bab7ca658d2be105e8b3faa45fade1851189cda702929f303e7d5f",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 1,
+      "totalLines": 427,
       "hasStructuralAnalysis": false
     },
     "basis-components/build.gradle.kts": {
       "filePath": "basis-components/build.gradle.kts",
-      "contentHash": "326cb1819b112acc667d6e9975839b42e85903058b44ecc89fc60a4cf8c46f16",
+      "contentHash": "ed1835bdd33d68bac9652a1be254d847026ca8a6881f6ac700ec4ef833fe44f1",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 55,
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/androidTest/kotlin/io/github/alph_a07/basis/components/theme/BasisThemeTest.kt": {
+      "filePath": "basis-components/src/androidTest/kotlin/io/github/alph_a07/basis/components/theme/BasisThemeTest.kt",
+      "contentHash": "7852404e9a9c88662cc9ab1eb703a1a0fa1ae408ad18904618e9333219dbc6c7",
+      "functions": [
+        {
+          "name": "requireAmbient_outsideBasisTheme_throwsIllegalStateException",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "requireAmbient_insideBasisTheme_doesNotThrow",
+          "params": [],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "basisThemePairOverload_lightMode_selectsLightTree",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "basisThemePairOverload_darkMode_selectsDarkTree",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "basisTheme_withReport_exposesDiagnostics",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "basisTheme_withoutReport_reportIsNull",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "nestedBasisTheme_replacesAmbientForSubtree",
+          "params": [],
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "basisTheme_accessors_returnNonNullValues",
+          "params": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "basisTheme_unregisteredCustomFont_failsFastAtThemeEntry",
+          "params": [],
+          "exported": true,
+          "lineCount": 37
+        },
+        {
+          "name": "basisTheme_registeredCustomFont_resolvesWithoutError",
+          "params": [],
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "readThemeOutside",
+          "params": [],
+          "returnType": "BasisThemeAmbient",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "BasisThemeTest",
+          "methods": [
+            "requireAmbient_outsideBasisTheme_throwsIllegalStateException",
+            "requireAmbient_insideBasisTheme_doesNotThrow",
+            "basisThemePairOverload_lightMode_selectsLightTree",
+            "basisThemePairOverload_darkMode_selectsDarkTree",
+            "basisTheme_withReport_exposesDiagnostics",
+            "basisTheme_withoutReport_reportIsNull",
+            "nestedBasisTheme_replacesAmbientForSubtree",
+            "basisTheme_accessors_returnNonNullValues",
+            "basisTheme_unregisteredCustomFont_failsFastAtThemeEntry",
+            "basisTheme_registeredCustomFont_resolvesWithoutError"
+          ],
+          "properties": [
+            "composeRule"
+          ],
+          "exported": true,
+          "lineCount": 206
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.runtime.Composable",
+          "specifiers": [
+            "Composable"
+          ]
+        },
+        {
+          "source": "androidx.compose.runtime.ReadOnlyComposable",
+          "specifiers": [
+            "ReadOnlyComposable"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.test.junit4.v2.createComposeRule",
+          "specifiers": [
+            "createComposeRule"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry",
+          "specifiers": [
+            "FontFamilyRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.fontRegistry",
+          "specifiers": [
+            "fontRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.resolve",
+          "specifiers": [
+            "resolve"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        },
+        {
+          "source": "org.junit.Rule",
+          "specifiers": [
+            "Rule"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "composeRule",
+        "requireAmbient_outsideBasisTheme_throwsIllegalStateException",
+        "requireAmbient_insideBasisTheme_doesNotThrow",
+        "basisThemePairOverload_lightMode_selectsLightTree",
+        "basisThemePairOverload_darkMode_selectsDarkTree",
+        "basisTheme_withReport_exposesDiagnostics",
+        "basisTheme_withoutReport_reportIsNull",
+        "nestedBasisTheme_replacesAmbientForSubtree",
+        "basisTheme_accessors_returnNonNullValues",
+        "basisTheme_unregisteredCustomFont_failsFastAtThemeEntry",
+        "basisTheme_registeredCustomFont_resolvesWithoutError",
+        "BasisThemeTest"
+      ],
+      "totalLines": 230,
       "hasStructuralAnalysis": true
     },
     "basis-components/src/main/AndroidManifest.xml": {
@@ -222,6 +425,2573 @@
       "exports": [],
       "totalLines": 4,
       "hasStructuralAnalysis": false
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisColorLocals.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisColorLocals.kt",
+      "contentHash": "ae61067c5fd287ecd2e1cfc12a9130d6d020825800c50ea6704b4029bb1ced5b",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BasisColorLocals",
+          "methods": [],
+          "properties": [
+            "surface",
+            "content",
+            "icon",
+            "border",
+            "selection",
+            "focus",
+            "positive",
+            "negative",
+            "caution",
+            "info",
+            "brand"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "BasisSurfaceColors",
+          "methods": [],
+          "properties": [
+            "default",
+            "elevated",
+            "recessed",
+            "inverse"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "BasisContentColors",
+          "methods": [],
+          "properties": [
+            "default",
+            "muted",
+            "inverse"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BasisIconColors",
+          "methods": [],
+          "properties": [
+            "default",
+            "muted",
+            "inverse"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BasisBorderColors",
+          "methods": [],
+          "properties": [
+            "default",
+            "muted",
+            "strong",
+            "inverse"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "BasisSelectionColors",
+          "methods": [],
+          "properties": [
+            "surface",
+            "content",
+            "border"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BasisFocusColors",
+          "methods": [],
+          "properties": [
+            "ring"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "BasisStatusColors",
+          "methods": [],
+          "properties": [
+            "surface",
+            "content",
+            "border",
+            "icon"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "BasisBrandColors",
+          "methods": [],
+          "properties": [
+            "primary",
+            "secondary",
+            "tertiary",
+            "quaternary"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.graphics.Color",
+          "specifiers": [
+            "Color"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.BorderColors",
+          "specifiers": [
+            "BorderColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.BrandColors",
+          "specifiers": [
+            "BrandColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.ColorTokens",
+          "specifiers": [
+            "ColorTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.ContentColors",
+          "specifiers": [
+            "ContentColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.FocusColors",
+          "specifiers": [
+            "FocusColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.IconColors",
+          "specifiers": [
+            "IconColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.SelectionColors",
+          "specifiers": [
+            "SelectionColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.StatusColors",
+          "specifiers": [
+            "StatusColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.SurfaceColors",
+          "specifiers": [
+            "SurfaceColors"
+          ]
+        }
+      ],
+      "exports": [
+        "BasisColorLocals",
+        "BasisSurfaceColors",
+        "BasisContentColors",
+        "BasisIconColors",
+        "BasisBorderColors",
+        "BasisSelectionColors",
+        "BasisFocusColors",
+        "BasisStatusColors",
+        "BasisBrandColors"
+      ],
+      "totalLines": 155,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisMotionLocals.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisMotionLocals.kt",
+      "contentHash": "d6f0f64b15e514db5338421efecaa544792310675cdfb338484c5a15f866045c",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BasisMotionLocals",
+          "methods": [],
+          "properties": [
+            "feedback",
+            "stateTransition",
+            "transformation",
+            "expansion",
+            "reposition",
+            "emphasis"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.animation.core.AnimationSpec",
+          "specifiers": [
+            "AnimationSpec"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.FiniteAnimationSpec",
+          "specifiers": [
+            "FiniteAnimationSpec"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.motion.MotionTokens",
+          "specifiers": [
+            "MotionTokens"
+          ]
+        }
+      ],
+      "exports": [
+        "BasisMotionLocals"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisTheme.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisTheme.kt",
+      "contentHash": "20f1d8b87ff6e3da8fcc2181fb6a5bf2f90466d8a263b34a599de54ac2d1e81f",
+      "functions": [
+        {
+          "name": "BasisTheme",
+          "params": [
+            "theme",
+            "fontRegistry",
+            "report",
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "BasisTheme",
+          "params": [
+            "pair",
+            "useDarkTheme",
+            "fontRegistry",
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "BasisTheme",
+          "params": [
+            "intent",
+            "useDarkTheme",
+            "fontRegistry",
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "requireAmbient",
+          "params": [],
+          "returnType": "BasisThemeAmbient",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "buildAmbient",
+          "params": [
+            "theme",
+            "fontRegistry",
+            "report"
+          ],
+          "returnType": "BasisThemeAmbient",
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "selectTheme",
+          "params": [
+            "pair",
+            "useDarkTheme"
+          ],
+          "returnType": "ResolvedTheme",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "BasisTheme",
+          "methods": [],
+          "properties": [
+            "current",
+            "colors",
+            "typography",
+            "spacing",
+            "radius",
+            "depth",
+            "size",
+            "motion",
+            "componentPatches"
+          ],
+          "exported": true,
+          "lineCount": 53
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.runtime.Composable",
+          "specifiers": [
+            "Composable"
+          ]
+        },
+        {
+          "source": "androidx.compose.runtime.CompositionLocalProvider",
+          "specifiers": [
+            "CompositionLocalProvider"
+          ]
+        },
+        {
+          "source": "androidx.compose.runtime.ReadOnlyComposable",
+          "specifiers": [
+            "ReadOnlyComposable"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisTheme.colors",
+          "specifiers": [
+            "colors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisTheme.current",
+          "specifiers": [
+            "current"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisTheme.typography",
+          "specifiers": [
+            "typography"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.conversion.toBasisColorLocals",
+          "specifiers": [
+            "toBasisColorLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.conversion.toBasisMotionLocals",
+          "specifiers": [
+            "toBasisMotionLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.conversion.toBasisTypographyLocals",
+          "specifiers": [
+            "toBasisTypographyLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry",
+          "specifiers": [
+            "FontFamilyRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides",
+          "specifiers": [
+            "ComponentOverrides"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.report.ResolutionReport",
+          "specifiers": [
+            "ResolutionReport"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.resolve",
+          "specifiers": [
+            "resolve"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme",
+          "specifiers": [
+            "ResolvedTheme"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.core.ResolvedThemePair",
+          "specifiers": [
+            "ResolvedThemePair"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.DepthTokens",
+          "specifiers": [
+            "DepthTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.RadiusTokens",
+          "specifiers": [
+            "RadiusTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.SizeTokens",
+          "specifiers": [
+            "SizeTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens",
+          "specifiers": [
+            "SpacingTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        }
+      ],
+      "exports": [
+        "BasisTheme",
+        "BasisTheme",
+        "BasisTheme",
+        "current",
+        "colors",
+        "typography",
+        "spacing",
+        "radius",
+        "depth",
+        "size",
+        "motion",
+        "componentPatches",
+        "BasisTheme",
+        "requireAmbient"
+      ],
+      "totalLines": 218,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisThemeAmbient.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisThemeAmbient.kt",
+      "contentHash": "6cfc7fe65e1712e3b2ecd6de12d81ed2e4f66f00b485aaf55c1f541e2b1fc099",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BasisThemeAmbient",
+          "methods": [],
+          "properties": [
+            "theme",
+            "colors",
+            "typography",
+            "spacing",
+            "radius",
+            "depth",
+            "size",
+            "motion",
+            "componentPatches",
+            "report"
+          ],
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.TextStyle",
+          "specifiers": [
+            "TextStyle"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides",
+          "specifiers": [
+            "ComponentOverrides"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.report.ResolutionReport",
+          "specifiers": [
+            "ResolutionReport"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme",
+          "specifiers": [
+            "ResolvedTheme"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.DepthTokens",
+          "specifiers": [
+            "DepthTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.RadiusTokens",
+          "specifiers": [
+            "RadiusTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.SizeTokens",
+          "specifiers": [
+            "SizeTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens",
+          "specifiers": [
+            "SpacingTokens"
+          ]
+        }
+      ],
+      "exports": [
+        "BasisThemeAmbient"
+      ],
+      "totalLines": 43,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisTypographyLocals.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/BasisTypographyLocals.kt",
+      "contentHash": "fcb5529130bfefe03907b2e3cba53acec41016bd0f65f86d7cd509366cd3e767",
+      "functions": [],
+      "classes": [
+        {
+          "name": "BasisTypographyLocals",
+          "methods": [],
+          "properties": [
+            "structure",
+            "content",
+            "metadata"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "BasisStructureType",
+          "methods": [],
+          "properties": [
+            "level1",
+            "level2",
+            "level3",
+            "level4",
+            "level5",
+            "level6"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "BasisContentType",
+          "methods": [],
+          "properties": [
+            "level1",
+            "level2",
+            "level3",
+            "level4",
+            "level5"
+          ],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "BasisMetadataType",
+          "methods": [],
+          "properties": [
+            "level1",
+            "level2",
+            "level3"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.TextStyle",
+          "specifiers": [
+            "TextStyle"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens",
+          "specifiers": [
+            "TypographyTokens"
+          ]
+        }
+      ],
+      "exports": [
+        "BasisTypographyLocals",
+        "BasisStructureType",
+        "BasisContentType",
+        "BasisMetadataType"
+      ],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/LocalBasisTheme.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/LocalBasisTheme.kt",
+      "contentHash": "028605847751540f8b8c279b19807c0d26dc0d3444ef38834b5d0db539eade4b",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.runtime.staticCompositionLocalOf",
+          "specifiers": [
+            "staticCompositionLocalOf"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 13,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/ColorConversions.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/ColorConversions.kt",
+      "contentHash": "a4f000958467405a93215034f9cf3a4172fde7ad63daa463227da659ffc89c13",
+      "functions": [
+        {
+          "name": "toColor",
+          "params": [],
+          "returnType": "Color",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toColor",
+          "params": [],
+          "returnType": "Color",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toArgb",
+          "params": [],
+          "returnType": "Int",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toBasisColorLocals",
+          "params": [],
+          "returnType": "BasisColorLocals",
+          "exported": true,
+          "lineCount": 50
+        },
+        {
+          "name": "toBasisStatusColors",
+          "params": [],
+          "returnType": "BasisStatusColors",
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.graphics.Color",
+          "specifiers": [
+            "Color"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisBorderColors",
+          "specifiers": [
+            "BasisBorderColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisBrandColors",
+          "specifiers": [
+            "BasisBrandColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisColorLocals",
+          "specifiers": [
+            "BasisColorLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisContentColors",
+          "specifiers": [
+            "BasisContentColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisFocusColors",
+          "specifiers": [
+            "BasisFocusColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisIconColors",
+          "specifiers": [
+            "BasisIconColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisSelectionColors",
+          "specifiers": [
+            "BasisSelectionColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisStatusColors",
+          "specifiers": [
+            "BasisStatusColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisSurfaceColors",
+          "specifiers": [
+            "BasisSurfaceColors"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.color.ColorSpec",
+          "specifiers": [
+            "ColorSpec"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.color.Oklch",
+          "specifiers": [
+            "Oklch"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.color.toArgb",
+          "specifiers": [
+            "themeToArgb"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.color.toColorSpecArgb",
+          "specifiers": [
+            "toColorSpecArgb"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.ColorTokens",
+          "specifiers": [
+            "ColorTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.StatusColors",
+          "specifiers": [
+            "StatusColors"
+          ]
+        }
+      ],
+      "exports": [
+        "toColor",
+        "toColor",
+        "toArgb",
+        "toBasisColorLocals"
+      ],
+      "totalLines": 102,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/DepthConversions.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/DepthConversions.kt",
+      "contentHash": "541621602ea629deb65c02253a43a4ca491b617f38f89553c9c5239498855bfe",
+      "functions": [
+        {
+          "name": "toElevationDp",
+          "params": [],
+          "returnType": "Dp",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toShadowColor",
+          "params": [
+            "baseColor"
+          ],
+          "returnType": "Color",
+          "exported": true,
+          "lineCount": 2
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.graphics.Color",
+          "specifiers": [
+            "Color"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.unit.Dp",
+          "specifiers": [
+            "Dp"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec",
+          "specifiers": [
+            "DepthSpec"
+          ]
+        }
+      ],
+      "exports": [
+        "toElevationDp",
+        "toShadowColor"
+      ],
+      "totalLines": 22,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/DpConversions.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/DpConversions.kt",
+      "contentHash": "2ec610bd1bc071928d398194129e955d99ac41be0659fb382090d2a19b705bbd",
+      "functions": [
+        {
+          "name": "toDp",
+          "params": [],
+          "returnType": "Dp",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toDpValue",
+          "params": [],
+          "returnType": "DpValue",
+          "exported": true,
+          "lineCount": 1
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.unit.Dp",
+          "specifiers": [
+            "Dp"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.unit.dp",
+          "specifiers": [
+            "dp"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.DpValue",
+          "specifiers": [
+            "DpValue"
+          ]
+        }
+      ],
+      "exports": [
+        "toDp",
+        "toDpValue"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/MotionConversions.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/MotionConversions.kt",
+      "contentHash": "10d691f0f5583871af4281da83dcf3cb5ccc975924c93391259e1881eb0b5a55",
+      "functions": [
+        {
+          "name": "toFiniteAnimationSpec",
+          "params": [],
+          "returnType": "FiniteAnimationSpec<T>",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "toAnimationSpec",
+          "params": [],
+          "returnType": "AnimationSpec<T>",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "toComposeEasing",
+          "params": [],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "toBasisMotionLocals",
+          "params": [],
+          "returnType": "BasisMotionLocals",
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.animation.core.AnimationSpec",
+          "specifiers": [
+            "AnimationSpec"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.FastOutLinearInEasing",
+          "specifiers": [
+            "FastOutLinearInEasing"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.FastOutSlowInEasing",
+          "specifiers": [
+            "FastOutSlowInEasing"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.FiniteAnimationSpec",
+          "specifiers": [
+            "FiniteAnimationSpec"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.LinearEasing",
+          "specifiers": [
+            "LinearEasing"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.LinearOutSlowInEasing",
+          "specifiers": [
+            "LinearOutSlowInEasing"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.spring",
+          "specifiers": [
+            "spring"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.tween",
+          "specifiers": [
+            "tween"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisMotionLocals",
+          "specifiers": [
+            "BasisMotionLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.motion.EasingKind",
+          "specifiers": [
+            "EasingKind"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.motion.MotionSpec",
+          "specifiers": [
+            "MotionSpec"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.motion.MotionTokens",
+          "specifiers": [
+            "MotionTokens"
+          ]
+        }
+      ],
+      "exports": [
+        "toFiniteAnimationSpec",
+        "toAnimationSpec",
+        "toBasisMotionLocals"
+      ],
+      "totalLines": 76,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/TypographyConversions.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/conversion/TypographyConversions.kt",
+      "contentHash": "ca920ff61fdd1b1b8811966c81d6246d0b8427e49b03bc188de096c484dc01a8",
+      "functions": [
+        {
+          "name": "toBasisTypographyLocals",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "BasisTypographyLocals",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "toTextStyle",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "TextStyle",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "toTextStyle",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "TextStyle",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "toBasisStructureType",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "BasisStructureType",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "toBasisContentType",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "BasisContentType",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "toBasisMetadataType",
+          "params": [
+            "colors",
+            "registry"
+          ],
+          "returnType": "BasisMetadataType",
+          "exported": false,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.TextStyle",
+          "specifiers": [
+            "TextStyle"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.unit.em",
+          "specifiers": [
+            "em"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.unit.sp",
+          "specifiers": [
+            "sp"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisColorLocals",
+          "specifiers": [
+            "BasisColorLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisContentType",
+          "specifiers": [
+            "BasisContentType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisMetadataType",
+          "specifiers": [
+            "BasisMetadataType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisStructureType",
+          "specifiers": [
+            "BasisStructureType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisTypographyLocals",
+          "specifiers": [
+            "BasisTypographyLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry",
+          "specifiers": [
+            "FontFamilyRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.color.ColorTokens",
+          "specifiers": [
+            "ColorTokens"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.ContentType",
+          "specifiers": [
+            "ContentType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.MetadataType",
+          "specifiers": [
+            "MetadataType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.StructureType",
+          "specifiers": [
+            "StructureType"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypeColorRef",
+          "specifiers": [
+            "TypeColorRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypeRole",
+          "specifiers": [
+            "TypeRole"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens",
+          "specifiers": [
+            "TypographyTokens"
+          ]
+        }
+      ],
+      "exports": [
+        "toBasisTypographyLocals",
+        "toTextStyle",
+        "toTextStyle"
+      ],
+      "totalLines": 127,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/AssetFont.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/AssetFont.kt",
+      "contentHash": "5c26ca68e6fd210bcd35ceddffabcf8edce4a56046351c6bde2d54e5011689a5",
+      "functions": [
+        {
+          "name": "loadFontFamilyFromAssets",
+          "params": [
+            "assetManager",
+            "fonts"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "loadFontFamilyFromAssets",
+          "params": [
+            "assetManager",
+            "path",
+            "weight",
+            "style"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "registerAsset",
+          "params": [
+            "key",
+            "assetManager",
+            "fonts"
+          ],
+          "returnType": "FontFamilyRegistry.Builder",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "registerAsset",
+          "params": [
+            "key",
+            "assetManager",
+            "path",
+            "weight",
+            "style"
+          ],
+          "returnType": "FontFamilyRegistry.Builder",
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "classes": [
+        {
+          "name": "AssetFont",
+          "methods": [],
+          "properties": [
+            "path",
+            "weight",
+            "style"
+          ],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "android.content.res.AssetManager",
+          "specifiers": [
+            "AssetManager"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.Font",
+          "specifiers": [
+            "Font"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontStyle",
+          "specifiers": [
+            "FontStyle"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        }
+      ],
+      "exports": [
+        "AssetFont",
+        "loadFontFamilyFromAssets",
+        "loadFontFamilyFromAssets",
+        "registerAsset",
+        "registerAsset"
+      ],
+      "totalLines": 120,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/FontFamilyRegistry.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/FontFamilyRegistry.kt",
+      "contentHash": "7ab652ecdb3f684a3dc69ff0eff7581eb1e5c3c4b0f1ab544413a0aeb003ea0e",
+      "functions": [
+        {
+          "name": "resolve",
+          "params": [
+            "ref"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "isRegistered",
+          "params": [
+            "key"
+          ],
+          "returnType": "Boolean",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "fontRegistry",
+          "params": [
+            "block"
+          ],
+          "returnType": "FontFamilyRegistry",
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontFamilyRegistry",
+          "methods": [
+            "resolve",
+            "isRegistered"
+          ],
+          "properties": [
+            "customFamilies",
+            "googleFontDownloader"
+          ],
+          "exported": true,
+          "lineCount": 64
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        }
+      ],
+      "exports": [
+        "resolve",
+        "isRegistered",
+        "FontFamilyRegistry",
+        "fontRegistry"
+      ],
+      "totalLines": 101,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/GoogleFontDownloader.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/GoogleFontDownloader.kt",
+      "contentHash": "158ddecad56eb922b5a81a2828c74ea91c1380ef5abcb89866a2759702a1c33c",
+      "functions": [
+        {
+          "name": "load",
+          "params": [
+            "id",
+            "weights"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [
+        {
+          "name": "GoogleFontDownloader",
+          "methods": [
+            "load"
+          ],
+          "properties": [
+            "weights",
+            "cache"
+          ],
+          "exported": true,
+          "lineCount": 54
+        },
+        {
+          "name": "CacheKey",
+          "methods": [],
+          "properties": [
+            "id",
+            "weights"
+          ],
+          "exported": false,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.googlefonts.Font",
+          "specifiers": [
+            "Font"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.googlefonts.GoogleFont",
+          "specifiers": [
+            "GoogleFont"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog",
+          "specifiers": [
+            "GoogleFontCatalog"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "java.util.concurrent.ConcurrentHashMap",
+          "specifiers": [
+            "ConcurrentHashMap"
+          ]
+        }
+      ],
+      "exports": [
+        "load",
+        "GoogleFontDownloader"
+      ],
+      "totalLines": 79,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/ResourceFont.kt": {
+      "filePath": "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/theme/font/ResourceFont.kt",
+      "contentHash": "c49e8733ee0d9be51c21bd6d676c649169a5fc9bbc0c1af2e6f1f9e27fbf99b6",
+      "functions": [
+        {
+          "name": "loadFontFamilyFromResource",
+          "params": [
+            "fonts"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "loadFontFamilyFromResource",
+          "params": [
+            "resId",
+            "weight",
+            "style"
+          ],
+          "returnType": "FontFamily",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "registerResource",
+          "params": [
+            "key",
+            "fonts"
+          ],
+          "returnType": "FontFamilyRegistry.Builder",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "registerResource",
+          "params": [
+            "key",
+            "resId",
+            "weight",
+            "style"
+          ],
+          "returnType": "FontFamilyRegistry.Builder",
+          "exported": true,
+          "lineCount": 14
+        }
+      ],
+      "classes": [
+        {
+          "name": "ResourceFont",
+          "methods": [],
+          "properties": [
+            "resId",
+            "weight",
+            "style"
+          ],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.annotation.FontRes",
+          "specifiers": [
+            "FontRes"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.Font",
+          "specifiers": [
+            "Font"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontStyle",
+          "specifiers": [
+            "FontStyle"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        }
+      ],
+      "exports": [
+        "ResourceFont",
+        "loadFontFamilyFromResource",
+        "loadFontFamilyFromResource",
+        "registerResource",
+        "registerResource"
+      ],
+      "totalLines": 109,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/AssetFontTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/AssetFontTest.kt",
+      "contentHash": "4789552f9a795e1246224a7449276a7ef35effb02c1e79aec8ce79f412e63fe5",
+      "functions": [
+        {
+          "name": "constructor_validPath_createsInstance",
+          "params": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "constructor_blankPath_throwsIllegalArgumentException",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "AssetFontTest",
+          "methods": [
+            "constructor_validPath_createsInstance",
+            "constructor_blankPath_throwsIllegalArgumentException"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontStyle",
+          "specifiers": [
+            "FontStyle"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.AssetFont",
+          "specifiers": [
+            "AssetFont"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "constructor_validPath_createsInstance",
+        "constructor_blankPath_throwsIllegalArgumentException",
+        "AssetFontTest"
+      ],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/FontFamilyRegistryTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/FontFamilyRegistryTest.kt",
+      "contentHash": "ac683b33d6e3d7599eb0eb5b9bc396e99aa1c72f7cc97bfbb7dc559cb989ce9a",
+      "functions": [
+        {
+          "name": "resolve_registeredCustomFamily_returnsRegisteredInstance",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "resolve_unregisteredCustomFamily_throwsIllegalStateException",
+          "params": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "resolve_catalogFamily_noDownloader_fallsBackToDefault",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "defaultRegistry_resolvesCatalogFontAutomatically",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "fontRegistry_registerResource_registersCustomFamily",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontFamilyRegistryTest",
+          "methods": [
+            "resolve_registeredCustomFamily_returnsRegisteredInstance",
+            "resolve_unregisteredCustomFamily_throwsIllegalStateException",
+            "resolve_catalogFamily_noDownloader_fallsBackToDefault",
+            "defaultRegistry_resolvesCatalogFontAutomatically",
+            "fontRegistry_registerResource_registersCustomFamily"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 53
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry",
+          "specifiers": [
+            "FontFamilyRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.fontRegistry",
+          "specifiers": [
+            "fontRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.registerResource",
+          "specifiers": [
+            "registerResource"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFalse",
+          "specifiers": [
+            "assertFalse"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "resolve_registeredCustomFamily_returnsRegisteredInstance",
+        "resolve_unregisteredCustomFamily_throwsIllegalStateException",
+        "resolve_catalogFamily_noDownloader_fallsBackToDefault",
+        "defaultRegistry_resolvesCatalogFontAutomatically",
+        "fontRegistry_registerResource_registersCustomFamily",
+        "FontFamilyRegistryTest"
+      ],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/GoogleFontDownloaderTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/GoogleFontDownloaderTest.kt",
+      "contentHash": "5e23fa39424f163a997914c5ebc748de4c71592b8fff7209f07c85757be78cee",
+      "functions": [
+        {
+          "name": "load_catalogFont_resolvesFontFamily",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "load_unknownFont_fallsBackToIdValue",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "load_returnsCachedInstanceForSameArguments",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "load_customWeights_createsFontFamily",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "load_emptyWeights_throwsIllegalArgumentException",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "init_emptyDefaultWeights_throwsIllegalArgumentException",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "defaultInstance_loadsCatalogFont",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "GoogleFontDownloaderTest",
+          "methods": [
+            "load_catalogFont_resolvesFontFamily",
+            "load_unknownFont_fallsBackToIdValue",
+            "load_returnsCachedInstanceForSameArguments",
+            "load_customWeights_createsFontFamily",
+            "load_emptyWeights_throwsIllegalArgumentException",
+            "init_emptyDefaultWeights_throwsIllegalArgumentException",
+            "defaultInstance_loadsCatalogFont"
+          ],
+          "properties": [
+            "downloader"
+          ],
+          "exported": true,
+          "lineCount": 57
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.GoogleFontDownloader",
+          "specifiers": [
+            "GoogleFontDownloader"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertSame",
+          "specifiers": [
+            "assertSame"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "load_catalogFont_resolvesFontFamily",
+        "load_unknownFont_fallsBackToIdValue",
+        "load_returnsCachedInstanceForSameArguments",
+        "load_customWeights_createsFontFamily",
+        "load_emptyWeights_throwsIllegalArgumentException",
+        "init_emptyDefaultWeights_throwsIllegalArgumentException",
+        "defaultInstance_loadsCatalogFont",
+        "GoogleFontDownloaderTest"
+      ],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/ResourceFontTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/ResourceFontTest.kt",
+      "contentHash": "115a2d1e75d81a33f667138b866a67452e0a576b25f864dc42fdb70abed52802",
+      "functions": [
+        {
+          "name": "constructor_validResId_createsInstance",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "constructor_zeroResId_throwsIllegalArgumentException",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "loadFontFamilyFromResource_singleRes_returnsFontFamily",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "loadFontFamilyFromResource_vararg_returnsFontFamily",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "loadFontFamilyFromResource_emptyVararg_throwsIllegalArgumentException",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "ResourceFontTest",
+          "methods": [
+            "constructor_validResId_createsInstance",
+            "constructor_zeroResId_throwsIllegalArgumentException",
+            "loadFontFamilyFromResource_singleRes_returnsFontFamily",
+            "loadFontFamilyFromResource_vararg_returnsFontFamily",
+            "loadFontFamilyFromResource_emptyVararg_throwsIllegalArgumentException"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontStyle",
+          "specifiers": [
+            "FontStyle"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.text.font.FontWeight",
+          "specifiers": [
+            "FontWeight"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.ResourceFont",
+          "specifiers": [
+            "ResourceFont"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.loadFontFamilyFromResource",
+          "specifiers": [
+            "loadFontFamilyFromResource"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "constructor_validResId_createsInstance",
+        "constructor_zeroResId_throwsIllegalArgumentException",
+        "loadFontFamilyFromResource_singleRes_returnsFontFamily",
+        "loadFontFamilyFromResource_vararg_returnsFontFamily",
+        "loadFontFamilyFromResource_emptyVararg_throwsIllegalArgumentException",
+        "ResourceFontTest"
+      ],
+      "totalLines": 58,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/ColorConversionsTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/ColorConversionsTest.kt",
+      "contentHash": "40038a11cd101db1fcddc915bf1e7d17d443adddbf7cedef320053afaf9b7651",
+      "functions": [
+        {
+          "name": "toColor_blackOklch_mapsToBlack",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "toColor_whiteOklch_mapsToWhite",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "toColor_preservesAlpha",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "toColor_channelsAreFiniteAndClamped",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "toArgb_preservesAlphaAndChannels",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "colorSpecArgb_toColor_mapsDirectly",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "toBasisColorLocals_populatesAllTreeBranches",
+          "params": [],
+          "exported": true,
+          "lineCount": 37
+        }
+      ],
+      "classes": [
+        {
+          "name": "ColorConversionsTest",
+          "methods": [
+            "toColor_blackOklch_mapsToBlack",
+            "toColor_whiteOklch_mapsToWhite",
+            "toColor_preservesAlpha",
+            "toColor_channelsAreFiniteAndClamped",
+            "toArgb_preservesAlphaAndChannels",
+            "colorSpecArgb_toColor_mapsDirectly",
+            "toBasisColorLocals_populatesAllTreeBranches"
+          ],
+          "properties": [
+            "tolerance"
+          ],
+          "exported": true,
+          "lineCount": 101
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.graphics.Color",
+          "specifiers": [
+            "Color"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.BasisColorLocals",
+          "specifiers": [
+            "BasisColorLocals"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.color.Oklch",
+          "specifiers": [
+            "Oklch"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.resolve",
+          "specifiers": [
+            "resolve"
+          ]
+        },
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "toColor_blackOklch_mapsToBlack",
+        "toColor_whiteOklch_mapsToWhite",
+        "toColor_preservesAlpha",
+        "toColor_channelsAreFiniteAndClamped",
+        "toArgb_preservesAlphaAndChannels",
+        "colorSpecArgb_toColor_mapsDirectly",
+        "toBasisColorLocals_populatesAllTreeBranches",
+        "ColorConversionsTest"
+      ],
+      "totalLines": 118,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/DepthConversionsTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/DepthConversionsTest.kt",
+      "contentHash": "2cacc03d764bc8591848d26e3631ec99a6aeb67b380f5f6a72deea605592faed",
+      "functions": [
+        {
+          "name": "toElevationDp_returnsElevationInDp",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "toShadowColor_modulatesBaseColorAlpha",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "DepthConversionsTest",
+          "methods": [
+            "toElevationDp_returnsElevationInDp",
+            "toShadowColor_modulatesBaseColorAlpha"
+          ],
+          "properties": [
+            "spec"
+          ],
+          "exported": true,
+          "lineCount": 26
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.graphics.Color",
+          "specifiers": [
+            "Color"
+          ]
+        },
+        {
+          "source": "androidx.compose.ui.unit.dp",
+          "specifiers": [
+            "dp"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.DpValue",
+          "specifiers": [
+            "DpValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec",
+          "specifiers": [
+            "DepthSpec"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "toElevationDp_returnsElevationInDp",
+        "toShadowColor_modulatesBaseColorAlpha",
+        "DepthConversionsTest"
+      ],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/DpConversionsTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/DpConversionsTest.kt",
+      "contentHash": "a66aa0a55808cc2238ba81b6980765e840656176fed3699c890d95ddfef66f23",
+      "functions": [
+        {
+          "name": "toDp_convertsValueCorrectly",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "toDpValue_convertsDpCorrectly",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "roundTrip_preservesMagnitude",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [
+        {
+          "name": "DpConversionsTest",
+          "methods": [
+            "toDp_convertsValueCorrectly",
+            "toDpValue_convertsDpCorrectly",
+            "roundTrip_preservesMagnitude"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 26
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.unit.dp",
+          "specifiers": [
+            "dp"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.DpValue",
+          "specifiers": [
+            "DpValue"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "toDp_convertsValueCorrectly",
+        "toDpValue_convertsDpCorrectly",
+        "roundTrip_preservesMagnitude",
+        "DpConversionsTest"
+      ],
+      "totalLines": 37,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/MotionConversionsTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/MotionConversionsTest.kt",
+      "contentHash": "7279653f6c5cf585bb187de3689f90dd63f2886682abbbdb066134e8fffcba49",
+      "functions": [
+        {
+          "name": "toFiniteAnimationSpec_springEasing_producesSpringSpec",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "toFiniteAnimationSpec_standardEasing_producesTweenSpec",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "toAnimationSpec_supportsGenericTypes",
+          "params": [],
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "MotionConversionsTest",
+          "methods": [
+            "toFiniteAnimationSpec_springEasing_producesSpringSpec",
+            "toFiniteAnimationSpec_standardEasing_producesTweenSpec",
+            "toAnimationSpec_supportsGenericTypes"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 45
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.animation.core.SpringSpec",
+          "specifiers": [
+            "SpringSpec"
+          ]
+        },
+        {
+          "source": "androidx.compose.animation.core.TweenSpec",
+          "specifiers": [
+            "TweenSpec"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.DurationValue",
+          "specifiers": [
+            "DurationValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.motion.EasingKind",
+          "specifiers": [
+            "EasingKind"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.motion.MotionSpec",
+          "specifiers": [
+            "MotionSpec"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.motion.SpringParams",
+          "specifiers": [
+            "SpringParams"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "toFiniteAnimationSpec_springEasing_producesSpringSpec",
+        "toFiniteAnimationSpec_standardEasing_producesTweenSpec",
+        "toAnimationSpec_supportsGenericTypes",
+        "MotionConversionsTest"
+      ],
+      "totalLines": 61,
+      "hasStructuralAnalysis": true
+    },
+    "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/TypographyConversionsTest.kt": {
+      "filePath": "basis-components/src/test/kotlin/io/github/alph_a07/basis/components/theme/conversion/TypographyConversionsTest.kt",
+      "contentHash": "005078e7b792884364e06e24f1d7d0ed6dfb9de104b54af73c0668e0459a2baa",
+      "functions": [
+        {
+          "name": "toTextStyle_withColorTokens_mapsPropertiesCorrectly",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "toTextStyle_withBasisColorLocals_mapsPropertiesCorrectly",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "toTextStyle_unregisteredCustomFamily_throws",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [
+        {
+          "name": "TypographyConversionsTest",
+          "methods": [
+            "toTextStyle_withColorTokens_mapsPropertiesCorrectly",
+            "toTextStyle_withBasisColorLocals_mapsPropertiesCorrectly",
+            "toTextStyle_unregisteredCustomFamily_throws"
+          ],
+          "properties": [
+            "customKey",
+            "customFamily",
+            "registry",
+            "role"
+          ],
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "imports": [
+        {
+          "source": "androidx.compose.ui.text.font.FontFamily",
+          "specifiers": [
+            "FontFamily"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry",
+          "specifiers": [
+            "FontFamilyRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.components.theme.font.fontRegistry",
+          "specifiers": [
+            "fontRegistry"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.DpValue",
+          "specifiers": [
+            "DpValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.EmValue",
+          "specifiers": [
+            "EmValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.FontWeightValue",
+          "specifiers": [
+            "FontWeightValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.core.LineHeightValue",
+          "specifiers": [
+            "LineHeightValue"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.resolve",
+          "specifiers": [
+            "resolve"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypeColorRef",
+          "specifiers": [
+            "TypeColorRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.TypeRole",
+          "specifiers": [
+            "TypeRole"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "org.junit.Test",
+          "specifiers": [
+            "Test"
+          ]
+        }
+      ],
+      "exports": [
+        "toTextStyle_withColorTokens_mapsPropertiesCorrectly",
+        "toTextStyle_withBasisColorLocals_mapsPropertiesCorrectly",
+        "toTextStyle_unregisteredCustomFamily_throws",
+        "TypographyConversionsTest"
+      ],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
     },
     "basis-lint/build.gradle.kts": {
       "filePath": "basis-lint/build.gradle.kts",
@@ -1010,7 +3780,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/OklchConversion.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/OklchConversion.kt",
-      "contentHash": "f110156025220f9f1b723018ba139db5303448225f69d9a36859fdfd5e5f3a4c",
+      "contentHash": "aa75a4e5706965cbb5b6cd900b0ed7c7179b73aee53b3e798dc0bc8821d07436",
       "functions": [
         {
           "name": "toOklchOrNull",
@@ -1032,6 +3802,20 @@
           "lineCount": 6
         },
         {
+          "name": "toArgb",
+          "params": [],
+          "returnType": "Int",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "toColorSpecArgb",
+          "params": [],
+          "returnType": "ColorSpec.Argb",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
           "name": "hexToOklch",
           "params": [
             "value"
@@ -1047,7 +3831,7 @@
           ],
           "returnType": "Oklch",
           "exported": false,
-          "lineCount": 6
+          "lineCount": 10
         },
         {
           "name": "hslToOklch",
@@ -1083,16 +3867,6 @@
           "returnType": "Triple<Float, Float, Float>",
           "exported": false,
           "lineCount": 26
-        },
-        {
-          "name": "channel",
-          "params": [
-            "argb",
-            "shift"
-          ],
-          "returnType": "Float",
-          "exported": false,
-          "lineCount": 1
         },
         {
           "name": "toLinear",
@@ -1133,9 +3907,11 @@
       ],
       "exports": [
         "toOklchOrNull",
-        "safeOklch"
+        "safeOklch",
+        "toArgb",
+        "toColorSpecArgb"
       ],
-      "totalLines": 194,
+      "totalLines": 237,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/core/color/OklchGamut.kt": {
@@ -2775,7 +5551,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/ResolutionPipeline.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/ResolutionPipeline.kt",
-      "contentHash": "bed042a46b5fd365e0d85b97e90237965d94baa5128e0e76585bf0b47f9f46a0",
+      "contentHash": "b59e66bc4407d01182c756c9a571fb32000351061439c219b46fae8831495b5f",
       "functions": [
         {
           "name": "resolve",
@@ -5326,7 +8102,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/domain/PriorVector.kt",
-      "contentHash": "b5c2fb6c8adfd022aa7b5b0ccd9827fd2f4e29bb0cdf552a62e7930ddbc2bae3",
+      "contentHash": "ac9b8c30b7d5cba3ff0db918d25f2b73d23abc27f12b755f416bbf3f2f0d68ed",
       "functions": [],
       "classes": [
         {
@@ -5350,7 +8126,7 @@
       "exports": [
         "PriorVector"
       ],
-      "totalLines": 31,
+      "totalLines": 39,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/enforce/ColorContrastRepair.kt": {
@@ -5933,7 +8709,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/DefaultFontBias.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/DefaultFontBias.kt",
-      "contentHash": "a0e189295f262c4fa5b703be1acbc3700cb78b2d299cab5bc1b7b88438b45d29",
+      "contentHash": "92c9fe17074b673f830a3a1ea141e511466d33e85973b8ad7cd2a2d0df19ee28",
       "functions": [],
       "classes": [
         {
@@ -5970,22 +8746,91 @@
         "DISPLAY_THRESHOLD",
         "DefaultFontBias"
       ],
-      "totalLines": 26,
+      "totalLines": 21,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontAssignment.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontAssignment.kt",
-      "contentHash": "34591da9a39b6808205fff234f64960758b88d6a91096b20e10b1027c06005ff",
+      "contentHash": "ccb1795a55bdc930365deded75c652180f5e82b3c2bed56f1582f7180a736375",
       "functions": [
         {
           "name": "resolveFontRoles",
           "params": [
             "normalized",
-            "aesthetic"
+            "aesthetic",
+            "prior"
           ],
           "returnType": "FontRolePlan",
           "exported": true,
-          "lineCount": 41
+          "lineCount": 68
+        },
+        {
+          "name": "resolveLadderFallback",
+          "params": [
+            "ladder",
+            "intentSpecified",
+            "derived",
+            "canonical",
+            "entries"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "isIntentSpecified",
+          "params": [
+            "normalized"
+          ],
+          "returnType": "Boolean",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "assignCandidateRoles",
+          "params": [
+            "candidates",
+            "pinnedStructure",
+            "pinnedContent",
+            "pinnedMetadata",
+            "aesthetic",
+            "entries"
+          ],
+          "returnType": "AssignedLadders",
+          "exported": false,
+          "lineCount": 47
+        },
+        {
+          "name": "pickCandidate",
+          "params": [
+            "pool",
+            "scoreFn"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "scoreCandidate",
+          "params": [
+            "ref",
+            "ladder",
+            "aesthetic"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 21
+        },
+        {
+          "name": "candidateEntry",
+          "params": [
+            "ladder",
+            "candidate",
+            "isReuse"
+          ],
+          "returnType": "ReportEntry",
+          "exported": false,
+          "lineCount": 12
         },
         {
           "name": "pinned",
@@ -5998,25 +8843,15 @@
           "lineCount": 16
         },
         {
-          "name": "takeNext",
+          "name": "fallbackEntry",
           "params": [
             "ladder",
-            "entries"
-          ],
-          "returnType": "FontFamilyRef?",
-          "exported": false,
-          "lineCount": 14
-        },
-        {
-          "name": "derivedEntry",
-          "params": [
-            "ladder",
-            "assigned",
-            "fallback"
+            "fallback",
+            "isDynamic"
           ],
           "returnType": "List<ReportEntry>",
           "exported": false,
-          "lineCount": 15
+          "lineCount": 14
         },
         {
           "name": "lockEntries",
@@ -6026,21 +8861,51 @@
           "returnType": "List<ReportEntry>",
           "exported": false,
           "lineCount": 10
-        },
-        {
-          "name": "label",
-          "params": [],
-          "returnType": "String",
-          "exported": false,
-          "lineCount": 9
         }
       ],
-      "classes": [],
+      "classes": [
+        {
+          "name": "AssignedLadders",
+          "methods": [],
+          "properties": [
+            "structure",
+            "content",
+            "metadata",
+            "unusedCandidates"
+          ],
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
       "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodIntent",
+          "specifiers": [
+            "MoodIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.PriorVector",
+          "specifiers": [
+            "PriorVector"
+          ]
+        },
         {
           "source": "io.github.alph_a07.basis.theme.resolution.mood.MoodProfile",
           "specifiers": [
             "MoodProfile"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.isUnspecified",
+          "specifiers": [
+            "isUnspecified"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01",
+          "specifiers": [
+            "typographyExpressiveness01"
           ]
         },
         {
@@ -6078,12 +8943,343 @@
           "specifiers": [
             "FontFamilyRef"
           ]
+        },
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
         }
       ],
       "exports": [
         "resolveFontRoles"
       ],
-      "totalLines": 140,
+      "totalLines": 298,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogDerivation.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogDerivation.kt",
+      "contentHash": "38223787fc2721b0277e7b87dd65ca390e645c8e86720392fe696fa2626cbbe1",
+      "functions": [
+        {
+          "name": "deriveStructure",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "deriveContent",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "deriveMetadata",
+          "params": [
+            "aesthetic",
+            "prior"
+          ],
+          "returnType": "FontFamilyRef",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "scoreStructureEntry",
+          "params": [
+            "entry",
+            "targetExpr",
+            "targetRound",
+            "trust"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 24
+        },
+        {
+          "name": "scoreContentEntry",
+          "params": [
+            "entry",
+            "targetRound",
+            "trust"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "scoreMetadataEntry",
+          "params": [
+            "entry",
+            "targetRound",
+            "density"
+          ],
+          "returnType": "Float",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "isBetterCandidate",
+          "params": [
+            "score",
+            "bestEntry",
+            "bestScore"
+          ],
+          "returnType": "Boolean",
+          "exported": false,
+          "lineCount": 5
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontCatalogDerivation",
+          "methods": [
+            "deriveStructure",
+            "deriveContent",
+            "deriveMetadata",
+            "scoreStructureEntry",
+            "scoreContentEntry",
+            "scoreMetadataEntry",
+            "isBetterCandidate"
+          ],
+          "properties": [
+            "STRUCTURE_DISPLAY_WEIGHT",
+            "STRUCTURE_EXPR_WEIGHT",
+            "STRUCTURE_ROUND_WEIGHT",
+            "STRUCTURE_TRUST_WEIGHT",
+            "STRUCTURE_MIN_WEIGHT_DEPTH",
+            "STRUCTURE_WEIGHT_DEPTH_PENALTY",
+            "STRUCTURE_RESTRAINED_EXPR_THRESHOLD",
+            "STRUCTURE_ELEVATED_TRUST_THRESHOLD",
+            "CONTENT_ROUND_WEIGHT",
+            "CONTENT_TRUST_WEIGHT",
+            "METADATA_ROUND_WEIGHT",
+            "METADATA_MONOSPACE_DENSITY_THRESHOLD",
+            "METADATA_MONOSPACE_BONUS",
+            "METADATA_DENSITY_WEIGHT",
+            "CATALOG_TIE_EPSILON"
+          ],
+          "exported": true,
+          "lineCount": 174
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.PriorVector",
+          "specifiers": [
+            "PriorVector"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.dataDensity01",
+          "specifiers": [
+            "dataDensity01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.domain.trustStrictness01",
+          "specifiers": [
+            "trustStrictness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.MoodProfile",
+          "specifiers": [
+            "MoodProfile"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.roundness01",
+          "specifiers": [
+            "roundness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01",
+          "specifiers": [
+            "typographyExpressiveness01"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
+        }
+      ],
+      "exports": [
+        "deriveStructure",
+        "deriveContent",
+        "deriveMetadata",
+        "FontCatalogDerivation"
+      ],
+      "totalLines": 193,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogEntry.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogEntry.kt",
+      "contentHash": "62628b26c9e5d6409dd7134e42a133ade3382b38390ef0fda1ccb880dbe8ae82",
+      "functions": [],
+      "classes": [
+        {
+          "name": "FontCatalogEntry",
+          "methods": [],
+          "properties": [
+            "id",
+            "familyName",
+            "googleFontsKey",
+            "category",
+            "axes",
+            "displayAffinity",
+            "textAffinity",
+            "metaAffinity",
+            "expressiveness",
+            "roundness",
+            "serif",
+            "mono",
+            "weightsCount"
+          ],
+          "exported": true,
+          "lineCount": 38
+        },
+        {
+          "name": "FontAxis",
+          "methods": [],
+          "properties": [
+            "tag",
+            "min",
+            "max",
+            "defaultValue"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "GoogleFontsCategory",
+          "methods": [],
+          "properties": [],
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        }
+      ],
+      "exports": [
+        "FontCatalogEntry",
+        "FontAxis",
+        "GoogleFontsCategory"
+      ],
+      "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogReader.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontCatalogReader.kt",
+      "contentHash": "ce3f445a303942cdfd3f4cc66e2c43199a6245a803870d550625455900762e15",
+      "functions": [
+        {
+          "name": "readCatalog",
+          "params": [
+            "input"
+          ],
+          "returnType": "List<FontCatalogEntry>",
+          "exported": true,
+          "lineCount": 69
+        },
+        {
+          "name": "categoryFromCode",
+          "params": [
+            "code"
+          ],
+          "returnType": "GoogleFontsCategory",
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontCatalogReader",
+          "methods": [
+            "readCatalog",
+            "categoryFromCode"
+          ],
+          "properties": [
+            "MAGIC_BYTES",
+            "MAGIC_BYTES_LENGTH",
+            "FORMAT_VERSION",
+            "FLAG_SERIF",
+            "FLAG_MONO",
+            "CATEGORY_CODE_SANS_SERIF",
+            "CATEGORY_CODE_SERIF",
+            "CATEGORY_CODE_DISPLAY",
+            "CATEGORY_CODE_HANDWRITING",
+            "CATEGORY_CODE_MONOSPACE"
+          ],
+          "exported": true,
+          "lineCount": 101
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "java.io.BufferedInputStream",
+          "specifiers": [
+            "BufferedInputStream"
+          ]
+        },
+        {
+          "source": "java.io.DataInputStream",
+          "specifiers": [
+            "DataInputStream"
+          ]
+        },
+        {
+          "source": "java.io.InputStream",
+          "specifiers": [
+            "InputStream"
+          ]
+        },
+        {
+          "source": "java.util.zip.GZIPInputStream",
+          "specifiers": [
+            "GZIPInputStream"
+          ]
+        }
+      ],
+      "exports": [
+        "readCatalog",
+        "categoryFromCode",
+        "CATEGORY_CODE_SANS_SERIF",
+        "CATEGORY_CODE_SERIF",
+        "CATEGORY_CODE_DISPLAY",
+        "CATEGORY_CODE_HANDWRITING",
+        "CATEGORY_CODE_MONOSPACE",
+        "FontCatalogReader"
+      ],
+      "totalLines": 111,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/FontRolePlan.kt": {
@@ -6153,6 +9349,97 @@
         "FontRolePlan"
       ],
       "totalLines": 44,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/GoogleFontCatalog.kt": {
+      "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/fonts/GoogleFontCatalog.kt",
+      "contentHash": "4197ea398ecfdcba16ff07dc380b7b17096c770a6ae1bc6a3d65e1673659c43e",
+      "functions": [
+        {
+          "name": "find",
+          "params": [
+            "id"
+          ],
+          "returnType": "FontCatalogEntry?",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "contains",
+          "params": [
+            "id"
+          ],
+          "returnType": "Boolean",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "byCategory",
+          "params": [
+            "category"
+          ],
+          "returnType": "List<FontCatalogEntry>",
+          "exported": true,
+          "lineCount": 2
+        },
+        {
+          "name": "normalizeKey",
+          "params": [
+            "raw"
+          ],
+          "returnType": "String",
+          "exported": false,
+          "lineCount": 2
+        }
+      ],
+      "classes": [
+        {
+          "name": "GoogleFontCatalog",
+          "methods": [
+            "find",
+            "contains",
+            "byCategory",
+            "normalizeKey"
+          ],
+          "properties": [
+            "all",
+            "topStructureCandidates",
+            "topContentCandidates",
+            "topMetadataCandidates",
+            "byNormalizedKey",
+            "byCategoryMap",
+            "RESOURCE_PATH",
+            "TOP_CANDIDATE_POOL_SIZE",
+            "STRUCTURE_AFFINITY_FLOOR",
+            "CONTENT_AFFINITY_FLOOR",
+            "METADATA_AFFINITY_FLOOR"
+          ],
+          "exported": true,
+          "lineCount": 96
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        }
+      ],
+      "exports": [
+        "all",
+        "find",
+        "contains",
+        "byCategory",
+        "topStructureCandidates",
+        "topContentCandidates",
+        "topMetadataCandidates",
+        "STRUCTURE_AFFINITY_FLOOR",
+        "CONTENT_AFFINITY_FLOOR",
+        "METADATA_AFFINITY_FLOOR",
+        "GoogleFontCatalog"
+      ],
+      "totalLines": 102,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/identity/PresencePlan.kt": {
@@ -6385,7 +9672,7 @@
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProfile.kt": {
       "filePath": "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProfile.kt",
-      "contentHash": "1b62c4c5b6939500422d9f412f37c946eb527710bd9124f59e98e555d14d8b23",
+      "contentHash": "59cde0ffb6cf2642939f14f7e503c92d8550b009dbc7d8b9ad268c7877298bcf",
       "functions": [],
       "classes": [
         {
@@ -6416,7 +9703,7 @@
       "exports": [
         "MoodProfile"
       ],
-      "totalLines": 30,
+      "totalLines": 42,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/main/kotlin/io/github/alph_a07/basis/theme/resolution/mood/MoodProjection.kt": {
@@ -9602,6 +12889,91 @@
       "totalLines": 447,
       "hasStructuralAnalysis": true
     },
+    "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/core/color/OklchConversionTest.kt": {
+      "filePath": "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/core/color/OklchConversionTest.kt",
+      "contentHash": "2192c1da251d9aeae9a2dc222714e5dad99965af170a5a3c0d9bac870556d3ff",
+      "functions": [
+        {
+          "name": "toArgb_blackAndWhite",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "toArgb_preservesAlpha",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "toColorSpecArgb_wrapsCalculatedArgb",
+          "params": [],
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "toColorSpecArgb_roundTripNormalization",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [
+        {
+          "name": "OklchConversionTest",
+          "methods": [
+            "toArgb_blackAndWhite",
+            "toArgb_preservesAlpha",
+            "toColorSpecArgb_wrapsCalculatedArgb",
+            "toColorSpecArgb_roundTripNormalization"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 39
+        }
+      ],
+      "imports": [
+        {
+          "source": "kotlin.math.abs",
+          "specifiers": [
+            "abs"
+          ]
+        },
+        {
+          "source": "kotlin.test.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        }
+      ],
+      "exports": [
+        "toArgb_blackAndWhite",
+        "toArgb_preservesAlpha",
+        "toColorSpecArgb_wrapsCalculatedArgb",
+        "toColorSpecArgb_roundTripNormalization",
+        "OklchConversionTest"
+      ],
+      "totalLines": 48,
+      "hasStructuralAnalysis": true
+    },
     "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/ColorEnforcementTest.kt": {
       "filePath": "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/ColorEnforcementTest.kt",
       "contentHash": "ca91cf98743dd933ef0811083f4e61c037489da71bab2f699b36da515330c883",
@@ -9946,6 +13318,371 @@
         "DomainMoodProjectionTest"
       ],
       "totalLines": 158,
+      "hasStructuralAnalysis": true
+    },
+    "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/FontAssignmentTest.kt": {
+      "filePath": "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/FontAssignmentTest.kt",
+      "contentHash": "3ca6ecccdb4cc9298934cea1171e6f3ca857b379878201ed699066a78e01f8b9",
+      "functions": [
+        {
+          "name": "catalogLoadsAllVendoredFamilies",
+          "params": [],
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "catalogLookupIsCaseAndWhitespaceInsensitive",
+          "params": [],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "categoryIndexAndAffinityPoolsArePopulated",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "pinsWinOverCandidates",
+          "params": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "singleCandidateReuseFillsUnpinnedLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "singleCandidateWithPinReusesForRemainingLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "candidateScoringAssignsByAffinities",
+          "params": [],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "unusedCandidatesAreRecordedInReport",
+          "params": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "emptyIntentDerivesDefaultSansFallbacks",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "dynamicCatalogDerivationRespondsToExpressiveness",
+          "params": [],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "dynamicCatalogDerivationRespondsToRoundness",
+          "params": [],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "dynamicDerivationIsIdempotentAndReliable",
+          "params": [],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "anyCatalogFamilyCanBePinnedViaIdentity",
+          "params": [],
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "anyCatalogFamilyCanBePinnedViaControl",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "customFontKeysPreservedWithoutNetwork",
+          "params": [],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "dynamicDerivationRespondsToProductDomainPriors",
+          "params": [],
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "dynamicDerivationRespondsToArchetypePresets",
+          "params": [],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+          "params": [],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+          "params": [],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "dynamicDerivationWithPolarExtremeKnobs",
+          "params": [],
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "dynamicDerivationPriorsMultiSelectDomainBlend",
+          "params": [],
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "categoryFromCodeDecodesAllSupportedCodes",
+          "params": [],
+          "exported": true,
+          "lineCount": 27
+        },
+        {
+          "name": "weightsCountIsValidOnAllEntries",
+          "params": [],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "goldenDynamicDerivationStabilityAcrossArchetypes",
+          "params": [],
+          "exported": true,
+          "lineCount": 42
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontAssignmentTest",
+          "methods": [
+            "catalogLoadsAllVendoredFamilies",
+            "catalogLookupIsCaseAndWhitespaceInsensitive",
+            "categoryIndexAndAffinityPoolsArePopulated",
+            "pinsWinOverCandidates",
+            "singleCandidateReuseFillsUnpinnedLadders",
+            "singleCandidateWithPinReusesForRemainingLadders",
+            "candidateScoringAssignsByAffinities",
+            "unusedCandidatesAreRecordedInReport",
+            "emptyIntentDerivesDefaultSansFallbacks",
+            "dynamicCatalogDerivationRespondsToExpressiveness",
+            "dynamicCatalogDerivationRespondsToRoundness",
+            "dynamicDerivationIsIdempotentAndReliable",
+            "anyCatalogFamilyCanBePinnedViaIdentity",
+            "anyCatalogFamilyCanBePinnedViaControl",
+            "customFontKeysPreservedWithoutNetwork",
+            "dynamicDerivationRespondsToProductDomainPriors",
+            "dynamicDerivationRespondsToArchetypePresets",
+            "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+            "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+            "dynamicDerivationWithPolarExtremeKnobs",
+            "dynamicDerivationPriorsMultiSelectDomainBlend",
+            "categoryFromCodeDecodesAllSupportedCodes",
+            "weightsCountIsValidOnAllEntries",
+            "goldenDynamicDerivationStabilityAcrossArchetypes"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 569
+        }
+      ],
+      "imports": [
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.BasisIntent",
+          "specifiers": [
+            "BasisIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.ControlIntent",
+          "specifiers": [
+            "ControlIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.DomainIntent",
+          "specifiers": [
+            "DomainIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.IdentityIntent",
+          "specifiers": [
+            "IdentityIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.InteractionPattern",
+          "specifiers": [
+            "InteractionPattern"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodIntent",
+          "specifiers": [
+            "MoodIntent"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodKnobs",
+          "specifiers": [
+            "MoodKnobs"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.MoodPreset",
+          "specifiers": [
+            "MoodPreset"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.ProductDomain",
+          "specifiers": [
+            "ProductDomain"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.TypographyIdentity",
+          "specifiers": [
+            "TypographyIdentity"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.intent.controls.FontControl",
+          "specifiers": [
+            "FontControl"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.DefaultFontBias",
+          "specifiers": [
+            "DefaultFontBias"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.FontCatalogReader",
+          "specifiers": [
+            "FontCatalogReader"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog",
+          "specifiers": [
+            "GoogleFontCatalog"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontsCategory",
+          "specifiers": [
+            "GoogleFontsCategory"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.resolution.report.ReportStatus",
+          "specifiers": [
+            "ReportStatus"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath",
+          "specifiers": [
+            "TypographyTokenPath"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey",
+          "specifiers": [
+            "CustomFontKey"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef",
+          "specifiers": [
+            "FontFamilyRef"
+          ]
+        },
+        {
+          "source": "io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId",
+          "specifiers": [
+            "GoogleFontId"
+          ]
+        },
+        {
+          "source": "kotlin.test.Test",
+          "specifiers": [
+            "Test"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertEquals",
+          "specifiers": [
+            "assertEquals"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertFailsWith",
+          "specifiers": [
+            "assertFailsWith"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertNotNull",
+          "specifiers": [
+            "assertNotNull"
+          ]
+        },
+        {
+          "source": "kotlin.test.assertTrue",
+          "specifiers": [
+            "assertTrue"
+          ]
+        }
+      ],
+      "exports": [
+        "catalogLoadsAllVendoredFamilies",
+        "catalogLookupIsCaseAndWhitespaceInsensitive",
+        "categoryIndexAndAffinityPoolsArePopulated",
+        "pinsWinOverCandidates",
+        "singleCandidateReuseFillsUnpinnedLadders",
+        "singleCandidateWithPinReusesForRemainingLadders",
+        "candidateScoringAssignsByAffinities",
+        "unusedCandidatesAreRecordedInReport",
+        "emptyIntentDerivesDefaultSansFallbacks",
+        "dynamicCatalogDerivationRespondsToExpressiveness",
+        "dynamicCatalogDerivationRespondsToRoundness",
+        "dynamicDerivationIsIdempotentAndReliable",
+        "anyCatalogFamilyCanBePinnedViaIdentity",
+        "anyCatalogFamilyCanBePinnedViaControl",
+        "customFontKeysPreservedWithoutNetwork",
+        "dynamicDerivationRespondsToProductDomainPriors",
+        "dynamicDerivationRespondsToArchetypePresets",
+        "dynamicDerivationFillsGapsWhenSomeLaddersArePinned",
+        "dynamicDerivationFillsGapsWhenTwoCandidatesProvidedForThreeLadders",
+        "dynamicDerivationWithPolarExtremeKnobs",
+        "dynamicDerivationPriorsMultiSelectDomainBlend",
+        "categoryFromCodeDecodesAllSupportedCodes",
+        "weightsCountIsValidOnAllEntries",
+        "goldenDynamicDerivationStabilityAcrossArchetypes",
+        "FontAssignmentTest"
+      ],
+      "totalLines": 598,
       "hasStructuralAnalysis": true
     },
     "basis-theme/src/test/kotlin/io/github/alph_a07/basis/theme/resolution/ResolvePipelineTest.kt": {
@@ -12754,7 +16491,7 @@
     },
     "build-logic/src/main/kotlin/verify-all-conventions.gradle.kts": {
       "filePath": "build-logic/src/main/kotlin/verify-all-conventions.gradle.kts",
-      "contentHash": "955203150ece665c48d21e49d2c5217fc65ba848e6859e3d5f8f63a1f68ae516",
+      "contentHash": "942d7d6ffc191abe361de1878c7230e2588f3d18bf516070336e8fa7831cf8e4",
       "functions": [
         {
           "name": "onFinish",
@@ -12762,7 +16499,7 @@
             "event"
           ],
           "exported": true,
-          "lineCount": 22
+          "lineCount": 24
         },
         {
           "name": "close",
@@ -12786,25 +16523,36 @@
           "name": "printFailures",
           "params": [],
           "exported": false,
-          "lineCount": 10
+          "lineCount": 11
+        },
+        {
+          "name": "collectFailureMessages",
+          "params": [
+            "failure",
+            "collector"
+          ],
+          "exported": false,
+          "lineCount": 4
         },
         {
           "name": "resolveBasePath",
           "params": [
-            "taskPath"
+            "taskPath",
+            "rootDir"
           ],
           "returnType": "String",
-          "exported": false,
-          "lineCount": 16
+          "exported": true,
+          "lineCount": 15
         },
         {
           "name": "printTaskTrace",
           "params": [
             "taskName",
-            "absoluteBase"
+            "absoluteBase",
+            "failureMessages"
           ],
-          "exported": false,
-          "lineCount": 31
+          "exported": true,
+          "lineCount": 20
         },
         {
           "name": "printDetektTrace",
@@ -12821,6 +16569,49 @@
           ],
           "exported": false,
           "lineCount": 17
+        },
+        {
+          "name": "printConnectedTestTrace",
+          "params": [
+            "absoluteBase",
+            "failureMessages"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "isDeviceFailure",
+          "params": [
+            "message"
+          ],
+          "returnType": "Boolean",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "printUnitTestTrace",
+          "params": [
+            "absoluteBase",
+            "failureMessages"
+          ],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "printLintTrace",
+          "params": [
+            "absoluteBase"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "printGenericTaskTrace",
+          "params": [
+            "failureMessages"
+          ],
+          "exported": false,
+          "lineCount": 8
         }
       ],
       "classes": [
@@ -12834,6 +16625,16 @@
           "lineCount": 3
         },
         {
+          "name": "TaskFailureEntry",
+          "methods": [],
+          "properties": [
+            "taskPath",
+            "failureMessages"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
           "name": "VerificationReporter",
           "methods": [
             "onFinish",
@@ -12841,10 +16642,7 @@
             "printExecutionSummary",
             "printWarnings",
             "printFailures",
-            "resolveBasePath",
-            "printTaskTrace",
-            "printDetektTrace",
-            "printKtlintTrace"
+            "collectFailureMessages"
           ],
           "properties": [
             "errors",
@@ -12854,7 +16652,24 @@
             "primaryChecks"
           ],
           "exported": true,
-          "lineCount": 148
+          "lineCount": 81
+        },
+        {
+          "name": "VerificationTracePrinter",
+          "methods": [
+            "resolveBasePath",
+            "printTaskTrace",
+            "printDetektTrace",
+            "printKtlintTrace",
+            "printConnectedTestTrace",
+            "isDeviceFailure",
+            "printUnitTestTrace",
+            "printLintTrace",
+            "printGenericTaskTrace"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 116
         },
         {
           "name": "InjectedRegistry",
@@ -12871,6 +16686,12 @@
           "source": "java.util.concurrent.CopyOnWriteArrayList",
           "specifiers": [
             "CopyOnWriteArrayList"
+          ]
+        },
+        {
+          "source": "org.gradle.tooling.Failure",
+          "specifiers": [
+            "Failure"
           ]
         },
         {
@@ -12916,10 +16737,13 @@
         "onFinish",
         "close",
         "VerificationReporter",
+        "resolveBasePath",
+        "printTaskTrace",
+        "VerificationTracePrinter",
         "registry",
         "InjectedRegistry"
       ],
-      "totalLines": 220,
+      "totalLines": 295,
       "hasStructuralAnalysis": true
     },
     "build.gradle.kts": {
@@ -12997,12 +16821,12 @@
     },
     "gradle/libs.versions.toml": {
       "filePath": "gradle/libs.versions.toml",
-      "contentHash": "22baea5cf1af1f9173fbbf7a9729b3284f336bb6dec6c68f6b77bdb2f70840ef",
+      "contentHash": "5fb205a6494d9aff8e0d9d8650863a5f0e96a3cfe2d96630d2870780bb21fe4e",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 55,
+      "totalLines": 62,
       "hasStructuralAnalysis": false
     },
     "gradle/wrapper/gradle-wrapper.jar": {
@@ -13027,23 +16851,111 @@
     },
     "gradlew": {
       "filePath": "gradlew",
-      "contentHash": "3238afb2aed5cb16eb7d6718077e7138059108f007b54179e9cc157c5a6e0e89",
+      "contentHash": "2b3a76cb9109a8e181e836954812f32e588e58815a90d41ae94f0e777229ee00",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 252,
+      "totalLines": 277,
       "hasStructuralAnalysis": false
     },
     "gradlew.bat": {
       "filePath": "gradlew.bat",
-      "contentHash": "94102713eb8fb22d032397924c0f38ab2da783ba60d07054339f1190a0c4e2cd",
+      "contentHash": "542898ab14d325d8fa55a309e00f09670d8d1c42477bbd624589a9f36efda8c2",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 95,
+      "totalLines": 117,
       "hasStructuralAnalysis": false
+    },
+    "scripts/generate_font_catalog.py": {
+      "filePath": "scripts/generate_font_catalog.py",
+      "contentHash": "61ac52ed7c68b86f815f0efe19c2cee286c92736c2a991fac89d2e067b54f6df",
+      "functions": [
+        {
+          "name": "canonical_id",
+          "params": [
+            "name"
+          ],
+          "returnType": "str",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "read_existing_ids",
+          "params": [
+            "file_path"
+          ],
+          "returnType": "set",
+          "exported": true,
+          "lineCount": 35
+        },
+        {
+          "name": "write_utf",
+          "params": [
+            "buffer",
+            "value"
+          ],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "main",
+          "params": [],
+          "returnType": "None",
+          "exported": true,
+          "lineCount": 266
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "gzip",
+          "specifiers": [
+            "gzip"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "struct",
+          "specifiers": [
+            "struct"
+          ]
+        },
+        {
+          "source": "urllib.request",
+          "specifiers": [
+            "urllib.request"
+          ]
+        }
+      ],
+      "exports": [
+        "canonical_id",
+        "read_existing_ids",
+        "write_utf",
+        "main"
+      ],
+      "totalLines": 362,
+      "hasStructuralAnalysis": true
     },
     "settings.gradle.kts": {
       "filePath": "settings.gradle.kts",
