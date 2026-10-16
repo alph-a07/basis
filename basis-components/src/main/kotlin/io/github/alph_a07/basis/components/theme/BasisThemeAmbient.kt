@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.components.theme
 
+import androidx.compose.ui.text.TextStyle
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
