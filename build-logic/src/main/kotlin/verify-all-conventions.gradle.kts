@@ -4,6 +4,7 @@
  */
 
 import java.util.concurrent.CopyOnWriteArrayList
+import org.gradle.tooling.Failure
 import org.gradle.tooling.events.FinishEvent
 import org.gradle.tooling.events.OperationCompletionListener
 import org.gradle.tooling.events.task.TaskFailureResult
@@ -13,6 +14,7 @@ import org.gradle.tooling.events.task.TaskSuccessResult
 
 val verifyAllChecks = listOf("assemble", "test", "lint", "detekt", "ktlintCheck", "releaseApiCheck")
 val fixAllChecks = listOf("ktlintFormat", "lintFix")
+val testsChecks = listOf("test", "connectedDebugAndroidTest")
 
 val verifyAll =
     tasks.register("verifyAll") {
@@ -26,23 +28,37 @@ val fixAll =
         description = "Attempts to auto-fix formatting and linting issues (ktlintFormat, lintFix)."
     }
 
+val tests =
+    tasks.register("tests") {
+        group = "verification"
+        description = "Runs all unit tests and Android instrumentation tests on the first available connected device."
+    }
+
 interface ReporterParams : BuildServiceParameters {
     val rootDirPath: Property<String>
 }
 
+private data class TaskFailureEntry(
+    val taskPath: String,
+    val failureMessages: List<String>,
+)
+
 abstract class VerificationReporter : BuildService<ReporterParams>, OperationCompletionListener, AutoCloseable {
-    private val errors = CopyOnWriteArrayList<String>()
+    private val errors = CopyOnWriteArrayList<TaskFailureEntry>()
     private val successes = CopyOnWriteArrayList<String>()
     private val cached = CopyOnWriteArrayList<String>()
     private val skipped = CopyOnWriteArrayList<String>()
-    private val primaryChecks = setOf("test", "lint", "detekt", "ktlintCheck", "releaseApiCheck")
+    private val primaryChecks =
+        setOf("test", "lint", "detekt", "ktlintCheck", "releaseApiCheck", "connectedDebugAndroidTest")
 
     override fun onFinish(event: FinishEvent) {
         if (event is TaskFinishEvent) {
             val path = event.descriptor.taskPath
             when (val result = event.result) {
                 is TaskFailureResult -> {
-                    errors.add(path)
+                    val messages = mutableListOf<String>()
+                    result.failures.forEach { collectFailureMessages(it, messages) }
+                    errors.add(TaskFailureEntry(path, messages))
                 }
 
                 is TaskSkippedResult -> {
@@ -93,16 +109,24 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
 
     private fun printFailures() {
         println(" 🔴 DETAILED FAILURES & TRACES:")
-        errors.forEach { path ->
-            println("\n ❌ $path")
-            val absoluteBase = resolveBasePath(path)
-            val taskName = path.substringAfterLast(":")
-            printTaskTrace(taskName, absoluteBase)
+        errors.forEach { entry ->
+            println("\n ❌ ${entry.taskPath}")
+            val absoluteBase =
+                VerificationTracePrinter.resolveBasePath(entry.taskPath, parameters.rootDirPath.get())
+            val taskName = entry.taskPath.substringAfterLast(":")
+            VerificationTracePrinter.printTaskTrace(taskName, absoluteBase, entry.failureMessages)
         }
         println("\n" + "━".repeat(80) + "\n")
     }
 
-    private fun resolveBasePath(taskPath: String): String {
+    private fun collectFailureMessages(failure: Failure, collector: MutableList<String>) {
+        failure.message?.takeIf { it.isNotBlank() }?.let { collector.add(it) }
+        failure.causes.forEach { collectFailureMessages(it, collector) }
+    }
+}
+
+internal object VerificationTracePrinter {
+    fun resolveBasePath(taskPath: String, rootDir: String): String {
         val modulePath = taskPath.substringBeforeLast(":")
         val relativeDir =
             if (modulePath.isEmpty()) {
@@ -110,7 +134,6 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
             } else {
                 modulePath.replace(":", "/")
             }
-        val rootDir = parameters.rootDirPath.get()
 
         return if (relativeDir.isEmpty()) {
             rootDir
@@ -119,30 +142,19 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
         }
     }
 
-    private fun printTaskTrace(taskName: String, absoluteBase: String) {
+    fun printTaskTrace(
+        taskName: String,
+        absoluteBase: String,
+        failureMessages: List<String>,
+    ) {
         try {
             when {
-                taskName.contains("detekt") -> {
-                    printDetektTrace(absoluteBase)
-                }
-
-                taskName.contains("ktlint") -> {
-                    printKtlintTrace(absoluteBase)
-                }
-
-                taskName.contains("test") -> {
-                    println("    | ↳ There were failing tests. See the full trace at:")
-                    println("    |   file://$absoluteBase/build/reports/tests/test/index.html")
-                }
-
-                taskName.contains("lint") -> {
-                    println("    | ↳ Android Lint found errors. See the exact lines at:")
-                    println("    |   file://$absoluteBase/build/reports/lint-results.html")
-                }
-
-                else -> {
-                    println("    | ↳ Task failed. Scroll up for standard stacktrace.")
-                }
+                taskName.contains("detekt") -> printDetektTrace(absoluteBase)
+                taskName.contains("ktlint") -> printKtlintTrace(absoluteBase)
+                taskName.contains("connected") -> printConnectedTestTrace(absoluteBase, failureMessages)
+                taskName.contains("test") -> printUnitTestTrace(absoluteBase, failureMessages)
+                taskName.contains("lint") -> printLintTrace(absoluteBase)
+                else -> printGenericTaskTrace(failureMessages)
             }
         } catch (e: java.io.IOException) {
             println("    | ↳ Failed to read trace file: ${e.message}")
@@ -177,6 +189,57 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
             println("    | ↳ Could not extract text trace. Check standard output above.")
         }
     }
+
+    private fun printConnectedTestTrace(absoluteBase: String, failureMessages: List<String>) {
+        val deviceFailure = failureMessages.firstOrNull { isDeviceFailure(it) }
+        if (deviceFailure != null) {
+            println("    | ↳ 📱 Device Error: No connected Android device or emulator was found!")
+            println("    |   $deviceFailure")
+            println("    |   Please attach an Android device via USB/Wi-Fi or start an emulator.")
+            return
+        }
+
+        val reportFile = File("$absoluteBase/build/reports/androidTests/connected/index.html")
+        if (reportFile.exists()) {
+            println("    | ↳ Instrumentation tests failed. See the report at:")
+            println("    |   file://$absoluteBase/build/reports/androidTests/connected/index.html")
+        } else {
+            println("    | ↳ Instrumentation tests failed to execute:")
+            failureMessages.forEach { println("    |   $it") }
+        }
+    }
+
+    private fun isDeviceFailure(message: String): Boolean =
+        message.contains("DeviceException") ||
+            message.contains("No online devices found") ||
+            message.contains("Connected device with serial") ||
+            message.contains("not online") ||
+            message.contains("device not found", ignoreCase = true)
+
+    private fun printUnitTestTrace(absoluteBase: String, failureMessages: List<String>) {
+        val reportFile = File("$absoluteBase/build/reports/tests/test/index.html")
+        if (reportFile.exists()) {
+            println("    | ↳ There were failing tests. See the full trace at:")
+            println("    |   file://$absoluteBase/build/reports/tests/test/index.html")
+        } else {
+            println("    | ↳ Tests failed to execute:")
+            failureMessages.forEach { println("    |   $it") }
+        }
+    }
+
+    private fun printLintTrace(absoluteBase: String) {
+        println("    | ↳ Android Lint found errors. See the exact lines at:")
+        println("    |   file://$absoluteBase/build/reports/lint-results.html")
+    }
+
+    private fun printGenericTaskTrace(failureMessages: List<String>) {
+        println("    | ↳ Task failed:")
+        if (failureMessages.isNotEmpty()) {
+            failureMessages.take(3).forEach { println("    |   $it") }
+        } else {
+            println("    |   Scroll up for standard stacktrace.")
+        }
+    }
 }
 
 interface InjectedRegistry {
@@ -185,7 +248,7 @@ interface InjectedRegistry {
 }
 
 val invokedTasks = gradle.startParameter.taskNames.map { it.substringAfterLast(':') }
-val isPipelineActive = verifyAll.name in invokedTasks || fixAll.name in invokedTasks
+val isPipelineActive = verifyAll.name in invokedTasks || fixAll.name in invokedTasks || tests.name in invokedTasks
 
 if (isPipelineActive) {
     gradle.startParameter.isContinueOnFailure = true
@@ -206,6 +269,15 @@ gradle.projectsEvaluated {
         fixAllChecks.filter { it in module.tasks.names }.forEach { check ->
             fixAll.configure { dependsOn(module.tasks.named(check)) }
         }
+        testsChecks.filter { it in module.tasks.names }.forEach { check ->
+            tests.configure { dependsOn(module.tasks.named(check)) }
+        }
+
+        val testTask = module.tasks.findByName("test")
+        val androidTestTask = module.tasks.findByName("connectedDebugAndroidTest")
+        if (testTask != null && androidTestTask != null) {
+            androidTestTask.mustRunAfter(testTask)
+        }
     }
 
     val buildLogic = gradle.includedBuild("build-logic")
@@ -216,4 +288,7 @@ gradle.projectsEvaluated {
         dependsOn(buildLogic.task(":basis-theme-ksp:test"))
     }
     fixAll.configure { dependsOn(buildLogic.task(":ktlintFormat")) }
+    tests.configure {
+        dependsOn(buildLogic.task(":basis-theme-ksp:test"))
+    }
 }

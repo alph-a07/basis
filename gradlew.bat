@@ -44,6 +44,16 @@ if not defined ANDROID_SERIAL (
                 if not defined ANDROID_SERIAL set ANDROID_SERIAL=%%a
             )
         )
+        if defined ANDROID_SERIAL (
+            echo 📱 [tests] Targeting connected device: %ANDROID_SERIAL%
+        ) else (
+            echo ⚠️  [tests] No online Android device or emulator detected via 'adb devices'. 1>&2
+        )
+    )
+) else (
+    echo "%*" | findstr /i "tests connected" >nul
+    if %ERRORLEVEL% equ 0 (
+        echo 📱 [tests] Using specified ANDROID_SERIAL: %ANDROID_SERIAL%
     )
 )
 
