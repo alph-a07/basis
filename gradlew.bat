@@ -35,6 +35,18 @@ set APP_HOME=%DIRNAME%
 @rem Resolve any "." and ".." in APP_HOME to make it shorter.
 for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 
+@rem Resolve first available connected device for tests if ANDROID_SERIAL is not set
+if not defined ANDROID_SERIAL (
+    echo "%*" | findstr /i "tests connected" >nul
+    if %ERRORLEVEL% equ 0 (
+        for /f "tokens=1,2" %%a in ('adb devices 2^>nul') do (
+            if "%%b"=="device" (
+                if not defined ANDROID_SERIAL set ANDROID_SERIAL=%%a
+            )
+        )
+    )
+)
+
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
 
