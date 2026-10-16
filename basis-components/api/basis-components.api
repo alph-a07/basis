@@ -1,0 +1,426 @@
+public final class io/github/alph_a07/basis/components/theme/BasisBorderColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun copy-jRlVdoo (JJJJ)Lio/github/alph_a07/basis/components/theme/BasisBorderColors;
+	public static synthetic fun copy-jRlVdoo$default (Lio/github/alph_a07/basis/components/theme/BasisBorderColors;JJJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisBorderColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefault-0d7_KjU ()J
+	public final fun getInverse-0d7_KjU ()J
+	public final fun getMuted-0d7_KjU ()J
+	public final fun getStrong-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisBrandColors {
+	public static final field $stable I
+	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component3-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component4-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun copy-FzUhOVw (JLandroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;)Lio/github/alph_a07/basis/components/theme/BasisBrandColors;
+	public static synthetic fun copy-FzUhOVw$default (Lio/github/alph_a07/basis/components/theme/BasisBrandColors;JLandroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisBrandColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrimary-0d7_KjU ()J
+	public final fun getQuaternary-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getSecondary-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getTertiary-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisColorLocals {
+	public static final field $stable I
+	public fun <init> (Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;Lio/github/alph_a07/basis/components/theme/BasisContentColors;Lio/github/alph_a07/basis/components/theme/BasisIconColors;Lio/github/alph_a07/basis/components/theme/BasisBorderColors;Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;Lio/github/alph_a07/basis/components/theme/BasisFocusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisBrandColors;)V
+	public final fun component1 ()Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;
+	public final fun component10 ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun component11 ()Lio/github/alph_a07/basis/components/theme/BasisBrandColors;
+	public final fun component2 ()Lio/github/alph_a07/basis/components/theme/BasisContentColors;
+	public final fun component3 ()Lio/github/alph_a07/basis/components/theme/BasisIconColors;
+	public final fun component4 ()Lio/github/alph_a07/basis/components/theme/BasisBorderColors;
+	public final fun component5 ()Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;
+	public final fun component6 ()Lio/github/alph_a07/basis/components/theme/BasisFocusColors;
+	public final fun component7 ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun component8 ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun component9 ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun copy (Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;Lio/github/alph_a07/basis/components/theme/BasisContentColors;Lio/github/alph_a07/basis/components/theme/BasisIconColors;Lio/github/alph_a07/basis/components/theme/BasisBorderColors;Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;Lio/github/alph_a07/basis/components/theme/BasisFocusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisBrandColors;)Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;Lio/github/alph_a07/basis/components/theme/BasisContentColors;Lio/github/alph_a07/basis/components/theme/BasisIconColors;Lio/github/alph_a07/basis/components/theme/BasisBorderColors;Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;Lio/github/alph_a07/basis/components/theme/BasisFocusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisStatusColors;Lio/github/alph_a07/basis/components/theme/BasisBrandColors;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder ()Lio/github/alph_a07/basis/components/theme/BasisBorderColors;
+	public final fun getBrand ()Lio/github/alph_a07/basis/components/theme/BasisBrandColors;
+	public final fun getCaution ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun getContent ()Lio/github/alph_a07/basis/components/theme/BasisContentColors;
+	public final fun getFocus ()Lio/github/alph_a07/basis/components/theme/BasisFocusColors;
+	public final fun getIcon ()Lio/github/alph_a07/basis/components/theme/BasisIconColors;
+	public final fun getInfo ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun getNegative ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun getPositive ()Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public final fun getSelection ()Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;
+	public final fun getSurface ()Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisContentColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun copy-ysEtTa8 (JJJ)Lio/github/alph_a07/basis/components/theme/BasisContentColors;
+	public static synthetic fun copy-ysEtTa8$default (Lio/github/alph_a07/basis/components/theme/BasisContentColors;JJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisContentColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefault-0d7_KjU ()J
+	public final fun getInverse-0d7_KjU ()J
+	public final fun getMuted-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisContentType {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)V
+	public final fun component1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component4 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component5 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)Lio/github/alph_a07/basis/components/theme/BasisContentType;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisContentType;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisContentType;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel4 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel5 ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisFocusColors {
+	public static final field $stable I
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun copy-8_81llA (J)Lio/github/alph_a07/basis/components/theme/BasisFocusColors;
+	public static synthetic fun copy-8_81llA$default (Lio/github/alph_a07/basis/components/theme/BasisFocusColors;JILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisFocusColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRing-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisIconColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun copy-ysEtTa8 (JJJ)Lio/github/alph_a07/basis/components/theme/BasisIconColors;
+	public static synthetic fun copy-ysEtTa8$default (Lio/github/alph_a07/basis/components/theme/BasisIconColors;JJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisIconColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefault-0d7_KjU ()J
+	public final fun getInverse-0d7_KjU ()J
+	public final fun getMuted-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisMetadataType {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)V
+	public final fun component1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)Lio/github/alph_a07/basis/components/theme/BasisMetadataType;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisMetadataType;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisMetadataType;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel3 ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisMotionLocals {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/AnimationSpec;)V
+	public final fun component1 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component2 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component3 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component4 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component5 ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun component6 ()Landroidx/compose/animation/core/AnimationSpec;
+	public final fun copy (Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/AnimationSpec;)Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/FiniteAnimationSpec;Landroidx/compose/animation/core/AnimationSpec;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEmphasis ()Landroidx/compose/animation/core/AnimationSpec;
+	public final fun getExpansion ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getFeedback ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getReposition ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getStateTransition ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun getTransformation ()Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisSelectionColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun copy-ysEtTa8 (JJJ)Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;
+	public static synthetic fun copy-ysEtTa8$default (Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;JJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisSelectionColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getSurface-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisStatusColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun copy-jRlVdoo (JJJJ)Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public static synthetic fun copy-jRlVdoo$default (Lio/github/alph_a07/basis/components/theme/BasisStatusColors;JJJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisStatusColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-0d7_KjU ()J
+	public final fun getContent-0d7_KjU ()J
+	public final fun getIcon-0d7_KjU ()J
+	public final fun getSurface-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisStructureType {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)V
+	public final fun component1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component4 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component5 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component6 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun copy (Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;)Lio/github/alph_a07/basis/components/theme/BasisStructureType;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisStructureType;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/text/TextStyle;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisStructureType;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel1 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel2 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel3 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel4 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel5 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLevel6 ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisSurfaceColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun copy-jRlVdoo (JJJJ)Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;
+	public static synthetic fun copy-jRlVdoo$default (Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;JJJJILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisSurfaceColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefault-0d7_KjU ()J
+	public final fun getElevated-0d7_KjU ()J
+	public final fun getInverse-0d7_KjU ()J
+	public final fun getRecessed-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisTheme {
+	public static final field $stable I
+	public static final field INSTANCE Lio/github/alph_a07/basis/components/theme/BasisTheme;
+	public final fun getColors (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
+	public final fun getComponentPatches (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun getCurrent (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
+	public final fun getDepth (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
+	public final fun getMotion (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
+	public final fun getRadius (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
+	public final fun getSize (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;
+	public final fun getSpacing (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;
+	public final fun getTypography (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisThemeAmbient {
+	public static final field $stable I
+	public fun <init> (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;)V
+	public final fun component1 ()Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;
+	public final fun component10 ()Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;
+	public final fun component2 ()Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
+	public final fun component3 ()Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
+	public final fun component4 ()Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;
+	public final fun component5 ()Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
+	public final fun component6 ()Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
+	public final fun component7 ()Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;
+	public final fun component8 ()Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
+	public final fun component9 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun copy (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColors ()Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
+	public final fun getComponentPatches ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun getDepth ()Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
+	public final fun getMotion ()Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
+	public final fun getRadius ()Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
+	public final fun getReport ()Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;
+	public final fun getSize ()Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;
+	public final fun getSpacing ()Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;
+	public final fun getTheme ()Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;
+	public final fun getTypography ()Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisThemeKt {
+	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/intent/BasisIntent;ZLio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair;ZLio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class io/github/alph_a07/basis/components/theme/BasisTypographyLocals {
+	public static final field $stable I
+	public fun <init> (Lio/github/alph_a07/basis/components/theme/BasisStructureType;Lio/github/alph_a07/basis/components/theme/BasisContentType;Lio/github/alph_a07/basis/components/theme/BasisMetadataType;)V
+	public final fun component1 ()Lio/github/alph_a07/basis/components/theme/BasisStructureType;
+	public final fun component2 ()Lio/github/alph_a07/basis/components/theme/BasisContentType;
+	public final fun component3 ()Lio/github/alph_a07/basis/components/theme/BasisMetadataType;
+	public final fun copy (Lio/github/alph_a07/basis/components/theme/BasisStructureType;Lio/github/alph_a07/basis/components/theme/BasisContentType;Lio/github/alph_a07/basis/components/theme/BasisMetadataType;)Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;Lio/github/alph_a07/basis/components/theme/BasisStructureType;Lio/github/alph_a07/basis/components/theme/BasisContentType;Lio/github/alph_a07/basis/components/theme/BasisMetadataType;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lio/github/alph_a07/basis/components/theme/BasisContentType;
+	public final fun getMetadata ()Lio/github/alph_a07/basis/components/theme/BasisMetadataType;
+	public final fun getStructure ()Lio/github/alph_a07/basis/components/theme/BasisStructureType;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/ColorConversionsKt {
+	public static final fun toArgb (Lio/github/alph_a07/basis/theme/core/color/Oklch;)I
+	public static final fun toColor (Lio/github/alph_a07/basis/theme/core/color/ColorSpec$Argb;)J
+	public static final fun toColor (Lio/github/alph_a07/basis/theme/core/color/Oklch;)J
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/DepthConversionsKt {
+	public static final fun toElevationDp (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)F
+	public static final fun toShadowColor-4WTKRHQ (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;J)J
+	public static synthetic fun toShadowColor-4WTKRHQ$default (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;JILjava/lang/Object;)J
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/DpConversionsKt {
+	public static final fun toDp-kZ1aDBI (F)F
+	public static final fun toDpValue-0680j_4 (F)F
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/MotionConversionsKt {
+	public static final fun toAnimationSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/AnimationSpec;
+	public static final fun toFiniteAnimationSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/FiniteAnimationSpec;
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/TypographyConversionsKt {
+	public static final fun toTextStyle (Lio/github/alph_a07/basis/theme/tokens/typography/TypeRole;Lio/github/alph_a07/basis/components/theme/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)Landroidx/compose/ui/text/TextStyle;
+	public static final fun toTextStyle (Lio/github/alph_a07/basis/theme/tokens/typography/TypeRole;Lio/github/alph_a07/basis/theme/tokens/color/ColorTokens;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)Landroidx/compose/ui/text/TextStyle;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/AssetFont {
+	public static final field $stable I
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Landroidx/compose/ui/text/font/FontWeight;
+	public final fun component3-_-LCdwA ()I
+	public final fun copy-RetOiIg (Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;I)Lio/github/alph_a07/basis/components/theme/font/AssetFont;
+	public static synthetic fun copy-RetOiIg$default (Lio/github/alph_a07/basis/components/theme/font/AssetFont;Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/font/AssetFont;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getStyle-_-LCdwA ()I
+	public final fun getWeight ()Landroidx/compose/ui/text/font/FontWeight;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/AssetFontKt {
+	public static final fun loadFontFamilyFromAssets (Landroid/content/res/AssetManager;[Lio/github/alph_a07/basis/components/theme/font/AssetFont;)Landroidx/compose/ui/text/font/FontFamily;
+	public static final fun loadFontFamilyFromAssets-wCLgNak (Landroid/content/res/AssetManager;Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;I)Landroidx/compose/ui/text/font/FontFamily;
+	public static synthetic fun loadFontFamilyFromAssets-wCLgNak$default (Landroid/content/res/AssetManager;Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Landroidx/compose/ui/text/font/FontFamily;
+	public static final fun registerAsset-6Ez--Kc (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;Landroid/content/res/AssetManager;[Lio/github/alph_a07/basis/components/theme/font/AssetFont;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+	public static final fun registerAsset-6v0_y2g (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;Landroid/content/res/AssetManager;Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;I)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+	public static synthetic fun registerAsset-6v0_y2g$default (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;Landroid/content/res/AssetManager;Ljava/lang/String;Landroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/FontFamilyRegistry {
+	public static final field $stable I
+	public static final field Companion Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Companion;
+	public fun <init> ()V
+	public final fun isRegistered-JDpuHE0 (Ljava/lang/String;)Z
+	public final fun resolve (Lio/github/alph_a07/basis/theme/tokens/typography/FontFamilyRef;)Landroidx/compose/ui/text/font/FontFamily;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder {
+	public static final field $stable I
+	public final fun register-HjthzY0 (Ljava/lang/String;Landroidx/compose/ui/text/font/FontFamily;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Companion {
+	public final fun getDefault ()Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/FontFamilyRegistryKt {
+	public static final fun fontRegistry (Lkotlin/jvm/functions/Function1;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/GoogleFontDownloader {
+	public static final field $stable I
+	public static final field Companion Lio/github/alph_a07/basis/components/theme/font/GoogleFontDownloader$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getWeights ()Ljava/util/List;
+	public final fun load-gGHt8f4 (Ljava/lang/String;Ljava/util/List;)Landroidx/compose/ui/text/font/FontFamily;
+	public static synthetic fun load-gGHt8f4$default (Lio/github/alph_a07/basis/components/theme/font/GoogleFontDownloader;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Landroidx/compose/ui/text/font/FontFamily;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/GoogleFontDownloader$Companion {
+	public final fun getDEFAULT_WEIGHTS ()Ljava/util/List;
+	public final fun getDefault ()Lio/github/alph_a07/basis/components/theme/font/GoogleFontDownloader;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/ResourceFont {
+	public static final field $stable I
+	public synthetic fun <init> (ILandroidx/compose/ui/text/font/FontWeight;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ILandroidx/compose/ui/text/font/FontWeight;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()I
+	public final fun component2 ()Landroidx/compose/ui/text/font/FontWeight;
+	public final fun component3-_-LCdwA ()I
+	public final fun copy-RetOiIg (ILandroidx/compose/ui/text/font/FontWeight;I)Lio/github/alph_a07/basis/components/theme/font/ResourceFont;
+	public static synthetic fun copy-RetOiIg$default (Lio/github/alph_a07/basis/components/theme/font/ResourceFont;ILandroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/font/ResourceFont;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResId ()I
+	public final fun getStyle-_-LCdwA ()I
+	public final fun getWeight ()Landroidx/compose/ui/text/font/FontWeight;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/theme/font/ResourceFontKt {
+	public static final fun loadFontFamilyFromResource ([Lio/github/alph_a07/basis/components/theme/font/ResourceFont;)Landroidx/compose/ui/text/font/FontFamily;
+	public static final fun loadFontFamilyFromResource-RetOiIg (ILandroidx/compose/ui/text/font/FontWeight;I)Landroidx/compose/ui/text/font/FontFamily;
+	public static synthetic fun loadFontFamilyFromResource-RetOiIg$default (ILandroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Landroidx/compose/ui/text/font/FontFamily;
+	public static final fun registerResource-gQmryMc (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;ILandroidx/compose/ui/text/font/FontWeight;I)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+	public static synthetic fun registerResource-gQmryMc$default (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;ILandroidx/compose/ui/text/font/FontWeight;IILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+	public static final fun registerResource-s2lq870 (Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;Ljava/lang/String;[Lio/github/alph_a07/basis/components/theme/font/ResourceFont;)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry$Builder;
+}
+

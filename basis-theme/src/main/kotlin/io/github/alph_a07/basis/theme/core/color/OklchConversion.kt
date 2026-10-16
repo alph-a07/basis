@@ -45,6 +45,41 @@ internal fun safeOklch(l: Float, c: Float, h: Float, a: Float = 1f): Oklch = Okl
     a = a.coerceIn(0f, 1f),
 )
 
+/**
+ * Converts this [Oklch] color to a 32-bit packed ARGB integer in `0xAARRGGBB` layout.
+ *
+ * Linear sRGB channels are derived from OKLab LMS cone responses and mapped through the
+ * standard sRGB gamma transfer curve, then clamped to `0..255`.
+ *
+ * @return 32-bit packed ARGB integer.
+ */
+public fun Oklch.toArgb(): Int {
+    fun toGamma(linear: Float): Float {
+        val clamped = linear.coerceIn(0f, 1f)
+
+        return if (clamped <= LINEAR_TRANSFER_KNEE) {
+            12.92f * clamped
+        } else {
+            1.055f * clamped.pow(1f / 2.4f) - 0.055f
+        }.coerceIn(0f, 1f)
+    }
+
+    val linear = toLinearSrgb()
+    val red = (toGamma(linear.r) * BYTE_MAX + ROUND_OFFSET).toInt()
+    val green = (toGamma(linear.g) * BYTE_MAX + ROUND_OFFSET).toInt()
+    val blue = (toGamma(linear.b) * BYTE_MAX + ROUND_OFFSET).toInt()
+    val alpha = (a.coerceIn(0f, 1f) * BYTE_MAX + ROUND_OFFSET).toInt()
+
+    return (alpha shl ALPHA_SHIFT) or (red shl RED_SHIFT) or (green shl GREEN_SHIFT) or blue
+}
+
+/**
+ * Converts this [Oklch] color into a [ColorSpec.Argb] representation.
+ *
+ * @return The [ColorSpec.Argb] wrapping this color's packed ARGB integer.
+ */
+public fun Oklch.toColorSpecArgb(): ColorSpec.Argb = ColorSpec.Argb(toArgb())
+
 @Suppress("ReturnCount")
 private fun hexToOklch(value: String): Oklch? {
     val digits = value.removePrefix("#")
@@ -68,12 +103,16 @@ private fun hexToOklch(value: String): Oklch? {
     )
 }
 
-private fun argbToOklch(argb: Int): Oklch = srgbToOklch(
-    r = channel(argb, RED_SHIFT),
-    g = channel(argb, GREEN_SHIFT),
-    b = channel(argb, 0),
-    a = channel(argb, ALPHA_SHIFT),
-)
+private fun argbToOklch(argb: Int): Oklch {
+    fun channel(shift: Int): Float = (argb ushr shift and CHANNEL_MASK) / BYTE_MAX
+
+    return srgbToOklch(
+        r = channel(RED_SHIFT),
+        g = channel(GREEN_SHIFT),
+        b = channel(0),
+        a = channel(ALPHA_SHIFT),
+    )
+}
 
 private fun hslToOklch(h: Float, s: Float, l: Float, a: Float): Oklch {
     val chroma = (1f - kotlin.math.abs(2f * l - 1f)) * s
@@ -144,8 +183,6 @@ private fun hueSector(sector: Int, chroma: Float, secondary: Float): Triple<Floa
         }
     }
 
-private fun channel(argb: Int, shift: Int): Float = (argb ushr shift and CHANNEL_MASK) / BYTE_MAX
-
 private fun toLinear(channel: Float): Float =
     if (channel <= TRANSFER_KNEE) {
         channel / 12.92f
@@ -172,6 +209,12 @@ private const val GREEN_SHIFT: Int = 8
 
 /** sRGB transfer-function knee between the linear and the gamma segment. */
 private const val TRANSFER_KNEE: Float = 0.04045f
+
+/** Linear sRGB transfer-function knee (0.04045 / 12.92). */
+private const val LINEAR_TRANSFER_KNEE: Float = 0.0031308f
+
+/** Rounding offset for channel quantization to 8-bit integer. */
+private const val ROUND_OFFSET: Float = 0.5f
 
 private val HEX_SHAPE = Regex("^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$")
 

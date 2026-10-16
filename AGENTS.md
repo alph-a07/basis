@@ -21,6 +21,8 @@ Enforcement lives in source — reference, don't copy:
   source or update rule/config.
 - **Compliance gate:** conclude only after `./gradlew verifyAll` passes (assemble / test / lint / detekt / ktlintCheck /
   releaseApiCheck across all modules + build-logic). Single command, not piecemeal.
+- **Testing tasks:** `./gradlew test` runs unit tests across all modules. `./gradlew tests` runs both unit tests and
+  Android instrumentation tests on the first available connected device (auto-targeted via `adb` or `ANDROID_SERIAL`).
 - **Source of truth / tight scope:** One owner per constant / logic (`Single source`). Changes stay tight — scoped, no
   drive-by renames / refactors. If a fix duplicates logic, fix the root or ask.
 - **Public API & naming:** `Basis` prefix reserved strictly for public API root entrypoints, composables, and public
