@@ -47,14 +47,17 @@ dependencies {
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.text.google.fonts)
-
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
+
     lintChecks(project(":basis-lint"))
     implementation(project(":basis-theme"))
-    testImplementation(kotlin("test"))
+
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.junit)
+
+    androidTestImplementation(libs.kotlin.test)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.compose.bom))
