@@ -43,6 +43,7 @@ internal fun normalizeIntent(intent: BasisIntent): NormalizedIntent {
         knobs = intent.mood?.knobs?.clamped() ?: MoodKnobs(),
         domain = intent.domain ?: DomainIntent(),
         control = intent.control,
+        deriveColors = intent.identity?.deriveColors ?: true,
         entries = entries,
     )
 }

@@ -21,6 +21,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property knobs Clamped mood knobs; null axes inherit the preset.
  * @property domain Product and interaction priors as specified.
  * @property control Handoff controls as specified.
+ * @property deriveColors Whether to derive colors from brand, mood and domain signals.
  * @property entries Diagnostics recorded while normalizing.
  */
 internal data class NormalizedIntent(
@@ -32,6 +33,7 @@ internal data class NormalizedIntent(
     val knobs: MoodKnobs,
     val domain: DomainIntent,
     val control: ControlIntent?,
+    val deriveColors: Boolean,
     val entries: List<ReportEntry>,
 ) {
     /** Every catalog or custom family the consumer asked for, pins first. */
