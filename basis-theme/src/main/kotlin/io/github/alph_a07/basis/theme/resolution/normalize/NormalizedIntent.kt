@@ -14,7 +14,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * Intent after validation and unit conversion, shared by every generated theme mode.
  *
  * @property brandColor Brand anchor after conversion and gamut mapping, null when unspecified.
- * @property supportingColors Supporting anchors after conversion, capped at four.
+ * @property supportingColors Supporting anchors after conversion, capped at three.
  * @property presence Presence as specified, meaningful only when [brandColor] is present.
  * @property typography Brand type intent with deduplicated candidates.
  * @property preset Mood preset as specified, null when unspecified.
