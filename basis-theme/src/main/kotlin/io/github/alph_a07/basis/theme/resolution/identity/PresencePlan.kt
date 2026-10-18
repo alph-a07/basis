@@ -21,12 +21,17 @@ internal data class PresencePlan(
 /**
  * Resolves the tint strengths for a presence tier.
  *
- * @param presence Presence as specified; null resolves to [DEFAULT_PRESENCE].
+ * @param presence Presence as specified; null infers the tier from [brandChroma].
  * @param isDark Whether the dark mode slightly raises chroma-bearing tints.
+ * @param brandChroma Resolved brand anchor's chroma, used when [presence] is unspecified.
  * @return The mix amounts the derivation stage applies.
  */
-internal fun presencePlan(presence: BrandPresence?, isDark: Boolean): PresencePlan {
-    val tier = presence ?: DEFAULT_PRESENCE
+internal fun presencePlan(
+    presence: BrandPresence?,
+    isDark: Boolean,
+    brandChroma: Float = 0f,
+): PresencePlan {
+    val tier = presence ?: inferPresenceFromChroma(brandChroma)
     val lift = if (isDark) DARK_TINT_LIFT else 1f
 
     return when (tier) {
@@ -59,13 +64,25 @@ internal fun presencePlan(presence: BrandPresence?, isDark: Boolean): PresencePl
 }
 
 /**
+ * Infers default brand presence tier from brand anchor chroma when unspecified by consumer.
+ *
+ * @param brandChroma Resolved brand anchor's OKLCH chroma.
+ * @return Inferred [BrandPresence].
+ */
+internal fun inferPresenceFromChroma(brandChroma: Float): BrandPresence = when {
+    brandChroma < LOW_CHROMA_PRESENCE_THRESHOLD -> BrandPresence.Subtle
+    brandChroma < HIGH_CHROMA_PRESENCE_THRESHOLD -> BrandPresence.Balanced
+    else -> BrandPresence.Strong
+}
+
+/**
  * Builds the brand anchor set from the identity inputs.
  *
  * The primary anchor is the converted brand color; supporting anchors fill the remaining slots in
  * the order specified and keep their own hue, so presence never rewrites who the brand is.
  *
  * @param primary Converted brand color, or null when unspecified or rejected.
- * @param supporting Converted supporting colors, at most four.
+ * @param supporting Converted supporting colors, at most three.
  * @return Brand anchors retained for diagnostics and categorical generation, or null when no
  * brand color anchors them so derivation falls back to the seed brand.
  */
@@ -85,8 +102,11 @@ internal fun brandAnchors(
     )
 }
 
-/** Presence applied when a brand color exists but presence was not specified. */
-internal val DEFAULT_PRESENCE: BrandPresence = BrandPresence.Balanced
+/** Brand anchor chroma below which presence defaults to subtle. */
+private const val LOW_CHROMA_PRESENCE_THRESHOLD: Float = 0.08f
+
+/** Brand anchor chroma above which presence defaults to strong. */
+private const val HIGH_CHROMA_PRESENCE_THRESHOLD: Float = 0.18f
 
 /** Selection tint under subtle presence. */
 private const val SUBTLE_SELECTION_TINT = 0.12f
