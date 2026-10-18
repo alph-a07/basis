@@ -15,12 +15,15 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property presence How evident the brand color should be in semantic roles. `null` equivalents
  * to [BrandPresence.Balanced].
  * @property typography Brand typeface intent, as candidates, role pins, or both.
+ * @property deriveColors When `true` (default), colors are synthesized from mood, brand, and domain
+ * signals. When `false`, a fully achromatic seed (chroma = 0.0) is used for a neutral, color-agnostic base.
  */
 public data class IdentityIntent(
     public val brandColor: ColorSpec? = null,
     public val supportingColors: List<ColorSpec> = emptyList(),
     public val presence: BrandPresence? = null,
     public val typography: TypographyIdentity? = null,
+    public val deriveColors: Boolean = true,
 )
 
 /** How evident brand color is in semantic roles; a branding decision, not a mood or energy setting. */
