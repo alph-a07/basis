@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.intent.controls
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.SpValue
 
 /**
  * Hard constraints controls on the resolved theme.
@@ -78,7 +79,7 @@ public data class MinMaxLevels(
 /**
  * Motion floors applied during enforcement, after mood and duration scaling.
  *
- * @property preferReducedMotion Rewrites every motion spec toward zero-effect linear motion.
+ * @property preferReducedMotion Collapses spatial motion to zero duration and retains short feedback fade.
  * @property maxDurationBias Bias in `[-1, 1]` capping durations relative to the derived spec;
  * negative shortens, positive extends, null leaves durations untouched.
  */
@@ -103,12 +104,12 @@ public data class MotionConstraint(
 /**
  * Typography floors applied during enforcement.
  *
- * @property minReadableSize Smallest allowed rendered text size, or null for the library default.
+ * @property minReadableSize Smallest allowed rendered text size in sp, or null for the library default.
  * @property scaleFloor Smallest allowed font-scale factor applied by the host, e.g. `1` for no
  * downsizing; null for no floor.
  */
 public data class TypographyConstraints(
-    public val minReadableSize: DpValue? = null,
+    public val minReadableSize: SpValue? = null,
     public val scaleFloor: Float? = null,
 ) {
     init {
