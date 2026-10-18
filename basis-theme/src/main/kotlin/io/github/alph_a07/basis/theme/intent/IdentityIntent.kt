@@ -10,7 +10,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * [supportingColors] act as secondary brand anchors.
  *
  * @property brandColor Primary brand color, in any supported intake color space.
- * @property supportingColors Secondary brand anchors; at most four are honored and extras are
+ * @property supportingColors Secondary brand anchors; at most three are honored and extras are
  * rejected during normalization.
  * @property presence How evident the brand color should be in semantic roles. `null` equivalents
  * to [BrandPresence.Balanced].

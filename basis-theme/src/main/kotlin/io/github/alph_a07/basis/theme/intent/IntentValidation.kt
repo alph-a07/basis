@@ -5,7 +5,7 @@ import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
 /** Maximum number of supporting colors honored from [IdentityIntent.supportingColors]. */
-internal const val MAX_SUPPORTING_COLORS: Int = 4
+internal const val MAX_SUPPORTING_COLORS: Int = 3
 
 /** Lower bound of a valid mood knob value. */
 internal const val KNOB_MIN: Float = -1f
