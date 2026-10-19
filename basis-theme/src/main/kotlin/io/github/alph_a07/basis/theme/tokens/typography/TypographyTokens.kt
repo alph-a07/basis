@@ -1,9 +1,9 @@
 package io.github.alph_a07.basis.theme.tokens.typography
 
-import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.core.SpValue
 import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 
@@ -48,7 +48,7 @@ public data class MetadataType(
  * Composite typographic decision for one role level.
  *
  * @property family Font family selected by the fonts stage.
- * @property size Text size in dp.
+ * @property size Text size in sp.
  * @property weight Font weight, `100..900` in steps of 100.
  * @property lineHeight Line height multiplier, e.g. `1.25`.
  * @property letterSpacing Letter spacing in em relative to [size].
@@ -56,7 +56,7 @@ public data class MetadataType(
  */
 public data class TypeRole(
     public val family: FontFamilyRef,
-    public val size: DpValue,
+    public val size: SpValue,
     public val weight: FontWeightValue,
     public val lineHeight: LineHeightValue,
     public val letterSpacing: EmValue,
