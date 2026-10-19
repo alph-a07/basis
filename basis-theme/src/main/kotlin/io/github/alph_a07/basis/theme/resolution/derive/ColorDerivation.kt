@@ -76,12 +76,37 @@ private fun deriveGradients(
     )
 }
 
-private fun mapBrandGamut(brand: BrandColors): BrandColors = brand.copy(
-    primary = brand.primary.gamutMapped(),
-    secondary = brand.secondary?.gamutMapped(),
-    tertiary = brand.tertiary?.gamutMapped(),
-    quaternary = brand.quaternary?.gamutMapped(),
-)
+private fun mapBrandGamut(brand: BrandColors): BrandColors {
+    val primaryMapped = brand.primary.gamutMapped()
+    val secondaryMapped = brand.secondary?.gamutMapped() ?: deriveHarmonicSecondary(primaryMapped)
+    val tertiaryMapped = brand.tertiary?.gamutMapped() ?: deriveHarmonicTertiary(primaryMapped)
+    val quaternaryMapped = brand.quaternary?.gamutMapped() ?: deriveHarmonicQuaternary(primaryMapped)
+
+    return BrandColors(
+        primary = primaryMapped,
+        secondary = secondaryMapped,
+        tertiary = tertiaryMapped,
+        quaternary = quaternaryMapped,
+    )
+}
+
+private fun deriveHarmonicSecondary(primary: Oklch): Oklch? {
+    if (primary.c <= 0.01f) return null
+    return primary.copy(h = primary.h.shiftHue(SECONDARY_HUE_OFFSET), c = primary.c * SECONDARY_CHROMA_SCALE)
+        .gamutMapped()
+}
+
+private fun deriveHarmonicTertiary(primary: Oklch): Oklch? {
+    if (primary.c <= 0.01f) return null
+    return primary.copy(h = primary.h.shiftHue(TERTIARY_HUE_OFFSET), c = primary.c * TERTIARY_CHROMA_SCALE)
+        .gamutMapped()
+}
+
+private fun deriveHarmonicQuaternary(primary: Oklch): Oklch? {
+    if (primary.c <= 0.01f) return null
+    return primary.copy(h = primary.h.shiftHue(QUATERNARY_HUE_OFFSET), c = primary.c * QUATERNARY_CHROMA_SCALE)
+        .gamutMapped()
+}
 
 private fun deriveFocus(
     anchor: Oklch,
@@ -97,3 +122,21 @@ private const val FOCUS_CHROMA_GAIN: Float = 0.12f
 
 /** Hue rotation applied to the second brand gradient stop, in degrees. */
 private const val BRAND_GRADIENT_ROTATION: Float = 28f
+
+/** Hue rotation for secondary split-complementary/analogous brand accent, in degrees. */
+private const val SECONDARY_HUE_OFFSET: Float = 35f
+
+/** Chroma scale for secondary brand accent relative to primary. */
+private const val SECONDARY_CHROMA_SCALE: Float = 0.85f
+
+/** Hue rotation for tertiary contrasting brand accent, in degrees. */
+private const val TERTIARY_HUE_OFFSET: Float = 135f
+
+/** Chroma scale for tertiary brand accent relative to primary. */
+private const val TERTIARY_CHROMA_SCALE: Float = 0.75f
+
+/** Hue rotation for quaternary brand accent, in degrees. */
+private const val QUATERNARY_HUE_OFFSET: Float = 70f
+
+/** Chroma scale for quaternary brand accent relative to primary. */
+private const val QUATERNARY_CHROMA_SCALE: Float = 0.65f
