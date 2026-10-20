@@ -14,7 +14,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property unusedCandidates Requested candidates that no role consumed.
  * @property entries Diagnostics for pins, reuse, and derivation.
  */
-internal data class FontRolePlan(
+internal data class ResolvedFonts(
     val structure: FontFamilyRef,
     val content: FontFamilyRef,
     val metadata: FontFamilyRef,
