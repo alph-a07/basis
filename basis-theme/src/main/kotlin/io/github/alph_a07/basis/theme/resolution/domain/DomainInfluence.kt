@@ -3,46 +3,53 @@ package io.github.alph_a07.basis.theme.resolution.domain
 import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
+import io.github.alph_a07.basis.theme.resolution.tables.DOMAIN_BLEND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.tables.INTERACTION_BLEND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.tables.toThemeProfile
 
 /**
- * Deterministic multi-select blend of product domain and interaction patterns priors.
+ * Deterministic multi-select blend of product domain and interaction pattern influences.
  *
- * @param intent Selected [DomainIntent] - domains and interactions.
- * @return Blended vector clamped per dimension to `[-1, 1]`; [PriorVector.ZERO]
+ * @param intent Selected [DomainIntent] containing domains and interactions.
+ * @return Blended profile clamped per dimension to `[-1, 1]`; [ThemeProfile.NEUTRAL]
  * when nothing is selected.
  */
-public fun blendPriorVectors(intent: DomainIntent): PriorVector {
-    val domainVectors = intent.domains.map { it.toPriorVector() }
-    val interactionVectors = intent.interactions.map { it.toPriorVector() }
+public fun blendInfluenceProfiles(intent: DomainIntent): ThemeProfile {
+    val domainProfiles = intent.domains.map { it.toThemeProfile() }
+    val interactionProfiles = intent.interactions.map { it.toThemeProfile() }
 
-    val domainGroup = domainVectors.mergePriorsOrNull()
-    val interactionGroup = interactionVectors.mergePriorsOrNull()
+    val domainGroup = domainProfiles.mergeOrNull()
+    val interactionGroup = interactionProfiles.mergeOrNull()
 
     val blended =
         when {
-            domainVectors.isEmpty() && interactionVectors.isEmpty() -> {
-                PriorVector.ZERO
+            domainProfiles.isEmpty() && interactionProfiles.isEmpty() -> {
+                ThemeProfile.NEUTRAL
             }
+
             domainGroup != null && interactionGroup != null -> {
-                combineGroups(domainGroup, interactionGroup)
+                combineDomainAndInteractions(domainGroup, interactionGroup)
             }
+
             domainGroup != null -> {
                 domainGroup
             }
+
             else -> {
-                interactionGroup ?: PriorVector.ZERO
+                interactionGroup ?: ThemeProfile.NEUTRAL
             }
         }
 
     return blended.clamped()
 }
 
-/** Contributing [DomainIntent] labels behind a blended [PriorVector], for resolution reports. */
+/** Contributing [DomainIntent] labels behind a blended [ThemeProfile], for resolution reports. */
 public fun DomainIntent.contributors(): List<String> =
     domains.map { ProductDomain::class.simpleName + "." + it.name } +
         interactions.map { InteractionPattern::class.simpleName + "." + it.name }
 
-private fun List<PriorVector>.mergePriorsOrNull(): PriorVector? {
+private fun List<ThemeProfile>.mergeOrNull(): ThemeProfile? {
     val risks = map { it.riskSensitivity }
     val trusts = map { it.trustStrictness }
 
@@ -51,11 +58,13 @@ private fun List<PriorVector>.mergePriorsOrNull(): PriorVector? {
             isEmpty() -> {
                 null
             }
+
             size == 1 -> {
                 first()
             }
+
             else -> {
-                PriorVector(
+                ThemeProfile(
                     riskSensitivity = risks.max(),
                     trustStrictness = trusts.max(),
                     dataDensity = map { it.dataDensity }.averageF(),
@@ -71,16 +80,17 @@ private fun List<PriorVector>.mergePriorsOrNull(): PriorVector? {
     return merged
 }
 
-private fun combineGroups(domain: PriorVector, interaction: PriorVector): PriorVector = PriorVector(
-    riskSensitivity = maxOf(domain.riskSensitivity, interaction.riskSensitivity),
-    trustStrictness = maxOf(domain.trustStrictness, interaction.trustStrictness),
-    dataDensity = weighted(domain.dataDensity, interaction.dataDensity),
-    contentVelocity = weighted(domain.contentVelocity, interaction.contentVelocity),
-    socialPresence = weighted(domain.socialPresence, interaction.socialPresence),
-    transactionality = weighted(domain.transactionality, interaction.transactionality),
-    mediaRichness = weighted(domain.mediaRichness, interaction.mediaRichness),
-    inputHeaviness = weighted(domain.inputHeaviness, interaction.inputHeaviness),
-)
+private fun combineDomainAndInteractions(domain: ThemeProfile, interaction: ThemeProfile): ThemeProfile =
+    ThemeProfile(
+        riskSensitivity = maxOf(domain.riskSensitivity, interaction.riskSensitivity),
+        trustStrictness = maxOf(domain.trustStrictness, interaction.trustStrictness),
+        dataDensity = weighted(domain.dataDensity, interaction.dataDensity),
+        contentVelocity = weighted(domain.contentVelocity, interaction.contentVelocity),
+        socialPresence = weighted(domain.socialPresence, interaction.socialPresence),
+        transactionality = weighted(domain.transactionality, interaction.transactionality),
+        mediaRichness = weighted(domain.mediaRichness, interaction.mediaRichness),
+        inputHeaviness = weighted(domain.inputHeaviness, interaction.inputHeaviness),
+    )
 
 private fun weighted(domain: Float, interaction: Float): Float =
     DOMAIN_BLEND_WEIGHT * domain + INTERACTION_BLEND_WEIGHT * interaction
@@ -91,6 +101,7 @@ private fun List<Float>.averageF(): Float {
             isEmpty() -> {
                 0f
             }
+
             else -> {
                 sum() / size
             }
@@ -99,7 +110,7 @@ private fun List<Float>.averageF(): Float {
     return mean
 }
 
-private fun PriorVector.clamped(): PriorVector = PriorVector(
+private fun ThemeProfile.clamped(): ThemeProfile = copy(
     riskSensitivity = riskSensitivity.coerceIn(-1f, 1f),
     trustStrictness = trustStrictness.coerceIn(-1f, 1f),
     dataDensity = dataDensity.coerceIn(-1f, 1f),
@@ -109,9 +120,3 @@ private fun PriorVector.clamped(): PriorVector = PriorVector(
     mediaRichness = mediaRichness.coerceIn(-1f, 1f),
     inputHeaviness = inputHeaviness.coerceIn(-1f, 1f),
 )
-
-/** Weight of the product domains when both domains and interaction patterns contribute. */
-private const val DOMAIN_BLEND_WEIGHT: Float = 0.45f
-
-/** Weight of the interaction patterns when both domain and interaction patterns contribute. */
-private const val INTERACTION_BLEND_WEIGHT: Float = 0.55f
