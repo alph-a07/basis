@@ -1,19 +1,20 @@
-package io.github.alph_a07.basis.theme.resolution.domain
+package io.github.alph_a07.basis.theme.resolution.tables
 
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
 
 /**
- * Product domain label presets to its [PriorVector] setpoint.
+ * Product domain label presets to its [ThemeProfile] behavioral setpoint.
  *
- * Values are setpoints in `[-1, 1]`; `Other` is [PriorVector.ZERO] (no opinion).
+ * Values are setpoints in `[-1, 1]`; `Other` is [ThemeProfile.NEUTRAL] (no opinion).
  * Accessed via [Map.getValue] so a missing entry fails fast instead of silently
  * washing out the blend.
  */
-public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
+public val PRODUCT_DOMAIN_INFLUENCES: Map<ProductDomain, ThemeProfile> =
     mapOf(
         ProductDomain.Finance to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.80f,
                 trustStrictness = 0.75f,
                 dataDensity = 0.55f,
@@ -24,7 +25,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.35f,
             ),
         ProductDomain.Health to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.70f,
                 trustStrictness = 0.80f,
                 dataDensity = 0.20f,
@@ -35,7 +36,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.40f,
             ),
         ProductDomain.Social to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.30f,
                 trustStrictness = -0.20f,
                 dataDensity = -0.10f,
@@ -46,7 +47,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = -0.10f,
             ),
         ProductDomain.Productivity to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.10f,
                 trustStrictness = 0.35f,
                 dataDensity = 0.65f,
@@ -57,7 +58,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.55f,
             ),
         ProductDomain.Commerce to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.25f,
                 trustStrictness = 0.40f,
                 dataDensity = 0.15f,
@@ -68,7 +69,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.30f,
             ),
         ProductDomain.Media to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.20f,
                 trustStrictness = -0.10f,
                 dataDensity = -0.20f,
@@ -79,7 +80,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = -0.20f,
             ),
         ProductDomain.Education to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.15f,
                 trustStrictness = 0.50f,
                 dataDensity = 0.25f,
@@ -90,7 +91,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.35f,
             ),
         ProductDomain.Travel to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.10f,
                 trustStrictness = 0.25f,
                 dataDensity = -0.05f,
@@ -101,7 +102,7 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 inputHeaviness = 0.20f,
             ),
         ProductDomain.Utilities to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.20f,
                 trustStrictness = 0.30f,
                 dataDensity = 0.10f,
@@ -111,19 +112,19 @@ public val PRODUCT_DOMAIN_VECTORS: Map<ProductDomain, PriorVector> =
                 mediaRichness = -0.50f,
                 inputHeaviness = 0.15f,
             ),
-        ProductDomain.Other to PriorVector.ZERO,
+        ProductDomain.Other to ThemeProfile.NEUTRAL,
     )
 
 /**
- * Interaction pattern label presets to its [PriorVector] setpoint.
+ * Interaction pattern label presets to its [ThemeProfile] behavioral setpoint.
  *
  * Values are setpoints in `[-1, 1]`. Accessed via [Map.getValue] so a missing
  * entry fails fast instead of silently washing out the blend.
  */
-public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
+public val INTERACTION_INFLUENCES: Map<InteractionPattern, ThemeProfile> =
     mapOf(
         InteractionPattern.DataNavigation to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.20f,
                 trustStrictness = 0.25f,
                 dataDensity = 0.85f,
@@ -134,7 +135,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.30f,
             ),
         InteractionPattern.FormsEntry to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.15f,
                 trustStrictness = 0.30f,
                 dataDensity = 0.35f,
@@ -145,7 +146,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.85f,
             ),
         InteractionPattern.ChatMessaging to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.10f,
                 trustStrictness = 0f,
                 dataDensity = -0.20f,
@@ -156,7 +157,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.40f,
             ),
         InteractionPattern.ContentFeed to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.20f,
                 trustStrictness = -0.15f,
                 dataDensity = -0.15f,
@@ -167,7 +168,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = -0.20f,
             ),
         InteractionPattern.ContentReading to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.10f,
                 trustStrictness = 0.20f,
                 dataDensity = -0.25f,
@@ -178,7 +179,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = -0.30f,
             ),
         InteractionPattern.SearchDiscovery to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0f,
                 trustStrictness = 0.10f,
                 dataDensity = 0.40f,
@@ -189,7 +190,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.45f,
             ),
         InteractionPattern.MediaBrowse to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = -0.15f,
                 trustStrictness = -0.10f,
                 dataDensity = -0.25f,
@@ -200,7 +201,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = -0.25f,
             ),
         InteractionPattern.DashboardMonitoring to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.35f,
                 trustStrictness = 0.40f,
                 dataDensity = 0.80f,
@@ -211,7 +212,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.20f,
             ),
         InteractionPattern.CheckoutCommerce to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.40f,
                 trustStrictness = 0.55f,
                 dataDensity = 0.20f,
@@ -222,7 +223,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.50f,
             ),
         InteractionPattern.AuthOnboarding to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.45f,
                 trustStrictness = 0.60f,
                 dataDensity = -0.20f,
@@ -233,7 +234,7 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
                 inputHeaviness = 0.55f,
             ),
         InteractionPattern.SettingsAdmin to
-            PriorVector(
+            ThemeProfile(
                 riskSensitivity = 0.15f,
                 trustStrictness = 0.35f,
                 dataDensity = 0.50f,
@@ -245,8 +246,48 @@ public val INTERACTION_VECTORS: Map<InteractionPattern, PriorVector> =
             ),
     )
 
-/** Product domain label to its locked [PriorVector] setpoint. */
-public fun ProductDomain.toPriorVector(): PriorVector = PRODUCT_DOMAIN_VECTORS.getValue(this)
+/** Product domain label to its locked [ThemeProfile] behavioral setpoint. */
+public fun ProductDomain.toThemeProfile(): ThemeProfile = PRODUCT_DOMAIN_INFLUENCES.getValue(this)
 
-/** Interaction pattern label to its locked [PriorVector] setpoint. */
-public fun InteractionPattern.toPriorVector(): PriorVector = INTERACTION_VECTORS.getValue(this)
+/** Interaction pattern label to its locked [ThemeProfile] behavioral setpoint. */
+public fun InteractionPattern.toThemeProfile(): ThemeProfile = INTERACTION_INFLUENCES.getValue(this)
+
+/** Weight of the product domains when both domains and interaction patterns contribute. */
+internal const val DOMAIN_BLEND_WEIGHT: Float = 0.45f
+
+/** Weight of the interaction patterns when both domain and interaction patterns contribute. */
+internal const val INTERACTION_BLEND_WEIGHT: Float = 0.55f
+
+/** Weights for the coupling of influence dimensions to style properties. */
+internal object InfluenceWeights {
+    const val DENSITY_DATA: Float = 0.70f
+    const val DENSITY_INPUT: Float = 0.30f
+    const val ROUND_SOCIAL: Float = 0.60f
+    const val ROUND_TRUST: Float = 0.30f
+    const val ROUND_RISK: Float = 0.20f
+    const val CHROMA_VELOCITY: Float = 0.30f
+    const val CHROMA_MEDIA: Float = 0.20f
+    const val CHROMA_TRUST: Float = 0.20f
+    const val CONTRAST_RISK: Float = 0.35f
+    const val CONTRAST_TRUST: Float = 0.25f
+    const val MOTION_VELOCITY: Float = 0.55f
+    const val MOTION_INPUT: Float = 0.10f
+    const val PLAY_SOCIAL: Float = 0.60f
+    const val PLAY_RISK: Float = 0.50f
+    const val PLAY_TRUST: Float = 0.30f
+    const val TYPE_TRUST: Float = 0.40f
+    const val TYPE_MEDIA: Float = 0.20f
+    const val TYPE_SOCIAL: Float = 0.20f
+}
+
+/** Weights for the coupling of influence dimensions to structural properties. */
+internal object StructuralWeights {
+    const val DEPTH_MEDIA: Float = 0.70f
+    const val DEPTH_DATA: Float = 0.20f
+    const val BORDER_RISK: Float = 0.60f
+    const val BORDER_TRUST: Float = 0.30f
+    const val STATUS_RISK: Float = 0.70f
+    const val FOCUS_INPUT: Float = 0.70f
+    const val FOCUS_RISK: Float = 0.20f
+    const val AVATAR_SOCIAL: Float = 0.60f
+}
