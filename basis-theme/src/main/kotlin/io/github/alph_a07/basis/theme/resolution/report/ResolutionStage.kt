@@ -1,12 +1,15 @@
 package io.github.alph_a07.basis.theme.resolution.report
 
 /** Pipeline stage that produced a [ReportEntry]. */
-public enum class ResolutionStageId {
+public enum class ResolutionStage {
     /** Input normalization and validation. */
     Normalize,
 
-    /** Default and domain-prior seeding. */
-    Seed,
+    /** Domain and interaction influence blending. */
+    Domain,
+
+    /** Base token table population. */
+    Base,
 
     /** Brand anchor application. */
     Identity,
