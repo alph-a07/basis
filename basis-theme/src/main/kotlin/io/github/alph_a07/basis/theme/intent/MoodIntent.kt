@@ -64,3 +64,24 @@ public data class MoodKnobs(
     public val motionEnergy: Float? = null,
     public val playfulness: Float? = null,
 )
+
+/** Returns true when no preset and no knob axis is set. */
+public fun MoodIntent?.isUnspecified(): Boolean {
+    val activeKnobs = this?.knobs
+    val specified =
+        when {
+            this == null -> false
+            preset != null -> true
+            activeKnobs == null -> false
+            else ->
+                activeKnobs.warmth != null || activeKnobs.chroma != null || activeKnobs.contrast != null ||
+                    activeKnobs.density != null || activeKnobs.roundness != null ||
+                    activeKnobs.typographyExpressiveness != null || activeKnobs.motionEnergy != null ||
+                    activeKnobs.playfulness != null
+        }
+
+    return !specified
+}
+
+/** Returns true when either a preset or any knob axis is set. */
+public fun MoodIntent?.isSpecified(): Boolean = !isUnspecified()
