@@ -1,25 +1,25 @@
 package io.github.alph_a07.basis.theme.resolution.report
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
-import io.github.alph_a07.basis.theme.resolution.seed.BasisSeedCatalog
+import io.github.alph_a07.basis.theme.resolution.tables.BaseTables
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedThemePair
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
 /**
  * Public diagnostics emitted alongside a [ResolvedThemePair].
  *
- * Every specified intent field maps to an entry; nothing is silently dropped. Carries the seed
+ * Every specified intent field maps to an entry; nothing is silently dropped. Carries the base
  * version the themes were derived from so visual tuning stays deliberate.
  *
  * @property entries Per-input diagnostics in stage order.
- * @property seedVersion Version of the seed tables the themes were derived from.
- * @property modesGenerated Modes present on the pair.
+ * @property baseVersion Version of the base tables the themes were derived from.
+ * @property modes Modes present on the pair.
  * @property fontAssignments Font role assignments selected by the fonts stage.
  */
 public data class ResolutionReport(
     public val entries: List<ReportEntry>,
-    public val seedVersion: Int = BasisSeedCatalog.CURRENT,
-    public val modesGenerated: Set<ThemeMode>,
+    public val baseVersion: Int = BaseTables.CURRENT,
+    public val modes: Set<ThemeMode>,
     public val fontAssignments: FontAssignmentReport,
 )
 
@@ -35,7 +35,7 @@ public data class ResolutionReport(
  */
 public data class ReportEntry(
     public val path: String,
-    public val stage: ResolutionStageId,
+    public val stage: ResolutionStage,
     public val status: ReportStatus,
     public val message: String,
     public val requested: String? = null,
