@@ -8,6 +8,7 @@ import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.IdentityIntent
 import io.github.alph_a07.basis.theme.intent.MAX_SUPPORTING_COLORS
+import io.github.alph_a07.basis.theme.intent.MoodIntent
 import io.github.alph_a07.basis.theme.intent.MoodKnobs
 import io.github.alph_a07.basis.theme.intent.TypographyIdentity
 import io.github.alph_a07.basis.theme.intent.clamped
@@ -18,7 +19,7 @@ import io.github.alph_a07.basis.theme.intent.isWellFormed
 import io.github.alph_a07.basis.theme.intent.violatingKnobs
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 
 /**
  * Validates and converts intent before any mode is seeded.
@@ -39,8 +40,11 @@ internal fun normalizeIntent(intent: BasisIntent): NormalizedIntent {
         supportingColors = supportingColors(identity, entries),
         presence = if (brand == null) null else identity.presence,
         typography = identity.typography.deduped(),
-        preset = intent.mood?.preset,
-        knobs = intent.mood?.knobs?.clamped() ?: MoodKnobs(),
+        mood =
+            MoodIntent(
+                preset = intent.mood?.preset,
+                knobs = intent.mood?.knobs?.clamped() ?: MoodKnobs(),
+            ),
         domain = intent.domain ?: DomainIntent(),
         control = intent.control,
         deriveColors = intent.identity?.deriveColors ?: true,
@@ -54,7 +58,7 @@ private fun supportingColors(identity: IdentityIntent, entries: MutableList<Repo
         entries +=
             ReportEntry(
                 path = SUPPORTING_COLORS_PATH,
-                stage = ResolutionStageId.Normalize,
+                stage = ResolutionStage.Normalize,
                 status = ReportStatus.Rejected,
                 message = "At most $MAX_SUPPORTING_COLORS supporting colors are honored.",
                 requested = identity.supportingColors.size.toString(),
@@ -81,7 +85,7 @@ private fun ColorSpec?.toOklch(path: String, entries: MutableList<ReportEntry>):
         entries +=
             ReportEntry(
                 path = path,
-                stage = ResolutionStageId.Normalize,
+                stage = ResolutionStage.Normalize,
                 status = ReportStatus.Rejected,
                 message = "Color specification could not be interpreted.",
                 requested = toString(),
@@ -93,7 +97,7 @@ private fun ColorSpec?.toOklch(path: String, entries: MutableList<ReportEntry>):
     entries +=
         ReportEntry(
             path = path,
-            stage = ResolutionStageId.Normalize,
+            stage = ResolutionStage.Normalize,
             status = ReportStatus.Honored,
             message = "Color converted to OKLCH and mapped into the sRGB gamut.",
             requested = toString(),
@@ -107,7 +111,7 @@ private fun knobReportEntries(violating: Map<String, Float>?): List<ReportEntry>
     ?.map { (axis, value) ->
         ReportEntry(
             path = "$KNOBS_PATH.$axis",
-            stage = ResolutionStageId.Normalize,
+            stage = ResolutionStage.Normalize,
             status = ReportStatus.Rejected,
             message = "Knob value is not finite or outside [-1, 1]; the axis falls back to the preset.",
             requested = value.toString(),
@@ -123,7 +127,7 @@ private fun presenceReportEntries(identity: IdentityIntent): List<ReportEntry> {
     return listOf(
         ReportEntry(
             path = PRESENCE_PATH,
-            stage = ResolutionStageId.Normalize,
+            stage = ResolutionStage.Normalize,
             status = ReportStatus.Modulated,
             message = "Presence has no brand color to amplify and is ignored.",
             requested = identity.presence?.name,
