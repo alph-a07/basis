@@ -1,27 +1,27 @@
-package io.github.alph_a07.basis.theme.resolution.seed
+package io.github.alph_a07.basis.theme.resolution.tables
 
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 
-/** Seed tables for a single version of the Basis design system. */
-public data class BasisSeedTables(
-    public val version: Int,
-    public val spacing: FloatArray,
-    public val radiusLevels: FloatArray,
-    public val depth: List<DepthSpec>,
-    public val iconSizes: FloatArray,
-    public val avatarSizes: FloatArray,
-    public val controlSizes: FloatArray,
-    public val dotSizes: FloatArray,
-    public val typeMetrics: TypeSeedMetrics,
-    public val motion: MotionTokens,
-    public val lightNeutrals: NeutralSeed,
-    public val darkNeutrals: NeutralSeed,
-    public val statusLight: StatusSeed,
-    public val statusDark: StatusSeed,
+/** Foundational base token schema for a single version of the theme resolution engine. */
+internal data class BaseSchema(
+    val version: Int,
+    val spacing: FloatArray,
+    val radiusLevels: FloatArray,
+    val depth: List<DepthSpec>,
+    val iconSizes: FloatArray,
+    val avatarSizes: FloatArray,
+    val controlSizes: FloatArray,
+    val dotSizes: FloatArray,
+    val typeMetrics: BaseTypeMetrics,
+    val motion: MotionTokens,
+    val lightNeutrals: BaseNeutrals,
+    val darkNeutrals: BaseNeutrals,
+    val statusLight: BaseStatus,
+    val statusDark: BaseStatus,
 ) {
     /** Human-readable version tag. */
-    override fun toString(): String = "BasisSeedTables(v=$version)"
+    override fun toString(): String = "BaseSchema(v=$version)"
 
     /** Equality compares version + content; arrays compared structurally. */
     @Suppress("CyclomaticComplexMethod")
@@ -30,7 +30,7 @@ public data class BasisSeedTables(
             return true
         }
 
-        if (other !is BasisSeedTables) {
+        if (other !is BaseSchema) {
             return false
         }
 
@@ -71,32 +71,32 @@ public data class BasisSeedTables(
     }
 }
 
-/** Default typography derivation metrics. */
-public data class TypeSeedMetrics(
-    public val structureSizeDp: Float,
-    public val contentSizeDp: Float,
-    public val metadataSizeDp: Float,
-    public val weight: Int,
-    public val lineHeight: Float,
-    public val letterSpacingEm: Float,
+/** Default typography base metrics. */
+internal data class BaseTypeMetrics(
+    val structureSizeDp: Float,
+    val contentSizeDp: Float,
+    val metadataSizeDp: Float,
+    val weight: Int,
+    val lineHeight: Float,
+    val letterSpacingEm: Float,
 )
 
-/** Dual-mode neutral L/C targets (lightness / chroma). */
-public data class NeutralSeed(
-    public val surfaceL: Float,
-    public val surfaceC: Float,
-    public val contentL: Float,
-    public val contentC: Float,
+/** Dual-mode neutral L/C base targets (lightness / chroma). */
+internal data class BaseNeutrals(
+    val surfaceL: Float,
+    val surfaceC: Float,
+    val contentL: Float,
+    val contentC: Float,
 )
 
-/** Status L/C targets for one mode (positive / negative / caution / info). */
-public data class StatusSeed(
-    public val positiveSurfaceL: Float,
-    public val positiveContentL: Float,
-    public val negativeSurfaceL: Float,
-    public val negativeContentL: Float,
-    public val cautionSurfaceL: Float,
-    public val cautionContentL: Float,
-    public val infoSurfaceL: Float,
-    public val infoContentL: Float,
+/** Status L/C base targets for one mode (positive / negative / caution / info). */
+internal data class BaseStatus(
+    val positiveSurfaceL: Float,
+    val positiveContentL: Float,
+    val negativeSurfaceL: Float,
+    val negativeContentL: Float,
+    val cautionSurfaceL: Float,
+    val cautionContentL: Float,
+    val infoSurfaceL: Float,
+    val infoContentL: Float,
 )
