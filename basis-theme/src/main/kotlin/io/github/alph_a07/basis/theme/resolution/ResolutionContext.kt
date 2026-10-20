@@ -1,54 +1,97 @@
 package io.github.alph_a07.basis.theme.resolution
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
-import io.github.alph_a07.basis.theme.intent.controls.ModeGeneration
-import io.github.alph_a07.basis.theme.resolution.domain.PriorGain
-import io.github.alph_a07.basis.theme.resolution.domain.PriorSeedBiases
-import io.github.alph_a07.basis.theme.resolution.domain.PriorVector
-import io.github.alph_a07.basis.theme.resolution.fonts.FontRolePlan
-import io.github.alph_a07.basis.theme.resolution.mood.MoodModulators
-import io.github.alph_a07.basis.theme.resolution.mood.MoodProfile
+import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.resolution.derive.DerivationWeights
+import io.github.alph_a07.basis.theme.resolution.fonts.ResolvedFonts
 import io.github.alph_a07.basis.theme.resolution.normalize.NormalizedIntent
+import io.github.alph_a07.basis.theme.resolution.normalize.normalizeIntent
+import io.github.alph_a07.basis.theme.resolution.report.FontAssignmentReport
+import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
+import io.github.alph_a07.basis.theme.resolution.tables.BaseSchema
+import io.github.alph_a07.basis.theme.resolution.tables.BaseTables
+import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 
 /**
- * Mode-invariant resolution state shared by every generated theme tree.
+ * Single context holding inputs, stage processing state, per-mode drafts, and diagnostics.
  *
- * The prior blend, mood stacking, family modulators, font role plan, and the set of tokens
- * locked by Control are computed once; the per-mode stages consume them without re-deriving.
- *
+ * @property intent Unvalidated consumer intent.
  * @property normalized Validated and converted intent.
- * @property prior Blended domain and interaction prior vector.
- * @property gain Weak-coupling gain applied to the prior-derived seed biases.
- * @property seedBiases Prior-derived aesthetic and structural biases.
- * @property moodProfile Mood setpoints after preset and knob replacement.
- * @property effectiveAesthetic Stacked `seed + mood` profile consumed by derivation.
- * @property modulators Processable per-family multipliers projected from [effectiveAesthetic].
- * @property fonts Font role plan, including per-level Control locks.
- * @property lockedPaths Tokens replaced by Control, which enforcement must not re-adjust.
+ * @property modes Target theme modes to generate.
+ * @property baseTables Versioned base tables.
+ * @property lockedPaths Set of dotted token paths locked by Control.
  */
-internal data class ResolutionContext(
+internal class ResolutionContext(
+    val intent: BasisIntent,
     val normalized: NormalizedIntent,
-    val prior: PriorVector,
-    val gain: PriorGain,
-    val seedBiases: PriorSeedBiases,
-    val moodProfile: MoodProfile,
-    val effectiveAesthetic: MoodProfile,
-    val modulators: MoodModulators,
-    val fonts: FontRolePlan,
+    val modes: List<ThemeMode>,
+    val baseTables: BaseSchema,
     val lockedPaths: Set<String>,
 ) {
-    /** Modes the resolved pair carries, from the mode generation policy. */
-    val modes: List<ThemeMode>
-        get() =
-            when (normalized.control?.mode?.generate) {
-                ModeGeneration.LightOnly -> {
-                    listOf(ThemeMode.Light)
-                }
-                ModeGeneration.DarkOnly -> {
-                    listOf(ThemeMode.Dark)
-                }
-                else -> {
-                    listOf(ThemeMode.Light, ThemeMode.Dark)
-                }
-            }
+    /** Unified theme profile combining visual style, structural biases, and behavioral influences. */
+    var profile: ThemeProfile = ThemeProfile.NEUTRAL
+
+    /** Multipliers and weight scaling factors derived from [profile]. */
+    var weights: DerivationWeights? = null
+
+    /** Resolved typography font families for all ladders. */
+    var fonts: ResolvedFonts? = null
+
+    /** Brand color anchors resolved by IdentityStage. */
+    var brand: BrandColors? = null
+
+    /** Per-mode draft token trees under construction. */
+    val drafts: MutableMap<ThemeMode, ThemeDraft> = mutableMapOf()
+
+    /** Diagnostics accumulator tracking decisions and overrides across every stage. */
+    val entries: MutableList<ReportEntry> = mutableListOf()
+
+    init {
+        entries += normalized.entries
+    }
+
+    /** Appends a single diagnostic entry. */
+    fun report(entry: ReportEntry) {
+        entries += entry
+    }
+
+    /** Appends multiple diagnostic entries. */
+    fun reportAll(newEntries: Iterable<ReportEntry>) {
+        entries += newEntries
+    }
+
+    /** Builds the font assignment summary for the final resolution report. */
+    fun fontReport(): FontAssignmentReport {
+        val resolved = checkNotNull(fonts) { "Fonts have not been planned." }
+        return FontAssignmentReport(
+            structure = resolved.structure,
+            content = resolved.content,
+            metadata = resolved.metadata,
+            unusedCandidates = resolved.unusedCandidates,
+        )
+    }
+
+    companion object {
+        /**
+         * Normalizes [intent] and constructs the initial [ResolutionContext].
+         *
+         * @param intent Raw consumer intent.
+         * @return Initialized [ResolutionContext] ready for stage execution.
+         */
+        fun create(intent: BasisIntent): ResolutionContext {
+            val normalized = normalizeIntent(intent)
+            val baseTables = BaseTables.get()
+            val lockedPaths = normalized.control?.tokens?.paths?.keys ?: emptySet()
+            val targets = normalized.control?.mode?.targets ?: setOf(ThemeMode.Light, ThemeMode.Dark)
+            val modes = targets.toList()
+
+            return ResolutionContext(
+                intent = intent,
+                normalized = normalized,
+                modes = modes,
+                baseTables = baseTables,
+                lockedPaths = lockedPaths,
+            )
+        }
+    }
 }
