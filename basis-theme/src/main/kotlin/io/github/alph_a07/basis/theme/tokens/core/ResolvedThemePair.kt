@@ -5,9 +5,9 @@ import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
 /**
  * Engine emit for a single intent: paired light/dark themes plus diagnostics.
  *
- * @property light Light tree, null only when `ModeGeneration` requests dark only.
- * @property dark Dark tree, null only when `ModeGeneration` requests light only.
- * @property report Public diagnostics; carries the `seedVersion` field expectation.
+ * @property light Light tree, null only when requested modes include dark only.
+ * @property dark Dark tree, null only when requested modes include light only.
+ * @property report Public diagnostics; carries the `baseVersion` field expectation.
  */
 public data class ResolvedThemePair(
     public val light: ResolvedTheme?,
