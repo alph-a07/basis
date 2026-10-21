@@ -12,6 +12,20 @@ import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 public fun DepthSpec.toElevationDp(): Dp = elevation.toDp()
 
 /**
+ * Extracts the shadow blur radius from this [DepthSpec] as a Compose [Dp].
+ *
+ * @return Shadow blur in [Dp].
+ */
+public fun DepthSpec.toShadowBlurDp(): Dp = shadowBlur.toDp()
+
+/**
+ * Extracts the shadow vertical offset from this [DepthSpec] as a Compose [Dp].
+ *
+ * @return Shadow vertical offset in [Dp].
+ */
+public fun DepthSpec.toShadowYOffsetDp(): Dp = shadowYOffset.toDp()
+
+/**
  * Computes a shadow [Color] derived from [baseColor] scaled by [DepthSpec.shadowAlpha].
  *
  * @param baseColor Base color to tint the shadow with, defaults to black.
