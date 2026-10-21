@@ -9,6 +9,7 @@ metaAffinity, expressiveness, roundness), and serializes to:
 basis-theme/src/main/resources/basis/fonts/google-fonts-catalog.bin.gz
 """
 
+import csv
 import gzip
 import io
 import json
@@ -17,6 +18,7 @@ import struct
 import urllib.request
 
 METADATA_URL = "https://fonts.google.com/metadata/fonts"
+TAGS_URL = "https://raw.githubusercontent.com/google/fonts/main/tags/all/families.csv"
 OUTPUT_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "basis-theme",
@@ -68,8 +70,8 @@ def read_existing_ids(file_path: str) -> set:
                 gfk_len = struct.unpack(">H", f.read(2))[0]
                 f.read(gfk_len)
 
-                # Skip category (1), flags (1), weightsCount (1 if version >= 2), affinities (5 * 4 = 20)
-                skip_len = 23 if version >= 2 else 22
+                # Skip category (1), flags (1), weightsCount (1 if version >= 2), affinities (5 * 4 = 20), optical metrics (10 if version >= 3)
+                skip_len = 33 if version >= 3 else (23 if version >= 2 else 22)
                 f.read(skip_len)
 
                 axis_count = struct.unpack(">H", f.read(2))[0]
@@ -145,9 +147,27 @@ def main() -> None:
         families = sorted(families, key=lambda f: f.get("popularity", 999999))
     print(f"Selected {len(families)} families for vendored catalog.")
 
+    tags_by_family = {}
+    try:
+        print(f"Fetching Google Fonts official tags from {TAGS_URL}...")
+        req_tags = urllib.request.Request(TAGS_URL, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req_tags, timeout=20) as resp:
+            reader = csv.reader(io.StringIO(resp.read().decode("utf-8")))
+            for parts in reader:
+                if len(parts) >= 3:
+                    fam = parts[0].strip()
+                    tag = parts[2].strip()
+                    conf = float(parts[3]) if len(parts) >= 4 and parts[3].strip() else 100.0
+                    if fam not in tags_by_family:
+                        tags_by_family[fam] = {}
+                    tags_by_family[fam][tag] = conf
+        print(f"Loaded official tags for {len(tags_by_family)} families.")
+    except Exception as e:
+        print(f"Notice: Could not fetch tags from {TAGS_URL} ({e}); continuing with metadata heuristics.")
+
     buf = io.BytesIO()
     buf.write(b"BFNT")
-    buf.write(struct.pack(">H", 2))  # format version 2
+    buf.write(struct.pack(">H", 3))  # format version 3
     buf.write(struct.pack(">I", len(families)))
 
     for f in families:
@@ -160,6 +180,7 @@ def main() -> None:
         axes_tags = [a["tag"] for a in axes]
         distinct_weights = {k.rstrip("i") for k in f.get("fonts", {}).keys()}
         weights_count = max(1, len(distinct_weights))
+        tags = tags_by_family.get(family, {})
 
         fid = canonical_id(family)
         gf_key = family.replace(" ", "+")
@@ -176,6 +197,7 @@ def main() -> None:
             cat == 2
             or "Display" in classifs
             or any(k in name_lower for k in ["display", "poster", "banner", "headline"])
+            or any(t in tags for t in ["/Theme/Pixel", "/Theme/Inline", "/Theme/Stencil", "/Theme/Art Deco", "/Theme/Blackletter"])
         )
         is_handwriting = (
             cat == 3
@@ -186,7 +208,45 @@ def main() -> None:
             )
         )
 
-        # roundness heuristics derived from variation axes and morphological design descriptors
+        # Morphology & optical density profiling
+        is_pixel = "/Theme/Pixel" in tags or any(k in name_lower for k in ["pixel", "dots", "doto"])
+        is_inline = "/Theme/Inline" in tags or any(k in name_lower for k in ["inline", "monoton"])
+        is_stencil = "/Theme/Stencil" in tags or "stencil" in name_lower
+        is_didone = "/Serif/Didone" in tags or any(k in name_lower for k in ["playfair", "bodoni", "prata", "didot"])
+        is_hairline = (weights_count <= 2 and "wght" not in axes_tags and any(k in name_lower for k in ["thin", "hairline"])) or (family == "Poiret One")
+
+        has_weight_expansion = ("wght" in axes_tags) or weights_count >= 5
+
+        if is_inline:
+            optical_density = 0.16
+            min_optical_size_dp = 20.0
+            light_mode_weight_bias = 200 if has_weight_expansion else 0
+        elif is_pixel:
+            optical_density = 0.20
+            min_optical_size_dp = 18.0
+            light_mode_weight_bias = 200 if has_weight_expansion else 0
+        elif is_stencil:
+            optical_density = 0.25
+            min_optical_size_dp = 18.0
+            light_mode_weight_bias = 150 if has_weight_expansion else 0
+        elif is_hairline:
+            optical_density = 0.24
+            min_optical_size_dp = 16.0
+            light_mode_weight_bias = 150 if has_weight_expansion else 0
+        elif is_didone:
+            optical_density = 0.32
+            min_optical_size_dp = 16.0
+            light_mode_weight_bias = 100 if has_weight_expansion else 0
+        elif is_display:
+            optical_density = 0.40
+            min_optical_size_dp = 14.0
+            light_mode_weight_bias = 50 if has_weight_expansion else 0
+        else:
+            optical_density = 0.50
+            min_optical_size_dp = 11.0
+            light_mode_weight_bias = 0
+
+        # roundness heuristics derived from variation axes, morphological design descriptors, and official tags
         is_round = (
             "ROND" in axes_tags
             or "SOFT" in axes_tags
@@ -337,6 +397,7 @@ def main() -> None:
         buf.write(struct.pack(">B", min(255, max(1, weights_count))))
 
         buf.write(struct.pack(">fffff", float(disp), float(text), float(meta), float(expr), float(roundness)))
+        buf.write(struct.pack(">ffh", float(optical_density), float(min_optical_size_dp), int(light_mode_weight_bias)))
 
         buf.write(struct.pack(">H", len(axes)))
         for ax in axes:
