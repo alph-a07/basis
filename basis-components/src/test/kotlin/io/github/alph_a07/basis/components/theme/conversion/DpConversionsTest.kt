@@ -33,4 +33,23 @@ class DpConversionsTest {
 
         assertEquals(original.value, roundTripped.value)
     }
+
+    @Test
+    fun toDp_zeroValue_convertsToZeroDp() {
+        val dpValue = DpValue(0f)
+        val dp = dpValue.toDp()
+
+        assertEquals(0.dp, dp)
+        assertEquals(0f, dp.toDpValue().value)
+    }
+
+    @Test
+    fun toDp_fractionalValues_preservesPrecision() {
+        val dpValue = DpValue(0.5f)
+        val dp = dpValue.toDp()
+
+        assertEquals(0.5.dp, dp)
+
+        assertEquals(0.5f, dp.toDpValue().value)
+    }
 }
