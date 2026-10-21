@@ -1,8 +1,9 @@
-package io.github.alph_a07.basis.theme.resolution.seed
+package io.github.alph_a07.basis.theme.resolution.base
 
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.tokens.scalars.AvatarSizes
 import io.github.alph_a07.basis.theme.tokens.scalars.ControlSizes
+import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.DotSizes
 import io.github.alph_a07.basis.theme.tokens.scalars.IconSizes
@@ -11,12 +12,12 @@ import io.github.alph_a07.basis.theme.tokens.scalars.SizeTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens
 
 /**
- * Seeds the spacing ladder.
+ * Initializes the base spacing ladder.
  *
- * @param spacing Seed magnitudes in dp, tightest first.
- * @return The unmodulated spacing ladder.
+ * @param spacing Base magnitudes in dp, tightest first.
+ * @return The base spacing ladder.
  */
-internal fun seedSpacingTokens(spacing: FloatArray): SpacingTokens = SpacingTokens(
+internal fun baseSpacingTokens(spacing: FloatArray): SpacingTokens = SpacingTokens(
     level1 = DpValue(spacing[0]),
     level2 = DpValue(spacing[1]),
     level3 = DpValue(spacing[2]),
@@ -28,14 +29,14 @@ internal fun seedSpacingTokens(spacing: FloatArray): SpacingTokens = SpacingToke
 )
 
 /**
- * Seeds the radius ladder.
+ * Initializes the base radius ladder.
  *
  * The `none` and `full` sentinels are fixed, so mood roundness never moves them.
  *
- * @param radiusLevels Seed magnitudes in dp for levels one through eight.
- * @return The unmodulated radius ladder.
+ * @param radiusLevels Base magnitudes in dp for levels one through eight.
+ * @return The base radius ladder.
  */
-internal fun seedRadiusTokens(radiusLevels: FloatArray): RadiusTokens = RadiusTokens(
+internal fun baseRadiusTokens(radiusLevels: FloatArray): RadiusTokens = RadiusTokens(
     none = DpValue(RADIUS_NONE_DP),
     level1 = DpValue(radiusLevels[0]),
     level2 = DpValue(radiusLevels[1]),
@@ -49,12 +50,12 @@ internal fun seedRadiusTokens(radiusLevels: FloatArray): RadiusTokens = RadiusTo
 )
 
 /**
- * Seeds the four-level depth ladder.
+ * Initializes the base four-level depth ladder.
  *
- * @param depth Seed specs, lowest level first.
- * @return The unmodulated depth ladder.
+ * @param depth Base depth specs, lowest level first.
+ * @return The base depth ladder.
  */
-internal fun seedDepthTokens(depth: List<io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec>): DepthTokens =
+internal fun baseDepthTokens(depth: List<DepthSpec>): DepthTokens =
     DepthTokens(
         level1 = depth[FIRST_LEVEL],
         level2 = depth[1],
@@ -63,15 +64,15 @@ internal fun seedDepthTokens(depth: List<io.github.alph_a07.basis.theme.tokens.s
     )
 
 /**
- * Seeds the icon, avatar, control, and dot ladders.
+ * Initializes the base icon, avatar, control, and dot ladders.
  *
- * @param iconSizes Seed icon magnitudes in dp, smallest first.
- * @param avatarSizes Seed avatar magnitudes in dp, smallest first.
- * @param controlSizes Seed control magnitudes in dp, smallest first.
- * @param dotSizes Seed dot magnitudes in dp, smallest first.
- * @return The unmodulated size ladders.
+ * @param iconSizes Base icon magnitudes in dp, smallest first.
+ * @param avatarSizes Base avatar magnitudes in dp, smallest first.
+ * @param controlSizes Base control magnitudes in dp, smallest first.
+ * @param dotSizes Base dot magnitudes in dp, smallest first.
+ * @return The base size ladders.
  */
-internal fun seedSizeTokens(
+internal fun baseSizeTokens(
     iconSizes: FloatArray,
     avatarSizes: FloatArray,
     controlSizes: FloatArray,
@@ -115,8 +116,8 @@ private const val RADIUS_NONE_DP: Float = 0f
 /** Radius of the pill sentinel ladder entry, in dp. */
 private const val RADIUS_FULL_DP: Float = 9999f
 
-/** Index of the first radius level in the seed array. */
+/** Index of the first radius level in the base array. */
 private const val FIRST_LEVEL: Int = 0
 
-/** Index of the last radius level in the seed array. */
+/** Index of the last radius level in the base array. */
 private const val LAST_RADIUS_LEVEL: Int = 7

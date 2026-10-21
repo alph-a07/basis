@@ -1,9 +1,10 @@
-package io.github.alph_a07.basis.theme.resolution.seed
+package io.github.alph_a07.basis.theme.resolution.base
 
-import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.core.SpValue
+import io.github.alph_a07.basis.theme.resolution.constants.BaseTypeMetrics
 import io.github.alph_a07.basis.theme.tokens.typography.ContentType
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.MetadataType
@@ -14,19 +15,19 @@ import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens
 import kotlin.math.pow
 
 /**
- * Seeds the typography tree ladders.
+ * Initializes the base typography tree ladders.
  *
- * Sizes descend by a fixed per-ladder ratio from the seeded base size, and every role carries the
+ * Sizes descend by a fixed per-ladder ratio from the base size, and every role carries the
  * family the fonts stage resolved so no role is left unresolved.
  *
- * @param metrics Seeded base sizes and shared metrics.
+ * @param metrics Base sizes and shared metrics.
  * @param structure Structure ladder family.
  * @param content Content ladder family.
  * @param metadata Metadata ladder family.
- * @return The unmodulated typography tree.
+ * @return The base typography tree before derivation.
  */
-internal fun seedTypographyTokens(
-    metrics: TypeSeedMetrics,
+internal fun baseTypographyTokens(
+    metrics: BaseTypeMetrics,
     structure: FontFamilyRef,
     content: FontFamilyRef,
     metadata: FontFamilyRef,
@@ -37,7 +38,7 @@ internal fun seedTypographyTokens(
 
     fun role(size: Float, color: TypeColorRef, family: FontFamilyRef): TypeRole = TypeRole(
         family = family,
-        size = DpValue(size),
+        size = SpValue(size),
         weight = weight,
         lineHeight = lineHeight,
         letterSpacing = tracking,
