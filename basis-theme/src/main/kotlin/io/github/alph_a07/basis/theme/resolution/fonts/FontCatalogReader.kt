@@ -30,59 +30,70 @@ internal object FontCatalogReader {
         val entries = ArrayList<FontCatalogEntry>(count)
 
         repeat(count) {
-            val id = GoogleFontId(data.readUTF())
-            val familyName = data.readUTF()
-            val googleFontsKey = data.readUTF()
-            val category = categoryFromCode(data.readByte().toInt())
-
-            val flags = data.readByte().toInt()
-            val serif = (flags and FLAG_SERIF) != 0
-            val mono = (flags and FLAG_MONO) != 0
-
-            val weightsCount = data.readByte().toInt() and 0xFF
-
-            val displayAffinity = data.readFloat()
-            val textAffinity = data.readFloat()
-            val metaAffinity = data.readFloat()
-            val expressiveness = data.readFloat()
-            val roundness = data.readFloat()
-
-            val axisCount = data.readShort().toInt()
-            val axes =
-                if (axisCount == 0) {
-                    emptySet()
-                } else {
-                    val set = HashSet<FontAxis>(axisCount)
-                    repeat(axisCount) {
-                        val tag = data.readUTF()
-                        val min = data.readFloat()
-                        val max = data.readFloat()
-                        val defaultValue = data.readFloat()
-                        set.add(FontAxis(tag = tag, min = min, max = max, defaultValue = defaultValue))
-                    }
-                    set
-                }
-
-            entries.add(
-                FontCatalogEntry(
-                    id = id,
-                    familyName = familyName,
-                    googleFontsKey = googleFontsKey,
-                    category = category,
-                    axes = axes,
-                    displayAffinity = displayAffinity,
-                    textAffinity = textAffinity,
-                    metaAffinity = metaAffinity,
-                    expressiveness = expressiveness,
-                    roundness = roundness,
-                    serif = serif,
-                    mono = mono,
-                    weightsCount = weightsCount,
-                ),
-            )
+            entries.add(readEntry(data))
         }
 
         return entries
+    }
+
+    private fun readEntry(data: DataInputStream): FontCatalogEntry {
+        val id = GoogleFontId(data.readUTF())
+        val familyName = data.readUTF()
+        val googleFontsKey = data.readUTF()
+        val category = categoryFromCode(data.readByte().toInt())
+
+        val flags = data.readByte().toInt()
+        val serif = (flags and FLAG_SERIF) != 0
+        val mono = (flags and FLAG_MONO) != 0
+
+        val weightsCount = data.readByte().toInt() and 0xFF
+
+        val displayAffinity = data.readFloat()
+        val textAffinity = data.readFloat()
+        val metaAffinity = data.readFloat()
+        val expressiveness = data.readFloat()
+        val roundness = data.readFloat()
+
+        val opticalDensity = data.readFloat()
+        val minOpticalSizeDp = data.readFloat()
+        val lightModeWeightBias = data.readShort().toInt()
+
+        val axes = readAxes(data)
+
+        return FontCatalogEntry(
+            id = id,
+            familyName = familyName,
+            googleFontsKey = googleFontsKey,
+            category = category,
+            axes = axes,
+            displayAffinity = displayAffinity,
+            textAffinity = textAffinity,
+            metaAffinity = metaAffinity,
+            expressiveness = expressiveness,
+            roundness = roundness,
+            serif = serif,
+            mono = mono,
+            weightsCount = weightsCount,
+            opticalDensity = opticalDensity,
+            minOpticalSizeDp = minOpticalSizeDp,
+            lightModeWeightBias = lightModeWeightBias,
+        )
+    }
+
+    private fun readAxes(data: DataInputStream): Set<FontAxis> {
+        val axisCount = data.readShort().toInt()
+        if (axisCount == 0) return emptySet()
+
+        val set = HashSet<FontAxis>(axisCount)
+        repeat(axisCount) {
+            val tag = data.readUTF()
+            val min = data.readFloat()
+            val max = data.readFloat()
+            val defaultValue = data.readFloat()
+            set.add(FontAxis(tag = tag, min = min, max = max, defaultValue = defaultValue))
+        }
+
+        return set
     }
 
     /** Explicit byte-to-enum mapping decoupled from Kotlin enum declaration order. */
@@ -98,7 +109,7 @@ internal object FontCatalogReader {
     private val MAGIC_BYTES: ByteArray =
         byteArrayOf('B'.code.toByte(), 'F'.code.toByte(), 'N'.code.toByte(), 'T'.code.toByte())
     private const val MAGIC_BYTES_LENGTH: Int = 4
-    private const val FORMAT_VERSION: Int = 2
+    private const val FORMAT_VERSION: Int = 3
     private const val FLAG_SERIF: Int = 1
     private const val FLAG_MONO: Int = 2
 
