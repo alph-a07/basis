@@ -4,7 +4,7 @@ import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.intent.controls.MinMaxLevels
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 import io.github.alph_a07.basis.theme.tokens.core.ControlSizeTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.RadiusTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.SpacingTokenPath
@@ -51,7 +51,7 @@ private fun DpValue.raised(
     entries +=
         ReportEntry(
             path = path,
-            stage = ResolutionStageId.Enforce,
+            stage = ResolutionStage.Enforce,
             status = ReportStatus.OverriddenByConstraint,
             message = "Control size raised to the minimum touch target.",
             requested = "$value",
@@ -137,7 +137,7 @@ private fun DpValue.clamped(
     entries +=
         ReportEntry(
             path = path,
-            stage = ResolutionStageId.Enforce,
+            stage = ResolutionStage.Enforce,
             status = ReportStatus.OverriddenByConstraint,
             message = "Level clamped into the requested min/max range.",
             requested = "$value",
