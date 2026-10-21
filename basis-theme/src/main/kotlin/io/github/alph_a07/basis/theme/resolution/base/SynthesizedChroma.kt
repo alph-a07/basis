@@ -1,7 +1,4 @@
-package io.github.alph_a07.basis.theme.resolution.domain
-
-/** Neutral hue shared by non-anchor neutrals, borders, and surfaces, in degrees. */
-internal const val NEUTRAL_HUE_DEGREES: Float = 255f
+package io.github.alph_a07.basis.theme.resolution.base
 
 /**
  * Value container for synthesized chroma targets aligned with ColorTokens role axes.
