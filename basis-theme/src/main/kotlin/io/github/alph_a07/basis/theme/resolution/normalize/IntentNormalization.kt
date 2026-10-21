@@ -22,7 +22,7 @@ import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 
 /**
- * Validates and converts intent before any mode is seeded.
+ * Validates and converts intent before base token initialization and mode resolution.
  *
  * @param intent Consumer intent, every axis optional.
  * @return Normalized intent plus diagnostics for every rejected or adjusted input.
