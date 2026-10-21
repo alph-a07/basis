@@ -6,7 +6,10 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.text.font.FontFamily
 import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
 import io.github.alph_a07.basis.components.theme.font.fontRegistry
+import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.intent.ControlIntent
+import io.github.alph_a07.basis.theme.intent.controls.ModeControl
 import io.github.alph_a07.basis.theme.resolution.resolve
 import io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
@@ -86,6 +89,63 @@ class BasisThemeTest {
     }
 
     @Test
+    fun basisTheme_defaultArguments_providesNonNullAmbient() {
+        var ambient: BasisThemeAmbient? = null
+
+        composeRule.setContent {
+            BasisTheme {
+                ambient = BasisTheme.current
+            }
+        }
+
+        assertNotNull(ambient, "BasisThemeAmbient must be non-null with default arguments")
+    }
+
+    @Test
+    fun basisThemePairOverload_lightOnlyPairWithDarkRequested_fallsBackToLight() {
+        val intent =
+            BasisIntent(
+                control =
+                    ControlIntent(
+                        mode = ModeControl(targets = setOf(ThemeMode.Light)),
+                    ),
+            )
+        val pair = resolve(intent)
+        var ambient: BasisThemeAmbient? = null
+
+        composeRule.setContent {
+            BasisTheme(pair = pair, useDarkTheme = true) {
+                ambient = BasisTheme.current
+            }
+        }
+
+        assertNotNull(ambient)
+        assertEquals(ThemeMode.Light, ambient.theme.mode, "Must fallback to Light when dark is not available")
+    }
+
+    @Test
+    fun basisThemePairOverload_darkOnlyPairWithLightRequested_fallsBackToDark() {
+        val intent =
+            BasisIntent(
+                control =
+                    ControlIntent(
+                        mode = ModeControl(targets = setOf(ThemeMode.Dark)),
+                    ),
+            )
+        val pair = resolve(intent)
+        var ambient: BasisThemeAmbient? = null
+
+        composeRule.setContent {
+            BasisTheme(pair = pair, useDarkTheme = false) {
+                ambient = BasisTheme.current
+            }
+        }
+
+        assertNotNull(ambient)
+        assertEquals(ThemeMode.Dark, ambient.theme.mode, "Must fallback to Dark when light is not available")
+    }
+
+    @Test
     fun basisTheme_withReport_exposesDiagnostics() {
         val pair = resolve(BasisIntent())
         var ambient: BasisThemeAmbient? = null
@@ -118,8 +178,8 @@ class BasisThemeTest {
     @Test
     fun nestedBasisTheme_replacesAmbientForSubtree() {
         val pair = resolve(BasisIntent())
-        var outerMode: io.github.alph_a07.basis.theme.core.ThemeMode? = null
-        var innerMode: io.github.alph_a07.basis.theme.core.ThemeMode? = null
+        var outerMode: ThemeMode? = null
+        var innerMode: ThemeMode? = null
 
         composeRule.setContent {
             BasisTheme(theme = pair.light!!) {

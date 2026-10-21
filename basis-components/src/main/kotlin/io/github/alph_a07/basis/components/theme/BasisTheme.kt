@@ -1,8 +1,10 @@
 package io.github.alph_a07.basis.components.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import io.github.alph_a07.basis.components.theme.BasisTheme.colors
 import io.github.alph_a07.basis.components.theme.BasisTheme.current
 import io.github.alph_a07.basis.components.theme.BasisTheme.typography
@@ -61,11 +63,12 @@ public fun BasisTheme(
  * Convenience overload that accepts a pre-resolved [ResolvedThemePair] and selects the tree for
  * [useDarkTheme].
  *
- * Falls back to the available tree when the requested mode was not generated (e.g. a `LightOnly`
- * pair used with [useDarkTheme] = true receives the light tree).
+ * Supports single-mode and dual-mode resolution targets. If only one mode was requested and generated
+ * (for example, light-only or dark-only), this falls back to the available tree regardless of
+ * [useDarkTheme].
  *
  * @param pair Resolved light and dark pair.
- * @param useDarkTheme Whether to select the dark tree.
+ * @param useDarkTheme Whether to select the dark tree; defaults to [isSystemInDarkTheme].
  * @param fontRegistry Registry mapping font references to Compose font families. Defaults to
  * [FontFamilyRegistry.Default].
  * @param content Composable subtree under the theme ambient.
@@ -73,7 +76,7 @@ public fun BasisTheme(
 @Composable
 public fun BasisTheme(
     pair: ResolvedThemePair,
-    useDarkTheme: Boolean,
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
     content: @Composable () -> Unit,
 ) {
@@ -91,23 +94,23 @@ public fun BasisTheme(
  * Convenience overload that runs [resolve] on [intent], selects the tree for [useDarkTheme], and
  * provides the ambient.
  *
- * This overload is intended for simple use cases. When the caller manages a resolved pair (e.g.
- * to access the [ResolutionReport] independently), use the primary overload with [ResolvedTheme].
+ * The resolved pair is remembered across recompositions for the same [intent] instance. Supports
+ * single-mode and dual-mode intent configurations.
  *
- * @param intent Design intent; the empty intent yields a coherent default theme.
- * @param useDarkTheme Whether to select the dark tree.
+ * @param intent Design intent; defaults to empty [BasisIntent] which yields a coherent default theme.
+ * @param useDarkTheme Whether to select the dark tree; defaults to [isSystemInDarkTheme].
  * @param fontRegistry Registry mapping font references to Compose font families. Defaults to
  * [FontFamilyRegistry.Default].
  * @param content Composable subtree under the theme ambient.
  */
 @Composable
 public fun BasisTheme(
-    intent: BasisIntent,
-    useDarkTheme: Boolean,
+    intent: BasisIntent = BasisIntent(),
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
     content: @Composable () -> Unit,
 ) {
-    val pair = resolve(intent)
+    val pair = remember(intent) { resolve(intent) }
 
     BasisTheme(
         pair = pair,
