@@ -65,6 +65,8 @@ public class GoogleFontDownloader(
                 FontWeight.Medium,
                 FontWeight.SemiBold,
                 FontWeight.Bold,
+                FontWeight.ExtraBold,
+                FontWeight.Black,
             )
 
         /** Default downloader configured with Google Play Services font provider. */
