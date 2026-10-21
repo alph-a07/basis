@@ -4,7 +4,7 @@ import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 
 /**
- * Brand-defining inputs: who the product is, independent of feel, priors, or floors.
+ * Brand-defining inputs: who the product is, independent of feel, influences, or floors.
  *
  * All fields are optional. [presence] is meaningful only when a brand color anchors it, and
  * [supportingColors] act as secondary brand anchors.
@@ -16,7 +16,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * to [BrandPresence.Balanced].
  * @property typography Brand typeface intent, as candidates, role pins, or both.
  * @property deriveColors When `true` (default), colors are synthesized from mood, brand, and domain
- * signals. When `false`, a fully achromatic seed (chroma = 0.0) is used for a neutral, color-agnostic base.
+ * signals. When `false`, a fully achromatic base (chroma = 0.0) is used for a neutral, color-agnostic base.
  */
 public data class IdentityIntent(
     public val brandColor: ColorSpec? = null,

@@ -11,7 +11,7 @@ public data class DomainIntent(
     public val interactions: Set<InteractionPattern> = emptySet(),
 )
 
-/** Recognizable product contexts that seed trust, density, and risk priors. */
+/** Recognizable product contexts that supply trust, density, and risk influences. */
 public enum class ProductDomain {
     /** Banking, investing, and money management. */
     Finance,
@@ -44,7 +44,7 @@ public enum class ProductDomain {
     Other,
 }
 
-/** Recognizable interaction contexts that seed density, motion, and input priors. */
+/** Recognizable interaction contexts that supply density, motion, and input influences. */
 public enum class InteractionPattern {
     /** Tables, charts, and dense record browsing. */
     DataNavigation,
