@@ -10,7 +10,7 @@ package io.github.alph_a07.basis.theme.resolution.derive
  * @property avatar Multiplier on the avatar size ladder.
  * @property iconDot Multiplier on the icon and dot size ladders.
  */
-internal data class ScalarModulators(
+internal data class ScalarWeights(
     val spacing: Float,
     val radius: Float,
     val depth: Float,
@@ -18,3 +18,13 @@ internal data class ScalarModulators(
     val avatar: Float,
     val iconDot: Float,
 )
+
+internal fun DerivationWeights.toScalarWeights(): ScalarWeights =
+    ScalarWeights(
+        spacing = spacingScale,
+        radius = radiusScale,
+        depth = depthScale,
+        control = controlScale,
+        avatar = avatarScale,
+        iconDot = iconDotScale,
+    )
