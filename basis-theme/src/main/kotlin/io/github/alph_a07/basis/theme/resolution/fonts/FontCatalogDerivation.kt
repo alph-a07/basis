@@ -1,16 +1,35 @@
 package io.github.alph_a07.basis.theme.resolution.fonts
 
-import io.github.alph_a07.basis.theme.resolution.domain.PriorVector
-import io.github.alph_a07.basis.theme.resolution.domain.dataDensity01
-import io.github.alph_a07.basis.theme.resolution.domain.trustStrictness01
-import io.github.alph_a07.basis.theme.resolution.mood.MoodProfile
-import io.github.alph_a07.basis.theme.resolution.mood.roundness01
-import io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
+import io.github.alph_a07.basis.theme.resolution.constants.CATALOG_TIE_EPSILON
+import io.github.alph_a07.basis.theme.resolution.constants.CONTENT_OPTICAL_DENSITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.CONTENT_ROUND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.CONTENT_TEXT_AFFINITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.CONTENT_TRUST_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.DefaultFontBias
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_AFFINITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_DENSITY_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_MONOSPACE_BONUS
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_MONOSPACE_DENSITY_THRESHOLD
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_OPTICAL_DENSITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_ROUND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_DISPLAY_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_ELEVATED_TRUST_THRESHOLD
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_EXPR_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_MIN_WEIGHT_DEPTH
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_RESTRAINED_EXPR_THRESHOLD
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_ROUND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_TRUST_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_WEIGHT_DEPTH_PENALTY
+import io.github.alph_a07.basis.theme.resolution.dataDensity01
+import io.github.alph_a07.basis.theme.resolution.roundness01
+import io.github.alph_a07.basis.theme.resolution.trustStrictness01
+import io.github.alph_a07.basis.theme.resolution.typographyExpressiveness01
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import kotlin.math.abs
 
 /**
- * Dynamically scores and derives typographic ladder families from the vendored catalog based on mood and domain priors.
+ * Dynamically scores and derives typographic ladder families from the vendored catalog based on the theme profile.
  *
  * Content ladder derivation intentionally prioritizes high-legibility sans-serif workhorses for default UI body text
  * across varied display densities and small screen sizes. Consumers requiring editorial serif body text can supply
@@ -19,10 +38,10 @@ import kotlin.math.abs
 internal object FontCatalogDerivation {
 
     /** Derives the most suitable display/headline family for the structure ladder. */
-    fun deriveStructure(aesthetic: MoodProfile, prior: PriorVector): FontFamilyRef {
-        val targetExpr = aesthetic.typographyExpressiveness01
-        val targetRound = aesthetic.roundness01
-        val trust = prior.trustStrictness01
+    fun deriveStructure(profile: ThemeProfile): FontFamilyRef {
+        val targetExpr = profile.typographyExpressiveness01
+        val targetRound = profile.roundness01
+        val trust = profile.trustStrictness01
 
         var bestEntry: FontCatalogEntry? = null
         var bestScore = Float.NEGATIVE_INFINITY
@@ -40,15 +59,17 @@ internal object FontCatalogDerivation {
     }
 
     /** Derives the most suitable high-legibility body family for the content ladder. */
-    fun deriveContent(aesthetic: MoodProfile, prior: PriorVector): FontFamilyRef {
-        val targetRound = aesthetic.roundness01
-        val trust = prior.trustStrictness01
+    fun deriveContent(profile: ThemeProfile): FontFamilyRef {
+        val targetRound = profile.roundness01
+        val trust = profile.trustStrictness01
 
         var bestEntry: FontCatalogEntry? = null
         var bestScore = Float.NEGATIVE_INFINITY
 
         for (entry in GoogleFontCatalog.all) {
-            if (entry.mono || entry.textAffinity < GoogleFontCatalog.CONTENT_AFFINITY_FLOOR) continue
+            if (!isEligibleForContent(entry)) {
+                continue
+            }
             val score = scoreContentEntry(entry, targetRound, trust)
             if (isBetterCandidate(score, bestEntry, bestScore)) {
                 bestScore = score
@@ -61,15 +82,17 @@ internal object FontCatalogDerivation {
     }
 
     /** Derives the most suitable caption/table family for the metadata ladder. */
-    fun deriveMetadata(aesthetic: MoodProfile, prior: PriorVector): FontFamilyRef {
-        val targetRound = aesthetic.roundness01
-        val density = prior.dataDensity01
+    fun deriveMetadata(profile: ThemeProfile): FontFamilyRef {
+        val targetRound = profile.roundness01
+        val density = profile.dataDensity01
 
         var bestEntry: FontCatalogEntry? = null
         var bestScore = Float.NEGATIVE_INFINITY
 
         for (entry in GoogleFontCatalog.all) {
-            if (entry.metaAffinity < GoogleFontCatalog.METADATA_AFFINITY_FLOOR) continue
+            if (entry.opticalDensity < METADATA_OPTICAL_DENSITY_FLOOR || entry.metaAffinity < METADATA_AFFINITY_FLOOR) {
+                continue
+            }
             val score = scoreMetadataEntry(entry, targetRound, density)
             if (isBetterCandidate(score, bestEntry, bestScore)) {
                 bestScore = score
@@ -135,6 +158,12 @@ internal object FontCatalogDerivation {
         return entry.metaAffinity + METADATA_ROUND_WEIGHT * roundFit + monoBonus
     }
 
+    private fun isEligibleForContent(entry: FontCatalogEntry): Boolean =
+        !entry.mono &&
+            entry.category != GoogleFontsCategory.Display &&
+            entry.textAffinity >= CONTENT_TEXT_AFFINITY_FLOOR &&
+            entry.opticalDensity >= CONTENT_OPTICAL_DENSITY_FLOOR
+
     /**
      * Preserves popularity order for tie-breaking: since [GoogleFontCatalog.all] is sorted by popularity,
      * the earlier candidate in the catalog wins ties within [CATALOG_TIE_EPSILON].
@@ -144,49 +173,4 @@ internal object FontCatalogDerivation {
         bestEntry: FontCatalogEntry?,
         bestScore: Float,
     ): Boolean = bestEntry == null || score > bestScore + CATALOG_TIE_EPSILON
-
-    /** Weight given to headline display suitability in dynamic structure scoring. */
-    private const val STRUCTURE_DISPLAY_WEIGHT: Float = 0.40f
-
-    /** Weight given to mood expressiveness alignment in dynamic structure scoring. */
-    private const val STRUCTURE_EXPR_WEIGHT: Float = 0.30f
-
-    /** Weight given to mood roundness alignment in dynamic structure scoring. */
-    private const val STRUCTURE_ROUND_WEIGHT: Float = 0.30f
-
-    /** Penalty factor applied to expressiveness when domain trust is high in structure scoring. */
-    private const val STRUCTURE_TRUST_WEIGHT: Float = 0.25f
-
-    /** Minimum distinct weight count recommended for a multi-level structure ladder. */
-    private const val STRUCTURE_MIN_WEIGHT_DEPTH: Int = 3
-
-    /** Penalty applied to candidate structure families lacking sufficient weight depth in restrained contexts. */
-    private const val STRUCTURE_WEIGHT_DEPTH_PENALTY: Float = 0.30f
-
-    /** Expressiveness threshold below which shallow weight depth is penalized for structure headlines. */
-    private const val STRUCTURE_RESTRAINED_EXPR_THRESHOLD: Float = 0.60f
-
-    /** Domain trust strictness threshold above which shallow weight depth is penalized for structure headlines. */
-    private const val STRUCTURE_ELEVATED_TRUST_THRESHOLD: Float = 0.40f
-
-    /** Weight given to mood roundness alignment in dynamic content scoring. */
-    private const val CONTENT_ROUND_WEIGHT: Float = 0.15f
-
-    /** Bonus factor applied to text affinity when domain trust is high in content scoring. */
-    private const val CONTENT_TRUST_WEIGHT: Float = 0.10f
-
-    /** Weight given to mood roundness alignment in dynamic metadata scoring. */
-    private const val METADATA_ROUND_WEIGHT: Float = 0.10f
-
-    /** Explicit data density threshold above which metadata ladder prefers monospace candidates. */
-    private const val METADATA_MONOSPACE_DENSITY_THRESHOLD: Float = 0.60f
-
-    /** Base bonus given to monospace families when data density meets or exceeds threshold. */
-    private const val METADATA_MONOSPACE_BONUS: Float = 0.10f
-
-    /** Bonus factor scaled by data density prior for monospace entries. */
-    private const val METADATA_DENSITY_WEIGHT: Float = 0.08f
-
-    /** Minimum score difference required to beat an earlier (more popular) candidate. */
-    private const val CATALOG_TIE_EPSILON: Float = 0.0001f
 }

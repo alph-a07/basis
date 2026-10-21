@@ -1,14 +1,15 @@
 package io.github.alph_a07.basis.theme.resolution.fonts
 
-import io.github.alph_a07.basis.theme.intent.MoodIntent
-import io.github.alph_a07.basis.theme.resolution.domain.PriorVector
-import io.github.alph_a07.basis.theme.resolution.mood.MoodProfile
-import io.github.alph_a07.basis.theme.resolution.mood.isUnspecified
-import io.github.alph_a07.basis.theme.resolution.mood.typographyExpressiveness01
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
+import io.github.alph_a07.basis.theme.resolution.constants.CANDIDATE_EXPRESSIVENESS_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.DEFAULT_NEUTRAL_SCORE
+import io.github.alph_a07.basis.theme.resolution.constants.DefaultFontBias
+import io.github.alph_a07.basis.theme.resolution.constants.SCORE_TIE_EPSILON
 import io.github.alph_a07.basis.theme.resolution.normalize.NormalizedIntent
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
+import io.github.alph_a07.basis.theme.resolution.typographyExpressiveness01
 import io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import kotlin.math.abs
@@ -17,15 +18,13 @@ import kotlin.math.abs
  * Assigns a family to each typography ladder, then applies per-level Control locks.
  *
  * @param normalized Normalized intent carrying brand type and Control locks.
- * @param aesthetic Effective aesthetic, whose expressiveness modulates structure scoring and fallback bias.
- * @param prior Domain and interaction priors guiding trust and density setpoints.
- * @return The role plan with diagnostics for every derived or locked family, and any unused candidates.
+ * @param profile Effective theme profile, whose expressiveness modulates structure scoring and fallback bias.
+ * @return The resolved fonts with diagnostics for every derived or locked family, and any unused candidates.
  */
 internal fun resolveFontRoles(
     normalized: NormalizedIntent,
-    aesthetic: MoodProfile,
-    prior: PriorVector,
-): FontRolePlan {
+    profile: ThemeProfile,
+): ResolvedFonts {
     val entries = mutableListOf<ReportEntry>()
     val typography = normalized.typography
 
@@ -34,24 +33,24 @@ internal fun resolveFontRoles(
     val pinnedMetadata = typography.metadata.pinned(LADDER_METADATA, entries)
 
     val assigned =
-        assignCandidateRoles(
+        CandidateAssigner.assign(
             candidates = typography.candidates,
             pinnedStructure = pinnedStructure,
             pinnedContent = pinnedContent,
             pinnedMetadata = pinnedMetadata,
-            aesthetic = aesthetic,
+            profile = profile,
             entries = entries,
         )
 
-    val intentSpecified = isIntentSpecified(normalized)
+    val intentSpecified = normalized.isSpecified
 
     val structureFamily =
         assigned.structure ?: resolveLadderFallback(
             ladder = LADDER_STRUCTURE,
             intentSpecified = intentSpecified,
-            derived = { FontCatalogDerivation.deriveStructure(aesthetic, prior) },
+            derived = { FontCatalogDerivation.deriveStructure(profile) },
             canonical =
-                if (aesthetic.typographyExpressiveness >= DefaultFontBias.DISPLAY_THRESHOLD) {
+                if (profile.typographyExpressiveness >= DefaultFontBias.DISPLAY_THRESHOLD) {
                     DefaultFontBias.DISPLAY
                 } else {
                     DefaultFontBias.TEXT
@@ -63,7 +62,7 @@ internal fun resolveFontRoles(
         assigned.content ?: resolveLadderFallback(
             ladder = LADDER_CONTENT,
             intentSpecified = intentSpecified,
-            derived = { FontCatalogDerivation.deriveContent(aesthetic, prior) },
+            derived = { FontCatalogDerivation.deriveContent(profile) },
             canonical = DefaultFontBias.TEXT,
             entries = entries,
         )
@@ -72,7 +71,7 @@ internal fun resolveFontRoles(
         assigned.metadata ?: resolveLadderFallback(
             ladder = LADDER_METADATA,
             intentSpecified = intentSpecified,
-            derived = { FontCatalogDerivation.deriveMetadata(aesthetic, prior) },
+            derived = { FontCatalogDerivation.deriveMetadata(profile) },
             canonical = DefaultFontBias.METADATA,
             entries = entries,
         )
@@ -80,7 +79,7 @@ internal fun resolveFontRoles(
     val locks = normalized.control?.fonts?.levelFamilies ?: emptyMap()
     entries += lockEntries(locks)
 
-    return FontRolePlan(
+    return ResolvedFonts(
         structure = structureFamily,
         content = contentFamily,
         metadata = metadataFamily,
@@ -105,13 +104,6 @@ private inline fun resolveLadderFallback(
     canonical
 }
 
-private fun isIntentSpecified(normalized: NormalizedIntent): Boolean {
-    val mood = MoodIntent(preset = normalized.preset, knobs = normalized.knobs)
-    val moodSpecified = !mood.isUnspecified()
-    val domainSpecified = normalized.domain.domains.isNotEmpty() || normalized.domain.interactions.isNotEmpty()
-    return moodSpecified || domainSpecified
-}
-
 private class AssignedLadders(
     val structure: FontFamilyRef?,
     val content: FontFamilyRef?,
@@ -119,26 +111,58 @@ private class AssignedLadders(
     val unusedCandidates: List<FontFamilyRef>,
 )
 
-private fun assignCandidateRoles(
-    candidates: List<FontFamilyRef>,
-    pinnedStructure: FontFamilyRef?,
-    pinnedContent: FontFamilyRef?,
-    pinnedMetadata: FontFamilyRef?,
-    aesthetic: MoodProfile,
-    entries: MutableList<ReportEntry>,
-): AssignedLadders {
-    var structure = pinnedStructure
-    var content = pinnedContent
-    var metadata = pinnedMetadata
-    val unused = mutableListOf<FontFamilyRef>()
+private object CandidateAssigner {
+    fun assign(
+        candidates: List<FontFamilyRef>,
+        pinnedStructure: FontFamilyRef?,
+        pinnedContent: FontFamilyRef?,
+        pinnedMetadata: FontFamilyRef?,
+        profile: ThemeProfile,
+        entries: MutableList<ReportEntry>,
+    ): AssignedLadders = when {
+        candidates.size == 1 ->
+            assignSingle(
+                single = candidates[0],
+                pinnedStructure = pinnedStructure,
+                pinnedContent = pinnedContent,
+                pinnedMetadata = pinnedMetadata,
+                entries = entries,
+            )
 
-    if (candidates.size == 1) {
-        val single = candidates[0]
+        candidates.isNotEmpty() ->
+            assignMultiple(
+                candidates = candidates,
+                pinnedStructure = pinnedStructure,
+                pinnedContent = pinnedContent,
+                pinnedMetadata = pinnedMetadata,
+                profile = profile,
+                entries = entries,
+            )
+
+        else -> AssignedLadders(pinnedStructure, pinnedContent, pinnedMetadata, emptyList())
+    }
+
+    private fun assignSingle(
+        single: FontFamilyRef,
+        pinnedStructure: FontFamilyRef?,
+        pinnedContent: FontFamilyRef?,
+        pinnedMetadata: FontFamilyRef?,
+        entries: MutableList<ReportEntry>,
+    ): AssignedLadders {
+        var structure = pinnedStructure
+        var content = pinnedContent
+        var metadata = pinnedMetadata
+
+        val isDisplay =
+            when (single) {
+                is FontFamilyRef.Catalog -> GoogleFontCatalog.find(single.id)?.category == GoogleFontsCategory.Display
+                is FontFamilyRef.Custom -> false
+            }
         if (structure == null) {
             structure = single
             entries += candidateEntry(LADDER_STRUCTURE, single, isReuse = false)
         }
-        if (content == null) {
+        if (content == null && !isDisplay) {
             entries += candidateEntry(LADDER_CONTENT, single, isReuse = structure == single)
             content = single
         }
@@ -147,69 +171,83 @@ private fun assignCandidateRoles(
             entries += candidateEntry(LADDER_METADATA, single, isReuse = isReuse)
             metadata = single
         }
-    } else if (candidates.isNotEmpty()) {
+
+        return AssignedLadders(structure, content, metadata, emptyList())
+    }
+
+    private fun assignMultiple(
+        candidates: List<FontFamilyRef>,
+        pinnedStructure: FontFamilyRef?,
+        pinnedContent: FontFamilyRef?,
+        pinnedMetadata: FontFamilyRef?,
+        profile: ThemeProfile,
+        entries: MutableList<ReportEntry>,
+    ): AssignedLadders {
+        var structure = pinnedStructure
+        var content = pinnedContent
+        var metadata = pinnedMetadata
         val pool = candidates.toMutableList()
+
         if (structure == null && pool.isNotEmpty()) {
-            structure = pickCandidate(pool) { scoreCandidate(it, LADDER_STRUCTURE, aesthetic) }
+            structure = pickCandidate(pool) { scoreCandidate(it, LADDER_STRUCTURE, profile) }
             entries += candidateEntry(LADDER_STRUCTURE, structure, isReuse = false)
         }
         if (content == null && pool.isNotEmpty()) {
-            content = pickCandidate(pool) { scoreCandidate(it, LADDER_CONTENT, aesthetic) }
+            content = pickCandidate(pool) { scoreCandidate(it, LADDER_CONTENT, profile) }
             entries += candidateEntry(LADDER_CONTENT, content, isReuse = false)
         }
         if (metadata == null && pool.isNotEmpty()) {
-            metadata = pickCandidate(pool) { scoreCandidate(it, LADDER_METADATA, aesthetic) }
+            metadata = pickCandidate(pool) { scoreCandidate(it, LADDER_METADATA, profile) }
             entries += candidateEntry(LADDER_METADATA, metadata, isReuse = false)
         }
-        unused += pool
+
+        return AssignedLadders(structure, content, metadata, pool)
     }
 
-    return AssignedLadders(structure, content, metadata, unused)
-}
+    private inline fun pickCandidate(
+        pool: MutableList<FontFamilyRef>,
+        scoreFn: (FontFamilyRef) -> Float,
+    ): FontFamilyRef {
+        var bestIndex = 0
+        var bestScore = scoreFn(pool[0])
 
-private inline fun pickCandidate(
-    pool: MutableList<FontFamilyRef>,
-    scoreFn: (FontFamilyRef) -> Float,
-): FontFamilyRef {
-    var bestIndex = 0
-    var bestScore = scoreFn(pool[0])
-
-    for (i in 1 until pool.size) {
-        val score = scoreFn(pool[i])
-        if (score - bestScore > SCORE_TIE_EPSILON) {
-            bestScore = score
-            bestIndex = i
+        for (i in 1 until pool.size) {
+            val score = scoreFn(pool[i])
+            if (score - bestScore > SCORE_TIE_EPSILON) {
+                bestScore = score
+                bestIndex = i
+            }
         }
+
+        return pool.removeAt(bestIndex)
     }
 
-    return pool.removeAt(bestIndex)
-}
+    private fun scoreCandidate(
+        ref: FontFamilyRef,
+        ladder: String,
+        profile: ThemeProfile,
+    ): Float {
+        val entry =
+            when (ref) {
+                is FontFamilyRef.Catalog -> GoogleFontCatalog.find(ref.id)
+                is FontFamilyRef.Custom -> null
+            } ?: return DEFAULT_NEUTRAL_SCORE
 
-private fun scoreCandidate(
-    ref: FontFamilyRef,
-    ladder: String,
-    aesthetic: MoodProfile,
-): Float {
-    val entry =
-        when (ref) {
-            is FontFamilyRef.Catalog -> GoogleFontCatalog.find(ref.id)
-            is FontFamilyRef.Custom -> null
-        } ?: return DEFAULT_NEUTRAL_SCORE
+        return when (ladder) {
+            LADDER_STRUCTURE -> {
+                val fit = 1.0f - abs(entry.expressiveness - profile.typographyExpressiveness01)
+                entry.displayAffinity + CANDIDATE_EXPRESSIVENESS_WEIGHT * fit
+            }
 
-    return when (ladder) {
-        LADDER_STRUCTURE -> {
-            val fit = 1.0f - abs(entry.expressiveness - aesthetic.typographyExpressiveness01)
-            entry.displayAffinity + EXPRESSIVENESS_WEIGHT * fit
+            LADDER_CONTENT -> entry.textAffinity
+            else -> entry.metaAffinity
         }
-
-        LADDER_CONTENT -> entry.textAffinity
-        else -> entry.metaAffinity
     }
 }
 
 private fun candidateEntry(ladder: String, candidate: FontFamilyRef, isReuse: Boolean): ReportEntry = ReportEntry(
     path = "$FONTS_PATH.$ladder",
-    stage = ResolutionStageId.Fonts,
+    stage = ResolutionStage.Fonts,
     status = ReportStatus.Modulated,
     message =
         if (isReuse) {
@@ -228,7 +266,7 @@ private fun FontFamilyRef?.pinned(ladder: String, entries: MutableList<ReportEnt
     entries +=
         ReportEntry(
             path = "$FONTS_PATH.$ladder",
-            stage = ResolutionStageId.Fonts,
+            stage = ResolutionStage.Fonts,
             status = ReportStatus.Honored,
             message = "Role pin locks the $ladder ladder.",
             requested = label,
@@ -237,10 +275,10 @@ private fun FontFamilyRef?.pinned(ladder: String, entries: MutableList<ReportEnt
     return this
 }
 
-private fun fallbackEntry(ladder: String, fallback: FontFamilyRef, isDynamic: Boolean): List<ReportEntry> = listOf(
+private fun fallbackEntry(ladder: String, fallback: FontFamilyRef, isDynamic: Boolean): ReportEntry =
     ReportEntry(
         path = "$FONTS_PATH.$ladder",
-        stage = ResolutionStageId.Fonts,
+        stage = ResolutionStage.Fonts,
         status = ReportStatus.Absent,
         message =
             if (isDynamic) {
@@ -249,14 +287,13 @@ private fun fallbackEntry(ladder: String, fallback: FontFamilyRef, isDynamic: Bo
                 "No requested family fills the $ladder ladder; derivation bias applied."
             },
         enforced = fallback.label,
-    ),
-)
+    )
 
 private fun lockEntries(locks: Map<TypographyTokenPath, FontFamilyRef>): List<ReportEntry> = locks
     .map { (path, family) ->
         ReportEntry(
             path = path.path,
-            stage = ResolutionStageId.Fonts,
+            stage = ResolutionStage.Fonts,
             status = ReportStatus.Honored,
             message = "Per-level Control lock wins over the ladder family.",
             requested = family.label,
@@ -286,12 +323,3 @@ private const val LADDER_CONTENT: String = "content"
 
 /** Metadata ladder identifier. */
 private const val LADDER_METADATA: String = "metadata"
-
-/** Minimum score difference required to break pairing order tie. */
-private const val SCORE_TIE_EPSILON: Float = 0.05f
-
-/** Weight given to mood expressiveness alignment in structure scoring. */
-private const val EXPRESSIVENESS_WEIGHT: Float = 0.15f
-
-/** Neutral fallback score used when catalog metadata is unavailable. */
-private const val DEFAULT_NEUTRAL_SCORE: Float = 0.5f
