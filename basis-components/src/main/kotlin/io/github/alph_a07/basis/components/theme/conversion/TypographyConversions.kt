@@ -20,53 +20,6 @@ import io.github.alph_a07.basis.theme.tokens.typography.TypeRole
 import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens
 
 /**
- * Converts [TypographyTokens] into [BasisTypographyLocals] using the provided family registry and
- * resolved [ColorTokens].
- *
- * Font families are resolved through [registry]; an unregistered [FontFamilyRef.Custom] key fails fast
- * at theme construction time.
- *
- * @param colors OKLCH source tree for color dereference.
- * @param registry Registry mapping [FontFamilyRef] to a Compose font family.
- * @return Populated typography locals tree.
- */
-internal fun TypographyTokens.toBasisTypographyLocals(
-    colors: ColorTokens,
-    registry: FontFamilyRegistry,
-): BasisTypographyLocals = BasisTypographyLocals(
-    structure = structure.toBasisStructureType(colors, registry),
-    content = content.toBasisContentType(colors, registry),
-    metadata = metadata.toBasisMetadataType(colors, registry),
-)
-
-/**
- * Maps a single [TypeRole] composite to a Compose [TextStyle] using the provided [ColorTokens]
- * and [FontFamilyRegistry].
- *
- * @param colors Color tree for semantic color dereference.
- * @param registry Registry mapping font references to Compose font families.
- * @return Mapped [TextStyle].
- */
-public fun TypeRole.toTextStyle(colors: ColorTokens, registry: FontFamilyRegistry): TextStyle {
-    val resolvedColor =
-        when (val ref = color) {
-            TypeColorRef.ContentDefault -> colors.content.default.toColor()
-            TypeColorRef.ContentMuted -> colors.content.muted.toColor()
-            TypeColorRef.ContentInverse -> colors.content.inverse.toColor()
-            is TypeColorRef.Explicit -> ref.color.toColor()
-        }
-
-    return TextStyle(
-        fontFamily = registry.resolve(family),
-        fontSize = size.value.sp,
-        fontWeight = FontWeight(weight.weight),
-        lineHeight = lineHeight.multiplier.em,
-        letterSpacing = letterSpacing.em.em,
-        color = resolvedColor,
-    )
-}
-
-/**
  * Maps a single [TypeRole] composite to a Compose [TextStyle] using preconverted [BasisColorLocals]
  * and [FontFamilyRegistry].
  *
@@ -93,8 +46,55 @@ public fun TypeRole.toTextStyle(colors: BasisColorLocals, registry: FontFamilyRe
     )
 }
 
-private fun StructureType.toBasisStructureType(
+/**
+ * Maps a single [TypeRole] composite to a Compose [TextStyle] using the provided [ColorTokens]
+ * and [FontFamilyRegistry].
+ *
+ * @param colors Color tree for semantic color dereference.
+ * @param registry Registry mapping font references to Compose font families.
+ * @return Mapped [TextStyle].
+ */
+public fun TypeRole.toTextStyle(colors: ColorTokens, registry: FontFamilyRegistry): TextStyle =
+    toTextStyle(colors.toBasisColorLocals(), registry)
+
+/**
+ * Converts [TypographyTokens] into [BasisTypographyLocals] using the provided family registry and
+ * preconverted [BasisColorLocals].
+ *
+ * Font families are resolved through [registry]; an unregistered [FontFamilyRef.Custom] key fails fast
+ * at theme construction time.
+ *
+ * @param colors Preconverted Compose color locals.
+ * @param registry Registry mapping [FontFamilyRef] to a Compose font family.
+ * @return Populated typography locals tree.
+ */
+internal fun TypographyTokens.toBasisTypographyLocals(
+    colors: BasisColorLocals,
+    registry: FontFamilyRegistry,
+): BasisTypographyLocals = BasisTypographyLocals(
+    structure = structure.toBasisStructureType(colors, registry),
+    content = content.toBasisContentType(colors, registry),
+    metadata = metadata.toBasisMetadataType(colors, registry),
+)
+
+/**
+ * Converts [TypographyTokens] into [BasisTypographyLocals] using the provided family registry and
+ * resolved [ColorTokens].
+ *
+ * Font families are resolved through [registry]; an unregistered [FontFamilyRef.Custom] key fails fast
+ * at theme construction time.
+ *
+ * @param colors OKLCH source tree for color dereference.
+ * @param registry Registry mapping [FontFamilyRef] to a Compose font family.
+ * @return Populated typography locals tree.
+ */
+internal fun TypographyTokens.toBasisTypographyLocals(
     colors: ColorTokens,
+    registry: FontFamilyRegistry,
+): BasisTypographyLocals = toBasisTypographyLocals(colors.toBasisColorLocals(), registry)
+
+private fun StructureType.toBasisStructureType(
+    colors: BasisColorLocals,
     registry: FontFamilyRegistry,
 ): BasisStructureType = BasisStructureType(
     level1 = level1.toTextStyle(colors, registry),
@@ -106,7 +106,7 @@ private fun StructureType.toBasisStructureType(
 )
 
 private fun ContentType.toBasisContentType(
-    colors: ColorTokens,
+    colors: BasisColorLocals,
     registry: FontFamilyRegistry,
 ): BasisContentType = BasisContentType(
     level1 = level1.toTextStyle(colors, registry),
@@ -117,7 +117,7 @@ private fun ContentType.toBasisContentType(
 )
 
 private fun MetadataType.toBasisMetadataType(
-    colors: ColorTokens,
+    colors: BasisColorLocals,
     registry: FontFamilyRegistry,
 ): BasisMetadataType = BasisMetadataType(
     level1 = level1.toTextStyle(colors, registry),

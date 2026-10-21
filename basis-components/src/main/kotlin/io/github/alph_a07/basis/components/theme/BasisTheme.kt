@@ -224,18 +224,22 @@ private fun buildAmbient(
     theme: ResolvedTheme,
     fontRegistry: FontFamilyRegistry,
     report: ResolutionReport?,
-): BasisThemeAmbient = BasisThemeAmbient(
-    theme = theme,
-    colors = theme.color.toBasisColorLocals(),
-    typography = theme.typography.toBasisTypographyLocals(theme.color, fontRegistry),
-    spacing = theme.spacing,
-    radius = theme.radius,
-    depth = theme.depth,
-    size = theme.size,
-    motion = theme.motion.toBasisMotionLocals(),
-    componentPatches = ComponentOverrides(),
-    report = report,
-)
+): BasisThemeAmbient {
+    val colors = theme.color.toBasisColorLocals()
+
+    return BasisThemeAmbient(
+        theme = theme,
+        colors = colors,
+        typography = theme.typography.toBasisTypographyLocals(colors, fontRegistry),
+        spacing = theme.spacing,
+        radius = theme.radius,
+        depth = theme.depth,
+        size = theme.size,
+        motion = theme.motion.toBasisMotionLocals(),
+        componentPatches = ComponentOverrides(),
+        report = report,
+    )
+}
 
 private fun selectTheme(pair: ResolvedThemePair, useDarkTheme: Boolean): ResolvedTheme =
     (if (useDarkTheme) pair.dark ?: pair.light else pair.light ?: pair.dark)
