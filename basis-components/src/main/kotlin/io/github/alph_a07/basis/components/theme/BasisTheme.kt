@@ -13,6 +13,7 @@ import io.github.alph_a07.basis.components.theme.conversion.toBasisMotionLocals
 import io.github.alph_a07.basis.components.theme.conversion.toBasisTypographyLocals
 import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
 import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.intent.controls.ConstraintsControl
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
 import io.github.alph_a07.basis.theme.resolution.resolve
@@ -183,6 +184,11 @@ public object BasisTheme {
     public val componentPatches: ComponentOverrides
         @Composable @ReadOnlyComposable
         get() = requireAmbient().componentPatches
+
+    /** Hard constraints controls from the resolved intent. */
+    public val constraints: ConstraintsControl
+        @Composable @ReadOnlyComposable
+        get() = requireAmbient().constraints
 }
 
 /**

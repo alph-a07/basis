@@ -282,6 +282,39 @@ class BasisThemeTest {
         assertNotNull(ambient)
         assertEquals(FontFamily.Monospace, ambient.typography.content.level1.fontFamily)
     }
+
+    @Test
+    fun basisThemeAccessors_outsideBasisTheme_throwIllegalStateException() {
+        val caught =
+            runCatching {
+                composeRule.setContent {
+                    BasisTheme.colors
+                }
+            }.exceptionOrNull()
+
+        assertNotNull(caught)
+        val isExpectedException = caught is IllegalStateException || caught.cause is IllegalStateException
+
+        assertTrue(isExpectedException, "Expected IllegalStateException, got: $caught")
+        val message = (caught as? IllegalStateException)?.message ?: caught.cause?.message
+        assertNotNull(message)
+        assertTrue(message.contains("BasisTheme"), "Error message should mention BasisTheme, was: $message")
+    }
+
+    @Test
+    fun basisThemeConstraints_outsideBasisTheme_throwsIllegalStateException() {
+        val caught =
+            runCatching {
+                composeRule.setContent {
+                    BasisTheme.constraints
+                }
+            }.exceptionOrNull()
+
+        assertNotNull(caught)
+        val isExpectedException = caught is IllegalStateException || caught.cause is IllegalStateException
+
+        assertTrue(isExpectedException, "Expected IllegalStateException, got: $caught")
+    }
 }
 
 @Composable
