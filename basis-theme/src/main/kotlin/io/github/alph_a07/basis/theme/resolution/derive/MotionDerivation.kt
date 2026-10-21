@@ -5,11 +5,15 @@ import io.github.alph_a07.basis.theme.core.motion.EasingKind
 import io.github.alph_a07.basis.theme.core.motion.MotionSpec
 import io.github.alph_a07.basis.theme.core.motion.SpringParams
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
+import kotlin.math.roundToInt
+
+internal fun deriveMotionTokens(motion: MotionTokens, weights: DerivationWeights): MotionTokens =
+    deriveMotionTokens(motion, weights.durationScale, weights.emphasisBoost)
 
 /**
  * Scales the motion durations and optionally applies spring easing to expansion and emphasis purposes.
  *
- * @param motion Seeded motion tokens.
+ * @param motion Base motion tokens.
  * @param durationScale Multiplier on every motion duration.
  * @param emphasisBoost Emphasis boost in effect; if above the spring threshold, expansion and
  * emphasis purposes take a spring easing.
@@ -56,3 +60,7 @@ private const val SPRING_STIFFNESS: Float = 380f
 
 /** Spring damping ratio used when emphasis lifts a purpose onto a spring easing. */
 private const val SPRING_DAMPING: Float = 0.82f
+
+/** Rounds a scaled millisecond magnitude onto whole milliseconds. */
+internal fun scaleMilliseconds(milliseconds: Long, scale: Float): Long =
+    (milliseconds * scale).roundToInt().toLong().coerceAtLeast(0L)
