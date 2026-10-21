@@ -1,5 +1,9 @@
 package io.github.alph_a07.basis.theme.resolution.fonts
 
+import io.github.alph_a07.basis.theme.resolution.constants.CONTENT_AFFINITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.METADATA_AFFINITY_POOL_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.STRUCTURE_AFFINITY_FLOOR
+import io.github.alph_a07.basis.theme.resolution.constants.TOP_CANDIDATE_POOL_SIZE
 import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
 
 /** Access point for vendored Google Fonts catalog metadata and typographic affinity tags. */
@@ -65,7 +69,7 @@ public object GoogleFontCatalog {
     /** Returns the top candidate entries for metadata/caption typography. */
     internal val topMetadataCandidates: List<FontCatalogEntry> by lazy {
         all.asSequence()
-            .filter { it.metaAffinity >= METADATA_AFFINITY_FLOOR }
+            .filter { it.metaAffinity >= METADATA_AFFINITY_POOL_FLOOR }
             .sortedByDescending { it.metaAffinity }
             .take(TOP_CANDIDATE_POOL_SIZE)
             .toList()
@@ -88,14 +92,4 @@ public object GoogleFontCatalog {
         raw.trim().lowercase().replace('_', '-').replace(' ', '-')
 
     private const val RESOURCE_PATH: String = "/basis/fonts/google-fonts-catalog.bin.gz"
-    private const val TOP_CANDIDATE_POOL_SIZE: Int = 50
-
-    /** Minimum display affinity threshold for structural candidate consideration. */
-    internal const val STRUCTURE_AFFINITY_FLOOR: Float = 0.60f
-
-    /** Minimum text affinity threshold for body content candidate consideration. */
-    internal const val CONTENT_AFFINITY_FLOOR: Float = 0.70f
-
-    /** Minimum metadata affinity threshold for caption/tabular candidate consideration. */
-    internal const val METADATA_AFFINITY_FLOOR: Float = 0.65f
 }
