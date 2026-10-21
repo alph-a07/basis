@@ -11,7 +11,7 @@ import io.github.alph_a07.basis.theme.resolution.ThemeProfile
  * Accessed via [Map.getValue] so a missing entry fails fast instead of silently
  * washing out the blend.
  */
-public val PRODUCT_DOMAIN_INFLUENCES: Map<ProductDomain, ThemeProfile> =
+internal val PRODUCT_DOMAIN_INFLUENCES: Map<ProductDomain, ThemeProfile> =
     mapOf(
         ProductDomain.Finance to
             ThemeProfile(
@@ -121,7 +121,7 @@ public val PRODUCT_DOMAIN_INFLUENCES: Map<ProductDomain, ThemeProfile> =
  * Values are setpoints in `[-1, 1]`. Accessed via [Map.getValue] so a missing
  * entry fails fast instead of silently washing out the blend.
  */
-public val INTERACTION_INFLUENCES: Map<InteractionPattern, ThemeProfile> =
+internal val INTERACTION_INFLUENCES: Map<InteractionPattern, ThemeProfile> =
     mapOf(
         InteractionPattern.DataNavigation to
             ThemeProfile(
@@ -247,47 +247,13 @@ public val INTERACTION_INFLUENCES: Map<InteractionPattern, ThemeProfile> =
     )
 
 /** Product domain label to its locked [ThemeProfile] behavioral setpoint. */
-public fun ProductDomain.toThemeProfile(): ThemeProfile = PRODUCT_DOMAIN_INFLUENCES.getValue(this)
+internal fun ProductDomain.toThemeProfile(): ThemeProfile = PRODUCT_DOMAIN_INFLUENCES.getValue(this)
 
 /** Interaction pattern label to its locked [ThemeProfile] behavioral setpoint. */
-public fun InteractionPattern.toThemeProfile(): ThemeProfile = INTERACTION_INFLUENCES.getValue(this)
+internal fun InteractionPattern.toThemeProfile(): ThemeProfile = INTERACTION_INFLUENCES.getValue(this)
 
 /** Weight of the product domains when both domains and interaction patterns contribute. */
 internal const val DOMAIN_BLEND_WEIGHT: Float = 0.45f
 
 /** Weight of the interaction patterns when both domain and interaction patterns contribute. */
 internal const val INTERACTION_BLEND_WEIGHT: Float = 0.55f
-
-/** Weights for the coupling of influence dimensions to style properties. */
-internal object InfluenceWeights {
-    const val DENSITY_DATA: Float = 0.70f
-    const val DENSITY_INPUT: Float = 0.30f
-    const val ROUND_SOCIAL: Float = 0.60f
-    const val ROUND_TRUST: Float = 0.30f
-    const val ROUND_RISK: Float = 0.20f
-    const val CHROMA_VELOCITY: Float = 0.30f
-    const val CHROMA_MEDIA: Float = 0.20f
-    const val CHROMA_TRUST: Float = 0.20f
-    const val CONTRAST_RISK: Float = 0.35f
-    const val CONTRAST_TRUST: Float = 0.25f
-    const val MOTION_VELOCITY: Float = 0.55f
-    const val MOTION_INPUT: Float = 0.10f
-    const val PLAY_SOCIAL: Float = 0.60f
-    const val PLAY_RISK: Float = 0.50f
-    const val PLAY_TRUST: Float = 0.30f
-    const val TYPE_TRUST: Float = 0.40f
-    const val TYPE_MEDIA: Float = 0.20f
-    const val TYPE_SOCIAL: Float = 0.20f
-}
-
-/** Weights for the coupling of influence dimensions to structural properties. */
-internal object StructuralWeights {
-    const val DEPTH_MEDIA: Float = 0.70f
-    const val DEPTH_DATA: Float = 0.20f
-    const val BORDER_RISK: Float = 0.60f
-    const val BORDER_TRUST: Float = 0.30f
-    const val STATUS_RISK: Float = 0.70f
-    const val FOCUS_INPUT: Float = 0.70f
-    const val FOCUS_RISK: Float = 0.20f
-    const val AVATAR_SOCIAL: Float = 0.60f
-}
