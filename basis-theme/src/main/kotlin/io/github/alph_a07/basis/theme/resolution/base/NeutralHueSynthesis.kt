@@ -1,9 +1,20 @@
-package io.github.alph_a07.basis.theme.resolution.derive
+package io.github.alph_a07.basis.theme.resolution.base
 
 import io.github.alph_a07.basis.theme.intent.ProductDomain
-import io.github.alph_a07.basis.theme.resolution.domain.NEUTRAL_HUE_DEGREES
-import io.github.alph_a07.basis.theme.resolution.domain.PriorVector
-import io.github.alph_a07.basis.theme.resolution.domain.SynthesizedChroma
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_BORDER_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_BRAND_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_CONTENT_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_FOCUS_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_ICON_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_SELECTION_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MAX_SURFACE_CHROMA
+import io.github.alph_a07.basis.theme.resolution.constants.MEDIA_HUE_PULL
+import io.github.alph_a07.basis.theme.resolution.constants.NEUTRAL_HUE_DEGREES
+import io.github.alph_a07.basis.theme.resolution.constants.SOCIAL_HUE_PULL
+import io.github.alph_a07.basis.theme.resolution.constants.WARMTH_HUE_RANGE
+import io.github.alph_a07.basis.theme.resolution.constants.WARM_HUE_ANCHOR
+import io.github.alph_a07.basis.theme.resolution.constants.domainHueAnchor
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -12,22 +23,22 @@ import kotlin.math.sign
 import kotlin.math.sin
 
 /**
- * Synthesizes a neutral hue from domain baseline, interaction priors, and mood warmth.
+ * Synthesizes a neutral hue from domain anchors, interaction influences, and mood warmth.
  *
  * Domain hues are averaged using a circular mean across the 360-degree color wheel. Warmth rotates
  * along the shortest circular arc toward the warm amber anchor (65°).
  *
- * @param prior Prior vector carrying interaction and domain influences.
+ * @param profile Theme profile carrying interaction and domain influences.
  * @param domains Set of selected product domains.
  * @param effectiveWarmth Warmth setting in `[-1.0, 1.0]`.
  * @return Synthesized neutral hue in OKLCH degrees.
  */
 internal fun synthesizeNeutralHue(
-    prior: PriorVector,
+    profile: ThemeProfile,
     domains: Set<ProductDomain>,
     effectiveWarmth: Float,
 ): Float {
-    val domainBaselineHue =
+    val domainAnchorHue =
         if (domains.isEmpty()) {
             NEUTRAL_HUE_DEGREES
         } else {
@@ -35,13 +46,13 @@ internal fun synthesizeNeutralHue(
             circularMean(anchors)
         }
 
-    val interactionHueDelta = prior.socialPresence * SOCIAL_HUE_PULL + prior.mediaRichness * MEDIA_HUE_PULL
-    val baseWithInteractions = normalizeHue(domainBaselineHue + interactionHueDelta)
+    val interactionHueDelta = profile.socialPresence * SOCIAL_HUE_PULL + profile.mediaRichness * MEDIA_HUE_PULL
+    val baseWithInteractions = normalizeHue(domainAnchorHue + interactionHueDelta)
     return applyWarmth(baseWithInteractions, effectiveWarmth)
 }
 
 /**
- * Synthesizes chromas across ColorTokens role axes from the effective aesthetic chroma axis.
+ * Synthesizes chromas across ColorTokens role axes from the effective profile chroma axis.
  *
  * @param effectiveChroma Chroma setting in `[-1.0, 1.0]`.
  * @return Synthesized chroma values for all role axes.
@@ -108,45 +119,8 @@ private fun shortestAngleDelta(from: Float, to: Float): Float {
 
 private fun normalizeHue(hue: Float): Float = ((hue % DEGREES_FULL_CIRCLE) + DEGREES_FULL_CIRCLE) % DEGREES_FULL_CIRCLE
 
-private fun domainHueAnchor(domain: ProductDomain): Float = when (domain) {
-    ProductDomain.Finance -> FINANCE_HUE
-    ProductDomain.Health -> HEALTH_HUE
-    ProductDomain.Social -> SOCIAL_HUE
-    ProductDomain.Productivity -> PRODUCTIVITY_HUE
-    ProductDomain.Commerce -> COMMERCE_HUE
-    ProductDomain.Media -> MEDIA_HUE
-    ProductDomain.Education -> EDUCATION_HUE
-    ProductDomain.Travel -> TRAVEL_HUE
-    ProductDomain.Utilities -> UTILITIES_HUE
-    ProductDomain.Other -> OTHER_HUE
-}
-
 private fun lerp(start: Float, stop: Float, fraction: Float): Float = start + (stop - start) * fraction
-
-private const val FINANCE_HUE: Float = 210f
-private const val HEALTH_HUE: Float = 160f
-private const val SOCIAL_HUE: Float = 295f
-private const val PRODUCTIVITY_HUE: Float = 230f
-private const val COMMERCE_HUE: Float = 30f
-private const val MEDIA_HUE: Float = 270f
-private const val EDUCATION_HUE: Float = 195f
-private const val TRAVEL_HUE: Float = 185f
-private const val UTILITIES_HUE: Float = 240f
-private const val OTHER_HUE: Float = 255f
-
-private const val SOCIAL_HUE_PULL: Float = 8f
-private const val MEDIA_HUE_PULL: Float = -6f
-private const val WARMTH_HUE_RANGE: Float = 25f
-private const val WARM_HUE_ANCHOR: Float = 65f
 
 private const val DEGREES_FULL_CIRCLE: Float = 360f
 private const val DEGREES_HALF_CIRCLE: Float = 180f
 private const val CIRCULAR_SUM_EPSILON: Double = 1e-4
-
-private const val MAX_SURFACE_CHROMA: Float = 0.015f
-private const val MAX_CONTENT_CHROMA: Float = 0.06f
-private const val MAX_ICON_CHROMA: Float = 0.07f
-private const val MAX_BORDER_CHROMA: Float = 0.03f
-private const val MAX_SELECTION_CHROMA: Float = 0.08f
-private const val MAX_FOCUS_CHROMA: Float = 0.14f
-private const val MAX_BRAND_CHROMA: Float = 0.12f
