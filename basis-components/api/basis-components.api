@@ -252,6 +252,7 @@ public final class io/github/alph_a07/basis/components/theme/BasisTheme {
 	public final fun getDepth (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
 	public final fun getMotion (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
 	public final fun getRadius (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
+	public final fun getReport (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;
 	public final fun getSize (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;
 	public final fun getSpacing (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;
 	public final fun getTypography (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisTypographyLocals;
