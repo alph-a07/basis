@@ -5,6 +5,7 @@ import io.github.alph_a07.basis.theme.core.DurationValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.core.SpValue
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.core.color.CategoricalStrategy
 import io.github.alph_a07.basis.theme.core.color.GradientDirection
@@ -57,7 +58,7 @@ private fun gradient(): OklchGradient = OklchGradient(
 
 private fun role(): TypeRole = TypeRole(
     family = FontFamilyRef.Catalog(GoogleFontId("inter")),
-    size = DpValue(16f),
+    size = SpValue(16f),
     weight = FontWeightValue(400),
     lineHeight = LineHeightValue(1.5f),
     letterSpacing = EmValue(0f),

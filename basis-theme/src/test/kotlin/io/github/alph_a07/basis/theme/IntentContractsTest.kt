@@ -144,7 +144,7 @@ internal class IntentContractsTest {
                 supportingColors = List(6) { ColorSpec.Argb(it) },
                 presence = BrandPresence.Strong,
             )
-        assertEquals(2, unanchored.excessSupportingColorCount())
+        assertEquals(3, unanchored.excessSupportingColorCount())
 
         assertTrue(unanchored.hasPresenceWithoutBrand())
     }

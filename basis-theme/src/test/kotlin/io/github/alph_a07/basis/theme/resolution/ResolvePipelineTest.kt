@@ -19,7 +19,6 @@ import io.github.alph_a07.basis.theme.intent.TypographyIdentity
 import io.github.alph_a07.basis.theme.intent.controls.ConstraintsControl
 import io.github.alph_a07.basis.theme.intent.controls.ContrastConstraint
 import io.github.alph_a07.basis.theme.intent.controls.ModeControl
-import io.github.alph_a07.basis.theme.intent.controls.ModeGeneration
 import io.github.alph_a07.basis.theme.intent.controls.MotionConstraint
 import io.github.alph_a07.basis.theme.intent.controls.TouchTargetConstraint
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentId
@@ -33,9 +32,8 @@ import io.github.alph_a07.basis.theme.intent.controls.overrides.TokenOverrides
 import io.github.alph_a07.basis.theme.intent.controls.overrides.Treatment
 import io.github.alph_a07.basis.theme.intent.controls.overrides.UniversalStylePatch
 import io.github.alph_a07.basis.theme.intent.controls.overrides.VariantId
-import io.github.alph_a07.basis.theme.resolution.fonts.DefaultFontBias
+import io.github.alph_a07.basis.theme.resolution.constants.BaseTables
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.seed.BasisSeedCatalog
 import io.github.alph_a07.basis.theme.tokens.core.ColorTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.RadiusTokenPath
 import io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey
@@ -60,14 +58,14 @@ class ResolvePipelineTest {
         assertNotNull(dark)
         assertEquals(ThemeMode.Light, light.mode)
         assertEquals(ThemeMode.Dark, dark.mode)
-        assertEquals(setOf(ThemeMode.Light, ThemeMode.Dark), pair.report.modesGenerated)
-        assertEquals(BasisSeedCatalog.CURRENT, pair.report.seedVersion)
+        assertEquals(setOf(ThemeMode.Light, ThemeMode.Dark), pair.report.modes)
+        assertEquals(BaseTables.CURRENT, pair.report.baseVersion)
     }
 
     @Test
     fun emptyIntentMatchesSeedNeutralTargets() {
         val pair = resolve(BasisIntent())
-        val tables = BasisSeedCatalog.tables()
+        val tables = BaseTables.get()
 
         val lightSurface = pair.light?.color?.surface?.default
         assertNotNull(lightSurface)
@@ -159,8 +157,8 @@ class ResolvePipelineTest {
         val light = pair.light
         assertNotNull(light)
         assertEquals(playfair, light.typography.structure.level1.family)
-        assertEquals(DefaultFontBias.TEXT, light.typography.content.level1.family)
-        assertEquals(DefaultFontBias.METADATA, light.typography.metadata.level1.family)
+        assertTrue(light.typography.content.level1.family is FontFamilyRef.Catalog)
+        assertTrue(light.typography.metadata.level1.family is FontFamilyRef.Catalog)
 
         val structureEntry = pair.report.entries.first { it.path == "typography.structure" }
         assertEquals(ReportStatus.Honored, structureEntry.status)
@@ -361,13 +359,20 @@ class ResolvePipelineTest {
 
     @Test
     fun darkFirstProductGeneratesPairedThemesWithEqualDarkAttention() {
-        val control = ControlIntent(mode = ModeControl(preferred = ThemeMode.Dark, generate = ModeGeneration.Pair))
+        val control =
+            ControlIntent(
+                mode =
+                    ModeControl(
+                        preferred = ThemeMode.Dark,
+                        targets = setOf(ThemeMode.Light, ThemeMode.Dark),
+                    ),
+            )
         val pair = resolve(BasisIntent(control = control))
 
         assertNotNull(pair.light)
         val dark = pair.dark
         assertNotNull(dark)
-        assertEquals(setOf(ThemeMode.Light, ThemeMode.Dark), pair.report.modesGenerated)
+        assertEquals(setOf(ThemeMode.Light, ThemeMode.Dark), pair.report.modes)
 
         val darkSurface = dark.color.surface.default
         assertTrue(darkSurface.l < 0.3f, "dark surface must be properly dark")
@@ -537,12 +542,12 @@ class ResolvePipelineTest {
 
     @Test
     fun lightOnlyGenerationOmitsDark() {
-        val control = ControlIntent(mode = ModeControl(generate = ModeGeneration.LightOnly))
+        val control = ControlIntent(mode = ModeControl(targets = setOf(ThemeMode.Light)))
         val pair = resolve(BasisIntent(control = control))
 
         assertNotNull(pair.light)
         assertNull(pair.dark)
-        assertEquals(setOf(ThemeMode.Light), pair.report.modesGenerated)
+        assertEquals(setOf(ThemeMode.Light), pair.report.modes)
     }
 
     @Test
@@ -564,16 +569,19 @@ class ResolvePipelineTest {
     }
 
     @Test
-    fun reducedMotionCollapsesEveryPurpose() {
+    fun reducedMotionCollapsesSpatialMotionAndRetainsFeedbackFade() {
         val constraints = ConstraintsControl(motion = MotionConstraint(preferReducedMotion = true))
         val pair = resolve(BasisIntent(control = ControlIntent(constraints = constraints)))
 
         val motion = pair.light?.motion
         assertNotNull(motion)
 
+        listOf(motion.feedback, motion.stateTransition).forEach {
+            assertEquals(100L, it.duration.milliseconds)
+            assertEquals(EasingKind.Linear, it.easing)
+        }
+
         listOf(
-            motion.feedback,
-            motion.stateTransition,
             motion.transformation,
             motion.expansion,
             motion.reposition,

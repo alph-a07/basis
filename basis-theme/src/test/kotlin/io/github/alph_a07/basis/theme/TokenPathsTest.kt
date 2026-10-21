@@ -5,6 +5,7 @@ import io.github.alph_a07.basis.theme.core.DurationValue
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
+import io.github.alph_a07.basis.theme.core.SpValue
 import io.github.alph_a07.basis.theme.core.color.GradientDirection
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.core.color.OklchGradient
@@ -105,7 +106,7 @@ internal class TokenPathsTest {
 
             return TypeRole(
                 family = FontFamilyRef.Catalog(GoogleFontId("inter")),
-                size = DpValue(10f + n),
+                size = SpValue(10f + n),
                 weight = FontWeightValue(400),
                 lineHeight = LineHeightValue(1.5f),
                 letterSpacing = EmValue(0f),

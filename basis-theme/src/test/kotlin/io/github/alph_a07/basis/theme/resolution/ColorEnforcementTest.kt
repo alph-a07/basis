@@ -78,7 +78,7 @@ class ColorEnforcementTest {
     }
 
     @Test
-    fun enforceContrastRepairsOwnedPairsInWorkingTheme() {
+    fun enforceContrastRepairsOwnedPairsInThemeDraft() {
         val intent = io.github.alph_a07.basis.theme.intent.BasisIntent()
         val pair = resolve(intent)
         val lightTheme = pair.light
@@ -108,5 +108,46 @@ class ColorEnforcementTest {
                 "Pair ${contrastPair.foregroundPath} on ${contrastPair.backgroundPath} below ratio",
             )
         }
+    }
+
+    @Test
+    fun terminalBehaviorReportsBestEffortWhenRatioCannotBeMet() {
+        val fg = Oklch(l = 0.5f, c = 0.05f, h = 250f)
+        val bg = Oklch(l = 0.52f, c = 0.05f, h = 250f)
+        val impossibleRatio = 20f
+
+        val result = repairContrast(fg, bg, impossibleRatio, isDark = true, backgroundLocked = true)
+        assertFalse(result.ratioMet)
+        assertTrue(result.achievedRatio > 0f)
+        assertTrue(result.achievedRatio < impossibleRatio)
+    }
+
+    @Test
+    fun contentHierarchySeparationPreserved() {
+        val intent = io.github.alph_a07.basis.theme.intent.BasisIntent()
+        val pair = resolve(intent)
+        val lightTheme = pair.light
+        requireNotNull(lightTheme)
+
+        val flattenedContent =
+            lightTheme.color.content.copy(
+                default = Oklch(l = 0.40f, c = 0f, h = 0f),
+                muted = Oklch(l = 0.43f, c = 0f, h = 0f),
+            )
+        val modifiedColor = lightTheme.color.copy(content = flattenedContent)
+
+        val entries = mutableListOf<ReportEntry>()
+        val enforced =
+            enforceContrast(
+                color = modifiedColor,
+                minRatio = 4.5f,
+                lockedColorPaths = emptySet(),
+                isDark = false,
+                entries = entries,
+            )
+
+        val deltaL = kotlin.math.abs(enforced.content.default.l - enforced.content.muted.l)
+        assertTrue(deltaL >= 0.12f - 1e-4f, "Lightness separation deltaL ($deltaL) must be >= 0.12f")
+        assertTrue(entries.any { it.path == "color.content.muted" })
     }
 }

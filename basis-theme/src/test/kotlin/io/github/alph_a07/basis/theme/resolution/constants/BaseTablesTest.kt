@@ -1,14 +1,13 @@
-package io.github.alph_a07.basis.theme.seed
+package io.github.alph_a07.basis.theme.resolution.constants
 
-import io.github.alph_a07.basis.theme.resolution.seed.BasisSeedCatalog
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class SeedCatalogTest {
+class BaseTablesTest {
     @Test
     fun tablesLoad() {
-        val tables = BasisSeedCatalog.tables()
+        val tables = BaseTables.get()
         assertEquals(1, tables.version)
         assertEquals(8, tables.spacing.size)
         assertEquals(8, tables.radiusLevels.size)
@@ -21,7 +20,7 @@ class SeedCatalogTest {
 
     @Test
     fun lightAndDarkNeutralsIndependent() {
-        val t = BasisSeedCatalog.tables()
+        val t = BaseTables.get()
         assertEquals(0.98f, t.lightNeutrals.surfaceL, 0.001f)
         assertEquals(0.16f, t.darkNeutrals.surfaceL, 0.001f)
         assertEquals(0.20f, t.lightNeutrals.contentL, 0.001f)
@@ -29,8 +28,8 @@ class SeedCatalogTest {
     }
 
     @Test
-    fun statusSeedsDualDefined() {
-        val t = BasisSeedCatalog.tables()
+    fun statusBasesDualDefined() {
+        val t = BaseTables.get()
         assertEquals(0.94f, t.statusLight.positiveSurfaceL, 0.001f)
         assertEquals(0.28f, t.statusDark.positiveSurfaceL, 0.001f)
     }
@@ -38,12 +37,12 @@ class SeedCatalogTest {
     @Test
     fun unknownVersionRejected() {
         assertFailsWith<IllegalArgumentException> {
-            BasisSeedCatalog.tables(99)
+            BaseTables.get(99)
         }
     }
 
     @Test
     fun versionBumpPathDocumented() {
-        assertEquals(1, BasisSeedCatalog.CURRENT)
+        assertEquals(1, BaseTables.CURRENT)
     }
 }

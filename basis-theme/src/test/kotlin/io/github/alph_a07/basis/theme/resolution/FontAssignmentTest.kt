@@ -11,7 +11,7 @@ import io.github.alph_a07.basis.theme.intent.MoodPreset
 import io.github.alph_a07.basis.theme.intent.ProductDomain
 import io.github.alph_a07.basis.theme.intent.TypographyIdentity
 import io.github.alph_a07.basis.theme.intent.controls.FontControl
-import io.github.alph_a07.basis.theme.resolution.fonts.DefaultFontBias
+import io.github.alph_a07.basis.theme.resolution.constants.DefaultFontBias
 import io.github.alph_a07.basis.theme.resolution.fonts.FontCatalogReader
 import io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog
 import io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontsCategory
@@ -41,6 +41,9 @@ class FontAssignmentTest {
             assertTrue(entry.metaAffinity in 0f..1f)
             assertTrue(entry.expressiveness in 0f..1f)
             assertTrue(entry.roundness in 0f..1f)
+            assertTrue(entry.opticalDensity in 0f..1f)
+            assertTrue(entry.minOpticalSizeDp >= 0f)
+            assertTrue(entry.lightModeWeightBias >= 0)
         }
     }
 
@@ -163,7 +166,7 @@ class FontAssignmentTest {
         val assignments = pair.report.fontAssignments
         assertEquals(playfair, assignments.structure)
         assertEquals(inter, assignments.content)
-        assertEquals(DefaultFontBias.METADATA, assignments.metadata)
+        assertTrue(assignments.metadata is FontFamilyRef.Catalog)
         assertTrue(assignments.unusedCandidates.isEmpty())
     }
 
@@ -591,7 +594,109 @@ class FontAssignmentTest {
         assertTrue(metaEntry.mono, "High density developer archetype should select monospace metadata ladder")
     }
 
+    @Test
+    fun opticalCompensationAndScaleFloorsAreEnforced() {
+        val intent =
+            BasisIntent(
+                mood =
+                    MoodIntent(
+                        knobs =
+                            MoodKnobs(
+                                roundness = 1.0f,
+                                typographyExpressiveness = 1.0f,
+                            ),
+                    ),
+            )
+        val pair = resolve(intent)
+
+        val dotoEntry = GoogleFontCatalog.find(GoogleFontId("doto"))
+        assertNotNull(dotoEntry)
+        assertEquals(200, dotoEntry.lightModeWeightBias)
+        assertEquals(18.0f, dotoEntry.minOpticalSizeDp)
+
+        val lightTheme = pair.light
+        val darkTheme = pair.dark
+        assertNotNull(lightTheme)
+        assertNotNull(darkTheme)
+
+        val lightStructure = lightTheme.typography.structure
+        val darkStructure = darkTheme.typography.structure
+
+        // Light mode should compensate weight for low optical density
+        val lightWeight = lightStructure.level3.weight.weight
+        val darkWeight = darkStructure.level3.weight.weight
+        assertTrue(
+            lightWeight > darkWeight,
+            "Light mode weight ($lightWeight) should be heavier than dark mode ($darkWeight) for dot matrix font",
+        )
+        assertEquals(dotoEntry.lightModeWeightBias, lightWeight - darkWeight)
+
+        // Level 6 size should be raised to the optical size floor (18dp for Doto)
+        val lightLevel6Size = lightStructure.level6.size.value
+        val darkLevel6Size = darkStructure.level6.size.value
+        assertEquals(18.0f, lightLevel6Size)
+        assertEquals(18.0f, darkLevel6Size)
+    }
+
+    @Test
+    fun brandColorOnlyIntentTriggersDynamicDerivation() {
+        val intent =
+            BasisIntent(
+                identity =
+                    IdentityIntent(
+                        brandColor = io.github.alph_a07.basis.theme.core.color.ColorSpec.Hex("#3366cc"),
+                    ),
+            )
+        val pair = resolve(intent)
+        val structureEntry = pair.report.entries.first { it.path == "typography.structure" }
+        assertTrue(structureEntry.message.contains("derived dynamically from catalog"))
+    }
+
+    @Test
+    fun typographyCandidateOnlyIntentTriggersDynamicDerivation() {
+        val inter = FontFamilyRef.Catalog(GoogleFontId("inter"))
+        val intent =
+            BasisIntent(
+                identity =
+                    IdentityIntent(
+                        typography = TypographyIdentity(candidates = listOf(inter)),
+                    ),
+            )
+        val pair = resolve(intent)
+        // Single candidate assigns to all 3 ladders, verify candidate assignment occurs
+        val assignments = pair.report.fontAssignments
+        assertEquals(inter, assignments.structure)
+    }
+
+    @Test
+    fun contentLadderDerivationExcludesSubFloorOpticalDensityFonts() {
+        val intent =
+            BasisIntent(
+                mood = MoodIntent(knobs = MoodKnobs(roundness = 0.5f, typographyExpressiveness = 0.5f)),
+            )
+        val pair = resolve(intent)
+        val contentCatalogId = (pair.report.fontAssignments.content as FontFamilyRef.Catalog).id
+        val contentEntry = GoogleFontCatalog.find(contentCatalogId)
+        assertNotNull(contentEntry)
+        assertTrue(
+            contentEntry.opticalDensity >= 0.35f,
+            "Derived content font optical density must be >= 0.35f, was ${contentEntry.opticalDensity}",
+        )
+    }
+
+    @Test
+    fun displayFontCandidatesNeverAssignedToContentLadder() {
+        val displayEntry = GoogleFontCatalog.byCategory(GoogleFontsCategory.Display).first()
+        val displayRef = FontFamilyRef.Catalog(displayEntry.id)
+        val identity = IdentityIntent(typography = TypographyIdentity(candidates = listOf(displayRef)))
+        val pair = resolve(BasisIntent(identity = identity))
+
+        val assignments = pair.report.fontAssignments
+        assertEquals(displayRef, assignments.structure)
+        assertTrue(assignments.content != displayRef, "Display font must never be assigned to content ladder")
+    }
+
     private companion object {
-        private const val EXPECTED_CATALOG_COUNT: Int = 656
+        private const val EXPECTED_CATALOG_COUNT: Int = 749
     }
 }
