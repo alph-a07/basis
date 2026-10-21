@@ -1,11 +1,10 @@
-package io.github.alph_a07.basis.theme.resolution.fonts
+package io.github.alph_a07.basis.theme.resolution.constants
 
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
 
 /** Derived font fallbacks used when no requested family fills a ladder. */
 internal object DefaultFontBias {
-
     /** Text-leaning sans used for the content ladder and for restrained structure ladders. */
     val TEXT: FontFamilyRef = FontFamilyRef.Catalog(GoogleFontId("inter"))
 
