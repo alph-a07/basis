@@ -1,9 +1,9 @@
-package io.github.alph_a07.basis.theme.resolution.tables
+package io.github.alph_a07.basis.theme.resolution.constants
 
-/** Mathematical coefficients and thresholds used in token derivation modulators. */
+/** Mathematical coefficients and thresholds used in token derivation weights. */
 internal object DerivationConstants {
-    const val NEUTRAL_HUE_DEGREES: Float = 25f
-    const val BRAND_HUE_DEGREES: Float = 6f
+    const val MAX_NEUTRAL_HUE_SHIFT_DEGREES: Float = 25f
+    const val MAX_BRAND_HUE_SHIFT_DEGREES: Float = 6f
     const val ACCENT_CHROMA: Float = 0.40f
     const val ACCENT_CHROMA_PULLBACK: Float = 0.12f
     const val NEUTRAL_CHROMA: Float = 0.15f
