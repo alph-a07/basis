@@ -3,7 +3,7 @@ package io.github.alph_a07.basis.theme.resolution.normalize
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.resolution.ResolutionContext
-import io.github.alph_a07.basis.theme.resolution.tables.BaseTables
+import io.github.alph_a07.basis.theme.resolution.constants.BaseTables
 
 /** Normalization stage validating and converting raw consumer intent into an initial context. */
 internal object NormalizeStage {

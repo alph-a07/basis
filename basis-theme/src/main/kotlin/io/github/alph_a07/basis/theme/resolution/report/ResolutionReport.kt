@@ -1,7 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.report
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
-import io.github.alph_a07.basis.theme.resolution.tables.BaseTables
+import io.github.alph_a07.basis.theme.resolution.constants.BaseTables
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedThemePair
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 

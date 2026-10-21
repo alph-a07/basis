@@ -2,13 +2,13 @@ package io.github.alph_a07.basis.theme.resolution
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.resolution.constants.BaseSchema
 import io.github.alph_a07.basis.theme.resolution.derive.DerivationWeights
 import io.github.alph_a07.basis.theme.resolution.fonts.ResolvedFonts
 import io.github.alph_a07.basis.theme.resolution.identity.BrandTints
 import io.github.alph_a07.basis.theme.resolution.normalize.NormalizedIntent
 import io.github.alph_a07.basis.theme.resolution.report.FontAssignmentReport
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
-import io.github.alph_a07.basis.theme.resolution.tables.BaseSchema
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 
 /**
