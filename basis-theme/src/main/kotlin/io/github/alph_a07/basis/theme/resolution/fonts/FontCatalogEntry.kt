@@ -18,7 +18,14 @@ import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
  * @property serif Whether letterforms feature serifs or slab brackets.
  * @property mono Whether letterforms have fixed horizontal advance width.
  * @property weightsCount Number of distinct weight steps supported by this family, >= 1.
- * @throws IllegalArgumentException If [familyName] or [googleFontsKey] is blank, or if an affinity is outside `[0, 1]`.
+ * @property opticalDensity Ratio of glyph ink area to bounding box in `[0.0, 1.0]`. Lower values
+ *   indicate perforated, dot-matrix, or hairline strokes.
+ * @property minOpticalSizeDp Minimum readable size in dp before letterforms suffer from spatial
+ *   frequency degradation, >= 0.0.
+ * @property lightModeWeightBias Additional font weight offset recommended in Light mode to compensate for
+ *   optical irradiation, `0..1000`.
+ * @throws IllegalArgumentException If [familyName] or [googleFontsKey] is blank, or if an affinity or density
+ *   is outside `[0, 1]`, or if [minOpticalSizeDp] is negative, or if [lightModeWeightBias] is outside `0..1000`.
  */
 public data class FontCatalogEntry(
     public val id: GoogleFontId,
@@ -34,6 +41,9 @@ public data class FontCatalogEntry(
     public val serif: Boolean,
     public val mono: Boolean,
     public val weightsCount: Int = 1,
+    public val opticalDensity: Float = 0.5f,
+    public val minOpticalSizeDp: Float = 11.0f,
+    public val lightModeWeightBias: Int = 0,
 ) {
     init {
         require(familyName.isNotBlank()) { "FontCatalogEntry familyName must not be blank." }
@@ -55,6 +65,15 @@ public data class FontCatalogEntry(
         }
         require(weightsCount >= 1) {
             "weightsCount must be >= 1, was $weightsCount."
+        }
+        require(opticalDensity in 0.0f..1.0f) {
+            "opticalDensity must be between 0.0 and 1.0, was $opticalDensity."
+        }
+        require(minOpticalSizeDp >= 0.0f) {
+            "minOpticalSizeDp must be >= 0.0, was $minOpticalSizeDp."
+        }
+        require(lightModeWeightBias in 0..1000) {
+            "lightModeWeightBias must be between 0 and 1000, was $lightModeWeightBias."
         }
     }
 }
