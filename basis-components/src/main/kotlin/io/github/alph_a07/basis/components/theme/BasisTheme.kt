@@ -195,6 +195,16 @@ public object BasisTheme {
     public val constraints: ConstraintsControl
         @Composable @ReadOnlyComposable
         get() = requireAmbient().constraints
+
+    /**
+     * Optional resolution diagnostics; present when the host passed the report through
+     * or when using the [ResolvedThemePair] / [BasisIntent] overloads.
+     *
+     * Normal component implementations must not depend on its presence.
+     */
+    public val report: ResolutionReport?
+        @Composable @ReadOnlyComposable
+        get() = requireAmbient().report
 }
 
 /**

@@ -10,6 +10,7 @@ import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.ControlIntent
 import io.github.alph_a07.basis.theme.intent.controls.ModeControl
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
 import io.github.alph_a07.basis.theme.resolution.resolve
 import io.github.alph_a07.basis.theme.tokens.typography.CustomFontKey
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
@@ -149,30 +150,53 @@ class BasisThemeTest {
     fun basisTheme_withReport_exposesDiagnostics() {
         val pair = resolve(BasisIntent())
         var ambient: BasisThemeAmbient? = null
+        var accessorReport: ResolutionReport? = null
 
         composeRule.setContent {
             BasisTheme(theme = pair.light!!, report = pair.report) {
                 ambient = BasisTheme.current
+
+                accessorReport = BasisTheme.report
             }
         }
 
         assertNotNull(ambient)
         assertNotNull(ambient.report, "Report must be forwarded when provided")
+        assertEquals(pair.report, accessorReport, "BasisTheme.report must expose the forwarded diagnostics")
     }
 
     @Test
     fun basisTheme_withoutReport_reportIsNull() {
         val pair = resolve(BasisIntent())
         var ambient: BasisThemeAmbient? = null
+        var accessorReport: ResolutionReport? = "non-null-placeholder" as Any as ResolutionReport
 
         composeRule.setContent {
             BasisTheme(theme = pair.light!!) {
                 ambient = BasisTheme.current
+
+                accessorReport = BasisTheme.report
             }
         }
 
         assertNotNull(ambient)
-        assertEquals(ambient.report, null, "Report must be null when not passed through")
+        assertEquals(null, ambient.report, "Report must be null when not passed through")
+        assertEquals(null, accessorReport, "BasisTheme.report must be null when not provided")
+    }
+
+    @Test
+    fun basisThemePair_forwardsReport() {
+        val pair = resolve(BasisIntent())
+        var reportedViaAccessor: ResolutionReport? = null
+
+        composeRule.setContent {
+            BasisTheme(pair = pair, useDarkTheme = false) {
+                reportedViaAccessor = BasisTheme.report
+            }
+        }
+
+        assertNotNull(reportedViaAccessor, "Report must be forwarded by pair overload")
+        assertEquals(pair.report, reportedViaAccessor)
     }
 
     @Test
