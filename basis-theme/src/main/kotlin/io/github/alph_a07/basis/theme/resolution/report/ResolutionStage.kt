@@ -8,7 +8,7 @@ public enum class ResolutionStage {
     /** Domain and interaction influence blending. */
     Domain,
 
-    /** Mood profile projection. */
+    /** Mood preset and knob resolution. */
     Mood,
 
     /** Brand anchor application. */
