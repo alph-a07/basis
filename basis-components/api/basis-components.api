@@ -321,8 +321,10 @@ public final class io/github/alph_a07/basis/components/theme/conversion/ColorCon
 
 public final class io/github/alph_a07/basis/components/theme/conversion/DepthConversionsKt {
 	public static final fun toElevationDp (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)F
+	public static final fun toShadowBlurDp (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)F
 	public static final fun toShadowColor-4WTKRHQ (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;J)J
 	public static synthetic fun toShadowColor-4WTKRHQ$default (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;JILjava/lang/Object;)J
+	public static final fun toShadowYOffsetDp (Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)F
 }
 
 public final class io/github/alph_a07/basis/components/theme/conversion/DpConversionsKt {
