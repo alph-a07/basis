@@ -2,11 +2,12 @@ package io.github.alph_a07.basis.theme.resolution.enforce
 
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 import io.github.alph_a07.basis.theme.tokens.color.replaceToken
 import io.github.alph_a07.basis.theme.tokens.core.ColorTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.resolveIn
+import kotlin.math.abs
 
 /**
  * Repairs the owned contrast pairs of one mode's color tree.
@@ -52,11 +53,18 @@ internal fun enforceContrast(
                 tree = tree.replaceToken(pair.surface, repair.background)
             }
 
-            entries += repairEntry(pair.foreground.path, floor, surfaceLocked)
+            entries +=
+                repairEntry(
+                    path = pair.foreground.path,
+                    requestedRatio = floor,
+                    achievedRatio = repair.achievedRatio,
+                    ratioMet = repair.ratioMet,
+                    locked = surfaceLocked,
+                )
         }
     }
 
-    return tree
+    return enforceContentHierarchy(tree, isDark, entries)
 }
 
 /**
@@ -85,19 +93,22 @@ internal data class ContrastPair(
 
 private fun repairEntry(
     path: String,
-    minRatio: Float,
+    requestedRatio: Float,
+    achievedRatio: Float,
+    ratioMet: Boolean,
     locked: Boolean,
 ): ReportEntry = ReportEntry(
     path = path,
-    stage = ResolutionStageId.Enforce,
+    stage = ResolutionStage.Enforce,
     status = ReportStatus.OverriddenByConstraint,
     message =
-        if (locked) {
-            "Contrast floor $minRatio could not be met without moving a Control-locked background."
-        } else {
-            "Contrast floor $minRatio applied by lifting lightness."
+        when {
+            !ratioMet -> "Contrast floor $requestedRatio could not be fully met; best-effort achieved $achievedRatio."
+            locked -> "Contrast floor $requestedRatio could not be met without moving a Control-locked background."
+            else -> "Contrast floor $requestedRatio applied by lifting lightness."
         },
-    enforced = minRatio.toString(),
+    requested = requestedRatio.toString(),
+    enforced = achievedRatio.toString(),
 )
 
 /**
@@ -153,5 +164,45 @@ private val OWNED_CONTRAST_PAIRS: List<OwnedContrastPair> =
         ),
     )
 
+private fun enforceContentHierarchy(
+    tree: ColorTokens,
+    isDark: Boolean,
+    entries: MutableList<ReportEntry>,
+): ColorTokens {
+    val defaultContent = tree.content.default
+    val mutedContent = tree.content.muted
+    val deltaL = abs(defaultContent.l - mutedContent.l)
+
+    if (deltaL >= MIN_CONTENT_SEPARATION) {
+        return tree
+    }
+
+    val targetMutedL =
+        if (isDark) {
+            (defaultContent.l - MIN_CONTENT_SEPARATION).coerceAtLeast(0f)
+        } else {
+            (defaultContent.l + MIN_CONTENT_SEPARATION).coerceAtMost(1f)
+        }
+
+    val separatedMuted = mutedContent.copy(l = targetMutedL)
+    entries +=
+        ReportEntry(
+            path = ColorTokenPath.ContentMuted.path,
+            stage = ResolutionStage.Enforce,
+            status = ReportStatus.OverriddenByConstraint,
+            message = "Separation constraint applied to preserve hierarchy between content.default and content.muted.",
+            requested = mutedContent.l.toString(),
+            enforced = targetMutedL.toString(),
+        )
+
+    return tree.copy(
+        content = tree.content.copy(muted = separatedMuted),
+        icon = tree.icon.copy(muted = tree.icon.muted.copy(l = targetMutedL)),
+    )
+}
+
 /** Contrast ratio a focus ring must reach to stay detectable, below the body-text floor. */
 private const val FOCUS_MIN_CONTRAST: Float = 3f
+
+/** Minimum lightness separation required between content.default and content.muted to preserve hierarchy. */
+private const val MIN_CONTENT_SEPARATION: Float = 0.12f
