@@ -4,10 +4,10 @@ import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.core.motion.MotionSpec
 import io.github.alph_a07.basis.theme.intent.controls.overrides.OverrideValue
-import io.github.alph_a07.basis.theme.resolution.WorkingTheme
+import io.github.alph_a07.basis.theme.resolution.ThemeDraft
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 import io.github.alph_a07.basis.theme.tokens.color.replaceToken
 import io.github.alph_a07.basis.theme.tokens.core.ColorTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.DepthTokenPath
@@ -33,19 +33,19 @@ import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens
  * rejected rather than silently ignored. Mode-scoped color values resolve per mode; a value scoped
  * away from [mode] is skipped with a report entry.
  *
- * @param theme Working tree after derivation and font assignment.
+ * @param draft Draft tree after derivation and font assignment.
  * @param paths Dotted-path to override value pairs as specified.
  * @param mode Mode being resolved.
  * @param entries Accumulator of diagnostics for unknown and skipped paths.
- * @return The working tree with every recognized path applied.
+ * @return The draft tree with every recognized path applied.
  */
 internal fun applyPathOverrides(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     paths: Map<String, OverrideValue>,
     mode: ThemeMode,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
-    var current = theme
+): ThemeDraft {
+    var current = draft
 
     paths.forEach { (path, value) ->
         current = applyPath(current, path, value, mode, entries)
@@ -55,132 +55,132 @@ internal fun applyPathOverrides(
 }
 
 private fun applyPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue,
     mode: ThemeMode,
     entries: MutableList<ReportEntry>,
-): WorkingTheme = when (value) {
+): ThemeDraft = when (value) {
     is OverrideValue.Color -> {
-        applyColorPath(theme, path, value, mode, entries)
+        applyColorPath(draft, path, value, mode, entries)
     }
 
     is OverrideValue.Dp -> {
-        applyDpPath(theme, path, value, entries)
+        applyDpPath(draft, path, value, entries)
     }
 
     is OverrideValue.Depth -> {
-        applyDepthPath(theme, path, value, entries)
+        applyDepthPath(draft, path, value, entries)
     }
 
     is OverrideValue.Motion -> {
-        applyMotionPath(theme, path, value, entries)
+        applyMotionPath(draft, path, value, entries)
     }
 
     is OverrideValue.Typography -> {
-        applyTypographyPath(theme, path, value, entries)
+        applyTypographyPath(draft, path, value, entries)
     }
 }
 
 @Suppress("ReturnCount")
 private fun applyColorPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue.Color,
     mode: ThemeMode,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
+): ThemeDraft {
     val token = ColorTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
-        return theme
+        return draft
     }
 
     val resolved = value.value.forMode(mode)
     if (resolved == null) {
         entries += skippedPath(path)
-        return theme
+        return draft
     }
 
-    return theme.copy(color = theme.color.replaceToken(token, resolved))
+    return draft.copy(color = draft.color.replaceToken(token, resolved))
 }
 
 @Suppress("ReturnCount")
 private fun applyDpPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue.Dp,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
+): ThemeDraft {
     val spacingPath = SpacingTokenPath.entries.firstOrNull { it.path == path }
     if (spacingPath != null) {
-        return theme.copy(spacing = replaceSpacing(theme.spacing, spacingPath, value.value))
+        return draft.copy(spacing = replaceSpacing(draft.spacing, spacingPath, value.value))
     }
 
     val radiusPath = RadiusTokenPath.entries.firstOrNull { it.path == path }
     if (radiusPath != null) {
-        return theme.copy(radius = replaceRadius(theme.radius, radiusPath, value.value))
+        return draft.copy(radius = replaceRadius(draft.radius, radiusPath, value.value))
     }
 
     entries += unknownPath(path)
-    return theme
+    return draft
 }
 
 private fun applyDepthPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue.Depth,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
+): ThemeDraft {
     val token = DepthTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
-        return theme
+        return draft
     }
 
-    return theme.copy(depth = replaceDepth(theme.depth, token, value.value))
+    return draft.copy(depth = replaceDepth(draft.depth, token, value.value))
 }
 
 private fun applyMotionPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue.Motion,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
+): ThemeDraft {
     val token = MotionTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
-        return theme
+        return draft
     }
 
-    return theme.copy(motion = replaceMotion(theme.motion, token, value.value))
+    return draft.copy(motion = replaceMotion(draft.motion, token, value.value))
 }
 
 private fun applyTypographyPath(
-    theme: WorkingTheme,
+    draft: ThemeDraft,
     path: String,
     value: OverrideValue.Typography,
     entries: MutableList<ReportEntry>,
-): WorkingTheme {
+): ThemeDraft {
     val token = TypographyTokenPath.entries.firstOrNull { it.path == path }
     if (token == null) {
         entries += unknownPath(path)
-        return theme
+        return draft
     }
 
-    return theme.copy(typography = replaceRole(theme.typography, token, value.value))
+    return draft.copy(typography = replaceRole(draft.typography, token, value.value))
 }
 
 private fun unknownPath(path: String): ReportEntry = ReportEntry(
     path = path,
-    stage = ResolutionStageId.Control,
+    stage = ResolutionStage.Control,
     status = ReportStatus.Rejected,
     message = "Override path does not address a known token.",
 )
 
 private fun skippedPath(path: String): ReportEntry = ReportEntry(
     path = path,
-    stage = ResolutionStageId.Control,
+    stage = ResolutionStage.Control,
     status = ReportStatus.Rejected,
     message = "Override value is scoped to a mode that was not generated.",
 )
