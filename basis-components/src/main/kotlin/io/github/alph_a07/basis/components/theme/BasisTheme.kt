@@ -41,6 +41,12 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * [FontFamilyRef.Custom] key will throw at theme construction time. Catalog Google Fonts are
  * resolved and downloaded automatically using [FontFamilyRegistry.Default].
  *
+ * ### Nested themes
+ * When a `BasisTheme` is nested inside an existing `BasisTheme` block, the nested block completely
+ * replaces the ambient for its composable subtree. There is no implicit blending or merging of the
+ * outer and inner themes or their underlying intents. This allows localized mode overrides (such as
+ * a dark card inside a light screen), branded feature sections, or isolated component previews.
+ *
  * @param theme The resolved single-mode theme tree.
  * @param fontRegistry Registry mapping font references to Compose font families. Defaults to
  * [FontFamilyRegistry.Default].

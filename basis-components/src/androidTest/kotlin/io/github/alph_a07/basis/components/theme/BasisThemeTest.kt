@@ -178,21 +178,25 @@ class BasisThemeTest {
     @Test
     fun nestedBasisTheme_replacesAmbientForSubtree() {
         val pair = resolve(BasisIntent())
-        var outerMode: ThemeMode? = null
+        var outerModeBefore: ThemeMode? = null
         var innerMode: ThemeMode? = null
+        var outerModeAfter: ThemeMode? = null
 
         composeRule.setContent {
             BasisTheme(theme = pair.light!!) {
-                outerMode = BasisTheme.current.theme.mode
+                outerModeBefore = BasisTheme.current.theme.mode
 
                 BasisTheme(theme = pair.dark!!) {
                     innerMode = BasisTheme.current.theme.mode
                 }
+
+                outerModeAfter = BasisTheme.current.theme.mode
             }
         }
 
-        assertEquals(outerMode, pair.light!!.mode, "Outer ambient must be light")
-        assertEquals(innerMode, pair.dark!!.mode, "Inner ambient must be replaced by dark")
+        assertEquals(pair.light!!.mode, outerModeBefore, "Outer ambient must be light before inner block")
+        assertEquals(pair.dark!!.mode, innerMode, "Inner ambient must be replaced by dark")
+        assertEquals(pair.light!!.mode, outerModeAfter, "Outer ambient must remain light after inner block")
     }
 
     @Test

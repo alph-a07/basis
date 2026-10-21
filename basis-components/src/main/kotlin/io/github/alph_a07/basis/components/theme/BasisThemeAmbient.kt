@@ -17,6 +17,9 @@ import io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens
  * components read through typed accessors while advanced consumers can reach raw tokens via
  * [BasisTheme.current].
  *
+ * When nested under another [BasisTheme], an ambient completely replaces any outer ambient for its
+ * subtree without merging.
+ *
  * @property theme OKLCH source-of-truth retained for diagnostics and advanced access.
  * @property colors Compose-ready color locals converted at the theme entry boundary.
  * @property typography Compose-ready typography locals with [TextStyle] per type role.
