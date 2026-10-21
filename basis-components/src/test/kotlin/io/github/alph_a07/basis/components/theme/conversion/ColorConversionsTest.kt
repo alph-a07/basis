@@ -2,9 +2,11 @@ package io.github.alph_a07.basis.components.theme.conversion
 
 import androidx.compose.ui.graphics.Color
 import io.github.alph_a07.basis.components.theme.BasisColorLocals
+import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.resolution.resolve
+import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import kotlin.math.abs
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -78,7 +80,7 @@ class ColorConversionsTest {
 
     @Test
     fun colorSpecArgb_toColor_mapsDirectly() {
-        val spec = io.github.alph_a07.basis.theme.core.color.ColorSpec.Argb(-0x10000)
+        val spec = ColorSpec.Argb(-0x10000)
         val color = spec.toColor()
 
         assertEquals(1f, color.alpha)
@@ -123,5 +125,86 @@ class ColorConversionsTest {
         assertNotNull(locals.info.surface)
 
         assertNotNull(locals.brand.primary)
+    }
+
+    @Test
+    fun toBasisColorLocals_matchesTokenConversionExactly() {
+        val theme = resolve(BasisIntent()).light!!
+        val locals = theme.color.toBasisColorLocals()
+
+        assertEquals(theme.color.surface.default.toColor(), locals.surface.default)
+        assertEquals(theme.color.surface.elevated.toColor(), locals.surface.elevated)
+        assertEquals(theme.color.surface.recessed.toColor(), locals.surface.recessed)
+        assertEquals(theme.color.surface.inverse.toColor(), locals.surface.inverse)
+
+        assertEquals(theme.color.content.default.toColor(), locals.content.default)
+        assertEquals(theme.color.content.muted.toColor(), locals.content.muted)
+        assertEquals(theme.color.content.inverse.toColor(), locals.content.inverse)
+
+        assertEquals(theme.color.icon.default.toColor(), locals.icon.default)
+        assertEquals(theme.color.icon.muted.toColor(), locals.icon.muted)
+        assertEquals(theme.color.icon.inverse.toColor(), locals.icon.inverse)
+
+        assertEquals(theme.color.border.default.toColor(), locals.border.default)
+        assertEquals(theme.color.border.muted.toColor(), locals.border.muted)
+        assertEquals(theme.color.border.strong.toColor(), locals.border.strong)
+        assertEquals(theme.color.border.inverse.toColor(), locals.border.inverse)
+
+        assertEquals(theme.color.selection.surface.toColor(), locals.selection.surface)
+        assertEquals(theme.color.selection.content.toColor(), locals.selection.content)
+        assertEquals(theme.color.selection.border.toColor(), locals.selection.border)
+
+        assertEquals(theme.color.focus.ring.toColor(), locals.focus.ring)
+
+        assertEquals(theme.color.positive.surface.toColor(), locals.positive.surface)
+        assertEquals(theme.color.negative.surface.toColor(), locals.negative.surface)
+        assertEquals(theme.color.caution.surface.toColor(), locals.caution.surface)
+        assertEquals(theme.color.info.surface.toColor(), locals.info.surface)
+
+        assertEquals(theme.color.brand.primary.toColor(), locals.brand.primary)
+    }
+
+    @Test
+    fun toBasisColorLocals_supportingBrandColors_preserveNullWhenUnspecified() {
+        val baseTheme = resolve(BasisIntent()).light!!
+        val customColorTokens =
+            baseTheme.color.copy(
+                brand =
+                    BrandColors(
+                        primary = Oklch(0.5f, 0f, 0f),
+                        secondary = null,
+                        tertiary = null,
+                        quaternary = null,
+                    ),
+            )
+        val locals = customColorTokens.toBasisColorLocals()
+
+        assertEquals(null, locals.brand.secondary)
+        assertEquals(null, locals.brand.tertiary)
+
+        assertEquals(null, locals.brand.quaternary)
+    }
+
+    @Test
+    fun toBasisColorLocals_supportingBrandColors_convertsWhenSpecified() {
+        val baseTheme = resolve(BasisIntent()).light!!
+        val secondaryOklch = Oklch(0.6f, 0.1f, 120f)
+        val customColorTokens =
+            baseTheme.color.copy(
+                brand =
+                    BrandColors(
+                        primary = Oklch(0.5f, 0.2f, 30f),
+                        secondary = secondaryOklch,
+                        tertiary = null,
+                        quaternary = null,
+                    ),
+            )
+        val locals = customColorTokens.toBasisColorLocals()
+
+        assertNotNull(locals.brand.secondary)
+        assertEquals(secondaryOklch.toColor(), locals.brand.secondary)
+        assertEquals(null, locals.brand.tertiary)
+
+        assertEquals(null, locals.brand.quaternary)
     }
 }
