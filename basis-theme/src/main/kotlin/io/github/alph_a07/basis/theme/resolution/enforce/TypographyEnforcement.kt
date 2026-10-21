@@ -1,44 +1,83 @@
 package io.github.alph_a07.basis.theme.resolution.enforce
 
-import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.SpValue
+import io.github.alph_a07.basis.theme.resolution.fonts.FontCatalogEntry
+import io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
-import io.github.alph_a07.basis.theme.resolution.report.ResolutionStageId
+import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
 import io.github.alph_a07.basis.theme.tokens.typography.ContentType
+import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.MetadataType
 import io.github.alph_a07.basis.theme.tokens.typography.StructureType
+import io.github.alph_a07.basis.theme.tokens.typography.TypeColorRef
 import io.github.alph_a07.basis.theme.tokens.typography.TypeRole
 import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens
 
 /**
- * Raises every rendered text size to the readable floor.
+ * Enforces hardware and optical readability floors onto rendered typography.
+ *
+ * Text sizes are guaranteed not to drop below the readable floor [floor] or the font's
+ * hardware optical frequency threshold [FontCatalogEntry.minOpticalSizeDp]. Low-fill display
+ * families in Light mode are protected against dilution onto muted content colors.
  *
  * @param typography Derived typography tree.
  * @param floor Smallest allowed rendered text size.
- * @param entries Accumulator of report entries for actual raises.
- * @return The typography tree with every size at or above the floor.
+ * @param isDark Whether the active mode is Dark mode.
+ * @param entries Accumulator of report entries for actual overrides.
+ * @return The typography tree with every size and color constraint enforced.
  */
-internal fun enforceTextSizes(
+internal fun enforceTypographyConstraints(
     typography: TypographyTokens,
-    floor: DpValue,
+    floor: SpValue,
+    isDark: Boolean,
     entries: MutableList<ReportEntry>,
 ): TypographyTokens {
     fun role(current: TypeRole, path: String): TypeRole {
-        if (current.size.value >= floor.value) {
-            return current
+        val entry = (current.family as? FontFamilyRef.Catalog)?.let { GoogleFontCatalog.find(it.id) }
+        val opticalFloor = entry?.minOpticalSizeDp ?: floor.value
+        val effectiveFloor = maxOf(floor.value, opticalFloor)
+
+        var role = current
+        if (role.size.value < effectiveFloor) {
+            val message =
+                if (opticalFloor > floor.value) {
+                    "Display font size raised to optical legibility floor."
+                } else {
+                    "Text size raised to the minimum readable size."
+                }
+
+            entries +=
+                ReportEntry(
+                    path = path,
+                    stage = ResolutionStage.Enforce,
+                    status = ReportStatus.OverriddenByConstraint,
+                    message = message,
+                    requested = "${role.size.value}",
+                    enforced = "$effectiveFloor",
+                )
+
+            role = role.copy(size = SpValue(effectiveFloor))
         }
 
-        entries +=
-            ReportEntry(
-                path = path,
-                stage = ResolutionStageId.Enforce,
-                status = ReportStatus.OverriddenByConstraint,
-                message = "Text size raised to the minimum readable size.",
-                requested = "${current.size.value}",
-                enforced = "${floor.value}",
-            )
+        if (!isDark && entry != null && entry.opticalDensity < LOW_OPTICAL_DENSITY_THRESHOLD) {
+            if (role.color == TypeColorRef.ContentMuted) {
+                entries +=
+                    ReportEntry(
+                        path = "$path.color",
+                        stage = ResolutionStage.Enforce,
+                        status = ReportStatus.OverriddenByConstraint,
+                        message =
+                            "Low-fill font in light mode promoted to default content color for optical legibility.",
+                        requested = "content.muted",
+                        enforced = "content.default",
+                    )
 
-        return current.copy(size = floor)
+                role = role.copy(color = TypeColorRef.ContentDefault)
+            }
+        }
+
+        return role
     }
 
     return typography.copy(
@@ -67,3 +106,5 @@ internal fun enforceTextSizes(
             ),
     )
 }
+
+private const val LOW_OPTICAL_DENSITY_THRESHOLD: Float = 0.35f
