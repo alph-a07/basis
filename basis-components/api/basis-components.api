@@ -247,6 +247,7 @@ public final class io/github/alph_a07/basis/components/theme/BasisTheme {
 	public static final field INSTANCE Lio/github/alph_a07/basis/components/theme/BasisTheme;
 	public final fun getColors (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisColorLocals;
 	public final fun getComponentPatches (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun getConstraints (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;
 	public final fun getCurrent (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
 	public final fun getDepth (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
 	public final fun getMotion (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisMotionLocals;
