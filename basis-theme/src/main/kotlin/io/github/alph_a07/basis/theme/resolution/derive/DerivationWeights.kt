@@ -1,7 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.derive
 
 import io.github.alph_a07.basis.theme.resolution.ThemeProfile
-import io.github.alph_a07.basis.theme.resolution.tables.DerivationConstants
+import io.github.alph_a07.basis.theme.resolution.constants.DerivationConstants
 import io.github.alph_a07.basis.theme.resolution.typographyExpressiveness01
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -76,8 +76,8 @@ internal fun calculateDerivationWeights(profile: ThemeProfile): DerivationWeight
     val motionT = (profile.motionEnergy + 1f) / 2f
 
     return DerivationWeights(
-        neutralHueShiftDegrees = profile.warmth * DerivationConstants.NEUTRAL_HUE_DEGREES,
-        brandDerivativeMaxShiftDegrees = profile.warmth * DerivationConstants.BRAND_HUE_DEGREES,
+        neutralHueShiftDegrees = profile.warmth * DerivationConstants.MAX_NEUTRAL_HUE_SHIFT_DEGREES,
+        brandDerivativeMaxShiftDegrees = profile.warmth * DerivationConstants.MAX_BRAND_HUE_SHIFT_DEGREES,
         accentChromaScale = calculateAccentChroma(profile.chroma, profile.contrast),
         neutralChromaScale = 1f + profile.chroma * DerivationConstants.NEUTRAL_CHROMA,
         lightnessDeltaScale = calculateLightnessDelta(profile.contrast, profile.chroma),
