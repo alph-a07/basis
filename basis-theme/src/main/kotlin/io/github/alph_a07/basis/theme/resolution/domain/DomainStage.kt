@@ -13,7 +13,7 @@ internal object DomainStage {
      * @param context Resolution context holding normalized domain intent.
      */
     fun process(context: ResolutionContext) {
-        context.profile = blendInfluenceProfiles(context.normalized.domain)
+        context.profile = blendDomainInfluence(context.normalized.domain)
 
         val contributors = context.normalized.domain.contributors()
         val entry =

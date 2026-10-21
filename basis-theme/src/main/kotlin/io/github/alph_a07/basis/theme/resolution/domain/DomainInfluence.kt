@@ -4,9 +4,9 @@ import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain
 import io.github.alph_a07.basis.theme.resolution.ThemeProfile
-import io.github.alph_a07.basis.theme.resolution.tables.DOMAIN_BLEND_WEIGHT
-import io.github.alph_a07.basis.theme.resolution.tables.INTERACTION_BLEND_WEIGHT
-import io.github.alph_a07.basis.theme.resolution.tables.toThemeProfile
+import io.github.alph_a07.basis.theme.resolution.constants.DOMAIN_BLEND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.INTERACTION_BLEND_WEIGHT
+import io.github.alph_a07.basis.theme.resolution.constants.toThemeProfile
 
 /**
  * Deterministic multi-select blend of product domain and interaction pattern influences.
@@ -15,7 +15,7 @@ import io.github.alph_a07.basis.theme.resolution.tables.toThemeProfile
  * @return Blended profile clamped per dimension to `[-1, 1]`; [ThemeProfile.NEUTRAL]
  * when nothing is selected.
  */
-internal fun blendInfluenceProfiles(intent: DomainIntent): ThemeProfile {
+internal fun blendDomainInfluence(intent: DomainIntent): ThemeProfile {
     val domainProfiles = intent.domains.map { it.toThemeProfile() }
     val interactionProfiles = intent.interactions.map { it.toThemeProfile() }
 
