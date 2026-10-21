@@ -29,7 +29,7 @@ internal object DomainStage {
                     path = "domain",
                     stage = ResolutionStage.Domain,
                     status = ReportStatus.Honored,
-                    message = "Domain and interaction influences blended into baseline profile.",
+                    message = "Domain and interaction influences blended into theme profile.",
                     enforced = contributors.joinToString(),
                 )
             }
