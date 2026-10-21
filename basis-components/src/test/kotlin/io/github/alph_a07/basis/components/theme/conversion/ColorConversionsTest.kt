@@ -30,6 +30,16 @@ class ColorConversionsTest {
     }
 
     @Test
+    fun toColor_primaryRed_mapsCorrectly() {
+        val redOklch = Oklch(l = 0.628f, c = 0.258f, h = 29.2f)
+        val color = redOklch.toColor()
+
+        assertTrue(color.red > 0.8f, "Red channel should be dominant, got ${color.red}")
+        assertTrue(color.green < 0.2f, "Green channel should be low, got ${color.green}")
+        assertTrue(color.blue < 0.2f, "Blue channel should be low, got ${color.blue}")
+    }
+
+    @Test
     fun toColor_whiteOklch_mapsToWhite() {
         val oklch = Oklch(l = 1f, c = 0f, h = 0f)
         val color = oklch.toColor()
