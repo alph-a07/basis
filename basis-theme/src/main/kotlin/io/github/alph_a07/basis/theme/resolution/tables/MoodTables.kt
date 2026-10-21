@@ -1,17 +1,18 @@
-package io.github.alph_a07.basis.theme.resolution.mood
+package io.github.alph_a07.basis.theme.resolution.tables
 
 import io.github.alph_a07.basis.theme.intent.MoodPreset
+import io.github.alph_a07.basis.theme.resolution.ThemeProfile
 
 /**
- * Mood presets to their [MoodProfile] setpoints.
+ * Mood presets to their [ThemeProfile] setpoints.
  *
- * `Neutral` maps to [MoodProfile.NEUTRAL] and is intentionally absent: lookup
+ * `Neutral` maps to [ThemeProfile.NEUTRAL] and is intentionally absent: lookup
  * falls back to neutral so an unlisted preset can never silently resolve.
  */
-public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
+internal val MOOD_PRESET_PROFILES: Map<MoodPreset, ThemeProfile> =
     mapOf(
         MoodPreset.Calm to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0.15f,
                 chroma = -0.45f,
                 contrast = -0.35f,
@@ -22,7 +23,7 @@ public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
                 playfulness = -0.40f,
             ),
         MoodPreset.Professional to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0f,
                 chroma = -0.25f,
                 contrast = 0.15f,
@@ -33,7 +34,7 @@ public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
                 playfulness = -0.60f,
             ),
         MoodPreset.Bold to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0f,
                 chroma = 0.35f,
                 contrast = 0.55f,
@@ -44,7 +45,7 @@ public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
                 playfulness = -0.15f,
             ),
         MoodPreset.Playful to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0.25f,
                 chroma = 0.40f,
                 contrast = 0.10f,
@@ -55,7 +56,7 @@ public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
                 playfulness = 0.75f,
             ),
         MoodPreset.Minimal to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0f,
                 chroma = -0.55f,
                 contrast = 0.05f,
@@ -66,7 +67,7 @@ public val MOOD_PRESET_PROFILES: Map<MoodPreset, MoodProfile> =
                 playfulness = -0.50f,
             ),
         MoodPreset.Expressive to
-            MoodProfile(
+            ThemeProfile(
                 warmth = 0.10f,
                 chroma = 0.65f,
                 contrast = 0.25f,
