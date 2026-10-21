@@ -30,57 +30,57 @@ package io.github.alph_a07.basis.theme.resolution
  * @property contentVelocity Dynamic, streaming, or time-sensitive content updates.
  * @property mediaRichness Imagery, audio, visual depth, and illustrative elements.
  */
-public data class ThemeProfile(
+internal data class ThemeProfile(
     // Visual Style Axes
-    public val warmth: Float = 0f,
-    public val chroma: Float = 0f,
-    public val contrast: Float = 0f,
-    public val density: Float = 0f,
-    public val roundness: Float = 0f,
-    public val typographyExpressiveness: Float = 0f,
-    public val motionEnergy: Float = 0f,
-    public val playfulness: Float = 0f,
+    val warmth: Float = 0f,
+    val chroma: Float = 0f,
+    val contrast: Float = 0f,
+    val density: Float = 0f,
+    val roundness: Float = 0f,
+    val typographyExpressiveness: Float = 0f,
+    val motionEnergy: Float = 0f,
+    val playfulness: Float = 0f,
 
     // Structural Biases
-    public val ctaEmphasis: Float = 0f,
-    public val depthEmphasis: Float = 0f,
-    public val borderClarity: Float = 0f,
-    public val statusClarity: Float = 0f,
-    public val focusEmphasis: Float = 0f,
-    public val avatarBias: Float = 0f,
+    val ctaEmphasis: Float = 0f,
+    val depthEmphasis: Float = 0f,
+    val borderClarity: Float = 0f,
+    val statusClarity: Float = 0f,
+    val focusEmphasis: Float = 0f,
+    val avatarBias: Float = 0f,
 
     // Behavioral Influence Dimensions
-    public val dataDensity: Float = 0f,
-    public val inputHeaviness: Float = 0f,
-    public val transactionality: Float = 0f,
-    public val socialPresence: Float = 0f,
-    public val trustStrictness: Float = 0f,
-    public val riskSensitivity: Float = 0f,
-    public val contentVelocity: Float = 0f,
-    public val mediaRichness: Float = 0f,
+    val dataDensity: Float = 0f,
+    val inputHeaviness: Float = 0f,
+    val transactionality: Float = 0f,
+    val socialPresence: Float = 0f,
+    val trustStrictness: Float = 0f,
+    val riskSensitivity: Float = 0f,
+    val contentVelocity: Float = 0f,
+    val mediaRichness: Float = 0f,
 ) {
-    public companion object {
+    companion object {
         /** Neutral theme profile with every axis centered at `0.0`. */
-        public val NEUTRAL: ThemeProfile = ThemeProfile()
+        val NEUTRAL: ThemeProfile = ThemeProfile()
     }
 }
 
 /** Projects [ThemeProfile.typographyExpressiveness] from `[-1, 1]` to the unit interval `[0, 1]`. */
-public val ThemeProfile.typographyExpressiveness01: Float
+internal val ThemeProfile.typographyExpressiveness01: Float
     get() = ((typographyExpressiveness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
 
 /** Projects [ThemeProfile.roundness] from `[-1, 1]` to the unit interval `[0, 1]`. */
-public val ThemeProfile.roundness01: Float
+internal val ThemeProfile.roundness01: Float
     get() = ((roundness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
 
 /** Projects [ThemeProfile.density] from `[-1, 1]` to the unit interval `[0, 1]`. */
-public val ThemeProfile.density01: Float
+internal val ThemeProfile.density01: Float
     get() = ((density + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
 
 /** Projects [ThemeProfile.trustStrictness] from `[-1, 1]` to the unit interval `[0, 1]`. */
-public val ThemeProfile.trustStrictness01: Float
+internal val ThemeProfile.trustStrictness01: Float
     get() = ((trustStrictness + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
 
 /** Projects [ThemeProfile.dataDensity] from `[-1, 1]` to the unit interval `[0, 1]`. */
-public val ThemeProfile.dataDensity01: Float
+internal val ThemeProfile.dataDensity01: Float
     get() = ((dataDensity + 1.0f) * 0.5f).coerceIn(0.0f, 1.0f)
