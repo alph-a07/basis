@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.resolution.tables
+package io.github.alph_a07.basis.theme.resolution.constants
 
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain

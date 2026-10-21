@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.theme.resolution.tables
+package io.github.alph_a07.basis.theme.resolution.constants
 
 import io.github.alph_a07.basis.theme.tokens.motion.MotionTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
