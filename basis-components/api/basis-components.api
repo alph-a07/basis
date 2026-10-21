@@ -334,7 +334,12 @@ public final class io/github/alph_a07/basis/components/theme/conversion/DpConver
 
 public final class io/github/alph_a07/basis/components/theme/conversion/MotionConversionsKt {
 	public static final fun toAnimationSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/AnimationSpec;
+	public static final fun toAnimationSpec (Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Lio/github/alph_a07/basis/theme/tokens/motion/MotionTokens;)Landroidx/compose/animation/core/AnimationSpec;
+	public static final fun toEasing (Lio/github/alph_a07/basis/theme/core/motion/EasingKind;)Landroidx/compose/animation/core/Easing;
 	public static final fun toFiniteAnimationSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public static final fun toFiniteAnimationSpec (Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Lio/github/alph_a07/basis/theme/tokens/motion/MotionTokens;)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public static final fun toSpringSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/SpringSpec;
+	public static final fun toTweenSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/TweenSpec;
 }
 
 public final class io/github/alph_a07/basis/components/theme/conversion/TypographyConversionsKt {
