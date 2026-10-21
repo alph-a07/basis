@@ -20,7 +20,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property presence Presence as specified, meaningful only when [brandColor] is present.
  * @property typography Brand type intent with deduplicated candidates.
  * @property mood Mood intent carrying optional preset and clamped knobs.
- * @property domain Product and interaction priors as specified.
+ * @property domain Product and interaction influences as specified.
  * @property control Handoff controls as specified.
  * @property deriveColors Whether to derive colors from brand, mood and domain signals.
  * @property entries Diagnostics recorded while normalizing.
