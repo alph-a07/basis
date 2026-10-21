@@ -12,15 +12,18 @@ import io.github.alph_a07.basis.theme.tokens.scalars.SizeTokens
 import io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens
 import kotlin.math.roundToInt
 
+internal fun deriveSpacingTokens(spacing: SpacingTokens, weights: DerivationWeights): SpacingTokens =
+    deriveSpacingTokens(spacing, weights.toScalarWeights())
+
 /**
- * Applies the spacing multiplier to every level of the ladder.
+ * Applies the spacing multiplier to every level of the ladder and snaps values to the grid.
  *
- * @param spacing Seeded spacing ladder.
- * @param modulators Scalar multipliers in effect.
- * @return The scaled spacing ladder.
+ * @param spacing Base spacing ladder.
+ * @param weights Scalar multipliers in effect.
+ * @return The scaled and grid-snapped spacing ladder.
  */
-internal fun deriveSpacingTokens(spacing: SpacingTokens, modulators: ScalarModulators): SpacingTokens {
-    fun level(value: DpValue): DpValue = DpValue(value.value * modulators.spacing)
+internal fun deriveSpacingTokens(spacing: SpacingTokens, weights: ScalarWeights): SpacingTokens {
+    fun level(value: DpValue): DpValue = DpValue(snapToGrid(value.value * weights.spacing))
 
     return SpacingTokens(
         level1 = level(spacing.level1),
@@ -34,15 +37,18 @@ internal fun deriveSpacingTokens(spacing: SpacingTokens, modulators: ScalarModul
     )
 }
 
+internal fun deriveRadiusTokens(radius: RadiusTokens, weights: DerivationWeights): RadiusTokens =
+    deriveRadiusTokens(radius, weights.toScalarWeights())
+
 /**
- * Applies the radius multiplier to every level except the `none` and `full` sentinels.
+ * Applies the radius multiplier to every level except the `none` and `full` sentinels, snapping values to the grid.
  *
- * @param radius Seeded radius ladder.
- * @param modulators Scalar multipliers in effect.
- * @return The scaled radius ladder.
+ * @param radius Base radius ladder.
+ * @param weights Scalar multipliers in effect.
+ * @return The scaled and grid-snapped radius ladder.
  */
-internal fun deriveRadiusTokens(radius: RadiusTokens, modulators: ScalarModulators): RadiusTokens {
-    fun level(value: DpValue): DpValue = DpValue(value.value * modulators.radius)
+internal fun deriveRadiusTokens(radius: RadiusTokens, weights: ScalarWeights): RadiusTokens {
+    fun level(value: DpValue): DpValue = DpValue(snapToGrid(value.value * weights.radius))
 
     return radius.copy(
         level1 = level(radius.level1),
@@ -56,18 +62,21 @@ internal fun deriveRadiusTokens(radius: RadiusTokens, modulators: ScalarModulato
     )
 }
 
+internal fun deriveDepthTokens(depth: DepthTokens, weights: DerivationWeights): DepthTokens =
+    deriveDepthTokens(depth, weights.toScalarWeights())
+
 /**
  * Scales the depth ladder magnitudes without adding or removing levels.
  *
- * @param depth Seeded depth ladder.
- * @param modulators Scalar multipliers in effect.
+ * @param depth Base depth ladder.
+ * @param weights Scalar multipliers in effect.
  * @return The scaled depth ladder.
  */
-internal fun deriveDepthTokens(depth: DepthTokens, modulators: ScalarModulators): DepthTokens = DepthTokens(
-    level1 = depth.level1.scaled(modulators.depth),
-    level2 = depth.level2.scaled(modulators.depth),
-    level3 = depth.level3.scaled(modulators.depth),
-    level4 = depth.level4.scaled(modulators.depth),
+internal fun deriveDepthTokens(depth: DepthTokens, weights: ScalarWeights): DepthTokens = DepthTokens(
+    level1 = depth.level1.scaled(weights.depth),
+    level2 = depth.level2.scaled(weights.depth),
+    level3 = depth.level3.scaled(weights.depth),
+    level4 = depth.level4.scaled(weights.depth),
 )
 
 private fun DepthSpec.scaled(scale: Float): DepthSpec = DepthSpec(
@@ -77,21 +86,24 @@ private fun DepthSpec.scaled(scale: Float): DepthSpec = DepthSpec(
     shadowYOffset = DpValue(shadowYOffset.value * scale),
 )
 
+internal fun deriveSizeTokens(size: SizeTokens, weights: DerivationWeights): SizeTokens =
+    deriveSizeTokens(size, weights.toScalarWeights())
+
 /**
  * Scales each size ladder by its own multiplier.
  *
- * @param size Seeded size ladders.
- * @param modulators Scalar multipliers in effect.
+ * @param size Base size ladders.
+ * @param weights Scalar multipliers in effect.
  * @return The scaled size ladders.
  */
-internal fun deriveSizeTokens(size: SizeTokens, modulators: ScalarModulators): SizeTokens {
-    fun icon(value: DpValue): DpValue = DpValue(value.value * modulators.iconDot)
+internal fun deriveSizeTokens(size: SizeTokens, weights: ScalarWeights): SizeTokens {
+    fun icon(value: DpValue): DpValue = DpValue(value.value * weights.iconDot)
 
-    fun avatar(value: DpValue): DpValue = DpValue(value.value * modulators.avatar)
+    fun avatar(value: DpValue): DpValue = DpValue(value.value * weights.avatar)
 
-    fun control(value: DpValue): DpValue = DpValue(value.value * modulators.control)
+    fun control(value: DpValue): DpValue = DpValue(value.value * weights.control)
 
-    fun dot(value: DpValue): DpValue = DpValue(value.value * modulators.iconDot)
+    fun dot(value: DpValue): DpValue = DpValue(value.value * weights.iconDot)
 
     return SizeTokens(
         icon =
@@ -127,6 +139,6 @@ internal fun deriveSizeTokens(size: SizeTokens, modulators: ScalarModulators): S
     )
 }
 
-/** Rounds a scaled millisecond magnitude onto whole milliseconds. */
-internal fun scaleMilliseconds(milliseconds: Long, scale: Float): Long =
-    (milliseconds * scale).roundToInt().toLong().coerceAtLeast(0L)
+/** Snaps a scaled dp magnitude onto the whole-dp layout grid. */
+internal fun snapToGrid(value: Float): Float =
+    value.roundToInt().toFloat().coerceAtLeast(0f)
