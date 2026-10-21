@@ -343,8 +343,47 @@ class BasisThemeTest {
 
         assertTrue(isExpectedException, "Expected IllegalStateException, got: $caught")
     }
+
+    @Test
+    fun composableWithoutTheme_throwsIllegalStateException() {
+        val caught =
+            runCatching {
+                composeRule.setContent {
+                    SampleThemedComponent()
+                }
+            }.exceptionOrNull()
+
+        assertNotNull(caught, "Composable reading BasisTheme must throw when invoked outside BasisTheme")
+        val isExpectedException = caught is IllegalStateException || caught.cause is IllegalStateException
+
+        assertTrue(isExpectedException, "Expected IllegalStateException, got: $caught")
+        val message = (caught as? IllegalStateException)?.message ?: caught.cause?.message
+        assertNotNull(message)
+
+        assertTrue(message.contains("BasisTheme"), "Error message should mention BasisTheme, was: $message")
+    }
+
+    @Test
+    fun composableWithTheme_doesNotThrow() {
+        composeRule.setContent {
+            BasisTheme {
+                SampleThemedComponent()
+            }
+        }
+    }
 }
 
 @Composable
 @ReadOnlyComposable
 private fun readThemeOutside(): BasisThemeAmbient = requireAmbient()
+
+@Composable
+private fun SampleThemedComponent() {
+    val surfaceColor = BasisTheme.colors.surface.default
+    val bodyStyle = BasisTheme.typography.content.level1
+    val padding = BasisTheme.spacing.level2
+
+    assertNotNull(surfaceColor)
+    assertNotNull(bodyStyle)
+    assertNotNull(padding)
+}
