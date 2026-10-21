@@ -7,46 +7,46 @@ import io.github.alph_a07.basis.theme.core.color.OklchStop
 import io.github.alph_a07.basis.theme.core.color.gamutMapped
 import io.github.alph_a07.basis.theme.core.color.safeOklch
 import io.github.alph_a07.basis.theme.core.color.shiftHue
-import io.github.alph_a07.basis.theme.resolution.identity.PresencePlan
+import io.github.alph_a07.basis.theme.resolution.identity.BrandTints
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 import io.github.alph_a07.basis.theme.tokens.color.FocusColors
 import io.github.alph_a07.basis.theme.tokens.color.GradientColors
 
 /**
- * Derives the semantic color tree from seeded neutrals, brand identity and color [modulators].
+ * Derives the semantic color tree from base neutrals, brand identity and color [weights].
  *
- * @param seed Seeded color tree for the mode.
+ * @param base Base color tree for the mode.
  * @param neutralHue Warmth-shifted hue shared by non-anchor neutrals.
  * @param brand Brand anchors, or null when no brand color anchors them.
- * @param plan Presence tint strengths in effect, or null when presence is absent.
- * @param modulators Mood and structural color multipliers.
+ * @param tints Presence tint strengths in effect, or null when presence is absent.
+ * @param weights Mood and structural color multipliers.
  * @return The derived color tree, gamut mapped token by token.
  */
 internal fun deriveColorTokens(
-    seed: ColorTokens,
+    base: ColorTokens,
     neutralHue: Float,
     brand: BrandColors?,
-    plan: PresencePlan?,
-    modulators: ColorModulators,
+    tints: BrandTints?,
+    weights: DerivationWeights,
 ): ColorTokens {
-    val anchor = (brand?.primary ?: seed.brand.primary).gamutMapped()
-    val surfaces = deriveSurfaces(seed.surface, neutralHue, modulators, anchor, plan)
-    val selectionTint = plan?.selection ?: 0f
+    val anchor = (brand?.primary ?: base.brand.primary).gamutMapped()
+    val surfaces = deriveSurfaces(base.surface, neutralHue, weights, anchor, tints)
+    val selectionTint = tints?.selection ?: 0f
 
     return ColorTokens(
         surface = surfaces,
-        content = deriveContents(seed.content, surfaces, neutralHue, modulators),
-        icon = deriveIcons(seed.icon, surfaces, neutralHue, modulators),
-        border = deriveBorders(seed.border, neutralHue, modulators, anchor, plan),
-        selection = seed.deriveSelection(surfaces, anchor, neutralHue, modulators, selectionTint),
-        focus = deriveFocus(anchor, modulators),
-        positive = deriveStatus(seed.positive, modulators),
-        negative = deriveStatus(seed.negative, modulators),
-        caution = deriveStatus(seed.caution, modulators),
-        info = deriveStatus(seed.info, modulators),
-        gradient = deriveGradients(seed, anchor, brand, modulators),
-        brand = mapBrandGamut(brand ?: seed.brand),
+        content = deriveContents(base.content, surfaces, neutralHue, weights),
+        icon = deriveIcons(base.icon, surfaces, neutralHue, weights),
+        border = deriveBorders(base.border, neutralHue, weights, anchor, tints),
+        selection = deriveSelection(base.selection, surfaces, anchor, neutralHue, weights, selectionTint),
+        focus = deriveFocus(anchor, weights),
+        positive = deriveStatus(base.positive, weights),
+        negative = deriveStatus(base.negative, weights),
+        caution = deriveStatus(base.caution, weights),
+        info = deriveStatus(base.info, weights),
+        gradient = deriveGradients(base, anchor, brand, weights),
+        brand = mapBrandGamut(brand ?: base.brand),
     )
 }
 
@@ -59,20 +59,20 @@ internal fun verticalGradient(
 )
 
 private fun deriveGradients(
-    seed: ColorTokens,
+    base: ColorTokens,
     anchor: Oklch,
     brand: BrandColors?,
-    modulators: ColorModulators,
+    weights: DerivationWeights,
 ): GradientColors {
     val fallbackHue = anchor.h.shiftHue(BRAND_GRADIENT_ROTATION)
     val second =
         (brand?.secondary ?: anchor.copy(h = fallbackHue))
-            .copy(c = anchor.c * modulators.accentChromaScale)
+            .copy(c = anchor.c * weights.accentChromaScale)
             .gamutMapped()
 
     return GradientColors(
         brand = verticalGradient(anchor, second),
-        surface = verticalGradient(seed.surface.default, seed.surface.elevated),
+        surface = verticalGradient(base.surface.default, base.surface.elevated),
     )
 }
 
@@ -110,9 +110,9 @@ private fun deriveHarmonicQuaternary(primary: Oklch): Oklch? {
 
 private fun deriveFocus(
     anchor: Oklch,
-    modulators: ColorModulators,
+    weights: DerivationWeights,
 ): FocusColors {
-    val chroma = (anchor.c + FOCUS_CHROMA_GAIN * modulators.focusEmphasis) * modulators.accentChromaScale
+    val chroma = (anchor.c + FOCUS_CHROMA_GAIN * weights.focusEmphasis) * weights.accentChromaScale
 
     return FocusColors(ring = safeOklch(anchor.l, chroma, anchor.h).gamutMapped())
 }
