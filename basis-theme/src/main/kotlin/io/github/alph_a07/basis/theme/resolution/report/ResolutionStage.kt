@@ -8,20 +8,20 @@ public enum class ResolutionStage {
     /** Domain and interaction influence blending. */
     Domain,
 
-    /** Base token table population. */
-    Base,
+    /** Mood profile projection. */
+    Mood,
 
     /** Brand anchor application. */
     Identity,
 
-    /** Mood profile projection. */
-    Mood,
+    /** Font family assignment. */
+    Fonts,
+
+    /** Base token table population. */
+    Base,
 
     /** Token family derivation. */
     Derive,
-
-    /** Font family assignment. */
-    Fonts,
 
     /** Control override application. */
     Control,
