@@ -15,7 +15,7 @@ import io.github.alph_a07.basis.theme.resolution.tables.toThemeProfile
  * @return Blended profile clamped per dimension to `[-1, 1]`; [ThemeProfile.NEUTRAL]
  * when nothing is selected.
  */
-public fun blendInfluenceProfiles(intent: DomainIntent): ThemeProfile {
+internal fun blendInfluenceProfiles(intent: DomainIntent): ThemeProfile {
     val domainProfiles = intent.domains.map { it.toThemeProfile() }
     val interactionProfiles = intent.interactions.map { it.toThemeProfile() }
 
@@ -45,7 +45,7 @@ public fun blendInfluenceProfiles(intent: DomainIntent): ThemeProfile {
 }
 
 /** Contributing [DomainIntent] labels behind a blended [ThemeProfile], for resolution reports. */
-public fun DomainIntent.contributors(): List<String> =
+internal fun DomainIntent.contributors(): List<String> =
     domains.map { ProductDomain::class.simpleName + "." + it.name } +
         interactions.map { InteractionPattern::class.simpleName + "." + it.name }
 
