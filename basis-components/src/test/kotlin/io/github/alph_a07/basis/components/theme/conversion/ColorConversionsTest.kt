@@ -1,7 +1,7 @@
 package io.github.alph_a07.basis.components.theme.conversion
 
 import androidx.compose.ui.graphics.Color
-import io.github.alph_a07.basis.components.theme.BasisColorLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
 import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.intent.BasisIntent
