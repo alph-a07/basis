@@ -11,7 +11,7 @@ import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import io.github.alph_a07.basis.components.theme.BasisMotionLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisMotionLocals
 import io.github.alph_a07.basis.theme.core.motion.EasingKind
 import io.github.alph_a07.basis.theme.core.motion.MotionSpec
 import io.github.alph_a07.basis.theme.tokens.core.MotionTokenPath

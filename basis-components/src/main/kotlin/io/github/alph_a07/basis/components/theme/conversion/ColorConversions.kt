@@ -1,15 +1,15 @@
 package io.github.alph_a07.basis.components.theme.conversion
 
 import androidx.compose.ui.graphics.Color
-import io.github.alph_a07.basis.components.theme.BasisBorderColors
-import io.github.alph_a07.basis.components.theme.BasisBrandColors
-import io.github.alph_a07.basis.components.theme.BasisColorLocals
-import io.github.alph_a07.basis.components.theme.BasisContentColors
-import io.github.alph_a07.basis.components.theme.BasisFocusColors
-import io.github.alph_a07.basis.components.theme.BasisIconColors
-import io.github.alph_a07.basis.components.theme.BasisSelectionColors
-import io.github.alph_a07.basis.components.theme.BasisStatusColors
-import io.github.alph_a07.basis.components.theme.BasisSurfaceColors
+import io.github.alph_a07.basis.components.theme.locals.BasisBorderColors
+import io.github.alph_a07.basis.components.theme.locals.BasisBrandColors
+import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisContentColors
+import io.github.alph_a07.basis.components.theme.locals.BasisFocusColors
+import io.github.alph_a07.basis.components.theme.locals.BasisIconColors
+import io.github.alph_a07.basis.components.theme.locals.BasisSelectionColors
+import io.github.alph_a07.basis.components.theme.locals.BasisStatusColors
+import io.github.alph_a07.basis.components.theme.locals.BasisSurfaceColors
 import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.core.color.toArgb as themeToArgb

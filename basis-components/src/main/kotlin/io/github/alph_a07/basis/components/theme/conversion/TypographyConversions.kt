@@ -4,12 +4,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import io.github.alph_a07.basis.components.theme.BasisColorLocals
-import io.github.alph_a07.basis.components.theme.BasisContentType
-import io.github.alph_a07.basis.components.theme.BasisMetadataType
-import io.github.alph_a07.basis.components.theme.BasisStructureType
-import io.github.alph_a07.basis.components.theme.BasisTypographyLocals
 import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
+import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisContentType
+import io.github.alph_a07.basis.components.theme.locals.BasisMetadataType
+import io.github.alph_a07.basis.components.theme.locals.BasisStructureType
+import io.github.alph_a07.basis.components.theme.locals.BasisTypographyLocals
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
 import io.github.alph_a07.basis.theme.tokens.typography.ContentType
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
