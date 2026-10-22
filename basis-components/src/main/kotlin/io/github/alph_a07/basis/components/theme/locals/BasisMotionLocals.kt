@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.theme
+package io.github.alph_a07.basis.components.theme.locals
 
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FiniteAnimationSpec

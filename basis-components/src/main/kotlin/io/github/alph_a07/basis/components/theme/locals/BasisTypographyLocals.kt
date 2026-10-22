@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.theme
+package io.github.alph_a07.basis.components.theme.locals
 
 import androidx.compose.ui.text.TextStyle
 import io.github.alph_a07.basis.theme.tokens.typography.TypographyTokens

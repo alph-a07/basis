@@ -1,6 +1,7 @@
-package io.github.alph_a07.basis.components.theme
+package io.github.alph_a07.basis.components.theme.locals
 
 import androidx.compose.ui.graphics.Color
+import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.theme.tokens.color.BorderColors
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
