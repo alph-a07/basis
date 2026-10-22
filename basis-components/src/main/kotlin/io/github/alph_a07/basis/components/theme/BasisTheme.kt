@@ -5,13 +5,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import io.github.alph_a07.basis.components.theme.BasisTheme.colors
 import io.github.alph_a07.basis.components.theme.BasisTheme.current
 import io.github.alph_a07.basis.components.theme.BasisTheme.typography
 import io.github.alph_a07.basis.components.theme.conversion.toBasisColorLocals
 import io.github.alph_a07.basis.components.theme.conversion.toBasisMotionLocals
 import io.github.alph_a07.basis.components.theme.conversion.toBasisTypographyLocals
+import io.github.alph_a07.basis.components.theme.conversion.toDp
 import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
+import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisMotionLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisTypographyLocals
+import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.controls.ConstraintsControl
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
@@ -59,9 +66,10 @@ public fun BasisTheme(
     theme: ResolvedTheme,
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
     report: ResolutionReport? = null,
+    constraints: ConstraintsControl = ConstraintsControl(),
     content: @Composable () -> Unit,
 ) {
-    val ambient = buildAmbient(theme, fontRegistry, report)
+    val ambient = buildAmbient(theme, fontRegistry, report, constraints)
 
     CompositionLocalProvider(LocalBasisTheme provides ambient, content = content)
 }
@@ -78,6 +86,7 @@ public fun BasisTheme(
  * @param useDarkTheme Whether to select the dark tree; defaults to [isSystemInDarkTheme].
  * @param fontRegistry Registry mapping font references to Compose font families. Defaults to
  * [FontFamilyRegistry.Default].
+ * @param constraints Hard constraints controls; defaults to empty [ConstraintsControl].
  * @param content Composable subtree under the theme ambient.
  */
 @Composable
@@ -85,6 +94,7 @@ public fun BasisTheme(
     pair: ResolvedThemePair,
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
+    constraints: ConstraintsControl = ConstraintsControl(),
     content: @Composable () -> Unit,
 ) {
     val theme = selectTheme(pair, useDarkTheme)
@@ -93,6 +103,7 @@ public fun BasisTheme(
         theme = theme,
         fontRegistry = fontRegistry,
         report = pair.report,
+        constraints = constraints,
         content = content,
     )
 }
@@ -118,11 +129,13 @@ public fun BasisTheme(
     content: @Composable () -> Unit,
 ) {
     val pair = remember(intent) { resolve(intent) }
+    val constraints = intent.control?.constraints ?: ConstraintsControl()
 
     BasisTheme(
         pair = pair,
         useDarkTheme = useDarkTheme,
         fontRegistry = fontRegistry,
+        constraints = constraints,
         content = content,
     )
 }
@@ -197,6 +210,15 @@ public object BasisTheme {
         get() = requireAmbient().constraints
 
     /**
+     * Minimum accessible touch target dimension resolved from theme constraints.
+     *
+     * Resolves to [ConstraintsControl.minTouchTarget] when configured, falling back to 48.dp.
+     */
+    public val minTouchTarget: Dp
+        @Composable @ReadOnlyComposable
+        get() = requireAmbient().constraints.minTouchTarget?.minSize?.toDp() ?: DEFAULT_MIN_TOUCH_TARGET_DP
+
+    /**
      * Optional resolution diagnostics; present when the host passed the report through
      * or when using the [ResolvedThemePair] / [BasisIntent] overloads.
      *
@@ -224,6 +246,7 @@ private fun buildAmbient(
     theme: ResolvedTheme,
     fontRegistry: FontFamilyRegistry,
     report: ResolutionReport?,
+    constraints: ConstraintsControl,
 ): BasisThemeAmbient {
     val colors = theme.color.toBasisColorLocals()
 
@@ -238,9 +261,12 @@ private fun buildAmbient(
         motion = theme.motion.toBasisMotionLocals(),
         componentPatches = ComponentOverrides(),
         report = report,
+        constraints = constraints,
     )
 }
 
 private fun selectTheme(pair: ResolvedThemePair, useDarkTheme: Boolean): ResolvedTheme =
     (if (useDarkTheme) pair.dark ?: pair.light else pair.light ?: pair.dark)
         ?: error("ResolvedThemePair requires at least one mode.")
+
+private val DEFAULT_MIN_TOUCH_TARGET_DP: Dp = 48.dp
