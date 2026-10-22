@@ -1,6 +1,8 @@
-package io.github.alph_a07.basis.components.theme
+package io.github.alph_a07.basis.components.theme.locals
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import io.github.alph_a07.basis.components.theme.BasisTheme
+import io.github.alph_a07.basis.components.theme.BasisThemeAmbient
 
 /**
  * Composition local holding the [BasisThemeAmbient] for the current subtree.
