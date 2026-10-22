@@ -6,6 +6,8 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.text.font.FontFamily
 import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
 import io.github.alph_a07.basis.components.theme.font.fontRegistry
+import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
+import io.github.alph_a07.basis.components.theme.locals.BasisTypographyLocals
 import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.ControlIntent
@@ -169,7 +171,7 @@ class BasisThemeTest {
     fun basisTheme_withoutReport_reportIsNull() {
         val pair = resolve(BasisIntent())
         var ambient: BasisThemeAmbient? = null
-        var accessorReport: ResolutionReport? = "non-null-placeholder" as Any as ResolutionReport
+        var accessorReport: ResolutionReport? = pair.report
 
         composeRule.setContent {
             BasisTheme(theme = pair.light!!) {
