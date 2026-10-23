@@ -112,6 +112,29 @@ public fun EasingKind.toEasing(): Easing = when (this) {
     EasingKind.Spring -> FastOutSlowInEasing
 }
 
+/**
+ * Resolves a [MotionSpec] from this [MotionTokens] tree for [path].
+ *
+ * @param path The semantic motion token path to resolve.
+ * @return The corresponding [MotionSpec].
+ */
+public fun MotionTokens.spec(path: MotionTokenPath): MotionSpec = path.resolveIn(this)
+
+/**
+ * Returns the Compose [AnimationSpec] from [BasisMotionLocals] corresponding to [path].
+ *
+ * @param path The semantic motion token path.
+ * @return The animation specification configured for that purpose.
+ */
+public fun BasisMotionLocals.specFor(path: MotionTokenPath): AnimationSpec<Float> = when (path) {
+    MotionTokenPath.Feedback -> feedback
+    MotionTokenPath.StateTransition -> stateTransition
+    MotionTokenPath.Transformation -> transformation
+    MotionTokenPath.Expansion -> expansion
+    MotionTokenPath.Reposition -> reposition
+    MotionTokenPath.Emphasis -> emphasis
+}
+
 internal fun MotionTokens.toBasisMotionLocals(): BasisMotionLocals = BasisMotionLocals(
     feedback = feedback.toFiniteAnimationSpec(),
     stateTransition = stateTransition.toFiniteAnimationSpec(),
