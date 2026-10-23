@@ -59,6 +59,8 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * [FontFamilyRegistry.Default].
  * @param report Optional resolution diagnostics; passed through to [BasisTheme.current] for
  * advanced consumers; not required for normal component use.
+ * @param constraints Hard constraints controls; defaults to empty [ConstraintsControl].
+ * @param componentOverrides Component-level overrides; defaults to empty [ComponentOverrides].
  * @param content Composable subtree under the theme ambient.
  */
 @Composable
@@ -67,9 +69,10 @@ public fun BasisTheme(
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
     report: ResolutionReport? = null,
     constraints: ConstraintsControl = ConstraintsControl(),
+    componentOverrides: ComponentOverrides = ComponentOverrides(),
     content: @Composable () -> Unit,
 ) {
-    val ambient = buildAmbient(theme, fontRegistry, report, constraints)
+    val ambient = buildAmbient(theme, fontRegistry, report, constraints, componentOverrides)
 
     CompositionLocalProvider(LocalBasisTheme provides ambient, content = content)
 }
@@ -87,6 +90,7 @@ public fun BasisTheme(
  * @param fontRegistry Registry mapping font references to Compose font families. Defaults to
  * [FontFamilyRegistry.Default].
  * @param constraints Hard constraints controls; defaults to empty [ConstraintsControl].
+ * @param componentOverrides Component-level overrides; defaults to empty [ComponentOverrides].
  * @param content Composable subtree under the theme ambient.
  */
 @Composable
@@ -95,6 +99,7 @@ public fun BasisTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
     constraints: ConstraintsControl = ConstraintsControl(),
+    componentOverrides: ComponentOverrides = ComponentOverrides(),
     content: @Composable () -> Unit,
 ) {
     val theme = selectTheme(pair, useDarkTheme)
@@ -104,6 +109,7 @@ public fun BasisTheme(
         fontRegistry = fontRegistry,
         report = pair.report,
         constraints = constraints,
+        componentOverrides = componentOverrides,
         content = content,
     )
 }
@@ -130,12 +136,14 @@ public fun BasisTheme(
 ) {
     val pair = remember(intent) { resolve(intent) }
     val constraints = intent.control?.constraints ?: ConstraintsControl()
+    val componentOverrides = intent.control?.components ?: ComponentOverrides()
 
     BasisTheme(
         pair = pair,
         useDarkTheme = useDarkTheme,
         fontRegistry = fontRegistry,
         constraints = constraints,
+        componentOverrides = componentOverrides,
         content = content,
     )
 }
@@ -199,10 +207,10 @@ public object BasisTheme {
         @Composable @ReadOnlyComposable
         get() = requireAmbient().motion
 
-    /** Per-component style patches from the resolved intent. */
-    public val componentPatches: ComponentOverrides
+    /** Active component overrides configured on the theme ambient. */
+    public val componentOverrides: ComponentOverrides
         @Composable @ReadOnlyComposable
-        get() = requireAmbient().componentPatches
+        get() = requireAmbient().componentOverrides
 
     /** Hard constraints controls from the resolved intent. */
     public val constraints: ConstraintsControl
@@ -227,6 +235,11 @@ public object BasisTheme {
     public val report: ResolutionReport?
         @Composable @ReadOnlyComposable
         get() = requireAmbient().report
+
+    /** Registry mapping font references to Compose font families. */
+    public val fontRegistry: FontFamilyRegistry
+        @Composable @ReadOnlyComposable
+        get() = requireAmbient().fontRegistry
 }
 
 /**
@@ -247,6 +260,7 @@ private fun buildAmbient(
     fontRegistry: FontFamilyRegistry,
     report: ResolutionReport?,
     constraints: ConstraintsControl,
+    componentOverrides: ComponentOverrides,
 ): BasisThemeAmbient {
     val colors = theme.color.toBasisColorLocals()
 
@@ -259,9 +273,10 @@ private fun buildAmbient(
         depth = theme.depth,
         size = theme.size,
         motion = theme.motion.toBasisMotionLocals(),
-        componentPatches = ComponentOverrides(),
+        componentOverrides = componentOverrides,
         report = report,
         constraints = constraints,
+        fontRegistry = fontRegistry,
     )
 }
 
