@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.components.theme.conversion
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -9,8 +10,16 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.locals.BasisMotionLocals
 import io.github.alph_a07.basis.theme.core.motion.EasingKind
 import io.github.alph_a07.basis.theme.core.motion.MotionSpec
@@ -133,6 +142,116 @@ public fun BasisMotionLocals.specFor(path: MotionTokenPath): AnimationSpec<Float
     MotionTokenPath.Expansion -> expansion
     MotionTokenPath.Reposition -> reposition
     MotionTokenPath.Emphasis -> emphasis
+}
+
+/**
+ * Animates a [Color] using the active [BasisTheme] motion tokens for [purpose].
+ *
+ * @param targetValue The target color value to animate to.
+ * @param purpose Semantic motion purpose defining duration and easing curve. Defaults to
+ * [MotionTokenPath.StateTransition].
+ * @param label Debug label for animation tooling.
+ * @param finishedListener Optional callback invoked when the color animation finishes.
+ * @return A [State] holding the animated color.
+ */
+@Composable
+public fun animateBasisColorAsState(
+    targetValue: Color,
+    purpose: MotionTokenPath = MotionTokenPath.StateTransition,
+    label: String = "BasisColorAnimation",
+    finishedListener: ((Color) -> Unit)? = null,
+): State<Color> {
+    val motion = BasisTheme.current.theme.motion
+    val spec =
+        remember(motion, purpose) {
+            purpose.toFiniteAnimationSpec<Color>(motion)
+        }
+
+    return animateColorAsState(
+        targetValue = targetValue,
+        animationSpec = spec,
+        label = label,
+        finishedListener = finishedListener,
+    )
+}
+
+/**
+ * Animates a [Dp] value using the active [BasisTheme] motion tokens for [purpose].
+ *
+ * @param targetValue The target dp dimension to animate to.
+ * @param purpose Semantic motion purpose defining duration and easing curve. Defaults to
+ * [MotionTokenPath.StateTransition].
+ * @param label Debug label for animation tooling.
+ * @param finishedListener Optional callback invoked when the dimension animation finishes.
+ * @return A [State] holding the animated dp.
+ */
+@Composable
+public fun animateBasisDpAsState(
+    targetValue: Dp,
+    purpose: MotionTokenPath = MotionTokenPath.StateTransition,
+    label: String = "BasisDpAnimation",
+    finishedListener: ((Dp) -> Unit)? = null,
+): State<Dp> {
+    val motion = BasisTheme.current.theme.motion
+    val spec =
+        remember(motion, purpose) {
+            purpose.toFiniteAnimationSpec<Dp>(motion)
+        }
+
+    return animateDpAsState(
+        targetValue = targetValue,
+        animationSpec = spec,
+        label = label,
+        finishedListener = finishedListener,
+    )
+}
+
+/**
+ * Animates a [Float] value using the active [BasisTheme] motion tokens for [purpose].
+ *
+ * @param targetValue The target float value to animate to.
+ * @param purpose Semantic motion purpose defining duration and easing curve. Defaults to
+ * [MotionTokenPath.StateTransition].
+ * @param label Debug label for animation tooling.
+ * @param finishedListener Optional callback invoked when the float animation finishes.
+ * @return A [State] holding the animated float.
+ */
+@Composable
+public fun animateBasisFloatAsState(
+    targetValue: Float,
+    purpose: MotionTokenPath = MotionTokenPath.StateTransition,
+    label: String = "BasisFloatAnimation",
+    finishedListener: ((Float) -> Unit)? = null,
+): State<Float> {
+    val motion = BasisTheme.current.theme.motion
+    val spec =
+        remember(motion, purpose) {
+            purpose.toFiniteAnimationSpec<Float>(motion)
+        }
+
+    return animateFloatAsState(
+        targetValue = targetValue,
+        animationSpec = spec,
+        label = label,
+        finishedListener = finishedListener,
+    )
+}
+
+/**
+ * Resolves a [TweenSpec] from the active [BasisTheme] ambient for [purpose].
+ *
+ * @param T The animated value type.
+ * @param purpose Semantic motion purpose path. Defaults to [MotionTokenPath.StateTransition].
+ * @return A Compose [TweenSpec] configured with the theme's motion parameters.
+ */
+@Composable
+public fun <T> basisTween(
+    purpose: MotionTokenPath = MotionTokenPath.StateTransition,
+): TweenSpec<T> {
+    val motion = BasisTheme.current.theme.motion
+    val motionSpec = motion.spec(purpose)
+
+    return remember(motionSpec) { motionSpec.toTweenSpec() }
 }
 
 internal fun MotionTokens.toBasisMotionLocals(): BasisMotionLocals = BasisMotionLocals(
