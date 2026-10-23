@@ -4,12 +4,13 @@ import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ProminenceTier
 import io.github.alph_a07.basis.theme.intent.controls.overrides.Treatment
+import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 import io.github.alph_a07.basis.theme.tokens.typography.TypeRole
 
 /**
  * Fully resolved universal styling attributes for a component instance.
  *
- * Properties resolve to concrete theme units ([Oklch], [DpValue], [TypeRole]) rather than
+ * Properties resolve to concrete theme units ([Oklch], [DpValue], [TypeRole], [DepthSpec]) rather than
  * symbolic token paths. Irrelevant or unspecified properties remain null, indicating that
  * the component should defer to its own default treatment.
  *
@@ -22,6 +23,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.TypeRole
  * @property typography Typography role.
  * @property padding Outer content padding dimension.
  * @property gap Inner slot spacing dimension.
+ * @property depth Elevation and shadow spec.
  */
 public data class ResolvedUniversalStyle(
     public val prominence: ProminenceTier? = null,
@@ -33,4 +35,5 @@ public data class ResolvedUniversalStyle(
     public val typography: TypeRole? = null,
     public val padding: DpValue? = null,
     public val gap: DpValue? = null,
+    public val depth: DepthSpec? = null,
 )
