@@ -430,9 +430,9 @@ class ResolvePipelineTest {
 
     @Test
     fun componentFamilyPrefsConfiguredWithoutInstanceLevelContamination() {
-        val buttonId = ComponentId("button")
-        val primaryVariant = VariantId("primary")
-        val pressedState = StateId("pressed")
+        val surfaceId = ComponentId.Surface
+        val primaryVariant = VariantId.Primary
+        val pressedState = StateId.Pressed
 
         val allPatch =
             ComponentStylePatch(
@@ -459,13 +459,13 @@ class ResolvePipelineTest {
             )
         val componentOverrides =
             ComponentOverrides(
-                byComponent = mapOf(buttonId to componentOverride),
+                byComponent = mapOf(surfaceId to componentOverride),
             )
         val pair = resolve(BasisIntent(control = ControlIntent(components = componentOverrides)))
 
         assertNotNull(pair.light)
         assertNotNull(pair.dark)
-        assertEquals(RadiusTokenPath.Level2, componentOverrides.byComponent[buttonId]?.all?.universal?.radius)
+        assertEquals(RadiusTokenPath.Level2, componentOverrides.byComponent[surfaceId]?.all?.universal?.radius)
     }
 
     @Test

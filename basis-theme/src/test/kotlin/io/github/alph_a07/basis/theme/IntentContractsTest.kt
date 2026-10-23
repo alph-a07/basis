@@ -51,7 +51,7 @@ import io.github.alph_a07.basis.theme.intent.hasPresenceWithoutBrand
 import io.github.alph_a07.basis.theme.intent.isWellFormed
 import io.github.alph_a07.basis.theme.intent.violatingKnobs
 import io.github.alph_a07.basis.theme.tokens.core.ColorTokenPath
-import io.github.alph_a07.basis.theme.tokens.core.ControlSizeTokenPath
+import io.github.alph_a07.basis.theme.tokens.core.DepthTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
 import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
@@ -162,9 +162,6 @@ internal class IntentContractsTest {
 
     @Test
     fun identifiersValidateShapeAndLadders() {
-        assertFailsWith<IllegalArgumentException> { ComponentId("") }
-        assertFailsWith<IllegalArgumentException> { VariantId("") }
-        assertFailsWith<IllegalArgumentException> { StateId("") }
         assertFailsWith<IllegalArgumentException> {
             WeightClamp(min = FontWeightValue(600), max = FontWeightValue(400))
         }
@@ -195,22 +192,22 @@ internal class IntentContractsTest {
                         treatment = Treatment.Fill,
                         surface = ColorTokenPath.SurfaceDefault,
                     ),
-                extra = ComponentExtraPatch.Button(controlSize = ControlSizeTokenPath.Level3),
+                extra = ComponentExtraPatch.Surface(depth = DepthTokenPath.Level2),
             )
-        val key = VariantStateKey(VariantId("primary"), StateId("pressed"))
+        val key = VariantStateKey(VariantId.Primary, StateId.Pressed)
         val overrideSet =
             ComponentOverride(
                 all = patch,
-                byVariant = mapOf(VariantId("primary") to patch),
-                byState = mapOf(StateId("pressed") to patch),
+                byVariant = mapOf(VariantId.Primary to patch),
+                byState = mapOf(StateId.Pressed to patch),
                 byVariantState = mapOf(key to patch),
             )
-        val components = ComponentOverrides(byComponent = mapOf(ComponentId("button") to overrideSet))
-        assertEquals(overrideSet, components.byComponent[ComponentId("button")])
+        val components = ComponentOverrides(byComponent = mapOf(ComponentId.Surface to overrideSet))
+        assertEquals(overrideSet, components.byComponent[ComponentId.Surface])
         assertEquals(patch, overrideSet.byVariantState[key])
         assertEquals(patch, overrideSet.all)
         assertEquals("color.surface.default", ColorTokenPath.SurfaceDefault.path)
-        assertEquals("size.control.level3", ControlSizeTokenPath.Level3.path)
+        assertEquals("depth.level2", DepthTokenPath.Level2.path)
 
         val tokens =
             TokenOverrides(
