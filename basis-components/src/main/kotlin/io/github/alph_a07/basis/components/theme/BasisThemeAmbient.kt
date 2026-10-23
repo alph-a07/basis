@@ -5,6 +5,7 @@ import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
 import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
 import io.github.alph_a07.basis.components.theme.locals.BasisMotionLocals
 import io.github.alph_a07.basis.components.theme.locals.BasisTypographyLocals
+import io.github.alph_a07.basis.theme.intent.ControlIntent
 import io.github.alph_a07.basis.theme.intent.controls.ConstraintsControl
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionReport
@@ -32,7 +33,7 @@ import io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens
  * @property depth Elevation and shadow ladder, passed through unchanged.
  * @property size Icon, avatar, control, and dot size ladders.
  * @property motion Semantic motion purpose specs.
- * @property componentPatches Per-component overrides from [io.github.alph_a07.basis.theme.intent.ControlIntent].
+ * @property componentOverrides Per-component overrides from [ControlIntent].
  * @property report Optional public diagnostics; present when the host chose to pass the report
  * through. Components must not depend on its presence.
  * @property constraints Hard constraints controls from [ConstraintsControl], including touch target and
@@ -48,7 +49,7 @@ public data class BasisThemeAmbient(
     public val depth: DepthTokens,
     public val size: SizeTokens,
     public val motion: BasisMotionLocals,
-    public val componentPatches: ComponentOverrides,
+    public val componentOverrides: ComponentOverrides,
     public val report: ResolutionReport?,
     public val constraints: ConstraintsControl = ConstraintsControl(),
     public val fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
