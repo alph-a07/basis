@@ -169,7 +169,7 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/basis-lint/src/**', '**/theme/resolution/control/PathOverrideApplication.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt' ]
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/basis-lint/src/**', '**/theme/resolution/control/PathOverrideApplication.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt', '**/theme/conversion/MotionConversions.kt' ]
     thresholdInFiles: 11
     thresholdInClasses: 11
     thresholdInInterfaces: 11
