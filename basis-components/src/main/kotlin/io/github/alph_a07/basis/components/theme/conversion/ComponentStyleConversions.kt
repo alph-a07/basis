@@ -17,6 +17,7 @@ import io.github.alph_a07.basis.theme.resolution.component.ResolvedComponentStyl
 import io.github.alph_a07.basis.theme.resolution.component.ResolvedUniversalStyle
 import io.github.alph_a07.basis.theme.resolution.component.resolveComponentStyle as resolveThemeComponentStyle
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
+import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
 
 /**
  * Resolves the style for [id], [variant], and [state] against the active [BasisTheme] ambient.
@@ -25,8 +26,8 @@ import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
  * it against the theme token tree according to cascading specificity precedence.
  *
  * @param id The component family identifier.
- * @param variant Optional variant within the family (e.g. `"primary"`).
- * @param state Optional interaction state (e.g. `"pressed"`).
+ * @param variant Optional variant within the family (e.g. [VariantId.Primary]).
+ * @param state Optional interaction state (e.g. [StateId.Pressed]).
  * @return Fully resolved component style.
  */
 @Composable
@@ -48,8 +49,8 @@ public fun BasisTheme.resolveComponentStyle(
  * returning Compose-ready primitives.
  *
  * @param id The component family identifier.
- * @param variant Optional variant within the family (e.g. `"primary"`).
- * @param state Optional interaction state (e.g. `"pressed"`).
+ * @param variant Optional variant within the family (e.g. [VariantId.Primary]).
+ * @param state Optional interaction state (e.g. [StateId.Pressed]).
  * @return Fully resolved Compose universal style.
  */
 @Composable
@@ -75,6 +76,7 @@ public fun BasisTheme.resolveUniversalStyle(
  * @property typography Typography text style.
  * @property padding Outer content padding dimension.
  * @property gap Inner slot spacing dimension.
+ * @property depth Elevation and shadow spec.
  */
 public data class ComposeUniversalStyle(
     public val prominence: ProminenceTier? = null,
@@ -86,6 +88,7 @@ public data class ComposeUniversalStyle(
     public val typography: TextStyle? = null,
     public val padding: Dp? = null,
     public val gap: Dp? = null,
+    public val depth: DepthSpec? = null,
 )
 
 /**
@@ -108,6 +111,7 @@ public fun ResolvedUniversalStyle.toComposeUniversalStyle(
     typography = typography?.toTextStyle(theme.color, fontRegistry),
     padding = padding?.toDp(),
     gap = gap?.toDp(),
+    depth = depth,
 )
 
 /**
