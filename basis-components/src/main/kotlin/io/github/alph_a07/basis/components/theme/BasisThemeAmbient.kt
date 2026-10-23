@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.components.theme
 
 import androidx.compose.ui.text.TextStyle
+import io.github.alph_a07.basis.components.theme.font.FontFamilyRegistry
 import io.github.alph_a07.basis.components.theme.locals.BasisColorLocals
 import io.github.alph_a07.basis.components.theme.locals.BasisMotionLocals
 import io.github.alph_a07.basis.components.theme.locals.BasisTypographyLocals
@@ -36,6 +37,7 @@ import io.github.alph_a07.basis.theme.tokens.scalars.SpacingTokens
  * through. Components must not depend on its presence.
  * @property constraints Hard constraints controls from [ConstraintsControl], including touch target and
  * contrast floors.
+ * @property fontRegistry Registry mapping font references to Compose font families.
  */
 public data class BasisThemeAmbient(
     public val theme: ResolvedTheme,
@@ -49,4 +51,5 @@ public data class BasisThemeAmbient(
     public val componentPatches: ComponentOverrides,
     public val report: ResolutionReport?,
     public val constraints: ConstraintsControl = ConstraintsControl(),
+    public val fontRegistry: FontFamilyRegistry = FontFamilyRegistry.Default,
 )
