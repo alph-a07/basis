@@ -161,4 +161,16 @@ class MotionConversionsTest {
 
         assertNotNull(locals.emphasis)
     }
+
+    @Test
+    fun motionTokens_spec_and_specFor_resolvesProperly() {
+        val theme = resolve(BasisIntent()).light!!
+        val locals = theme.motion.toBasisMotionLocals()
+
+        assertEquals(theme.motion.feedback, theme.motion.spec(MotionTokenPath.Feedback))
+        assertEquals(theme.motion.stateTransition, theme.motion.spec(MotionTokenPath.StateTransition))
+
+        assertEquals(locals.feedback, locals.specFor(MotionTokenPath.Feedback))
+        assertEquals(locals.stateTransition, locals.specFor(MotionTokenPath.StateTransition))
+    }
 }

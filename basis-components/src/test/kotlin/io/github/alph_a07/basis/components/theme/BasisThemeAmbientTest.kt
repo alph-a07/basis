@@ -56,7 +56,7 @@ internal class BasisThemeAmbientTest {
         depth = resolvedTheme.depth,
         size = resolvedTheme.size,
         motion = resolvedTheme.motion.toBasisMotionLocals(),
-        componentPatches = ComponentOverrides(),
+        componentOverrides = ComponentOverrides(),
         report = null,
         constraints = constraints,
     )
