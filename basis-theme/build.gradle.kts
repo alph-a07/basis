@@ -14,6 +14,9 @@ kotlin {
     }
 
     sourceSets {
+        commonMain {
+            kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
+        }
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
@@ -31,28 +34,11 @@ dependencies {
     add("kspCommonMainMetadata", "io.github.alph-a07:basis-theme-ksp")
 }
 
-afterEvaluate {
-    val kspMetadataDir = layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin")
-    val commonMain = kotlin.sourceSets.getByName("commonMain")
-    commonMain.kotlin.srcDir(kspMetadataDir)
-}
-
-tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }.configureEach {
-    dependsOn("kspCommonMainKotlinMetadata")
-}
-
-tasks.named("compileKotlinJvm") {
-    dependsOn("kspCommonMainKotlinMetadata")
-}
-
-tasks.named("compileKotlinJs") {
-    dependsOn("kspCommonMainKotlinMetadata")
-}
-
 tasks.matching {
-    it.name.startsWith("runKtlintCheckOver") ||
-        it.name.startsWith("runKtlintFormatOver") ||
-        it.name.startsWith("detekt")
+    it.name.startsWith("compileKotlin") ||
+        it.name.startsWith("runKtlint") ||
+        it.name.startsWith("detekt") ||
+        (it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata")
 }.configureEach {
     dependsOn("kspCommonMainKotlinMetadata")
 }

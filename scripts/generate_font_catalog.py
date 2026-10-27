@@ -6,7 +6,7 @@ Fetches the complete Google Fonts catalog metadata, filters to the top 500 most
 popular families, enforces the Additive Retention Guarantee (never drops a previously
 vendored family), derives typographic affinity metrics (displayAffinity, textAffinity,
 metaAffinity, expressiveness, roundness), and serializes to:
-basis-theme/src/main/resources/basis/fonts/google-fonts-catalog.bin.gz
+basis-theme/src/commonMain/resources/basis/fonts/google-fonts-catalog.bin.gz
 """
 
 import csv
@@ -23,7 +23,7 @@ OUTPUT_FILE = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "basis-theme",
     "src",
-    "main",
+    "commonMain",
     "resources",
     "basis",
     "fonts",
