@@ -217,10 +217,16 @@ internal object VerificationTracePrinter {
             message.contains("device not found", ignoreCase = true)
 
     private fun printUnitTestTrace(absoluteBase: String, failureMessages: List<String>) {
-        val reportFile = File("$absoluteBase/build/reports/tests/test/index.html")
-        if (reportFile.exists()) {
+        val testsDir = File("$absoluteBase/build/reports/tests")
+        val htmlReports =
+            if (testsDir.exists()) {
+                testsDir.walkTopDown().filter { it.name == "index.html" }.toList()
+            } else {
+                emptyList()
+            }
+        if (htmlReports.isNotEmpty()) {
             println("    | ↳ There were failing tests. See the full trace at:")
-            println("    |   file://$absoluteBase/build/reports/tests/test/index.html")
+            htmlReports.forEach { println("    |   file://${it.absolutePath}") }
         } else {
             println("    | ↳ Tests failed to execute:")
             failureMessages.forEach { println("    |   $it") }
