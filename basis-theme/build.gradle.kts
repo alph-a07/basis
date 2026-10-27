@@ -19,15 +19,25 @@ kotlin {
 }
 
 dependencies {
+    add("kspCommonMainMetadata", "io.github.alph-a07:basis-theme-ksp")
     add("kspJvm", "io.github.alph-a07:basis-theme-ksp")
 }
 
 afterEvaluate {
-    val kspDir = layout.buildDirectory.dir("generated/ksp/jvm/jvmMain/kotlin")
-    kotlin.sourceSets.getByName("commonMain").kotlin.srcDir(kspDir)
+    val kspMetadataDir = layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin")
+    val kspJvmDir = layout.buildDirectory.dir("generated/ksp/jvm/jvmMain/kotlin")
+    val commonMain = kotlin.sourceSets.getByName("commonMain")
+    commonMain.kotlin.srcDir(kspMetadataDir)
+    commonMain.kotlin.srcDir(kspJvmDir)
     val jvmMain = kotlin.sourceSets.getByName("jvmMain")
     val filtered = jvmMain.kotlin.srcDirs.filter { !it.path.contains("generated/ksp") }
     jvmMain.kotlin.setSrcDirs(filtered)
+}
+
+tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }.configureEach {
+    if (tasks.findByName("kspCommonMainKotlinMetadata") != null) {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
 }
 
 tasks.named("compileKotlinJvm") {
