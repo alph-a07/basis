@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
     id("detekt-conventions")
     id("ktlint-conventions")
@@ -8,10 +8,42 @@ plugins {
 kotlin {
     explicitApi()
     jvmToolchain(21)
+    jvm()
+
+    sourceSets {
+        jvmTest.dependencies {
+            implementation(kotlin("test"))
+            implementation(libs.junit)
+        }
+    }
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
-    testImplementation(libs.junit)
-    ksp("io.github.alph-a07:basis-theme-ksp")
+    add("kspJvm", "io.github.alph-a07:basis-theme-ksp")
+}
+
+afterEvaluate {
+    val kspDir = layout.buildDirectory.dir("generated/ksp/jvm/jvmMain/kotlin")
+    kotlin.sourceSets.getByName("commonMain").kotlin.srcDir(kspDir)
+    val jvmMain = kotlin.sourceSets.getByName("jvmMain")
+    val filtered = jvmMain.kotlin.srcDirs.filter { !it.path.contains("generated/ksp") }
+    jvmMain.kotlin.setSrcDirs(filtered)
+}
+
+tasks.named("compileKotlinJvm") {
+    dependsOn("kspKotlinJvm")
+}
+
+tasks.matching {
+    it.name.startsWith("runKtlintCheckOver") ||
+        it.name.startsWith("runKtlintFormatOver") ||
+        it.name.startsWith("detekt")
+}.configureEach {
+    dependsOn("kspKotlinJvm")
+}
+
+tasks.register("test") {
+    group = "verification"
+    description = "Runs the jvm tests."
+    dependsOn("jvmTest")
 }

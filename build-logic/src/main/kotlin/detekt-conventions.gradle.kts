@@ -52,6 +52,10 @@ extensions.configure<DetektExtension> {
             "src/test/kotlin",
             "src/androidTest/java",
             "src/androidTest/kotlin",
+            "src/commonMain/kotlin",
+            "src/commonTest/kotlin",
+            "src/jvmMain/kotlin",
+            "src/jvmTest/kotlin",
         ),
     )
 }
@@ -127,4 +131,8 @@ pluginManager.withPlugin("com.android.library") {
 
 pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
     wireJvmClasspath("compileClasspath")
+}
+
+pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+    wireJvmClasspath("jvmCompileClasspath")
 }

@@ -60,10 +60,11 @@ public final class io/github/alph_a07/basis/components/theme/BasisTheme {
 	public static final field $stable I
 	public static final field INSTANCE Lio/github/alph_a07/basis/components/theme/BasisTheme;
 	public final fun getColors (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;
-	public final fun getComponentPatches (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun getComponentOverrides (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
 	public final fun getConstraints (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;
 	public final fun getCurrent (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
 	public final fun getDepth (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
+	public final fun getFontRegistry (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;
 	public final fun getMinTouchTarget (Landroidx/compose/runtime/Composer;I)F
 	public final fun getMotion (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;
 	public final fun getRadius (Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
@@ -75,11 +76,12 @@ public final class io/github/alph_a07/basis/components/theme/BasisTheme {
 
 public final class io/github/alph_a07/basis/components/theme/BasisThemeAmbient {
 	public static final field $stable I
-	public fun <init> (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;)V
-	public synthetic fun <init> (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)V
+	public synthetic fun <init> (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;
 	public final fun component10 ()Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;
 	public final fun component11 ()Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;
+	public final fun component12 ()Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;
 	public final fun component2 ()Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;
 	public final fun component3 ()Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;
 	public final fun component4 ()Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;
@@ -88,13 +90,14 @@ public final class io/github/alph_a07/basis/components/theme/BasisThemeAmbient {
 	public final fun component7 ()Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;
 	public final fun component8 ()Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;
 	public final fun component9 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
-	public final fun copy (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
-	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
+	public final fun copy (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
+	public static synthetic fun copy$default (Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;Lio/github/alph_a07/basis/components/theme/locals/BasisTypographyLocals;Lio/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;Lio/github/alph_a07/basis/theme/tokens/scalars/SizeTokens;Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/BasisThemeAmbient;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getColors ()Lio/github/alph_a07/basis/components/theme/locals/BasisColorLocals;
-	public final fun getComponentPatches ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
+	public final fun getComponentOverrides ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;
 	public final fun getConstraints ()Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;
 	public final fun getDepth ()Lio/github/alph_a07/basis/theme/tokens/scalars/DepthTokens;
+	public final fun getFontRegistry ()Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;
 	public final fun getMotion ()Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;
 	public final fun getRadius ()Lio/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens;
 	public final fun getReport ()Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;
@@ -108,14 +111,57 @@ public final class io/github/alph_a07/basis/components/theme/BasisThemeAmbient {
 
 public final class io/github/alph_a07/basis/components/theme/BasisThemeKt {
 	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/intent/BasisIntent;ZLio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair;ZLio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lio/github/alph_a07/basis/theme/resolution/report/ResolutionReport;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BasisTheme (Lio/github/alph_a07/basis/theme/tokens/core/ResolvedThemePair;ZLio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;Lio/github/alph_a07/basis/theme/intent/controls/ConstraintsControl;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentOverrides;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class io/github/alph_a07/basis/components/theme/conversion/ColorConversionsKt {
 	public static final fun toArgb (Lio/github/alph_a07/basis/theme/core/color/Oklch;)I
 	public static final fun toColor (Lio/github/alph_a07/basis/theme/core/color/ColorSpec$Argb;)J
 	public static final fun toColor (Lio/github/alph_a07/basis/theme/core/color/Oklch;)J
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/ComponentStyleConversionsKt {
+	public static final fun resolveComponentStyle (Lio/github/alph_a07/basis/components/theme/BasisTheme;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentId;Lio/github/alph_a07/basis/theme/intent/controls/overrides/VariantId;Lio/github/alph_a07/basis/theme/intent/controls/overrides/StateId;Landroidx/compose/runtime/Composer;II)Lio/github/alph_a07/basis/theme/resolution/component/ResolvedComponentStyle;
+	public static final fun resolveUniversalStyle (Lio/github/alph_a07/basis/components/theme/BasisTheme;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ComponentId;Lio/github/alph_a07/basis/theme/intent/controls/overrides/VariantId;Lio/github/alph_a07/basis/theme/intent/controls/overrides/StateId;Landroidx/compose/runtime/Composer;II)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static final fun toComposeUniversalStyle (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedComponentStyle;Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static final fun toComposeUniversalStyle (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedComponentStyle;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static final fun toComposeUniversalStyle (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedUniversalStyle;Landroidx/compose/runtime/Composer;I)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static final fun toComposeUniversalStyle (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedUniversalStyle;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static synthetic fun toComposeUniversalStyle$default (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedComponentStyle;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static synthetic fun toComposeUniversalStyle$default (Lio/github/alph_a07/basis/theme/resolution/component/ResolvedUniversalStyle;Lio/github/alph_a07/basis/theme/tokens/core/ResolvedTheme;Lio/github/alph_a07/basis/components/theme/font/FontFamilyRegistry;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+}
+
+public final class io/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle {
+	public static final field $stable I
+	public fun <init> ()V
+	public synthetic fun <init> (Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;
+	public final fun component10 ()Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;
+	public final fun component2 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
+	public final fun component3-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component4-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component5-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun component6-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun component7 ()Landroidx/compose/ui/text/TextStyle;
+	public final fun component8-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun component9-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun copy-8B4V4T0 (Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public static synthetic fun copy-8B4V4T0$default (Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/graphics/Color;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/ui/unit/Dp;Landroidx/compose/ui/unit/Dp;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;ILjava/lang/Object;)Lio/github/alph_a07/basis/components/theme/conversion/ComposeUniversalStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBorder-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getContent-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getDepth ()Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;
+	public final fun getGap-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun getPadding-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun getProminence ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/ProminenceTier;
+	public final fun getRadius-lTKBWiU ()Landroidx/compose/ui/unit/Dp;
+	public final fun getSurface-QN2ZGVo ()Landroidx/compose/ui/graphics/Color;
+	public final fun getTreatment ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
+	public final fun getTypography ()Landroidx/compose/ui/text/TextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class io/github/alph_a07/basis/components/theme/conversion/DepthConversionsKt {
@@ -132,6 +178,12 @@ public final class io/github/alph_a07/basis/components/theme/conversion/DpConver
 }
 
 public final class io/github/alph_a07/basis/components/theme/conversion/MotionConversionsKt {
+	public static final fun animateBasisColorAsState-euL9pac (JLio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+	public static final fun animateBasisDpAsState-AjpBEmI (FLio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+	public static final fun animateBasisFloatAsState (FLio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+	public static final fun basisTween (Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Landroidx/compose/runtime/Composer;II)Landroidx/compose/animation/core/TweenSpec;
+	public static final fun spec (Lio/github/alph_a07/basis/theme/tokens/motion/MotionTokens;Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;)Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;
+	public static final fun specFor (Lio/github/alph_a07/basis/components/theme/locals/BasisMotionLocals;Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;)Landroidx/compose/animation/core/AnimationSpec;
 	public static final fun toAnimationSpec (Lio/github/alph_a07/basis/theme/core/motion/MotionSpec;)Landroidx/compose/animation/core/AnimationSpec;
 	public static final fun toAnimationSpec (Lio/github/alph_a07/basis/theme/tokens/core/MotionTokenPath;Lio/github/alph_a07/basis/theme/tokens/motion/MotionTokens;)Landroidx/compose/animation/core/AnimationSpec;
 	public static final fun toEasing (Lio/github/alph_a07/basis/theme/core/motion/EasingKind;)Landroidx/compose/animation/core/Easing;
