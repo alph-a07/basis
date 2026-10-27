@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.base
 
 import io.github.alph_a07.basis.theme.core.ThemeMode
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
 import io.github.alph_a07.basis.theme.resolution.ResolutionContext
 import io.github.alph_a07.basis.theme.resolution.ThemeDraft
 import io.github.alph_a07.basis.theme.resolution.constants.NEUTRAL_HUE_DEGREES
@@ -90,7 +91,7 @@ internal object BaseStage {
                         } else {
                             "Color derivation disabled; fully achromatic base generated."
                         },
-                    enforced = if (deriveColors) hue.toString() else null,
+                    enforced = if (deriveColors) formatDeterministic(hue) else null,
                 ),
             )
         }

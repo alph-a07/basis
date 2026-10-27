@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.enforce
 
 import io.github.alph_a07.basis.theme.core.SpValue
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
 import io.github.alph_a07.basis.theme.resolution.fonts.FontCatalogEntry
 import io.github.alph_a07.basis.theme.resolution.fonts.GoogleFontCatalog
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
@@ -53,8 +54,8 @@ internal fun enforceTypographyConstraints(
                     stage = ResolutionStage.Enforce,
                     status = ReportStatus.OverriddenByConstraint,
                     message = message,
-                    requested = "${role.size.value}",
-                    enforced = "$effectiveFloor",
+                    requested = formatDeterministic(role.size.value),
+                    enforced = formatDeterministic(effectiveFloor),
                 )
 
             role = role.copy(size = SpValue(effectiveFloor))

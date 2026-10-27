@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.core
 
+import kotlin.jvm.JvmInline
+
 /**
  * Wrapper for a spacing value in em units, which must be finite.
  *

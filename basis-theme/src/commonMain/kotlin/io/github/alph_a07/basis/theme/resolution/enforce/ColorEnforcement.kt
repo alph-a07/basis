@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.theme.resolution.enforce
 
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
 import io.github.alph_a07.basis.theme.resolution.report.ResolutionStage
@@ -103,12 +104,16 @@ private fun repairEntry(
     status = ReportStatus.OverriddenByConstraint,
     message =
         when {
-            !ratioMet -> "Contrast floor $requestedRatio could not be fully met; best-effort achieved $achievedRatio."
-            locked -> "Contrast floor $requestedRatio could not be met without moving a Control-locked background."
-            else -> "Contrast floor $requestedRatio applied by lifting lightness."
+            !ratioMet ->
+                "Contrast floor ${formatDeterministic(requestedRatio)} could not be fully met; " +
+                    "best-effort achieved ${formatDeterministic(achievedRatio)}."
+            locked ->
+                "Contrast floor ${formatDeterministic(requestedRatio)} could not be met without moving " +
+                    "a Control-locked background."
+            else -> "Contrast floor ${formatDeterministic(requestedRatio)} applied by lifting lightness."
         },
-    requested = requestedRatio.toString(),
-    enforced = achievedRatio.toString(),
+    requested = formatDeterministic(requestedRatio),
+    enforced = formatDeterministic(achievedRatio),
 )
 
 /**
@@ -191,8 +196,8 @@ private fun enforceContentHierarchy(
             stage = ResolutionStage.Enforce,
             status = ReportStatus.OverriddenByConstraint,
             message = "Separation constraint applied to preserve hierarchy between content.default and content.muted.",
-            requested = mutedContent.l.toString(),
-            enforced = targetMutedL.toString(),
+            requested = formatDeterministic(mutedContent.l),
+            enforced = formatDeterministic(targetMutedL),
         )
 
     return tree.copy(

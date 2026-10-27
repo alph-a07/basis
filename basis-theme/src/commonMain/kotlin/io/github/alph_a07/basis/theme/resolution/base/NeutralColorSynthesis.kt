@@ -15,6 +15,7 @@ import io.github.alph_a07.basis.theme.resolution.constants.SOCIAL_HUE_PULL
 import io.github.alph_a07.basis.theme.resolution.constants.WARMTH_HUE_RANGE
 import io.github.alph_a07.basis.theme.resolution.constants.WARM_HUE_ANCHOR
 import io.github.alph_a07.basis.theme.resolution.constants.domainHueAnchor
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -83,7 +84,7 @@ private fun circularMean(hues: Collection<Float>): Float {
     var sinSum = 0.0
     var cosSum = 0.0
     for (hue in hues) {
-        val rad = Math.toRadians(hue.toDouble())
+        val rad = hue.toDouble() * (PI / 180.0)
         sinSum += sin(rad)
         cosSum += cos(rad)
     }
@@ -91,7 +92,7 @@ private fun circularMean(hues: Collection<Float>): Float {
         return NEUTRAL_HUE_DEGREES
     }
     val meanRad = atan2(sinSum, cosSum)
-    val deg = Math.toDegrees(meanRad).toFloat()
+    val deg = ((meanRad * 180.0) / PI).toFloat()
     return normalizeHue(deg)
 }
 

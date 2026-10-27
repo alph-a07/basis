@@ -84,7 +84,7 @@ internal object FontCatalogReader {
         val axisCount = data.readShort().toInt()
         if (axisCount == 0) return emptySet()
 
-        val set = HashSet<FontAxis>(axisCount)
+        val set = LinkedHashSet<FontAxis>(axisCount)
         repeat(axisCount) {
             val tag = data.readUTF()
             val min = data.readFloat()

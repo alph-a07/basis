@@ -2,6 +2,7 @@
 
 package io.github.alph_a07.basis.theme.core.color
 
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
@@ -63,7 +64,7 @@ internal fun Oklch.isInGamut(): Boolean {
 
 /** Converts this color to a linear-sRGB triplet. */
 internal fun Oklch.toLinearSrgb(): LinearSrgb {
-    val hue = h * (Math.PI.toFloat() / HUE_HALF)
+    val hue = h * (PI.toFloat() / HUE_HALF)
     val axisA = c * cos(hue)
     val axisB = c * sin(hue)
 

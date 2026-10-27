@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.core
 
+import kotlin.jvm.JvmInline
+
 /**
  * Wrapper for a font weight value, which must be in the range `100..900` in steps of `100`.
  *

@@ -15,10 +15,7 @@ public object GoogleFontCatalog {
      * Derivation tie-breaks leverage this ordering to deterministically prefer more widely-vetted typographic families.
      */
     public val all: List<FontCatalogEntry> by lazy {
-        val stream =
-            GoogleFontCatalog::class.java.getResourceAsStream(RESOURCE_PATH)
-                ?: error("Failed to load Google Fonts catalog resource at $RESOURCE_PATH")
-        stream.use { FontCatalogReader.readCatalog(it) }
+        loadFontCatalogEntries()
     }
 
     /**
@@ -76,7 +73,7 @@ public object GoogleFontCatalog {
     }
 
     private val byNormalizedKey: Map<String, FontCatalogEntry> by lazy {
-        val map = HashMap<String, FontCatalogEntry>(all.size * 2)
+        val map = LinkedHashMap<String, FontCatalogEntry>(all.size * 2)
         for (entry in all) {
             map[normalizeKey(entry.id.value)] = entry
             map[normalizeKey(entry.familyName)] = entry
@@ -90,6 +87,4 @@ public object GoogleFontCatalog {
 
     private fun normalizeKey(raw: String): String =
         raw.trim().lowercase().replace('_', '-').replace(' ', '-')
-
-    private const val RESOURCE_PATH: String = "/basis/fonts/google-fonts-catalog.bin.gz"
 }

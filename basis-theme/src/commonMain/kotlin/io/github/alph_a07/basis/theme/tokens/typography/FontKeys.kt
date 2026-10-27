@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.tokens.typography
 
+import kotlin.jvm.JvmInline
+
 /**
  * Stable identifier of a Google Fonts catalog family.
  *

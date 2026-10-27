@@ -4,6 +4,7 @@ import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.core.color.Oklch
 import io.github.alph_a07.basis.theme.core.color.gamutMapped
 import io.github.alph_a07.basis.theme.core.color.toOklchOrNull
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
 import io.github.alph_a07.basis.theme.intent.BasisIntent
 import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.IdentityIntent
@@ -114,7 +115,7 @@ private fun knobReportEntries(violating: Map<String, Float>?): List<ReportEntry>
             stage = ResolutionStage.Normalize,
             status = ReportStatus.Rejected,
             message = "Knob value is not finite or outside [-1, 1]; the axis falls back to the preset.",
-            requested = value.toString(),
+            requested = formatDeterministic(value),
         )
     }
     ?: emptyList()

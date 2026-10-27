@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.core
 
+import kotlin.jvm.JvmInline
+
 /**
  * Value wrapper for a magnitude in milliseconds.
  *
