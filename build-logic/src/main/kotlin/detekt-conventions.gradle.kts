@@ -56,6 +56,8 @@ extensions.configure<DetektExtension> {
             "src/commonTest/kotlin",
             "src/jvmMain/kotlin",
             "src/jvmTest/kotlin",
+            "src/jsMain/kotlin",
+            "src/jsTest/kotlin",
         ),
     )
 }

@@ -17,6 +17,7 @@
 local.properties
 .idea/
 /scratch
+kotlin-js-store/
 # Graphify local runtime, cache, and metadata
 /graphify-out/cache/
 /graphify-out/cost.json
