@@ -4,13 +4,16 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "dev": "npm run generate:theme && astro dev",
+    "generate:theme": "tsx scripts/generate-theme.ts",
+    "prebuild": "npm run generate:theme",
+    "build": "npm run generate:theme && astro build && pagefind --site dist",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "npm run generate:theme && astro check",
     "test:loader": "tsx scripts/test-loader-validation.ts",
+    "test:theme": "tsx scripts/test-theme-resolution.ts",
     "test:a11y": "tsx scripts/test-a11y-layout.ts",
-    "test": "tsx scripts/test-loader-validation.ts && tsx scripts/test-a11y-layout.ts"
+    "test": "tsx scripts/test-loader-validation.ts && npm run generate:theme && tsx scripts/test-theme-resolution.ts && tsx scripts/test-a11y-layout.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",

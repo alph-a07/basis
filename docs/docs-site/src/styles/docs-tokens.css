@@ -1,0 +1,51 @@
+/*
+ * docs-tokens.css - Documentation chrome derived tokens
+ * Built exclusively using color-mix() over the resolved --d-* token vocabulary.
+ * Per locked decisions: these tokens never extend or leak into the Basis component token vocabulary.
+ */
+
+:root {
+  /* Surfaces & Backgrounds */
+  --docs-bg: var(--d-color-surface-default);
+  --docs-surface: var(--d-color-surface-elevated);
+  --docs-surface-recessed: var(--d-color-surface-recessed);
+  --docs-surface-inverse: var(--d-color-surface-inverse);
+
+  /* Typography & Content */
+  --docs-text: var(--d-color-content-default);
+  --docs-text-muted: var(--d-color-content-muted);
+  --docs-text-inverse: var(--d-color-content-inverse);
+
+  /* Borders & Dividers */
+  --docs-border: var(--d-color-border-default);
+  --docs-border-muted: var(--d-color-border-muted);
+  --docs-border-strong: var(--d-color-border-strong);
+  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 50%, transparent);
+
+  /* Interactive, Focus, and Selection */
+  --docs-focus-ring: var(--d-color-focus-ring);
+  --docs-accent: var(--d-color-brand-primary);
+  --docs-selection-surface: var(--d-color-selection-surface);
+  --docs-selection-content: var(--d-color-selection-content);
+
+  /* Chrome-specific derived tokens */
+  --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
+  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 70%, transparent);
+  --docs-toc-active: var(--d-color-focus-ring);
+  --docs-toc-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
+  --docs-sidebar-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
+  --docs-card-hover: color-mix(in srgb, var(--d-color-surface-elevated) 92%, var(--d-color-content-default));
+
+  /* Status Colors */
+  --docs-status-pass-bg: var(--d-color-positive-surface);
+  --docs-status-pass-text: var(--d-color-positive-content);
+  --docs-status-pass-border: var(--d-color-positive-border);
+
+  --docs-status-warn-bg: var(--d-color-caution-surface);
+  --docs-status-warn-text: var(--d-color-caution-content);
+  --docs-status-warn-border: var(--d-color-caution-border);
+
+  --docs-status-fail-bg: var(--d-color-negative-surface);
+  --docs-status-fail-text: var(--d-color-negative-content);
+  --docs-status-fail-border: var(--d-color-negative-border);
+}
