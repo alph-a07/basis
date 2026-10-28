@@ -5,6 +5,10 @@
   "description": "Basis documentation schemas, generated TypeScript definitions, validators, and fixtures",
   "main": "types/index.ts",
   "types": "types/index.ts",
+  "exports": {
+    ".": "./types/index.ts",
+    "./validator": "./scripts/semantic-validator.ts"
+  },
   "scripts": {
     "generate:types": "tsx scripts/generate-types.ts",
     "prebuild": "npm run generate:types",

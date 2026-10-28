@@ -38,3 +38,6 @@ kotlin-js-store/
 /.claude/skills/impeccable/
 /.agents/skills/impeccable/
 skills-lock.json
+node_modules/
+dist/
+.astro/

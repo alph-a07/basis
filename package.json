@@ -1,0 +1,13 @@
+{
+  "name": "basis-workspace",
+  "private": true,
+  "workspaces": [
+    "docs/docs-model",
+    "docs/docs-site"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace docs-site",
+    "check": "npm run check --workspace docs-site",
+    "test": "npm run test --workspaces"
+  }
+}
