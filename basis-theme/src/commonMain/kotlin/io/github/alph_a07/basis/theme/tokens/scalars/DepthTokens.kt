@@ -2,6 +2,7 @@ package io.github.alph_a07.basis.theme.tokens.scalars
 
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
+import kotlinx.serialization.Serializable
 
 /** Depth ladders. */
 @BasisTokenPathFamily(prefix = "depth", kind = "depth level")
@@ -20,6 +21,7 @@ public data class DepthTokens(
  * @property shadowBlur Shadow blur in dp.
  * @property shadowYOffset Shadow vertical offset in dp.
  */
+@Serializable
 public data class DepthSpec(
     public val elevation: DpValue,
     public val shadowAlpha: Float,

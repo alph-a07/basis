@@ -1,8 +1,11 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * Stable identifier of one interaction state within a component family.
  */
+@Serializable
 public enum class StateId {
     /** Default resting state. */
     Default,

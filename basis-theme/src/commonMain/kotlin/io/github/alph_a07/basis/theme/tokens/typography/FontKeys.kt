@@ -1,12 +1,14 @@
 package io.github.alph_a07.basis.theme.tokens.typography
 
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Stable identifier of a Google Fonts catalog family.
  *
  * @property value Catalog family id, e.g. `"inter"`.
  */
+@Serializable
 @JvmInline
 public value class GoogleFontId(public val value: String) {
     init {
@@ -19,6 +21,7 @@ public value class GoogleFontId(public val value: String) {
  *
  * @property value Unique BYOF key chosen by the consumer.
  */
+@Serializable
 @JvmInline
 public value class CustomFontKey(public val value: String) {
     init {

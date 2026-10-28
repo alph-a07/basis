@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.intent
 
 import io.github.alph_a07.basis.theme.core.codegen.BasisKnobEntries
+import kotlinx.serialization.Serializable
 
 /**
  * Intent to drive a mood profile, expressed as a preset and optional per-axis knobs.
@@ -8,12 +9,14 @@ import io.github.alph_a07.basis.theme.core.codegen.BasisKnobEntries
  * @property preset Named archetype driving the base mood profile.
  * @property knobs Sparse per-axis biases overlaid on the preset; null axes inherit the preset.
  */
+@Serializable
 public data class MoodIntent(
     public val preset: MoodPreset? = null,
     public val knobs: MoodKnobs? = null,
 )
 
 /** Distinct mood archetypes. */
+@Serializable
 public enum class MoodPreset {
     /** Balanced defaults with no stylistic lean. */
     Neutral,
@@ -53,6 +56,7 @@ public enum class MoodPreset {
  * @property motionEnergy Quiet toward lively.
  * @property playfulness Serious toward playful.
  */
+@Serializable
 @BasisKnobEntries(prefix = "mood.knobs")
 public data class MoodKnobs(
     public val warmth: Float? = null,

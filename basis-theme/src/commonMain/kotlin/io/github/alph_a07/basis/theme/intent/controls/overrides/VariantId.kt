@@ -1,8 +1,11 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * Stable identifier of one variant within a component family.
  */
+@Serializable
 public enum class VariantId {
     /** Primary emphasized variant. */
     Primary,

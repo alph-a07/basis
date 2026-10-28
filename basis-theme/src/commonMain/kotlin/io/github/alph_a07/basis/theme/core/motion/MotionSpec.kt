@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.core.motion
 
 import io.github.alph_a07.basis.theme.core.DurationValue
+import kotlinx.serialization.Serializable
 
 /**
  * Timing specification for one semantic motion purpose.
@@ -13,6 +14,7 @@ import io.github.alph_a07.basis.theme.core.DurationValue
  * @property delay Start delay before the motion begins.
  * @property spring Spring parameters honored only when [easing] is [EasingKind.Spring].
  */
+@Serializable
 public data class MotionSpec(
     public val duration: DurationValue,
     public val easing: EasingKind,
@@ -26,6 +28,7 @@ public data class MotionSpec(
  * @property stiffness Spring stiffness.
  * @property dampingRatio Damping ratio; `1` is critically damped.
  */
+@Serializable
 public data class SpringParams(
     public val stiffness: Float,
     public val dampingRatio: Float,

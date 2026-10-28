@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.core.color
 
+import kotlinx.serialization.Serializable
+
 /**
  * Consumer-supplied color in any supported intake space, converted to [Oklch] during normalization.
  *
@@ -9,6 +11,7 @@ package io.github.alph_a07.basis.theme.core.color
  * crashing: values that cannot be interpreted (a hex string that does not parse, non-finite
  * components) are rejected with a report entry, and out-of-range components are clamped.
  */
+@Serializable
 public sealed interface ColorSpec {
 
     /**
@@ -16,6 +19,7 @@ public sealed interface ColorSpec {
      *
      * @property value Raw hex text, e.g. `"#6750A4"` or `"886750A4"`.
      */
+    @Serializable
     public data class Hex(public val value: String) : ColorSpec
 
     /**
@@ -23,6 +27,7 @@ public sealed interface ColorSpec {
      *
      * @property argb Packed alpha, red, green, and blue channels.
      */
+    @Serializable
     public data class Argb(public val argb: Int) : ColorSpec
 
     /**
@@ -33,6 +38,7 @@ public sealed interface ColorSpec {
      * @property l Lightness in `0..1`.
      * @property a Alpha in `0..1`. Defaults to `1` (opaque).
      */
+    @Serializable
     public data class Hsl(
         public val h: Float,
         public val s: Float,

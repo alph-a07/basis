@@ -4,6 +4,7 @@ import io.github.alph_a07.basis.theme.core.ThemeMode
 import io.github.alph_a07.basis.theme.resolution.constants.BaseTables
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedThemePair
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
+import kotlinx.serialization.Serializable
 
 /**
  * Public diagnostics emitted alongside a [ResolvedThemePair].
@@ -16,6 +17,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property modes Modes present on the pair.
  * @property fontAssignments Font role assignments selected by the fonts stage.
  */
+@Serializable
 public data class ResolutionReport(
     public val entries: List<ReportEntry>,
     public val baseVersion: Int = BaseTables.CURRENT,
@@ -33,6 +35,7 @@ public data class ResolutionReport(
  * @property requested Requested value snapshot, when applicable.
  * @property enforced Enforced value snapshot for [ReportStatus.OverriddenByConstraint].
  */
+@Serializable
 public data class ReportEntry(
     public val path: String,
     public val stage: ResolutionStage,
@@ -45,6 +48,7 @@ public data class ReportEntry(
 /**
  * How an input was treated by the pipeline.
  */
+@Serializable
 public enum class ReportStatus {
     /** Applied as specified. */
     Honored,
@@ -70,6 +74,7 @@ public enum class ReportStatus {
  * @property metadata Family assigned to the metadata ladder.
  * @property unusedCandidates Candidates not assigned to any role.
  */
+@Serializable
 public data class FontAssignmentReport(
     public val structure: FontFamilyRef?,
     public val content: FontFamilyRef?,

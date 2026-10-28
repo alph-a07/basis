@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.core
 
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Value wrapper for a magnitude in sp (scale-independent pixels).
@@ -8,6 +9,7 @@ import kotlin.jvm.JvmInline
  * @property value Magnitude in sp, must be finite and non-negative.
  * @throws IllegalArgumentException If [value] is non-finite or negative.
  */
+@Serializable
 @JvmInline
 public value class SpValue(public val value: Float) {
     init {

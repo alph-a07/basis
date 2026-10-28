@@ -17,6 +17,7 @@ internal object FamilyEmitter {
             appendLine()
         }
         append(enumEnumKdoc(model))
+        appendLine("@Serializable")
         appendLine("public enum class ${model.enumName}(public val path: String) {")
         model.members.forEach { appendLine("    ${it.entryName}(\"${it.path}\"),") }
         appendLine("}")
@@ -34,7 +35,7 @@ internal object FamilyEmitter {
     }
 
     private fun imports(model: FamilyModel): List<String> =
-        listOf(model.receiverFqn, model.returnFqn)
+        (listOf(model.receiverFqn, model.returnFqn) + "kotlinx.serialization.Serializable")
             .filterNot { it.startsWith("$OUTPUT_PACKAGE.") }
             .distinct()
             .sorted()

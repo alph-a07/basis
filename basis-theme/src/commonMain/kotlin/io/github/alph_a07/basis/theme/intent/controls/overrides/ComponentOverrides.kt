@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * Per-component style patches keyed by component id.
  *
@@ -8,6 +10,7 @@ package io.github.alph_a07.basis.theme.intent.controls.overrides
  *
  * @property byComponent Patches per component id, e.g. [ComponentId.Surface].
  */
+@Serializable
 public data class ComponentOverrides(
     public val byComponent: Map<ComponentId, ComponentOverride> = emptyMap(),
 )

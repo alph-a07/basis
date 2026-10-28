@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * One component's patch set across variants and states.
  *
@@ -11,6 +13,7 @@ package io.github.alph_a07.basis.theme.intent.controls.overrides
  * @property byState Patches per state id.
  * @property byVariantState Patches per variant-and-state combination.
  */
+@Serializable
 public data class ComponentOverride(
     public val all: ComponentStylePatch? = null,
     public val byVariant: Map<VariantId, ComponentStylePatch> = emptyMap(),

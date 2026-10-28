@@ -2,6 +2,7 @@ package io.github.alph_a07.basis.theme.intent.controls
 
 import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.core.SpValue
+import kotlinx.serialization.Serializable
 
 /**
  * Hard constraints controls on the resolved theme.
@@ -16,6 +17,7 @@ import io.github.alph_a07.basis.theme.core.SpValue
  * @property motion Reduced-motion preference and duration bias.
  * @property typography Minimum readable size and font-scale floor.
  */
+@Serializable
 public data class ConstraintsControl(
     public val minContrast: ContrastConstraint? = null,
     public val minTouchTarget: TouchTargetConstraint? = null,
@@ -31,6 +33,7 @@ public data class ConstraintsControl(
  *
  * @property minRatio Smallest allowed ratio between content and surface luminance.
  */
+@Serializable
 public data class ContrastConstraint(public val minRatio: Float) {
     init {
         require(minRatio.isFinite() && minRatio in MIN_RATIO..MAX_RATIO) {
@@ -50,6 +53,7 @@ public data class ContrastConstraint(public val minRatio: Float) {
  *
  * @property minSize Smallest allowed interactive edge length, must be positive.
  */
+@Serializable
 public data class TouchTargetConstraint(public val minSize: DpValue) {
     init {
         require(minSize.value > 0f) { "TouchTargetConstraint.minSize must be positive, was $minSize." }
@@ -62,6 +66,7 @@ public data class TouchTargetConstraint(public val minSize: DpValue) {
  * @property min Lower bound in dp, or null for no lower clamp.
  * @property max Upper bound in dp, or null for no upper clamp.
  */
+@Serializable
 public data class MinMaxLevels(
     public val min: DpValue? = null,
     public val max: DpValue? = null,
@@ -83,6 +88,7 @@ public data class MinMaxLevels(
  * @property maxDurationBias Bias in `[-1, 1]` capping durations relative to the derived spec;
  * negative shortens, positive extends, null leaves durations untouched.
  */
+@Serializable
 public data class MotionConstraint(
     public val preferReducedMotion: Boolean = false,
     public val maxDurationBias: Float? = null,
@@ -108,6 +114,7 @@ public data class MotionConstraint(
  * @property scaleFloor Smallest allowed font-scale factor applied by the host, e.g. `1` for no
  * downsizing; null for no floor.
  */
+@Serializable
 public data class TypographyConstraints(
     public val minReadableSize: SpValue? = null,
     public val scaleFloor: Float? = null,

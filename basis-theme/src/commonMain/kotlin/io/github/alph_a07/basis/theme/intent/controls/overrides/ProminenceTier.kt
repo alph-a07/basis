@@ -1,8 +1,11 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * Hierarchy tier a component instance occupies.
  */
+@Serializable
 public enum class ProminenceTier {
     /** Primary actions and focal surfaces. */
     Primary,

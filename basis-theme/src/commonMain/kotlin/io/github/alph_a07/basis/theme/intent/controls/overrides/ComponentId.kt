@@ -1,8 +1,11 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
+import kotlinx.serialization.Serializable
+
 /**
  * Stable identifier of one foundational component family.
  */
+@Serializable
 public enum class ComponentId {
     /** Structural surface container. */
     Surface,

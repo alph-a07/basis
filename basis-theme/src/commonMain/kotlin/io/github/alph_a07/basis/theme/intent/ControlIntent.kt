@@ -5,6 +5,7 @@ import io.github.alph_a07.basis.theme.intent.controls.FontControl
 import io.github.alph_a07.basis.theme.intent.controls.ModeControl
 import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
 import io.github.alph_a07.basis.theme.intent.controls.overrides.TokenOverrides
+import kotlinx.serialization.Serializable
 
 /**
  * Intent to drive fine-grained control over a resolved theme.
@@ -17,6 +18,7 @@ import io.github.alph_a07.basis.theme.intent.controls.overrides.TokenOverrides
  * typography identity belongs to [TypographyIdentity].
  * @property constraints Non-negotiable floors applied after all overrides.
  */
+@Serializable
 public data class ControlIntent(
     public val tokens: TokenOverrides? = null,
     public val components: ComponentOverrides? = null,

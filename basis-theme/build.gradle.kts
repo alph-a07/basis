@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     id("detekt-conventions")
     id("ktlint-conventions")
@@ -16,6 +17,9 @@ kotlin {
     sourceSets {
         commonMain {
             kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
+            }
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

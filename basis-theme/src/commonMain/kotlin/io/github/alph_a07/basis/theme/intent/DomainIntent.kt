@@ -1,17 +1,21 @@
 package io.github.alph_a07.basis.theme.intent
 
+import kotlinx.serialization.Serializable
+
 /**
  * Intent to guide theme selection and token defaults for a product or interaction.
  *
  * @property domains Product-domain labels, blended by conservative rules.
  * @property interactions Interaction-pattern labels, blended by weighted means.
  */
+@Serializable
 public data class DomainIntent(
     public val domains: Set<ProductDomain> = emptySet(),
     public val interactions: Set<InteractionPattern> = emptySet(),
 )
 
 /** Recognizable product contexts that supply trust, density, and risk influences. */
+@Serializable
 public enum class ProductDomain {
     /** Banking, investing, and money management. */
     Finance,
@@ -45,6 +49,7 @@ public enum class ProductDomain {
 }
 
 /** Recognizable interaction contexts that supply density, motion, and input influences. */
+@Serializable
 public enum class InteractionPattern {
     /** Tables, charts, and dense record browsing. */
     DataNavigation,

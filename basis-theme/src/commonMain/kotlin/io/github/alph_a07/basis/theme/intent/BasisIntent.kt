@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.intent
 
+import kotlinx.serialization.Serializable
+
 /**
  * A very flexible intent for a design-system handoff, with every axis optional and independently resolvable.
  *
@@ -14,6 +16,7 @@ package io.github.alph_a07.basis.theme.intent
  * @property domain Product-domain and interaction-pattern influences.
  * @property control Locked overrides, mode generation, and hard constraints.
  */
+@Serializable
 public data class BasisIntent(
     public val identity: IdentityIntent? = null,
     public val mood: MoodIntent? = null,

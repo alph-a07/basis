@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.core.color
 
 import io.github.alph_a07.basis.theme.core.format.formatDeterministic
+import kotlinx.serialization.Serializable
 
 /**
  * A color in the OKLCH color space, the single color representation used in the theme system.
@@ -12,6 +13,7 @@ import io.github.alph_a07.basis.theme.core.format.formatDeterministic
  * @property h Hue in degrees, `[0, 360]`.
  * @property a Alpha in `0..1`. defaults to `1` (opaque).
  */
+@Serializable
 @Suppress("MagicNumber")
 public data class Oklch(
     public val l: Float,

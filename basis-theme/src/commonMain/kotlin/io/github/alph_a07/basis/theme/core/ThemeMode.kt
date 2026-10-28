@@ -1,8 +1,10 @@
 package io.github.alph_a07.basis.theme.core
 
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
+import kotlinx.serialization.Serializable
 
 /** Theme mode for a [ResolvedTheme] tree. */
+@Serializable
 public enum class ThemeMode {
     /** Light appearance. */
     Light,

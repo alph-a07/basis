@@ -2,6 +2,7 @@ package io.github.alph_a07.basis.theme.intent
 
 import io.github.alph_a07.basis.theme.core.color.ColorSpec
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
+import kotlinx.serialization.Serializable
 
 /**
  * Brand-defining inputs: who the product is, independent of feel, influences, or floors.
@@ -18,6 +19,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property deriveColors When `true` (default), colors are synthesized from mood, brand, and domain
  * signals. When `false`, a fully achromatic base (chroma = 0.0) is used for a neutral, color-agnostic base.
  */
+@Serializable
 public data class IdentityIntent(
     public val brandColor: ColorSpec? = null,
     public val supportingColors: List<ColorSpec> = emptyList(),
@@ -27,6 +29,7 @@ public data class IdentityIntent(
 )
 
 /** How evident brand color is in semantic roles; a branding decision, not a mood or energy setting. */
+@Serializable
 public enum class BrandPresence {
     /** Brand color reaches selection, focus, and gradients only. */
     Subtle,
@@ -50,6 +53,7 @@ public enum class BrandPresence {
  * @property content Family pinned to the content (body) ladder.
  * @property metadata Family pinned to the metadata (caption and label) ladder.
  */
+@Serializable
 public data class TypographyIdentity(
     public val candidates: List<FontFamilyRef> = emptyList(),
     public val structure: FontFamilyRef? = null,

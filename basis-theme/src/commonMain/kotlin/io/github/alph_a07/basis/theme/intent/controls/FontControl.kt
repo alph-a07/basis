@@ -4,6 +4,7 @@ import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
 import io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
+import kotlinx.serialization.Serializable
 
 /**
  * Type ladder controls for a [ResolvedTheme] tree, overriding role-level typography assignments.
@@ -12,6 +13,7 @@ import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
  * @property weightClamps Weight bounds per [TypographyTokenPath]
  * @property features OpenType feature sets per [TypographyTokenPath].
  */
+@Serializable
 public data class FontControl(
     public val levelFamilies: Map<TypographyTokenPath, FontFamilyRef> = emptyMap(),
     public val weightClamps: Map<TypographyTokenPath, WeightClamp> = emptyMap(),
@@ -24,6 +26,7 @@ public data class FontControl(
  * @property min Lowest allowed weight, or null for no floor.
  * @property max Highest allowed weight, or null for no ceiling.
  */
+@Serializable
 public data class WeightClamp(
     public val min: FontWeightValue? = null,
     public val max: FontWeightValue? = null,
@@ -43,6 +46,7 @@ public data class WeightClamp(
  *
  * @property features Feature tags such as `"tnum"` or `"ss01"`, matched case-insensitively.
  */
+@Serializable
 public data class FontFeatureSpec(public val features: Set<String>) {
     init {
         require(features.none { it.isBlank() }) {

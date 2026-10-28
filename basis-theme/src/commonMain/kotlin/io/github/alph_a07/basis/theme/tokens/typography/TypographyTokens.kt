@@ -6,6 +6,7 @@ import io.github.alph_a07.basis.theme.core.LineHeightValue
 import io.github.alph_a07.basis.theme.core.SpValue
 import io.github.alph_a07.basis.theme.core.codegen.BasisTokenPathFamily
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
+import kotlinx.serialization.Serializable
 
 /**
  * Role-centric typography tree of composite roles.
@@ -54,6 +55,7 @@ public data class MetadataType(
  * @property letterSpacing Letter spacing in em relative to [size].
  * @property color Semantic color reference resolved against [ColorTokens].
  */
+@Serializable
 public data class TypeRole(
     public val family: FontFamilyRef,
     public val size: SpValue,

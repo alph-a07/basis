@@ -17,6 +17,7 @@ ksp = "2.3.12"
 vanniktechMavenPublish = "0.37.0"
 bcv = "0.18.2"
 bcvBridge = "0.2.0"
+kotlinxSerialization = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ detekt-api = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", versi
 detekt-test = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test", version.ref = "detekt" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.7" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -60,3 +62,4 @@ vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = 
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "bcv" }
 android-bcv-bridge = { id = "io.github.tjokinen.android-bcv-bridge", version.ref = "bcvBridge" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

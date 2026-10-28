@@ -5,6 +5,7 @@ import io.github.alph_a07.basis.theme.tokens.core.DepthTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.RadiusTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.SpacingTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath
+import kotlinx.serialization.Serializable
 
 /**
  * Fields common to a clear majority of components; irrelevant fields are ignored per component.
@@ -23,6 +24,7 @@ import io.github.alph_a07.basis.theme.tokens.core.TypographyTokenPath
  * @property gap Inner slot spacing path.
  * @property depth Depth level path defining elevation and shadow.
  */
+@Serializable
 public data class UniversalStylePatch(
     public val prominence: ProminenceTier? = null,
     public val treatment: Treatment? = null,

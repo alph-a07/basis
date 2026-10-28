@@ -1,6 +1,8 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Token overrides for a [ResolvedTheme] tree. Only non-null or non-empty fields are applied.
@@ -15,13 +17,21 @@ import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
  * @property paths Secondary path to override tokens keyed by dotted string, e.g.
  * `"color.surface.default"` to [OverrideValue.Color].
  */
+@Serializable
 public data class TokenOverrides(
+    @Transient
     public val color: ColorTokenOverrides? = null,
+    @Transient
     public val typography: TypographyTokenOverrides? = null,
+    @Transient
     public val spacing: LevelSpacingOverrides? = null,
+    @Transient
     public val radius: RadiusOverrides? = null,
+    @Transient
     public val depth: DepthOverrides? = null,
+    @Transient
     public val size: SizeOverrides? = null,
+    @Transient
     public val motion: MotionOverrides? = null,
     public val paths: Map<String, OverrideValue> = emptyMap(),
 ) {

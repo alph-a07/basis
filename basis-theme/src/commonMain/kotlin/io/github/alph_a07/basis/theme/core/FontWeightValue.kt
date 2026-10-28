@@ -1,12 +1,14 @@
 package io.github.alph_a07.basis.theme.core
 
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Wrapper for a font weight value, which must be in the range `100..900` in steps of `100`.
  *
  * @property weight Weight in `100..900` in steps of 100.
  */
+@Serializable
 @JvmInline
 public value class FontWeightValue(public val weight: Int) {
     init {

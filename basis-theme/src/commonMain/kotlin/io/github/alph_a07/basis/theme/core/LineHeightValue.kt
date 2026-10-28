@@ -1,12 +1,14 @@
 package io.github.alph_a07.basis.theme.core
 
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Line height multiplier.
  *
  * @property multiplier Multiplier of font size, e.g. `1.25`.
  */
+@Serializable
 @JvmInline
 public value class LineHeightValue(public val multiplier: Float) {
     init {
