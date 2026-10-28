@@ -93,3 +93,16 @@ tasks.register("installGitHooks") {
         println("✅ Git hooks installed — commit-msg, pre-commit and pre-push are now active.")
     }
 }
+
+tasks.register("generateIntentJson") {
+    group = "documentation"
+    description = "Delegates to :docs:docs-extract:generateIntentJson."
+    dependsOn(":docs:docs-extract:generateIntentJson")
+}
+
+tasks.register("generatePatchVocabulary") {
+    group = "documentation"
+    description = "Delegates to :docs:docs-extract:generatePatchVocabulary."
+    dependsOn(":docs:docs-extract:generatePatchVocabulary")
+}
+
