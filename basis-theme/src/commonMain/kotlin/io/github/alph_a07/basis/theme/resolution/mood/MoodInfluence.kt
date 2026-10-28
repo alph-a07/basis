@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.mood
 
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.intent.MoodIntent
 import io.github.alph_a07.basis.theme.intent.MoodKnobs
 import io.github.alph_a07.basis.theme.intent.MoodPreset
@@ -58,62 +60,64 @@ internal fun applyMoodKnobs(themeProfile: ThemeProfile, knobs: MoodKnobs?): Them
  */
 @Suppress("LongMethod")
 internal fun scaleInfluenceBiases(themeProfile: ThemeProfile, gain: MoodInfluenceGain): ThemeProfile {
-    val scale = gain.value
+    val scale = gain.value.coerceToFloat32().toDouble()
+
+    fun Float.d(): Double = coerceToFloat32().toDouble()
 
     val rawDensity =
-        themeProfile.dataDensity * InfluenceWeights.DENSITY_DATA +
-            themeProfile.inputHeaviness * InfluenceWeights.DENSITY_INPUT
+        themeProfile.dataDensity.d() * InfluenceWeights.DENSITY_DATA.d() +
+            themeProfile.inputHeaviness.d() * InfluenceWeights.DENSITY_INPUT.d()
     val rawRoundness =
-        themeProfile.socialPresence * InfluenceWeights.ROUND_SOCIAL -
-            themeProfile.trustStrictness * InfluenceWeights.ROUND_TRUST -
-            themeProfile.riskSensitivity * InfluenceWeights.ROUND_RISK
+        themeProfile.socialPresence.d() * InfluenceWeights.ROUND_SOCIAL.d() -
+            themeProfile.trustStrictness.d() * InfluenceWeights.ROUND_TRUST.d() -
+            themeProfile.riskSensitivity.d() * InfluenceWeights.ROUND_RISK.d()
     val rawChroma =
-        themeProfile.contentVelocity * InfluenceWeights.CHROMA_VELOCITY +
-            themeProfile.mediaRichness * InfluenceWeights.CHROMA_MEDIA -
-            themeProfile.trustStrictness * InfluenceWeights.CHROMA_TRUST
+        themeProfile.contentVelocity.d() * InfluenceWeights.CHROMA_VELOCITY.d() +
+            themeProfile.mediaRichness.d() * InfluenceWeights.CHROMA_MEDIA.d() -
+            themeProfile.trustStrictness.d() * InfluenceWeights.CHROMA_TRUST.d()
     val rawContrast =
-        themeProfile.riskSensitivity * InfluenceWeights.CONTRAST_RISK +
-            themeProfile.trustStrictness * InfluenceWeights.CONTRAST_TRUST
+        themeProfile.riskSensitivity.d() * InfluenceWeights.CONTRAST_RISK.d() +
+            themeProfile.trustStrictness.d() * InfluenceWeights.CONTRAST_TRUST.d()
     val rawMotionEnergy =
-        themeProfile.contentVelocity * InfluenceWeights.MOTION_VELOCITY +
-            themeProfile.inputHeaviness * InfluenceWeights.MOTION_INPUT
+        themeProfile.contentVelocity.d() * InfluenceWeights.MOTION_VELOCITY.d() +
+            themeProfile.inputHeaviness.d() * InfluenceWeights.MOTION_INPUT.d()
     val rawPlayfulness =
-        themeProfile.socialPresence * InfluenceWeights.PLAY_SOCIAL -
-            themeProfile.riskSensitivity * InfluenceWeights.PLAY_RISK -
-            themeProfile.trustStrictness * InfluenceWeights.PLAY_TRUST
+        themeProfile.socialPresence.d() * InfluenceWeights.PLAY_SOCIAL.d() -
+            themeProfile.riskSensitivity.d() * InfluenceWeights.PLAY_RISK.d() -
+            themeProfile.trustStrictness.d() * InfluenceWeights.PLAY_TRUST.d()
     val rawTypography =
-        -themeProfile.trustStrictness * InfluenceWeights.TYPE_TRUST +
-            themeProfile.mediaRichness * InfluenceWeights.TYPE_MEDIA +
-            themeProfile.socialPresence * InfluenceWeights.TYPE_SOCIAL
+        -themeProfile.trustStrictness.d() * InfluenceWeights.TYPE_TRUST.d() +
+            themeProfile.mediaRichness.d() * InfluenceWeights.TYPE_MEDIA.d() +
+            themeProfile.socialPresence.d() * InfluenceWeights.TYPE_SOCIAL.d()
 
-    val rawCta = themeProfile.transactionality
+    val rawCta = themeProfile.transactionality.d()
     val rawDepth =
-        themeProfile.mediaRichness * StructuralWeights.DEPTH_MEDIA +
-            themeProfile.dataDensity * StructuralWeights.DEPTH_DATA
+        themeProfile.mediaRichness.d() * StructuralWeights.DEPTH_MEDIA.d() +
+            themeProfile.dataDensity.d() * StructuralWeights.DEPTH_DATA.d()
     val rawBorder =
-        themeProfile.riskSensitivity * StructuralWeights.BORDER_RISK +
-            themeProfile.trustStrictness * StructuralWeights.BORDER_TRUST
-    val rawStatus = themeProfile.riskSensitivity * StructuralWeights.STATUS_RISK
+        themeProfile.riskSensitivity.d() * StructuralWeights.BORDER_RISK.d() +
+            themeProfile.trustStrictness.d() * StructuralWeights.BORDER_TRUST.d()
+    val rawStatus = themeProfile.riskSensitivity.d() * StructuralWeights.STATUS_RISK.d()
     val rawFocus =
-        themeProfile.inputHeaviness * StructuralWeights.FOCUS_INPUT +
-            themeProfile.riskSensitivity * StructuralWeights.FOCUS_RISK
-    val rawAvatar = themeProfile.socialPresence * StructuralWeights.AVATAR_SOCIAL
+        themeProfile.inputHeaviness.d() * StructuralWeights.FOCUS_INPUT.d() +
+            themeProfile.riskSensitivity.d() * StructuralWeights.FOCUS_RISK.d()
+    val rawAvatar = themeProfile.socialPresence.d() * StructuralWeights.AVATAR_SOCIAL.d()
 
     return ThemeProfile(
         warmth = 0f,
-        chroma = (rawChroma * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        contrast = (rawContrast * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        density = (rawDensity * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        roundness = (rawRoundness * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        typographyExpressiveness = (rawTypography * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        motionEnergy = (rawMotionEnergy * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        playfulness = (rawPlayfulness * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        ctaEmphasis = (rawCta * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        depthEmphasis = (rawDepth * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        borderClarity = (rawBorder * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        statusClarity = (rawStatus * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        focusEmphasis = (rawFocus * scale).coerceIn(AXIS_MIN, AXIS_MAX),
-        avatarBias = (rawAvatar * scale).coerceIn(AXIS_MIN, AXIS_MAX),
+        chroma = (rawChroma * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        contrast = (rawContrast * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        density = (rawDensity * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        roundness = (rawRoundness * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        typographyExpressiveness = (rawTypography * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        motionEnergy = (rawMotionEnergy * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        playfulness = (rawPlayfulness * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        ctaEmphasis = (rawCta * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        depthEmphasis = (rawDepth * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        borderClarity = (rawBorder * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        statusClarity = (rawStatus * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        focusEmphasis = (rawFocus * scale).coerceIn(-1.0, 1.0).toFloat32(),
+        avatarBias = (rawAvatar * scale).coerceIn(-1.0, 1.0).toFloat32(),
         dataDensity = themeProfile.dataDensity,
         inputHeaviness = themeProfile.inputHeaviness,
         transactionality = themeProfile.transactionality,
@@ -155,16 +159,17 @@ internal fun blendMoodInfluence(profile: ThemeProfile, mood: MoodIntent?): Theme
  * @return `clamp(profile + mood)` per axis in `[-1, 1]`.
  */
 internal fun stackMoodProfile(profile: ThemeProfile, mood: ThemeProfile): ThemeProfile = profile.copy(
-    warmth = (profile.warmth + mood.warmth).coerceIn(AXIS_MIN, AXIS_MAX),
-    chroma = (profile.chroma + mood.chroma).coerceIn(AXIS_MIN, AXIS_MAX),
-    contrast = (profile.contrast + mood.contrast).coerceIn(AXIS_MIN, AXIS_MAX),
-    density = (profile.density + mood.density).coerceIn(AXIS_MIN, AXIS_MAX),
-    roundness = (profile.roundness + mood.roundness).coerceIn(AXIS_MIN, AXIS_MAX),
+    warmth = (profile.warmth.toDouble() + mood.warmth.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
+    chroma = (profile.chroma.toDouble() + mood.chroma.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
+    contrast = (profile.contrast.toDouble() + mood.contrast.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
+    density = (profile.density.toDouble() + mood.density.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
+    roundness = (profile.roundness.toDouble() + mood.roundness.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
     typographyExpressiveness =
-        (profile.typographyExpressiveness + mood.typographyExpressiveness)
-            .coerceIn(AXIS_MIN, AXIS_MAX),
-    motionEnergy = (profile.motionEnergy + mood.motionEnergy).coerceIn(AXIS_MIN, AXIS_MAX),
-    playfulness = (profile.playfulness + mood.playfulness).coerceIn(AXIS_MIN, AXIS_MAX),
+        (profile.typographyExpressiveness.toDouble() + mood.typographyExpressiveness.toDouble())
+            .coerceIn(-1.0, 1.0)
+            .toFloat32(),
+    motionEnergy = (profile.motionEnergy.toDouble() + mood.motionEnergy.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
+    playfulness = (profile.playfulness.toDouble() + mood.playfulness.toDouble()).coerceIn(-1.0, 1.0).toFloat32(),
 )
 
 /**

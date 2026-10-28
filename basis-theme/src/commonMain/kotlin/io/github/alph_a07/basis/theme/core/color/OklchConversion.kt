@@ -2,6 +2,9 @@
 
 package io.github.alph_a07.basis.theme.core.color
 
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
+import io.github.alph_a07.basis.theme.core.format.toFloat32
+import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cbrt
 import kotlin.math.pow
@@ -39,10 +42,10 @@ internal fun ColorSpec.toOklchOrNull(): Oklch? =
  * into `[0, 360)`, so intermediate derivation results never fail construction.
  */
 internal fun safeOklch(l: Float, c: Float, h: Float, a: Float = 1f): Oklch = Oklch(
-    l = l.coerceIn(0f, 1f),
-    c = c.coerceAtLeast(0f),
-    h = h.wrapHue(),
-    a = a.coerceIn(0f, 1f),
+    l = l.coerceIn(0f, 1f).coerceToFloat32(),
+    c = c.coerceAtLeast(0f).coerceToFloat32(),
+    h = h.wrapHue().coerceToFloat32(),
+    a = a.coerceIn(0f, 1f).coerceToFloat32(),
 )
 
 /**
@@ -126,9 +129,9 @@ private fun hslToOklch(h: Float, s: Float, l: Float, a: Float): Oklch {
 }
 
 private fun srgbToOklch(r: Float, g: Float, b: Float, a: Float): Oklch {
-    val linearR = toLinear(r)
-    val linearG = toLinear(g)
-    val linearB = toLinear(b)
+    val linearR = toLinear(r.toDouble())
+    val linearG = toLinear(g.toDouble())
+    val linearB = toLinear(b.toDouble())
 
     val lmsLong = OKLAB_MATRIX[0] * linearR + OKLAB_MATRIX[1] * linearG + OKLAB_MATRIX[2] * linearB
     val lmsMedium = OKLAB_MATRIX[3] * linearR + OKLAB_MATRIX[4] * linearG + OKLAB_MATRIX[5] * linearB
@@ -143,12 +146,25 @@ private fun srgbToOklch(r: Float, g: Float, b: Float, a: Float): Oklch {
     val axisB =
         OKLAB_AXIS_B[0] * rootLong + OKLAB_AXIS_B[1] * rootMedium + OKLAB_AXIS_B[2] * rootShort
 
+    val chroma = sqrt(axisA * axisA + axisB * axisB)
+    val effectiveChroma = if (chroma <= ACHROMATIC_CHROMA_THRESHOLD) 0.0 else chroma
+    val hue =
+        if (effectiveChroma == 0.0) {
+            0.0
+        } else {
+            val deg = atan2(axisB, axisA) * (180.0 / PI)
+
+            if (deg < 0.0) deg + 360.0 else deg
+        }
+
+    val lightness =
+        OKLAB_LIGHTNESS[0] * rootLong + OKLAB_LIGHTNESS[1] * rootMedium +
+            OKLAB_LIGHTNESS[2] * rootShort
+
     return safeOklch(
-        l =
-            OKLAB_LIGHTNESS[0] * rootLong + OKLAB_LIGHTNESS[1] * rootMedium +
-                OKLAB_LIGHTNESS[2] * rootShort,
-        c = sqrt(axisA * axisA + axisB * axisB),
-        h = atan2(axisB, axisA) * DEGREES_PER_RADIAN,
+        l = lightness.toFloat32(),
+        c = effectiveChroma.toFloat32(),
+        h = hue.toFloat32(),
         a = a,
     )
 }
@@ -183,15 +199,12 @@ private fun hueSector(sector: Int, chroma: Float, secondary: Float): Triple<Floa
         }
     }
 
-private fun toLinear(channel: Float): Float =
+private fun toLinear(channel: Double): Double =
     if (channel <= TRANSFER_KNEE) {
-        channel / 12.92f
+        channel / 12.92
     } else {
-        ((channel + 0.055f) / 1.055f).pow(2.4f)
+        ((channel + 0.055) / 1.055).pow(2.4)
     }
-
-/** Degrees per radian, for converting an OKLab angle into an OKLCH hue. */
-private const val DEGREES_PER_RADIAN: Float = 57.29578f
 
 /** Largest value carried by one 8-bit channel. */
 private const val BYTE_MAX: Float = 255f
@@ -208,7 +221,7 @@ private const val RED_SHIFT: Int = 16
 private const val GREEN_SHIFT: Int = 8
 
 /** sRGB transfer-function knee between the linear and the gamma segment. */
-private const val TRANSFER_KNEE: Float = 0.04045f
+private const val TRANSFER_KNEE: Double = 0.04045
 
 /** Linear sRGB transfer-function knee (0.04045 / 12.92). */
 private const val LINEAR_TRANSFER_KNEE: Float = 0.0031308f
@@ -220,17 +233,20 @@ private val HEX_SHAPE = Regex("^[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$")
 
 /** Row-major linear-sRGB to OKLab matrix. */
 private val OKLAB_MATRIX =
-    floatArrayOf(
-        0.41222146f, 0.53633255f, 0.051445995f,
-        0.2119035f, 0.6806995f, 0.10739696f,
-        0.08830246f, 0.28171885f, 0.6299787f,
+    doubleArrayOf(
+        0.41222146, 0.53633255, 0.051445995,
+        0.2119035, 0.6806995, 0.10739696,
+        0.08830246, 0.28171885, 0.6299787,
     )
 
 /** OKLab lightness row. */
-private val OKLAB_LIGHTNESS = floatArrayOf(0.21045426f, 0.7936178f, -0.004072047f)
+private val OKLAB_LIGHTNESS = doubleArrayOf(0.21045426, 0.7936178, -0.004072047)
 
 /** OKLab `a` row. */
-private val OKLAB_AXIS_A = floatArrayOf(1.9779985f, -2.4285922f, 0.4505937f)
+private val OKLAB_AXIS_A = doubleArrayOf(1.9779985, -2.4285922, 0.4505937)
 
 /** OKLab `b` row. */
-private val OKLAB_AXIS_B = floatArrayOf(0.025904037f, 0.78277177f, -0.80867577f)
+private val OKLAB_AXIS_B = doubleArrayOf(0.025904037, 0.78277177, -0.80867577)
+
+/** Chroma floor below which hue is degenerate and set to 0. */
+private const val ACHROMATIC_CHROMA_THRESHOLD: Double = 0.0001

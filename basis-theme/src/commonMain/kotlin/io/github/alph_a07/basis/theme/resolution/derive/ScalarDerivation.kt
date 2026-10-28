@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.derive
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.tokens.scalars.AvatarSizes
 import io.github.alph_a07.basis.theme.tokens.scalars.ControlSizes
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
@@ -80,10 +81,10 @@ internal fun deriveDepthTokens(depth: DepthTokens, weights: ScalarWeights): Dept
 )
 
 private fun DepthSpec.scaled(scale: Float): DepthSpec = DepthSpec(
-    elevation = DpValue(elevation.value * scale),
+    elevation = DpValue((elevation.value.toDouble() * scale.toDouble()).toFloat32()),
     shadowAlpha = shadowAlpha,
-    shadowBlur = DpValue(shadowBlur.value * scale),
-    shadowYOffset = DpValue(shadowYOffset.value * scale),
+    shadowBlur = DpValue((shadowBlur.value.toDouble() * scale.toDouble()).toFloat32()),
+    shadowYOffset = DpValue((shadowYOffset.value.toDouble() * scale.toDouble()).toFloat32()),
 )
 
 internal fun deriveSizeTokens(size: SizeTokens, weights: DerivationWeights): SizeTokens =
@@ -97,13 +98,13 @@ internal fun deriveSizeTokens(size: SizeTokens, weights: DerivationWeights): Siz
  * @return The scaled size ladders.
  */
 internal fun deriveSizeTokens(size: SizeTokens, weights: ScalarWeights): SizeTokens {
-    fun icon(value: DpValue): DpValue = DpValue(value.value * weights.iconDot)
+    fun icon(value: DpValue): DpValue = DpValue((value.value.toDouble() * weights.iconDot.toDouble()).toFloat32())
 
-    fun avatar(value: DpValue): DpValue = DpValue(value.value * weights.avatar)
+    fun avatar(value: DpValue): DpValue = DpValue((value.value.toDouble() * weights.avatar.toDouble()).toFloat32())
 
-    fun control(value: DpValue): DpValue = DpValue(value.value * weights.control)
+    fun control(value: DpValue): DpValue = DpValue((value.value.toDouble() * weights.control.toDouble()).toFloat32())
 
-    fun dot(value: DpValue): DpValue = DpValue(value.value * weights.iconDot)
+    fun dot(value: DpValue): DpValue = DpValue((value.value.toDouble() * weights.iconDot.toDouble()).toFloat32())
 
     return SizeTokens(
         icon =

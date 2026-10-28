@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.theme.resolution.derive
 
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
 import io.github.alph_a07.basis.theme.resolution.ThemeProfile
 import io.github.alph_a07.basis.theme.resolution.constants.DerivationConstants
 import io.github.alph_a07.basis.theme.resolution.typographyExpressiveness01
@@ -70,52 +71,66 @@ internal data class DerivationWeights(
  *
  * @param profile Unified theme profile carrying visual style, structural biases, and behavioral influences.
  */
+@Suppress("LongMethod")
 internal fun calculateDerivationWeights(profile: ThemeProfile): DerivationWeights {
     val densityT = (profile.density + 1f) / 2f
     val roundnessT = (profile.roundness + 1f) / 2f
     val motionT = (profile.motionEnergy + 1f) / 2f
 
     return DerivationWeights(
-        neutralHueShiftDegrees = profile.warmth * DerivationConstants.MAX_NEUTRAL_HUE_SHIFT_DEGREES,
-        brandDerivativeMaxShiftDegrees = profile.warmth * DerivationConstants.MAX_BRAND_HUE_SHIFT_DEGREES,
-        accentChromaScale = calculateAccentChroma(profile.chroma, profile.contrast),
-        neutralChromaScale = 1f + profile.chroma * DerivationConstants.NEUTRAL_CHROMA,
-        lightnessDeltaScale = calculateLightnessDelta(profile.contrast, profile.chroma),
-        borderStrengthScale = 1f + profile.contrast * DerivationConstants.BORDER_CONTRAST,
-        statusChromaScale = 1f + profile.statusClarity * DerivationConstants.CLARITY_GAIN,
-        clarityBorderScale = 1f + profile.borderClarity * DerivationConstants.CLARITY_GAIN,
+        neutralHueShiftDegrees =
+            (profile.warmth * DerivationConstants.MAX_NEUTRAL_HUE_SHIFT_DEGREES).coerceToFloat32(),
+        brandDerivativeMaxShiftDegrees =
+            (profile.warmth * DerivationConstants.MAX_BRAND_HUE_SHIFT_DEGREES).coerceToFloat32(),
+        accentChromaScale = calculateAccentChroma(profile.chroma, profile.contrast).coerceToFloat32(),
+        neutralChromaScale = (1f + profile.chroma * DerivationConstants.NEUTRAL_CHROMA).coerceToFloat32(),
+        lightnessDeltaScale = calculateLightnessDelta(profile.contrast, profile.chroma).coerceToFloat32(),
+        borderStrengthScale = (1f + profile.contrast * DerivationConstants.BORDER_CONTRAST).coerceToFloat32(),
+        statusChromaScale = (1f + profile.statusClarity * DerivationConstants.CLARITY_GAIN).coerceToFloat32(),
+        clarityBorderScale = (1f + profile.borderClarity * DerivationConstants.CLARITY_GAIN).coerceToFloat32(),
         spacingScale =
             lerp(
                 DerivationConstants.SPACING_AIRY,
                 DerivationConstants.SPACING_COMPACT,
                 smoothstep(densityT),
-            ),
+            ).coerceToFloat32(),
         radiusScale =
             lerp(
                 DerivationConstants.RADIUS_SHARP,
                 DerivationConstants.RADIUS_ROUND,
                 roundnessT.coerceIn(0f, 1f).pow(DerivationConstants.RADIUS_CURVE),
-            ),
-        depthScale = calculateDepthScale(profile.contrast, profile.depthEmphasis, profile.playfulness),
+            ).coerceToFloat32(),
+        depthScale =
+            calculateDepthScale(
+                profile.contrast,
+                profile.depthEmphasis,
+                profile.playfulness,
+            ).coerceToFloat32(),
         controlScale =
-            1f + sqrt(profile.inputHeaviness.coerceAtLeast(0f)) * DerivationConstants.CONTROL_INPUT -
-                profile.density * DerivationConstants.CONTROL_DENSITY,
-        avatarScale = 1f + profile.avatarBias * DerivationConstants.AVATAR_BIAS,
-        iconDotScale = 1f - profile.density * DerivationConstants.ICON_DENSITY,
-        structureDisplayScale = 1f + profile.typographyExpressiveness * DerivationConstants.DISPLAY_SCALE,
-        typeRatioScale = 1f + profile.typographyExpressiveness * DerivationConstants.RATIO_SCALE,
-        contentBodyScale = 1f - profile.density * DerivationConstants.BODY_DENSITY,
-        structureTrackingScale = 1f - profile.typographyExpressiveness * DerivationConstants.TRACKING_SCALE,
+            (
+                1f + sqrt(profile.inputHeaviness.coerceAtLeast(0f)) * DerivationConstants.CONTROL_INPUT -
+                    profile.density * DerivationConstants.CONTROL_DENSITY
+                ).coerceToFloat32(),
+        avatarScale = (1f + profile.avatarBias * DerivationConstants.AVATAR_BIAS).coerceToFloat32(),
+        iconDotScale = (1f - profile.density * DerivationConstants.ICON_DENSITY).coerceToFloat32(),
+        structureDisplayScale =
+            (1f + profile.typographyExpressiveness * DerivationConstants.DISPLAY_SCALE).coerceToFloat32(),
+        typeRatioScale =
+            (1f + profile.typographyExpressiveness * DerivationConstants.RATIO_SCALE).coerceToFloat32(),
+        contentBodyScale =
+            (1f - profile.density * DerivationConstants.BODY_DENSITY).coerceToFloat32(),
+        structureTrackingScale =
+            (1f - profile.typographyExpressiveness * DerivationConstants.TRACKING_SCALE).coerceToFloat32(),
         structureWeightBias = calculateWeightBias(profile.typographyExpressiveness01),
         durationScale =
             lerp(
                 DerivationConstants.DURATION_QUIET,
                 DerivationConstants.DURATION_LIVELY,
                 smoothstep(motionT),
-            ),
-        emphasisBoost = calculateEmphasisBoost(profile.motionEnergy, profile.playfulness),
-        ctaEmphasis = profile.ctaEmphasis,
-        focusEmphasis = profile.focusEmphasis,
+            ).coerceToFloat32(),
+        emphasisBoost = calculateEmphasisBoost(profile.motionEnergy, profile.playfulness).coerceToFloat32(),
+        ctaEmphasis = profile.ctaEmphasis.coerceToFloat32(),
+        focusEmphasis = profile.focusEmphasis.coerceToFloat32(),
     )
 }
 

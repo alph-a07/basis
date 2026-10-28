@@ -31,13 +31,15 @@ public fun formatDeterministic(value: Double, maxDecimals: Int = 4): String {
         return if (isNegative && rounded != 0L) "-$rounded" else "$rounded"
     }
 
-    return formatFractional(absValue = absValue, isNegative = isNegative, maxDecimals = maxDecimals)
+    return formatFractional(
+        absValue = absValue,
+        isNegative = isNegative,
+        maxDecimals = maxDecimals,
+    )
 }
 
 /**
  * Formats a 32-bit floating-point number into a deterministic, locale-invariant string.
- *
- * Avoids platform-divergent `toString()` and locale-dependent formatting across JVM and JS.
  *
  * @param value Floating-point value to format.
  * @param maxDecimals Maximum number of fractional decimal digits to retain, >= 0.
@@ -55,7 +57,11 @@ private fun formatSpecial(value: Double): String? = when {
 }
 
 @Suppress("ReturnCount")
-private fun formatFractional(absValue: Double, isNegative: Boolean, maxDecimals: Int): String {
+private fun formatFractional(
+    absValue: Double,
+    isNegative: Boolean,
+    maxDecimals: Int,
+): String {
     var factor = 1L
     repeat(maxDecimals) { factor *= DECIMAL_BASE }
 
@@ -65,7 +71,9 @@ private fun formatFractional(absValue: Double, isNegative: Boolean, maxDecimals:
         return if (isNegative && longVal != 0L) "-$longVal" else "$longVal"
     }
 
-    val scaled = (absValue * factor).roundToLong()
+    val rawScaled = absValue * factor
+    val scaled = rawScaled.roundToLong()
+
     val integerPart = scaled / factor
     val fractionPart = scaled % factor
 

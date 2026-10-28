@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.core.color
 
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
+
 /**
  * A color in the OKLCH color space, the single color representation used in the theme system.
  *
@@ -24,4 +26,9 @@ public data class Oklch(
 
         require(a.isFinite() && a in 0f..1f) { "Oklch.a must be in 0..1, was $a." }
     }
+
+    override fun toString(): String =
+        "Oklch(l=${formatDeterministic(
+            l,
+        )}, c=${formatDeterministic(c)}, h=${formatDeterministic(h)}, a=${formatDeterministic(a)})"
 }

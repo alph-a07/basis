@@ -4,6 +4,7 @@ import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.FontWeightValue
 import io.github.alph_a07.basis.theme.core.LineHeightValue
 import io.github.alph_a07.basis.theme.core.SpValue
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.resolution.constants.BaseTypeMetrics
 import io.github.alph_a07.basis.theme.tokens.typography.ContentType
 import io.github.alph_a07.basis.theme.tokens.typography.FontFamilyRef
@@ -46,7 +47,7 @@ internal fun baseTypographyTokens(
     )
 
     fun ladder(base: Float, ratio: Double, levels: Int): List<Float> =
-        List(levels) { index -> (base / ratio.pow(index.toDouble())).toFloat() }
+        List(levels) { index -> (base.toDouble() / ratio.pow(index.toDouble())).toFloat32() }
 
     val structureSizes = ladder(metrics.structureSizeDp, STRUCTURE_RATIO, STRUCTURE_LEVELS)
     val contentSizes = ladder(metrics.contentSizeDp, CONTENT_RATIO, CONTENT_LEVELS)

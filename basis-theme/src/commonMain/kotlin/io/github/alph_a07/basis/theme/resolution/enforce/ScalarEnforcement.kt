@@ -1,6 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.enforce
 
 import io.github.alph_a07.basis.theme.core.DpValue
+import io.github.alph_a07.basis.theme.core.format.formatDeterministic
 import io.github.alph_a07.basis.theme.intent.controls.MinMaxLevels
 import io.github.alph_a07.basis.theme.resolution.report.ReportEntry
 import io.github.alph_a07.basis.theme.resolution.report.ReportStatus
@@ -54,8 +55,8 @@ private fun DpValue.raised(
             stage = ResolutionStage.Enforce,
             status = ReportStatus.OverriddenByConstraint,
             message = "Control size raised to the minimum touch target.",
-            requested = "$value",
-            enforced = "${floor.value}",
+            requested = formatDeterministic(value),
+            enforced = formatDeterministic(floor.value),
         )
 
     return floor
@@ -140,8 +141,8 @@ private fun DpValue.clamped(
             stage = ResolutionStage.Enforce,
             status = ReportStatus.OverriddenByConstraint,
             message = "Level clamped into the requested min/max range.",
-            requested = "$value",
-            enforced = "$target",
+            requested = formatDeterministic(value),
+            enforced = formatDeterministic(target),
         )
 
     return DpValue(target)

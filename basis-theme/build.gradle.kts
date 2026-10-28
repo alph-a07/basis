@@ -48,3 +48,17 @@ tasks.register("test") {
     description = "Runs the multiplatform tests."
     dependsOn("jvmTest", "jsTest")
 }
+
+tasks.register<Test>("updateGolden") {
+    group = "verification"
+    description = "Generates expected parity outputs from the JVM reference into ParityGoldens.kt."
+    dependsOn("compileTestKotlinJvm")
+    val jvmTestTask = tasks.named<Test>("jvmTest").get()
+    classpath = jvmTestTask.classpath
+    testClassesDirs = jvmTestTask.testClassesDirs
+    filter {
+        includeTestsMatching("*ParityGoldenGeneratorTest*")
+    }
+    systemProperty("basis.parity.update", "true")
+    systemProperty("basis.parity.dir", projectDir.resolve("src/commonTest/kotlin").absolutePath)
+}

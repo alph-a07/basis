@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.base
 
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.intent.ProductDomain
 import io.github.alph_a07.basis.theme.resolution.ThemeProfile
 import io.github.alph_a07.basis.theme.resolution.constants.MAX_BORDER_CHROMA
@@ -59,14 +61,14 @@ internal fun synthesizeNeutralHue(
  * @return Synthesized chroma values for all role axes.
  */
 internal fun synthesizeNeutralChroma(effectiveChroma: Float): SynthesizedChroma {
-    val t = ((effectiveChroma + 1f) / 2f).coerceIn(0f, 1f)
-    val surface = lerp(0f, MAX_SURFACE_CHROMA, t)
-    val content = lerp(0f, MAX_CONTENT_CHROMA, t)
-    val icon = lerp(0f, MAX_ICON_CHROMA, t)
-    val border = lerp(0f, MAX_BORDER_CHROMA, t)
-    val selection = lerp(0f, MAX_SELECTION_CHROMA, t)
-    val focus = lerp(0f, MAX_FOCUS_CHROMA, t)
-    val brand = lerp(0f, MAX_BRAND_CHROMA, t)
+    val t = ((effectiveChroma.coerceToFloat32().toDouble() + 1.0) / 2.0).coerceIn(0.0, 1.0)
+    val surface = (MAX_SURFACE_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val content = (MAX_CONTENT_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val icon = (MAX_ICON_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val border = (MAX_BORDER_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val selection = (MAX_SELECTION_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val focus = (MAX_FOCUS_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
+    val brand = (MAX_BRAND_CHROMA.coerceToFloat32().toDouble() * t).toFloat32()
 
     return SynthesizedChroma(
         surface = surface,
@@ -119,8 +121,6 @@ private fun shortestAngleDelta(from: Float, to: Float): Float {
 }
 
 private fun normalizeHue(hue: Float): Float = ((hue % DEGREES_FULL_CIRCLE) + DEGREES_FULL_CIRCLE) % DEGREES_FULL_CIRCLE
-
-private fun lerp(start: Float, stop: Float, fraction: Float): Float = start + (stop - start) * fraction
 
 private const val DEGREES_FULL_CIRCLE: Float = 360f
 private const val DEGREES_HALF_CIRCLE: Float = 180f

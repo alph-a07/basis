@@ -7,6 +7,8 @@ import io.github.alph_a07.basis.theme.core.color.OklchStop
 import io.github.alph_a07.basis.theme.core.color.gamutMapped
 import io.github.alph_a07.basis.theme.core.color.safeOklch
 import io.github.alph_a07.basis.theme.core.color.shiftHue
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.resolution.identity.BrandTints
 import io.github.alph_a07.basis.theme.tokens.color.BrandColors
 import io.github.alph_a07.basis.theme.tokens.color.ColorTokens
@@ -92,20 +94,26 @@ private fun mapBrandGamut(brand: BrandColors): BrandColors {
 
 private fun deriveHarmonicSecondary(primary: Oklch): Oklch? {
     if (primary.c <= 0.01f) return null
-    return primary.copy(h = primary.h.shiftHue(SECONDARY_HUE_OFFSET), c = primary.c * SECONDARY_CHROMA_SCALE)
-        .gamutMapped()
+    return primary.copy(
+        h = primary.h.shiftHue(SECONDARY_HUE_OFFSET),
+        c = (primary.c.coerceToFloat32().toDouble() * SECONDARY_CHROMA_SCALE.coerceToFloat32().toDouble()).toFloat32(),
+    ).gamutMapped()
 }
 
 private fun deriveHarmonicTertiary(primary: Oklch): Oklch? {
     if (primary.c <= 0.01f) return null
-    return primary.copy(h = primary.h.shiftHue(TERTIARY_HUE_OFFSET), c = primary.c * TERTIARY_CHROMA_SCALE)
-        .gamutMapped()
+    return primary.copy(
+        h = primary.h.shiftHue(TERTIARY_HUE_OFFSET),
+        c = (primary.c.coerceToFloat32().toDouble() * TERTIARY_CHROMA_SCALE.coerceToFloat32().toDouble()).toFloat32(),
+    ).gamutMapped()
 }
 
 private fun deriveHarmonicQuaternary(primary: Oklch): Oklch? {
     if (primary.c <= 0.01f) return null
-    return primary.copy(h = primary.h.shiftHue(QUATERNARY_HUE_OFFSET), c = primary.c * QUATERNARY_CHROMA_SCALE)
-        .gamutMapped()
+    return primary.copy(
+        h = primary.h.shiftHue(QUATERNARY_HUE_OFFSET),
+        c = (primary.c.coerceToFloat32().toDouble() * QUATERNARY_CHROMA_SCALE.coerceToFloat32().toDouble()).toFloat32(),
+    ).gamutMapped()
 }
 
 private fun deriveFocus(

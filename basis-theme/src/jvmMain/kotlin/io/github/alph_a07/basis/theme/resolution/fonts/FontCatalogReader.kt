@@ -1,8 +1,5 @@
 package io.github.alph_a07.basis.theme.resolution.fonts
 
-import io.github.alph_a07.basis.theme.tokens.typography.GoogleFontId
-import java.io.BufferedInputStream
-import java.io.DataInputStream
 import java.io.InputStream
 import java.util.zip.GZIPInputStream
 
@@ -16,106 +13,15 @@ internal object FontCatalogReader {
      * @return Deserialized list of [FontCatalogEntry] items.
      */
     fun readCatalog(input: InputStream): List<FontCatalogEntry> {
-        val gzip = GZIPInputStream(input)
-        val data = DataInputStream(BufferedInputStream(gzip))
-
-        val magic = ByteArray(MAGIC_BYTES_LENGTH)
-        data.readFully(magic)
-        check(magic.contentEquals(MAGIC_BYTES)) { "Invalid catalog asset magic bytes." }
-
-        val version = data.readShort().toInt()
-        check(version == FORMAT_VERSION) { "Unsupported catalog format version: $version" }
-
-        val count = data.readInt()
-        val entries = ArrayList<FontCatalogEntry>(count)
-
-        repeat(count) {
-            entries.add(readEntry(data))
-        }
-
-        return entries
+        val bytes = GZIPInputStream(input).use { it.readBytes() }
+        return FontCatalogDecoder.decode(bytes)
     }
 
-    private fun readEntry(data: DataInputStream): FontCatalogEntry {
-        val id = GoogleFontId(data.readUTF())
-        val familyName = data.readUTF()
-        val googleFontsKey = data.readUTF()
-        val category = categoryFromCode(data.readByte().toInt())
+    fun categoryFromCode(code: Int): GoogleFontsCategory = FontCatalogDecoder.categoryFromCode(code)
 
-        val flags = data.readByte().toInt()
-        val serif = (flags and FLAG_SERIF) != 0
-        val mono = (flags and FLAG_MONO) != 0
-
-        val weightsCount = data.readByte().toInt() and 0xFF
-
-        val displayAffinity = data.readFloat()
-        val textAffinity = data.readFloat()
-        val metaAffinity = data.readFloat()
-        val expressiveness = data.readFloat()
-        val roundness = data.readFloat()
-
-        val opticalDensity = data.readFloat()
-        val minOpticalSizeDp = data.readFloat()
-        val lightModeWeightBias = data.readShort().toInt()
-
-        val axes = readAxes(data)
-
-        return FontCatalogEntry(
-            id = id,
-            familyName = familyName,
-            googleFontsKey = googleFontsKey,
-            category = category,
-            axes = axes,
-            displayAffinity = displayAffinity,
-            textAffinity = textAffinity,
-            metaAffinity = metaAffinity,
-            expressiveness = expressiveness,
-            roundness = roundness,
-            serif = serif,
-            mono = mono,
-            weightsCount = weightsCount,
-            opticalDensity = opticalDensity,
-            minOpticalSizeDp = minOpticalSizeDp,
-            lightModeWeightBias = lightModeWeightBias,
-        )
-    }
-
-    private fun readAxes(data: DataInputStream): Set<FontAxis> {
-        val axisCount = data.readShort().toInt()
-        if (axisCount == 0) return emptySet()
-
-        val set = LinkedHashSet<FontAxis>(axisCount)
-        repeat(axisCount) {
-            val tag = data.readUTF()
-            val min = data.readFloat()
-            val max = data.readFloat()
-            val defaultValue = data.readFloat()
-            set.add(FontAxis(tag = tag, min = min, max = max, defaultValue = defaultValue))
-        }
-
-        return set
-    }
-
-    /** Explicit byte-to-enum mapping decoupled from Kotlin enum declaration order. */
-    fun categoryFromCode(code: Int): GoogleFontsCategory = when (code) {
-        CATEGORY_CODE_SANS_SERIF -> GoogleFontsCategory.SansSerif
-        CATEGORY_CODE_SERIF -> GoogleFontsCategory.Serif
-        CATEGORY_CODE_DISPLAY -> GoogleFontsCategory.Display
-        CATEGORY_CODE_HANDWRITING -> GoogleFontsCategory.Handwriting
-        CATEGORY_CODE_MONOSPACE -> GoogleFontsCategory.Monospace
-        else -> error("Unsupported Google Fonts category code: $code")
-    }
-
-    private val MAGIC_BYTES: ByteArray =
-        byteArrayOf('B'.code.toByte(), 'F'.code.toByte(), 'N'.code.toByte(), 'T'.code.toByte())
-    private const val MAGIC_BYTES_LENGTH: Int = 4
-    private const val FORMAT_VERSION: Int = 3
-    private const val FLAG_SERIF: Int = 1
-    private const val FLAG_MONO: Int = 2
-
-    internal const val CATEGORY_CODE_SANS_SERIF: Int = 0
-    internal const val CATEGORY_CODE_SERIF: Int = 1
-    internal const val CATEGORY_CODE_DISPLAY: Int = 2
-    internal const val CATEGORY_CODE_HANDWRITING: Int = 3
-    internal const val CATEGORY_CODE_MONOSPACE: Int = 4
+    internal const val CATEGORY_CODE_SANS_SERIF: Int = FontCatalogDecoder.CATEGORY_CODE_SANS_SERIF
+    internal const val CATEGORY_CODE_SERIF: Int = FontCatalogDecoder.CATEGORY_CODE_SERIF
+    internal const val CATEGORY_CODE_DISPLAY: Int = FontCatalogDecoder.CATEGORY_CODE_DISPLAY
+    internal const val CATEGORY_CODE_HANDWRITING: Int = FontCatalogDecoder.CATEGORY_CODE_HANDWRITING
+    internal const val CATEGORY_CODE_MONOSPACE: Int = FontCatalogDecoder.CATEGORY_CODE_MONOSPACE
 }

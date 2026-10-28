@@ -1,5 +1,7 @@
 package io.github.alph_a07.basis.theme.resolution.domain
 
+import io.github.alph_a07.basis.theme.core.format.coerceToFloat32
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.intent.DomainIntent
 import io.github.alph_a07.basis.theme.intent.InteractionPattern
 import io.github.alph_a07.basis.theme.intent.ProductDomain
@@ -93,7 +95,10 @@ private fun combineDomainAndInteractions(domain: ThemeProfile, interaction: Them
     )
 
 private fun weighted(domain: Float, interaction: Float): Float =
-    DOMAIN_BLEND_WEIGHT * domain + INTERACTION_BLEND_WEIGHT * interaction
+    (
+        DOMAIN_BLEND_WEIGHT.toDouble() * domain.toDouble() +
+            INTERACTION_BLEND_WEIGHT.toDouble() * interaction.toDouble()
+        ).toFloat32()
 
 private fun List<Float>.averageF(): Float {
     val mean =
@@ -103,7 +108,7 @@ private fun List<Float>.averageF(): Float {
             }
 
             else -> {
-                sum() / size
+                (sumOf { it.toDouble() } / size).toFloat32()
             }
         }
 
@@ -111,12 +116,12 @@ private fun List<Float>.averageF(): Float {
 }
 
 private fun ThemeProfile.clamped(): ThemeProfile = copy(
-    riskSensitivity = riskSensitivity.coerceIn(-1f, 1f),
-    trustStrictness = trustStrictness.coerceIn(-1f, 1f),
-    dataDensity = dataDensity.coerceIn(-1f, 1f),
-    contentVelocity = contentVelocity.coerceIn(-1f, 1f),
-    socialPresence = socialPresence.coerceIn(-1f, 1f),
-    transactionality = transactionality.coerceIn(-1f, 1f),
-    mediaRichness = mediaRichness.coerceIn(-1f, 1f),
-    inputHeaviness = inputHeaviness.coerceIn(-1f, 1f),
+    riskSensitivity = riskSensitivity.coerceIn(-1f, 1f).coerceToFloat32(),
+    trustStrictness = trustStrictness.coerceIn(-1f, 1f).coerceToFloat32(),
+    dataDensity = dataDensity.coerceIn(-1f, 1f).coerceToFloat32(),
+    contentVelocity = contentVelocity.coerceIn(-1f, 1f).coerceToFloat32(),
+    socialPresence = socialPresence.coerceIn(-1f, 1f).coerceToFloat32(),
+    transactionality = transactionality.coerceIn(-1f, 1f).coerceToFloat32(),
+    mediaRichness = mediaRichness.coerceIn(-1f, 1f).coerceToFloat32(),
+    inputHeaviness = inputHeaviness.coerceIn(-1f, 1f).coerceToFloat32(),
 )

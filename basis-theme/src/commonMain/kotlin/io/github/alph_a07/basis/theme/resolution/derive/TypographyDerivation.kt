@@ -2,6 +2,7 @@ package io.github.alph_a07.basis.theme.resolution.derive
 
 import io.github.alph_a07.basis.theme.core.EmValue
 import io.github.alph_a07.basis.theme.core.SpValue
+import io.github.alph_a07.basis.theme.core.format.toFloat32
 import io.github.alph_a07.basis.theme.resolution.fonts.offsetWeight
 import io.github.alph_a07.basis.theme.tokens.typography.ContentType
 import io.github.alph_a07.basis.theme.tokens.typography.MetadataType
@@ -24,31 +25,34 @@ internal fun deriveTypographyTokens(
     val structure = typography.structure
 
     fun structureRole(role: TypeRole, index: Int, boosted: Boolean): TypeRole {
-        val display = if (boosted) weights.structureDisplayScale else 1f
-        val ratio = weights.typeRatioScale.toDouble().pow(index.toDouble()).toFloat()
+        val display = if (boosted) weights.structureDisplayScale.toDouble() else 1.0
+        val ratio = weights.typeRatioScale.toDouble().pow(index.toDouble())
 
         return role.copy(
-            size = SpValue(role.size.value * display / ratio),
+            size = SpValue((role.size.value.toDouble() * display / ratio).toFloat32()),
             weight = offsetWeight(role.weight, if (boosted) weights.structureWeightBias else 0),
-            letterSpacing = EmValue(role.letterSpacing.em * weights.structureTrackingScale),
+            letterSpacing =
+                EmValue(
+                    (role.letterSpacing.em.toDouble() * weights.structureTrackingScale.toDouble()).toFloat32(),
+                ),
         )
     }
 
-    fun contentRole(role: TypeRole, index: Int): TypeRole = role.copy(
-        size =
-            SpValue(
-                role.size.value * weights.contentBodyScale /
-                    weights.typeRatioScale.toDouble().pow(index.toDouble()).toFloat(),
-            ),
-    )
+    fun contentRole(role: TypeRole, index: Int): TypeRole {
+        val ratio = weights.typeRatioScale.toDouble().pow(index.toDouble())
 
-    fun metadataRole(role: TypeRole, index: Int): TypeRole = role.copy(
-        size =
-            SpValue(
-                role.size.value * weights.contentBodyScale /
-                    weights.typeRatioScale.toDouble().pow(index.toDouble()).toFloat(),
-            ),
-    )
+        return role.copy(
+            size = SpValue((role.size.value.toDouble() * weights.contentBodyScale.toDouble() / ratio).toFloat32()),
+        )
+    }
+
+    fun metadataRole(role: TypeRole, index: Int): TypeRole {
+        val ratio = weights.typeRatioScale.toDouble().pow(index.toDouble())
+
+        return role.copy(
+            size = SpValue((role.size.value.toDouble() * weights.contentBodyScale.toDouble() / ratio).toFloat32()),
+        )
+    }
 
     return typography.copy(
         structure =
