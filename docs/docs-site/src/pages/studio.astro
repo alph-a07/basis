@@ -3,16 +3,184 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Intent Studio — Basis">
-  <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;" data-pagefind-body>
-    <header style="margin-bottom: 2rem;">
-      <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Intent Studio</h1>
-      <p style="color: #8b949e; font-size: 1.1rem; margin: 0;">
-        Interactive design-system workbench driven by the Basis intent resolution engine.
-      </p>
+  <div class="studio-app" data-pagefind-body>
+    <!-- Top bar: Full-bleed route without sidebar per locked decisions -->
+    <header class="studio-topbar" aria-label="Studio top navigation">
+      <div class="topbar-left">
+        <a href="/" class="brand-link" aria-label="Basis Home">
+          <svg class="brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#58a6ff" stroke-width="2" />
+            <circle cx="12" cy="12" r="4" fill="#58a6ff" />
+          </svg>
+          <span class="brand-title">Basis</span>
+        </a>
+        <span class="studio-badge">Studio</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button type="button" class="studio-btn btn-secondary" aria-label="Reset theme settings">
+          Reset
+        </button>
+        <button type="button" class="studio-btn btn-secondary" aria-label="Copy Kotlin code to clipboard">
+          Copy Kotlin
+        </button>
+        <button type="button" class="studio-btn btn-primary" aria-label="Share current theme configuration">
+          Share
+        </button>
+        <a href="/docs/components/button" class="studio-btn btn-docs" aria-label="Go to documentation">
+          Docs
+        </a>
+      </div>
     </header>
 
-    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 3rem; text-align: center;">
-      <p style="color: #c9d1d9; font-size: 1.2rem;">Studio Workspace Shell (Phase 2)</p>
-    </div>
+    <main id="studio-main" class="studio-main">
+      <div class="studio-workspace">
+        <div class="studio-placeholder">
+          <h1>Intent Studio Shell</h1>
+          <p>Full-bleed workspace for live intent exploration and real-time Kotlin token export.</p>
+        </div>
+      </div>
+    </main>
   </div>
 </BaseLayout>
+
+<style>
+  .studio-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .studio-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 56px;
+    background: #0d0f12;
+    border-bottom: 1px solid #21262d;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #e6edf3;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .brand-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .studio-badge {
+    background: rgba(88, 166, 255, 0.15);
+    color: #58a6ff;
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .studio-btn {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .studio-btn:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    background: #238636;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background: #2ea043;
+  }
+
+  .btn-secondary {
+    background: #161b22;
+    color: #c9d1d9;
+    border-color: #30363d;
+  }
+
+  .btn-secondary:hover {
+    background: #21262d;
+    color: #e6edf3;
+  }
+
+  .btn-docs {
+    background: transparent;
+    color: #8b949e;
+  }
+
+  .btn-docs:hover {
+    color: #e6edf3;
+  }
+
+  .studio-main {
+    flex: 1;
+    display: flex;
+    padding: 2rem;
+  }
+
+  .studio-workspace {
+    flex: 1;
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 480px;
+  }
+
+  .studio-placeholder {
+    text-align: center;
+    max-width: 500px;
+    padding: 2rem;
+  }
+
+  .studio-placeholder h1 {
+    font-size: 1.75rem;
+    margin: 0 0 0.5rem 0;
+    color: #e6edf3;
+  }
+
+  .studio-placeholder p {
+    color: #8b949e;
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

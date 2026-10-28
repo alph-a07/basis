@@ -1,135 +1,815 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocsLayout from '../../layouts/DocsLayout.astro';
 import { getCollection } from 'astro:content';
+import type { TocItem } from '../../types/navigation';
 
 export async function getStaticPaths() {
   const components = await getCollection('components');
+  const sidecars = await getCollection('sidecars');
   const paths: any[] = [];
 
   for (const comp of components) {
+    const sidecar = sidecars.find((s) => s.data.id === comp.data.id);
     const tabs = ['', 'api', 'overrides', 'accessibility'];
+
     for (const tab of tabs) {
-      const slug = tab ? `components/${comp.id}/${tab}` : `components/${comp.id}`;
+      const slug = tab ? `components/${comp.data.id}/${tab}` : `components/${comp.data.id}`;
       paths.push({
         params: { slug },
-        props: { component: comp, activeTab: tab || 'overview' },
+        props: {
+          type: 'component',
+          component: comp,
+          sidecar,
+          activeTab: tab || 'overview',
+        },
       });
     }
+  }
+
+  // Static documentation stub pages to ensure all sidebar navigation works
+  const docsStubs = [
+    {
+      slug: 'getting-started/overview',
+      title: 'Overview',
+      section: 'Getting Started',
+      description: 'Introduction to Basis design system for Jetpack Compose.',
+      headings: [
+        { depth: 2, slug: 'introduction', text: 'Introduction' },
+        { depth: 2, slug: 'principles', text: 'Principles' },
+        { depth: 2, slug: 'next-steps', text: 'Next Steps' },
+      ],
+    },
+    {
+      slug: 'getting-started/installation',
+      title: 'Installation',
+      section: 'Getting Started',
+      description: 'Adding Basis dependencies to your Gradle build.',
+      headings: [
+        { depth: 2, slug: 'gradle-setup', text: 'Gradle Setup' },
+        { depth: 2, slug: 'dependencies', text: 'Dependencies' },
+      ],
+    },
+    {
+      slug: 'getting-started/quickstart',
+      title: 'Quickstart',
+      section: 'Getting Started',
+      description: 'Get started with your first Basis composables.',
+      headings: [
+        { depth: 2, slug: 'theme-wrapper', text: 'Theme Wrapper' },
+        { depth: 2, slug: 'first-component', text: 'First Component' },
+      ],
+    },
+    {
+      slug: 'theming/overview',
+      title: 'Theming Overview',
+      section: 'Theming',
+      description: 'Learn how Basis resolves intent into fully deterministic themes.',
+      headings: [
+        { depth: 2, slug: 'theme-pipeline', text: 'Theme Pipeline' },
+        { depth: 2, slug: 'color-derivation', text: 'Color Derivation' },
+      ],
+    },
+    {
+      slug: 'theming/theme-mode',
+      title: 'ThemeMode',
+      section: 'Theming',
+      description: 'Light, Dark, and System theme mode resolution.',
+      headings: [
+        { depth: 2, slug: 'modes', text: 'Supported Modes' },
+        { depth: 2, slug: 'persisting-preference', text: 'Persisting Preference' },
+      ],
+    },
+    {
+      slug: 'theming/intent',
+      title: 'Intent',
+      section: 'Theming',
+      description: 'High-level aesthetic controls driving design system tokens.',
+      headings: [
+        { depth: 2, slug: 'intent-parameters', text: 'Intent Parameters' },
+        { depth: 2, slug: 'overrides', text: 'Token Overrides' },
+      ],
+    },
+    {
+      slug: 'foundation/surface',
+      title: 'Surface',
+      section: 'Foundation',
+      description: 'Foundational container providing tone, elevation, and shape.',
+      headings: [
+        { depth: 2, slug: 'overview', text: 'Overview' },
+        { depth: 2, slug: 'tonal-elevation', text: 'Tonal Elevation' },
+      ],
+    },
+    {
+      slug: 'foundation/focusable',
+      title: 'Focusable',
+      section: 'Foundation',
+      description: 'Accessible focus boundary handling keyboard navigation.',
+      headings: [
+        { depth: 2, slug: 'focus-rings', text: 'Focus Rings' },
+        { depth: 2, slug: 'keyboard-support', text: 'Keyboard Support' },
+      ],
+    },
+    {
+      slug: 'foundation/overlay',
+      title: 'Overlay',
+      section: 'Foundation',
+      description: 'Scaffold and backdrop system for modal layers.',
+      headings: [
+        { depth: 2, slug: 'scrim-tones', text: 'Scrim Tones' },
+        { depth: 2, slug: 'dismissal', text: 'Dismissal Behavior' },
+      ],
+    },
+  ];
+
+  for (const stub of docsStubs) {
+    paths.push({
+      params: { slug: stub.slug },
+      props: {
+        type: 'stub',
+        stub,
+      },
+    });
   }
 
   return paths;
 }
 
-const { component: componentEntry, activeTab } = Astro.props;
-const component = componentEntry.data;
+const props = Astro.props;
+
+let pageTitle = '';
+let pageDescription = '';
+let headings: TocItem[] = [];
+
+if (props.type === 'component') {
+  const component = props.component.data;
+  const activeTab = props.activeTab;
+  pageTitle = `${component.name} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
+  pageDescription = component.summary;
+
+  if (activeTab === 'overview') {
+    headings = [
+      { depth: 2, slug: 'quick-start', text: 'Quick Start' },
+      { depth: 2, slug: 'anatomy', text: 'Anatomy' },
+      { depth: 2, slug: 'variants', text: 'Variants' },
+      { depth: 2, slug: 'states', text: 'States' },
+      { depth: 2, slug: 'guidelines', text: 'Guidelines' },
+    ];
+  } else if (activeTab === 'api') {
+    headings = [
+      { depth: 2, slug: 'signatures', text: 'Signatures' },
+      { depth: 2, slug: 'parameters', text: 'Parameters' },
+      { depth: 2, slug: 'sample-gallery', text: 'Sample Gallery' },
+    ];
+  } else if (activeTab === 'overrides') {
+    headings = [
+      { depth: 2, slug: 'universal-fields', text: 'Universal Fields' },
+      { depth: 2, slug: 'variant-overrides', text: 'Variant Overrides' },
+      { depth: 2, slug: 'state-overrides', text: 'State Overrides' },
+    ];
+  } else if (activeTab === 'accessibility') {
+    headings = [
+      { depth: 2, slug: 'accessibility-facts', text: 'Accessibility Facts' },
+      { depth: 2, slug: 'touch-targets', text: 'Touch Targets' },
+      { depth: 2, slug: 'test-report', text: 'Test Report' },
+      { depth: 2, slug: 'keyboard-interaction', text: 'Keyboard Interaction' },
+    ];
+  }
+} else {
+  pageTitle = `${props.stub.title} — ${props.stub.section}`;
+  pageDescription = props.stub.description;
+  headings = props.stub.headings;
+}
 ---
 
-<BaseLayout title={`${component.name} — ${activeTab}`}>
-  <div style="display: flex; min-height: 100vh;">
-    <aside style="width: 260px; border-right: 1px solid #30363d; padding: 2rem 1.5rem;">
-      <h2 style="font-size: 1.1rem; margin-top: 0;">Components</h2>
-      <ul style="list-style: none; padding: 0; margin: 0;">
-        <li>
-          <a
-            href={`/docs/components/${component.id}`}
-            style={`color: ${activeTab === 'overview' ? '#58a6ff' : '#c9d1d9'}; text-decoration: none; font-weight: 500;`}
-          >
-            {component.name}
-          </a>
-        </li>
-      </ul>
-    </aside>
+<DocsLayout title={pageTitle} description={pageDescription} headings={headings}>
+  {props.type === 'component' ? (
+    <article class="component-doc">
+      <!-- Component Header -->
+      <header class="component-header">
+        <div class="component-meta">
+          <span class="family-badge">{props.component.data.family}</span>
+          <span class={`status-badge status-${props.component.data.lifecycle.status}`}>
+            {props.component.data.lifecycle.status}
+          </span>
+          {props.component.data.lifecycle.introducedIn && (
+            <span class="version-introduced">added in {props.component.data.lifecycle.introducedIn}</span>
+          )}
+        </div>
 
-    <main data-pagefind-body style="flex: 1; padding: 2rem 3rem; max-width: 900px;">
-      <header style="margin-bottom: 2rem; border-bottom: 1px solid #30363d; padding-bottom: 1.5rem;">
-        <span style="font-size: 0.85rem; color: #8b949e; text-transform: uppercase; font-weight: 600;">
-          {component.family} · {component.lifecycle.status}
-        </span>
-        <h1 style="font-size: 2.5rem; margin: 0.5rem 0 1rem 0;">{component.name}</h1>
-        <p style="font-size: 1.15rem; color: #8b949e; line-height: 1.6; margin: 0;">
-          {component.summary}
-        </p>
+        <h1 class="component-title">{props.component.data.name}</h1>
+        <p class="component-summary">{props.component.data.summary}</p>
 
-        <nav style="display: flex; gap: 1.5rem; margin-top: 1.5rem;">
-          {['overview', 'api', 'overrides', 'accessibility'].map((tab) => {
-            const href = tab === 'overview'
-              ? `/docs/components/${component.id}`
-              : `/docs/components/${component.id}/${tab}`;
-            const isActive = activeTab === tab;
+        <!-- 4 Route-per-tab Navigation -->
+        <nav class="component-tabs" aria-label="Component sections">
+          {[
+            { id: 'overview', label: 'Overview', path: `/docs/components/${props.component.data.id}` },
+            { id: 'api', label: 'API', path: `/docs/components/${props.component.data.id}/api` },
+            { id: 'overrides', label: 'Overrides', path: `/docs/components/${props.component.data.id}/overrides` },
+            { id: 'accessibility', label: 'Accessibility', path: `/docs/components/${props.component.data.id}/accessibility` },
+          ].map((tab) => {
+            const isActive = props.activeTab === tab.id;
             return (
               <a
-                href={href}
-                style={`text-decoration: none; text-transform: capitalize; padding-bottom: 0.5rem; font-weight: 600; color: ${
-                  isActive ? '#58a6ff' : '#8b949e'
-                }; border-bottom: 2px solid ${isActive ? '#58a6ff' : 'transparent'};`}
+                href={tab.path}
+                class={`tab-link ${isActive ? 'active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
               >
-                {tab}
+                {tab.label}
               </a>
             );
           })}
         </nav>
       </header>
 
-      <section>
-        {activeTab === 'overview' && (
-          <div>
-            <h2>Quick Start</h2>
-            <pre style="background: #161b22; padding: 1rem; border-radius: 6px; overflow-x: auto;">
-              <code>{component.overview.quickStartSample}</code>
-            </pre>
-            <h3>Anatomy ({component.overview.anatomy.parts.length} parts)</h3>
-            <ul>
-              {component.overview.anatomy.parts.map((part: any) => (
-                <li>
-                  <strong>{part.name}</strong> ({part.id}): {part.description}
+      <!-- Tab Content -->
+      <div class="tab-content">
+        {props.activeTab === 'overview' && (
+          <section class="tab-pane">
+            <h2 id="quick-start">Quick Start</h2>
+            <div class="code-block-wrapper">
+              <pre class="code-block"><code>{props.component.data.overview.quickStartSample}</code></pre>
+            </div>
+
+            <h2 id="anatomy">Anatomy</h2>
+            <p>The {props.component.data.name} component is composed of the following structural parts:</p>
+            <ul class="parts-list">
+              {props.component.data.overview.anatomy.parts.map((part: any) => (
+                <li class="part-item">
+                  <div class="part-header">
+                    <strong class="part-name">{part.name}</strong>
+                    <code class="part-id">{part.id}</code>
+                    <span class={`part-presence ${part.presence}`}>{part.presence}</span>
+                  </div>
+                  <p class="part-desc">{part.description}</p>
                 </li>
               ))}
             </ul>
-          </div>
+
+            <h2 id="variants">Variants</h2>
+            <p>Supported visual variants and prominence tiers:</p>
+            <div class="variant-chips">
+              {props.component.data.overview.variants.map((variant: string) => (
+                <span class="variant-chip">{variant}</span>
+              ))}
+            </div>
+
+            <h2 id="states">States</h2>
+            <p>Interaction and visual states handled by the component:</p>
+            <div class="state-chips">
+              {props.component.data.overview.states.map((state: string) => (
+                <span class="state-chip">{state}</span>
+              ))}
+            </div>
+
+            <h2 id="guidelines">Guidelines</h2>
+            {props.sidecar?.data?.guidelines ? (
+              <div class="guidelines-grid">
+                <div class="guideline-card do-card">
+                  <h3 class="guideline-title">Do</h3>
+                  <ul>
+                    {props.sidecar.data.guidelines.do.map((rule: string) => (
+                      <li>{rule}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="guideline-card dont-card">
+                  <h3 class="guideline-title">Don't</h3>
+                  <ul>
+                    {props.sidecar.data.guidelines.dont.map((rule: string) => (
+                      <li>{rule}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <p>Follow standard Jetpack Compose action design guidelines.</p>
+            )}
+          </section>
         )}
 
-        {activeTab === 'api' && (
-          <div>
-            <h2>API Signatures</h2>
-            {component.api.signatures.map((sig: any) => (
-              <pre style="background: #161b22; padding: 1rem; border-radius: 6px; overflow-x: auto;">
-                <code>{sig.declaration}</code>
-              </pre>
+        {props.activeTab === 'api' && (
+          <section class="tab-pane">
+            <h2 id="signatures">Signatures</h2>
+            {props.component.data.api.signatures.map((sig: any) => (
+              <div class="signature-block">
+                <pre class="code-block"><code>{sig.declaration}</code></pre>
+              </div>
             ))}
-          </div>
+
+            <h2 id="parameters">Parameters</h2>
+            <table class="params-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Type</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {props.component.data.api.signatures[0]?.parameters.map((param: any) => (
+                  <tr>
+                    <td><code>{param.name}</code></td>
+                    <td><span class="type-badge">{param.type}</span></td>
+                    <td>{param.defaultValue ? <code>{param.defaultValue}</code> : <span class="required-badge">required</span>}</td>
+                    <td>{param.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <h2 id="sample-gallery">Sample Gallery</h2>
+            <p>Compiled and verified interactive sample gallery demonstrating common use cases.</p>
+            <div class="code-block-wrapper">
+              <pre class="code-block"><code>{props.component.data.overview.quickStartSample}</code></pre>
+            </div>
+          </section>
         )}
 
-        {activeTab === 'overrides' && (
-          <div>
-            <h2>Overrides & Patches</h2>
-            <p>Extra family: {component.overrides.extraFamily || 'None'}</p>
-            <h3>Universal Fields</h3>
-            <ul>
-              {component.overrides.universalFields.map((field: string) => (
+        {props.activeTab === 'overrides' && (
+          <section class="tab-pane">
+            <h2 id="universal-fields">Universal Fields</h2>
+            <p>Fields patchable across any variant and state:</p>
+            <ul class="field-list">
+              {props.component.data.overrides.universalFields.map((field: string) => (
                 <li><code>{field}</code></li>
               ))}
             </ul>
-          </div>
+
+            <h2 id="variant-overrides">Variant Overrides</h2>
+            <p>Token overrides scoped to specific visual prominence variants.</p>
+
+            <h2 id="state-overrides">State Overrides</h2>
+            <p>Token overrides applied during hover, press, focus, and disabled states.</p>
+          </section>
         )}
 
-        {activeTab === 'accessibility' && (
-          <div>
-            <h2>Accessibility Facts</h2>
-            <p>Role: <code>{component.accessibility.role}</code></p>
-            <p>Minimum touch target: {component.accessibility.touchTarget.minWidthDp}dp x {component.accessibility.touchTarget.minHeightDp}dp</p>
-            {component.accessibility.report && (
-              <div>
-                <h3>Test Report ({component.accessibility.report.status})</h3>
-                <ul>
-                  {component.accessibility.report.checks.map((check: string) => (
-                    <li>{check}</li>
+        {props.activeTab === 'accessibility' && (
+          <section class="tab-pane">
+            <h2 id="accessibility-facts">Accessibility Facts</h2>
+            <div class="fact-card">
+              <div class="fact-row">
+                <span class="fact-label">Accessibility Role:</span>
+                <code class="fact-value">{props.component.data.accessibility.role}</code>
+              </div>
+              <div class="fact-row">
+                <span class="fact-label">Focusable:</span>
+                <span class="fact-value">{props.component.data.accessibility.isFocusable ? 'Yes' : 'No'}</span>
+              </div>
+              <div class="fact-row">
+                <span class="fact-label">Screen Reader Traversal:</span>
+                <span class="fact-value">{props.component.data.accessibility.screenReaderAnnouncement}</span>
+              </div>
+            </div>
+
+            <h2 id="touch-targets">Touch Targets</h2>
+            <p>
+              Basis enforces minimum touch target geometry of{' '}
+              <strong>{props.component.data.accessibility.touchTarget.minWidthDp}dp</strong> width by{' '}
+              <strong>{props.component.data.accessibility.touchTarget.minHeightDp}dp</strong> height.
+            </p>
+
+            <h2 id="test-report">Test Report</h2>
+            {props.component.data.accessibility.report ? (
+              <div class="report-box">
+                <div class="report-header">
+                  <span class={`report-status status-${props.component.data.accessibility.report.status}`}>
+                    {props.component.data.accessibility.report.status.toUpperCase()}
+                  </span>
+                  <span class="report-timestamp">{props.component.data.accessibility.report.timestamp}</span>
+                </div>
+                <ul class="check-list">
+                  {props.component.data.accessibility.report.checks.map((check: string) => (
+                    <li class="check-item">
+                      <span class="check-icon" aria-hidden="true">✓</span>
+                      <span>{check}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
+            ) : (
+              <p>No automated accessibility report attached.</p>
             )}
-          </div>
+
+            <h2 id="keyboard-interaction">Keyboard Interaction</h2>
+            <p>
+              Supports activation via <kbd>Enter</kbd> and <kbd>Space</kbd>. Focus indicators adhere to
+              enhanced contrast ratios.
+            </p>
+          </section>
         )}
-      </section>
-    </main>
-  </div>
-</BaseLayout>
+      </div>
+    </article>
+  ) : (
+    <article class="stub-doc">
+      <header class="stub-header">
+        <span class="section-badge">{props.stub.section}</span>
+        <h1 class="stub-title">{props.stub.title}</h1>
+        <p class="stub-summary">{props.stub.description}</p>
+      </header>
+
+      <div class="stub-content">
+        {props.stub.headings.map((h: any) => (
+          <section class="stub-section">
+            <h2 id={h.slug}>{h.text}</h2>
+            <p>
+              Documentation for <strong>{h.text}</strong> in the {props.stub.section} section is part of the Basis design system.
+            </p>
+          </section>
+        ))}
+      </div>
+    </article>
+  )}
+</DocsLayout>
+
+<style>
+  .component-doc,
+  .stub-doc {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .component-header,
+  .stub-header {
+    border-bottom: 1px solid #21262d;
+    padding-bottom: 1.5rem;
+  }
+
+  .component-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .family-badge,
+  .section-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8b949e;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: capitalize;
+  }
+
+  .status-stable {
+    background: rgba(46, 160, 67, 0.15);
+    color: #3fb950;
+    border: 1px solid rgba(46, 160, 67, 0.3);
+  }
+
+  .status-experimental {
+    background: rgba(210, 153, 34, 0.15);
+    color: #d29922;
+    border: 1px solid rgba(210, 153, 34, 0.3);
+  }
+
+  .version-introduced {
+    font-size: 0.8rem;
+    color: #6e7681;
+  }
+
+  .component-title,
+  .stub-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0.25rem 0 0.75rem 0;
+    color: #e6edf3;
+  }
+
+  .component-summary,
+  .stub-summary {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #8b949e;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .component-tabs {
+    display: flex;
+    gap: 1.5rem;
+    border-top: 1px solid #161b22;
+    padding-top: 1rem;
+    overflow-x: auto;
+  }
+
+  .tab-link {
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #8b949e;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-link:hover {
+    color: #e6edf3;
+  }
+
+  .tab-link.active {
+    color: #58a6ff;
+    border-bottom-color: #58a6ff;
+  }
+
+  .tab-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .tab-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 2rem 0 1rem 0;
+    color: #e6edf3;
+    scroll-margin-top: 5rem;
+  }
+
+  h2:first-child {
+    margin-top: 0;
+  }
+
+  p {
+    line-height: 1.65;
+    color: #c9d1d9;
+    margin: 0 0 1rem 0;
+  }
+
+  .code-block-wrapper,
+  .signature-block {
+    margin: 1rem 0;
+  }
+
+  .code-block {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #e6edf3;
+  }
+
+  .parts-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .part-item {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+  }
+
+  .part-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .part-name {
+    color: #e6edf3;
+    font-size: 1rem;
+  }
+
+  .part-id {
+    background: #21262d;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #8b949e;
+  }
+
+  .part-presence {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .part-presence.required {
+    color: #f85149;
+  }
+
+  .part-presence.optional {
+    color: #8b949e;
+  }
+
+  .part-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #8b949e;
+  }
+
+  .variant-chips,
+  .state-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1.5rem 0;
+  }
+
+  .variant-chip,
+  .state-chip {
+    background: #161b22;
+    border: 1px solid #21262d;
+    color: #58a6ff;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .guidelines-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .guideline-card {
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .do-card {
+    background: rgba(46, 160, 67, 0.08);
+    border: 1px solid rgba(46, 160, 67, 0.25);
+  }
+
+  .dont-card {
+    background: rgba(248, 81, 73, 0.08);
+    border: 1px solid rgba(248, 81, 73, 0.25);
+  }
+
+  .guideline-title {
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .do-card .guideline-title {
+    color: #3fb950;
+  }
+
+  .dont-card .guideline-title {
+    color: #f85149;
+  }
+
+  .guideline-card ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: #c9d1d9;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .params-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0 2rem 0;
+    font-size: 0.875rem;
+  }
+
+  .params-table th,
+  .params-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #21262d;
+    text-align: left;
+  }
+
+  .params-table th {
+    color: #8b949e;
+    font-weight: 600;
+  }
+
+  .params-table td {
+    color: #c9d1d9;
+  }
+
+  .type-badge {
+    color: #58a6ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+  }
+
+  .required-badge {
+    color: #f85149;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .fact-card {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .fact-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .fact-label {
+    color: #8b949e;
+    font-size: 0.9rem;
+  }
+
+  .fact-value {
+    color: #e6edf3;
+    font-weight: 500;
+  }
+
+  .report-box {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #21262d;
+  }
+
+  .report-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .report-status.status-pass {
+    background: rgba(46, 160, 67, 0.2);
+    color: #3fb950;
+  }
+
+  .report-timestamp {
+    font-size: 0.75rem;
+    color: #6e7681;
+  }
+
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    color: #c9d1d9;
+  }
+
+  .check-icon {
+    color: #3fb950;
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .guidelines-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
