@@ -12,8 +12,8 @@ const components = await getCollection('components');
       <div class="nav-left">
         <a href="/" class="brand-link" aria-label="Basis Home">
           <svg class="brand-logo" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#58a6ff" stroke-width="2" />
-            <circle cx="12" cy="12" r="4" fill="#58a6ff" />
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--docs-accent, #58a6ff)" stroke-width="2" />
+            <circle cx="12" cy="12" r="4" fill="var(--docs-accent, #58a6ff)" />
           </svg>
           <span class="brand-title">Basis</span>
         </a>
@@ -46,7 +46,8 @@ const components = await getCollection('components');
   </header>
 
   <main data-pagefind-body>
-    <section class="landing-hero">
+    <!-- Localized Preview Scope: isolated live tokens (--b-*) deferred from global docs chrome (--d-*) -->
+    <section class="landing-hero basis-preview-scope" id="landing-preview" data-scope="preview">
       <h1 class="hero-title">Basis Design System</h1>
       <p class="hero-subtitle">
         A deterministic, luminous, intent-driven design system built for Jetpack Compose and modern multiplatform runtimes.
@@ -63,10 +64,36 @@ const components = await getCollection('components');
   </main>
 </BaseLayout>
 
+<script>
+  // Deferred client-side localized intent resolution for landing hero preview
+  import { applyLocalizedPreviewTheme } from '../runtime/preview-theme';
+
+  function initLandingPreview() {
+    const previewEl = document.getElementById('landing-preview');
+    if (previewEl) {
+      // Localized preview intent: deferred application
+      applyLocalizedPreviewTheme(previewEl, {
+        brandColor: '#2ea043',
+        presence: 'Balanced',
+        deriveColors: true,
+      });
+    }
+  }
+
+  // Run deferred when page is idle
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(initLandingPreview);
+    } else {
+      setTimeout(initLandingPreview, 200);
+    }
+  }
+</script>
+
 <style>
   .landing-header {
-    border-bottom: 1px solid #21262d;
-    background: #0d0f12;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    background: var(--docs-bg, #0d0f12);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -87,13 +114,13 @@ const components = await getCollection('components');
     align-items: center;
     gap: 0.625rem;
     text-decoration: none;
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
     font-weight: 700;
     font-size: 1.2rem;
   }
 
   .brand-link:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -111,7 +138,7 @@ const components = await getCollection('components');
   }
 
   .nav-link {
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
@@ -119,22 +146,22 @@ const components = await getCollection('components');
   }
 
   .nav-link:hover {
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
   }
 
   .nav-link:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 4px;
     border-radius: 2px;
   }
 
   .studio-link {
-    color: #58a6ff;
+    color: var(--docs-accent, #58a6ff);
     font-weight: 600;
   }
 
   .github-link {
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     display: flex;
     align-items: center;
     padding: 0.4rem;
@@ -143,12 +170,20 @@ const components = await getCollection('components');
   }
 
   .github-link:hover {
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
   }
 
   .github-link:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
+  }
+
+  /* Localized Preview Scope: takes localized --b-* variables when applied */
+  .basis-preview-scope {
+    /* Fallback variables mapping to localized preview or docs defaults */
+    --preview-bg: var(--b-color-surface-default, var(--docs-bg));
+    --preview-text: var(--b-color-content-default, var(--docs-text));
+    --preview-brand: var(--b-color-brand-primary, #238636);
   }
 
   .landing-hero {
@@ -163,13 +198,13 @@ const components = await getCollection('components');
     font-weight: 800;
     letter-spacing: -0.03em;
     margin: 0 0 1.25rem 0;
-    color: #e6edf3;
+    color: var(--preview-text, var(--docs-text, #e6edf3));
   }
 
   .hero-subtitle {
     font-size: 1.25rem;
     line-height: 1.6;
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     margin: 0 0 2.5rem 0;
   }
 
@@ -191,28 +226,27 @@ const components = await getCollection('components');
   }
 
   .btn-primary {
-    background: #238636;
+    background: var(--preview-brand, #238636);
     color: #ffffff;
   }
 
   .btn-primary:hover {
-    background: #2ea043;
     box-shadow: 0 4px 16px rgba(46, 160, 67, 0.4);
   }
 
   .btn-secondary {
-    background: #161b22;
-    color: #e6edf3;
-    border: 1px solid #30363d;
+    background: var(--docs-surface, #161b22);
+    color: var(--docs-text, #e6edf3);
+    border: 1px solid var(--docs-border, #30363d);
   }
 
   .btn-secondary:hover {
-    background: #21262d;
-    border-color: #58a6ff;
+    background: var(--docs-card-hover, #21262d);
+    border-color: var(--docs-accent, #58a6ff);
   }
 
   .btn:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 3px;
   }
 

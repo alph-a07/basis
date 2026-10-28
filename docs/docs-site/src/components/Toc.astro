@@ -111,7 +111,7 @@ const { headings = [] } = Astro.props;
   }
 
   .toc-inner {
-    border-left: 1px solid #21262d;
+    border-left: 1px solid var(--docs-border-subtle, #21262d);
     padding-left: 1rem;
   }
 
@@ -120,7 +120,7 @@ const { headings = [] } = Astro.props;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     margin: 0 0 0.75rem 0;
   }
 
@@ -141,23 +141,23 @@ const { headings = [] } = Astro.props;
   .toc-link {
     display: block;
     font-size: 0.8125rem;
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     text-decoration: none;
     line-height: 1.4;
     transition: color 0.12s ease;
   }
 
   .toc-link:hover {
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
   }
 
   .toc-link.active {
-    color: #58a6ff;
+    color: var(--docs-toc-active, #58a6ff);
     font-weight: 600;
   }
 
   .toc-link:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
     border-radius: 2px;
   }

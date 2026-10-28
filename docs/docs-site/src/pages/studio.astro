@@ -9,8 +9,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="topbar-left">
         <a href="/" class="brand-link" aria-label="Basis Home">
           <svg class="brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#58a6ff" stroke-width="2" />
-            <circle cx="12" cy="12" r="4" fill="#58a6ff" />
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--docs-accent, #58a6ff)" stroke-width="2" />
+            <circle cx="12" cy="12" r="4" fill="var(--docs-accent, #58a6ff)" />
           </svg>
           <span class="brand-title">Basis</span>
         </a>
@@ -34,7 +34,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </header>
 
     <main id="studio-main" class="studio-main">
-      <div class="studio-workspace">
+      <!-- Localized Studio Preview Scope: uses deferred local --b-* intent resolution -->
+      <div class="studio-workspace basis-preview-scope" id="studio-preview" data-scope="preview">
         <div class="studio-placeholder">
           <h1>Intent Studio Shell</h1>
           <p>Full-bleed workspace for live intent exploration and real-time Kotlin token export.</p>
@@ -43,6 +44,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </main>
   </div>
 </BaseLayout>
+
+<script>
+  // Deferred client-side localized intent resolution for studio workspace preview
+  import { applyLocalizedPreviewTheme } from '../runtime/preview-theme';
+
+  function initStudioPreview() {
+    const previewEl = document.getElementById('studio-preview');
+    if (previewEl) {
+      applyLocalizedPreviewTheme(previewEl, {
+        brandColor: '#58a6ff',
+        presence: 'Strong',
+        moodPreset: 'Vibrant',
+        deriveColors: true,
+      });
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(initStudioPreview);
+    } else {
+      setTimeout(initStudioPreview, 200);
+    }
+  }
+</script>
 
 <style>
   .studio-app {
@@ -57,8 +83,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     justify-content: space-between;
     padding: 0 1.5rem;
     height: 56px;
-    background: #0d0f12;
-    border-bottom: 1px solid #21262d;
+    background: var(--docs-bg, #0d0f12);
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -75,20 +101,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
     font-weight: 700;
     font-size: 1.1rem;
   }
 
   .brand-link:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
     border-radius: 4px;
   }
 
   .studio-badge {
     background: rgba(88, 166, 255, 0.15);
-    color: #58a6ff;
+    color: var(--docs-accent, #58a6ff);
     border: 1px solid rgba(88, 166, 255, 0.3);
     font-size: 0.75rem;
     font-weight: 600;
@@ -116,7 +142,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .studio-btn:focus-visible {
-    outline: 2px solid #58a6ff;
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
   }
 
@@ -130,23 +156,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .btn-secondary {
-    background: #161b22;
-    color: #c9d1d9;
-    border-color: #30363d;
+    background: var(--docs-surface, #161b22);
+    color: var(--docs-text, #c9d1d9);
+    border-color: var(--docs-border, #30363d);
   }
 
   .btn-secondary:hover {
-    background: #21262d;
-    color: #e6edf3;
+    background: var(--docs-card-hover, #21262d);
+    color: var(--docs-text, #e6edf3);
   }
 
   .btn-docs {
     background: transparent;
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
   }
 
   .btn-docs:hover {
-    color: #e6edf3;
+    color: var(--docs-text, #e6edf3);
   }
 
   .studio-main {
@@ -155,10 +181,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 2rem;
   }
 
+  .basis-preview-scope {
+    --preview-bg: var(--b-color-surface-elevated, var(--docs-surface));
+    --preview-border: var(--b-color-border-default, var(--docs-border));
+    --preview-text: var(--b-color-content-default, var(--docs-text));
+  }
+
   .studio-workspace {
     flex: 1;
-    background: #161b22;
-    border: 1px solid #21262d;
+    background: var(--preview-bg, #161b22);
+    border: 1px solid var(--preview-border, #21262d);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -175,11 +207,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .studio-placeholder h1 {
     font-size: 1.75rem;
     margin: 0 0 0.5rem 0;
-    color: #e6edf3;
+    color: var(--preview-text, #e6edf3);
   }
 
   .studio-placeholder p {
-    color: #8b949e;
+    color: var(--docs-text-muted, #8b949e);
     line-height: 1.5;
     margin: 0;
   }
