@@ -1,0 +1,24 @@
+{
+  "name": "@basis/docs-model",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Basis documentation schemas, generated TypeScript definitions, validators, and fixtures",
+  "main": "types/index.ts",
+  "types": "types/index.ts",
+  "scripts": {
+    "generate:types": "tsx scripts/generate-types.ts",
+    "prebuild": "npm run generate:types",
+    "validate": "tsx scripts/validate.ts",
+    "validate:negative": "tsx scripts/validate-negative.ts",
+    "check:provenance": "tsx scripts/check-provenance.ts",
+    "test": "npm run validate && npm run validate:negative && npm run check:provenance"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.0",
+    "ajv": "8.17.1",
+    "ajv-formats": "3.0.1",
+    "json-schema-to-typescript": "15.0.4",
+    "tsx": "4.19.2",
+    "typescript": "5.7.3"
+  }
+}
