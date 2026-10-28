@@ -1,0 +1,170 @@
+---
+import type { TocItem } from '../types/navigation';
+
+interface Props {
+  headings?: TocItem[];
+}
+
+const { headings = [] } = Astro.props;
+---
+
+{headings.length > 0 && (
+  <nav class="docs-toc" aria-label="Table of contents">
+    <div class="toc-inner">
+      <h2 class="toc-heading">On this page</h2>
+      <ul class="toc-list">
+        {headings.map((item) => (
+          <li class={`toc-item depth-${item.depth}`}>
+            <a
+              href={`#${item.slug}`}
+              class="toc-link"
+              data-slug={item.slug}
+            >
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+)}
+
+<script>
+  function setupTocScrollSpy() {
+    const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+    if (!tocLinks.length) return;
+
+    const headingElements: HTMLElement[] = [];
+    tocLinks.forEach((link) => {
+      const slug = link.getAttribute('data-slug');
+      if (slug) {
+        const el = document.getElementById(slug);
+        if (el) headingElements.push(el);
+      }
+    });
+
+    if (!headingElements.length) return;
+
+    function setActiveLink(activeSlug: string) {
+      tocLinks.forEach((link) => {
+        if (link.getAttribute('data-slug') === activeSlug) {
+          link.classList.add('active');
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.classList.remove('active');
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    // Initialize IntersectionObserver to observe heading visibility
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveLink(entry.target.id);
+            break;
+          }
+        }
+      },
+      {
+        rootMargin: '0px 0px -70% 0px',
+        threshold: 0,
+      }
+    );
+
+    headingElements.forEach((el) => observer.observe(el));
+
+    // Fallback: Check scroll position on scroll
+    function onScroll() {
+      const scrollY = window.scrollY;
+      let currentSlug = headingElements[0]?.id || '';
+      for (const el of headingElements) {
+        if (el.offsetTop - 120 <= scrollY) {
+          currentSlug = el.id;
+        } else {
+          break;
+        }
+      }
+      if (currentSlug) {
+        setActiveLink(currentSlug);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  setupTocScrollSpy();
+  document.addEventListener('astro:page-load', setupTocScrollSpy);
+</script>
+
+<style>
+  .docs-toc {
+    width: 220px;
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+    padding-left: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .toc-inner {
+    border-left: 1px solid #21262d;
+    padding-left: 1rem;
+  }
+
+  .toc-heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8b949e;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-item {
+    margin-bottom: 0.4rem;
+  }
+
+  .toc-item.depth-3 {
+    padding-left: 0.75rem;
+  }
+
+  .toc-link {
+    display: block;
+    font-size: 0.8125rem;
+    color: #8b949e;
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.12s ease;
+  }
+
+  .toc-link:hover {
+    color: #e6edf3;
+  }
+
+  .toc-link.active {
+    color: #58a6ff;
+    font-weight: 600;
+  }
+
+  .toc-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 1200px) {
+    .docs-toc {
+      display: none;
+    }
+  }
+</style>

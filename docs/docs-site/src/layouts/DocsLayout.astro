@@ -1,0 +1,120 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import MobileHeader from '../components/MobileHeader.astro';
+import Toc from '../components/Toc.astro';
+import type { TocItem } from '../types/navigation';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: TocItem[];
+  currentPath?: string;
+}
+
+const { title, description, headings = [], currentPath } = Astro.props;
+const resolvedPath = currentPath || Astro.url.pathname;
+
+// Fetch components from collection to build dynamic component navigation groups
+const components = await getCollection('components');
+
+// Group components by family
+const familiesMap = new Map<string, { id: string; name: string }[]>();
+for (const comp of components) {
+  const family = comp.data.family || 'Other';
+  if (!familiesMap.has(family)) {
+    familiesMap.set(family, []);
+  }
+  familiesMap.get(family)!.push({ id: comp.data.id, name: comp.data.name });
+}
+
+const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) => ({
+  family,
+  components: comps.sort((a, b) => a.name.localeCompare(b.name)),
+}));
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Accessible Skip to Content Link -->
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+  <div class="docs-app">
+    <MobileHeader />
+
+    <div class="docs-shell">
+      <Sidebar currentPath={resolvedPath} componentGroups={componentGroups} />
+
+      <div class="docs-body-wrapper">
+        <main id="main-content" class="docs-main" data-pagefind-body>
+          <div class="docs-reading-column">
+            <slot />
+          </div>
+        </main>
+
+        <Toc headings={headings} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .skip-to-content {
+    position: absolute;
+    top: -9999px;
+    left: 1rem;
+    z-index: 1000;
+    padding: 0.75rem 1.25rem;
+    background: #58a6ff;
+    color: #0d0f12;
+    font-weight: 700;
+    border-radius: 6px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .skip-to-content:focus {
+    top: 1rem;
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+  }
+
+  .docs-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .docs-shell {
+    display: flex;
+    flex: 1;
+    width: 100%;
+  }
+
+  .docs-body-wrapper {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    padding: 2.5rem 3rem;
+    gap: 3rem;
+  }
+
+  .docs-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .docs-reading-column {
+    width: 100%;
+    max-width: 72ch;
+  }
+
+  @media (max-width: 1024px) {
+    .docs-body-wrapper {
+      padding: 1.5rem 1.25rem;
+      gap: 1.5rem;
+    }
+  }
+</style>

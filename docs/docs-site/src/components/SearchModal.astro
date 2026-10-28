@@ -1,0 +1,213 @@
+---
+// SearchModal.astro - Accessible search dialog integration
+---
+
+<dialog id="search-dialog" class="search-dialog" aria-label="Search documentation">
+  <div class="search-modal-container">
+    <div class="search-header">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search documentation, components, tokens..."
+          aria-label="Search query"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <button type="button" id="close-search-btn" class="close-search-btn" aria-label="Close search">
+        <kbd class="esc-kbd">ESC</kbd>
+      </button>
+    </div>
+
+    <div id="search-results" class="search-results" role="region" aria-live="polite" aria-label="Search results">
+      <div class="search-placeholder">
+        <p>Type keywords to search across Basis documentation.</p>
+        <span class="search-hint">Navigation shortcuts: <kbd>↑</kbd> <kbd>↓</kbd> to navigate, <kbd>Enter</kbd> to select</span>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  function initSearchModal() {
+    const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    const closeBtn = document.getElementById('close-search-btn');
+    const openBtns = document.querySelectorAll('.open-search-btn');
+
+    if (!dialog) return;
+
+    function openModal() {
+      if (!dialog) return;
+      dialog.showModal();
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => searchInput?.focus(), 50);
+    }
+
+    function closeModal() {
+      if (!dialog) return;
+      dialog.close();
+      document.body.style.overflow = '';
+    }
+
+    openBtns.forEach((btn) => {
+      btn.addEventListener('click', openModal);
+    });
+
+    closeBtn?.addEventListener('click', closeModal);
+
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) {
+        closeModal();
+      }
+    });
+
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+    });
+
+    // Global keyboard shortcut: Cmd+K / Ctrl+K
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (dialog.open) {
+          closeModal();
+        } else {
+          openModal();
+        }
+      }
+    });
+  }
+
+  // Initialize on load and on astro page-load
+  initSearchModal();
+  document.addEventListener('astro:page-load', initSearchModal);
+</script>
+
+<style>
+  .search-dialog {
+    margin: auto;
+    padding: 0;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    background: #161b22;
+    color: #e6edf3;
+    max-width: 640px;
+    width: 90vw;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  }
+
+  .search-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-modal-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid #21262d;
+    gap: 0.75rem;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0.75rem;
+  }
+
+  .search-icon {
+    color: #8b949e;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #e6edf3;
+    font-size: 1rem;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .search-input::placeholder {
+    color: #6e7681;
+  }
+
+  .close-search-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: #8b949e;
+    display: flex;
+    align-items: center;
+  }
+
+  .close-search-btn:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .esc-kbd {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.15rem 0.4rem;
+    font-size: 0.75rem;
+    color: #8b949e;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .search-results {
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    min-height: 200px;
+  }
+
+  .search-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8b949e;
+    text-align: center;
+    font-size: 0.95rem;
+    gap: 0.5rem;
+    padding: 2rem 0;
+  }
+
+  .search-hint {
+    font-size: 0.8rem;
+    color: #6e7681;
+  }
+
+  .search-hint kbd {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 3px;
+    padding: 0.1rem 0.3rem;
+  }
+</style>

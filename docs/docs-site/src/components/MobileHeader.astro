@@ -1,0 +1,102 @@
+---
+// MobileHeader.astro - Responsive header for viewports below 1024px
+---
+
+<header class="mobile-header" aria-label="Mobile site header">
+  <div class="mobile-header-inner">
+    <button
+      type="button"
+      id="mobile-menu-btn"
+      class="mobile-menu-btn"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="docs-sidebar"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <a href="/" class="mobile-brand" aria-label="Basis Home">
+      <svg class="mobile-brand-logo" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="4" stroke="#58a6ff" stroke-width="2" />
+        <circle cx="12" cy="12" r="4" fill="#58a6ff" />
+      </svg>
+      <span class="mobile-brand-title">Basis</span>
+    </a>
+
+    <button
+      type="button"
+      class="mobile-search-btn open-search-btn"
+      aria-label="Search documentation"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  .mobile-header {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #0d0f12;
+    border-bottom: 1px solid #21262d;
+    height: 56px;
+  }
+
+  .mobile-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 1rem;
+  }
+
+  .mobile-menu-btn,
+  .mobile-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    color: #e6edf3;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .mobile-menu-btn:focus-visible,
+  .mobile-search-btn:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #e6edf3;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  .mobile-brand:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 1024px) {
+    .mobile-header {
+      display: block;
+    }
+  }
+</style>

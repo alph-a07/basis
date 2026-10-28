@@ -1,0 +1,501 @@
+---
+import type { NavGroup } from '../types/navigation';
+import SearchModal from './SearchModal.astro';
+
+interface Props {
+  currentPath?: string;
+  componentGroups?: { family: string; components: { id: string; name: string }[] }[];
+}
+
+const { currentPath = '', componentGroups = [] } = Astro.props;
+
+const staticGroups: NavGroup[] = [
+  {
+    title: 'Getting Started',
+    items: [
+      { title: 'Overview', href: '/docs/getting-started/overview' },
+      { title: 'Installation', href: '/docs/getting-started/installation' },
+      { title: 'Quickstart', href: '/docs/getting-started/quickstart' },
+    ],
+  },
+  {
+    title: 'Theming',
+    items: [
+      { title: 'Overview', href: '/docs/theming/overview' },
+      { title: 'ThemeMode', href: '/docs/theming/theme-mode' },
+      { title: 'Intent', href: '/docs/theming/intent' },
+    ],
+  },
+  {
+    title: 'Foundation',
+    items: [
+      { title: 'Surface', href: '/docs/foundation/surface' },
+      { title: 'Focusable', href: '/docs/foundation/focusable' },
+      { title: 'Overlay', href: '/docs/foundation/overlay' },
+    ],
+  },
+];
+
+// Combine static groups with dynamic component groups
+const allGroups: NavGroup[] = [
+  ...staticGroups,
+  ...componentGroups.map((group) => ({
+    title: `Components · ${group.family}`,
+    items: group.components.map((comp) => ({
+      title: comp.name,
+      href: `/docs/components/${comp.id}`,
+    })),
+  })),
+];
+
+function isPathActive(itemHref: string): boolean {
+  if (itemHref === currentPath) return true;
+  if (itemHref.startsWith('/docs/components/')) {
+    const compBase = itemHref;
+    return currentPath === compBase || currentPath.startsWith(`${compBase}/`);
+  }
+  return false;
+}
+---
+
+<!-- Mobile Drawer Backdrop -->
+<div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation navigation">
+  <div class="sidebar-inner">
+    <!-- Header: Logo + Search Trigger -->
+    <div class="sidebar-header">
+      <div class="logo-row">
+        <a href="/" class="brand-link" aria-label="Basis Home">
+          <svg class="brand-logo" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#58a6ff" stroke-width="2" />
+            <circle cx="12" cy="12" r="4" fill="#58a6ff" />
+          </svg>
+          <span class="brand-title">Basis</span>
+        </a>
+        <button type="button" id="close-sidebar-btn" class="close-sidebar-btn" aria-label="Close navigation drawer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="search-trigger open-search-btn"
+        aria-label="Search documentation"
+        aria-keyshortcuts="Control+K Meta+K"
+      >
+        <span class="search-trigger-content">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="search-placeholder">Search docs...</span>
+        </span>
+        <kbd class="search-kbd">⌘K</kbd>
+      </button>
+    </div>
+
+    <!-- Navigation Groups -->
+    <nav class="sidebar-nav" aria-label="Sidebar Sections">
+      {allGroups.map((group) => (
+        <div class="nav-group">
+          <h2 class="nav-group-title">{group.title}</h2>
+          <ul class="nav-group-list">
+            {group.items.map((item) => {
+              const active = isPathActive(item.href);
+              return (
+                <li class="nav-item">
+                  <a
+                    href={item.href}
+                    class={`nav-link ${active ? 'active' : ''}`}
+                    aria-current={active ? 'page' : undefined}
+                  >
+                    <span>{item.title}</span>
+                    {item.badge && <span class="nav-badge">{item.badge}</span>}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </nav>
+
+    <!-- Footer: Version + Theme Toggle + GitHub -->
+    <div class="sidebar-footer">
+      <div class="footer-meta">
+        <span class="version-badge" title="Basis Version">v0.1.0</span>
+      </div>
+      <div class="footer-actions">
+        <button
+          type="button"
+          id="theme-toggle"
+          class="theme-toggle-btn"
+          aria-label="Toggle theme"
+          title="Toggle light/dark theme"
+        >
+          <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <a
+          href="https://github.com/alph-a07/basis"
+          class="github-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Basis on GitHub"
+          title="GitHub Repository"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<SearchModal />
+
+<script>
+  function setupSidebarDrawer() {
+    const sidebar = document.getElementById('docs-sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const closeBtn = document.getElementById('close-sidebar-btn');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+    function openDrawer() {
+      if (!sidebar || !backdrop) return;
+      sidebar.classList.add('drawer-open');
+      backdrop.classList.add('visible');
+      mobileMenuBtn?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      if (!sidebar || !backdrop) return;
+      sidebar.classList.remove('drawer-open');
+      backdrop.classList.remove('visible');
+      mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    mobileMenuBtn?.addEventListener('click', () => {
+      const isOpen = sidebar?.classList.contains('drawer-open');
+      if (isOpen) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+
+    closeBtn?.addEventListener('click', closeDrawer);
+    backdrop?.addEventListener('click', closeDrawer);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar?.classList.contains('drawer-open')) {
+        closeDrawer();
+      }
+    });
+
+    // Theme toggle handling
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle?.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      try {
+        localStorage.setItem('basis-theme', newTheme);
+      } catch (_) {}
+    });
+  }
+
+  setupSidebarDrawer();
+  document.addEventListener('astro:page-load', setupSidebarDrawer);
+</script>
+
+<style>
+  .docs-sidebar {
+    width: 280px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+    background: #0d0f12;
+    border-right: 1px solid #21262d;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 1.25rem 1.25rem 1rem 1.25rem;
+    border-bottom: 1px solid #161b22;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    color: #e6edf3;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .brand-logo {
+    display: block;
+  }
+
+  .close-sidebar-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+
+  .close-sidebar-btn:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .search-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 6px;
+    color: #8b949e;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .search-trigger:hover {
+    border-color: #30363d;
+    background: #1c2128;
+    color: #c9d1d9;
+  }
+
+  .search-trigger:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+
+  .search-trigger-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .search-placeholder {
+    font-size: 0.85rem;
+  }
+
+  .search-kbd {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.7rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #8b949e;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: #30363d transparent;
+  }
+
+  .nav-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .nav-group:last-child {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8b949e;
+    margin: 0 0 0.5rem 0.5rem;
+  }
+
+  .nav-group-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-item {
+    margin-bottom: 0.125rem;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.625rem;
+    border-radius: 6px;
+    color: #8b949e;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .nav-link:hover {
+    background: #161b22;
+    color: #e6edf3;
+  }
+
+  .nav-link.active {
+    background: rgba(88, 166, 255, 0.12);
+    color: #58a6ff;
+    font-weight: 600;
+  }
+
+  .nav-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: -1px;
+  }
+
+  .sidebar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    border-top: 1px solid #161b22;
+    background: #0d0f12;
+  }
+
+  .version-badge {
+    font-size: 0.75rem;
+    color: #6e7681;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: #161b22;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid #21262d;
+  }
+
+  .footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .theme-toggle-btn,
+  .github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    color: #8b949e;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .theme-toggle-btn:hover,
+  .github-link:hover {
+    color: #e6edf3;
+    background: #161b22;
+  }
+
+  .theme-toggle-btn:focus-visible,
+  .github-link:focus-visible {
+    outline: 2px solid #58a6ff;
+    outline-offset: 2px;
+  }
+
+  .sidebar-backdrop {
+    display: none;
+  }
+
+  /* Responsive Drawer styles */
+  @media (max-width: 1024px) {
+    .docs-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      transform: translateX(-100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: none;
+    }
+
+    .docs-sidebar.drawer-open {
+      transform: translateX(0);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .close-sidebar-btn {
+      display: flex;
+    }
+
+    .sidebar-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(2px);
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+</style>
