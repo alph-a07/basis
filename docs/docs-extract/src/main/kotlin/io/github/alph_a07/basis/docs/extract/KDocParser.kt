@@ -5,7 +5,7 @@ package io.github.alph_a07.basis.docs.extract
  */
 public object KDocParser {
 
-    private val bracketLinkRegex = Regex("""\[([^\]]+)\]""")
+    private val bracketLinkRegex = Regex("""\[([^]]+)]""")
     private val knobTowardRegex = Regex("""(\w[\w-]*)\s+toward\s+(\w[\w-]*)(?:[;.]|$)""")
     private val propertyTagRegex = Regex("""@property\s+(\w+)\s+([\s\S]*?)(?=@property|@param|@return|@throws|\*/|$)""")
 

@@ -7,7 +7,7 @@ import io.github.alph_a07.basis.theme.tokens.core.RadiusTokenPath
 import io.github.alph_a07.basis.theme.tokens.core.SpacingTokenPath
 
 /**
- * Flattens typed token override trees into a secondary dotted [paths] map.
+ * Flattens typed token override trees into a secondary dotted paths map.
  */
 internal fun flattenTokenOverrides(
     color: ColorTokenOverrides?,
