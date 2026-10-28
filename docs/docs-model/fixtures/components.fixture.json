@@ -1,0 +1,289 @@
+{
+  "schemaVersion": "0.2.0",
+  "provenance": "fixture",
+  "source": {
+    "commit": "fixture-commit"
+  },
+  "components": [
+    {
+      "id": "button",
+      "name": "BasisButton",
+      "family": "Actions",
+      "kind": "component",
+      "lifecycle": {
+        "status": "stable",
+        "addedIn": "0.1.0"
+      },
+      "summary": "Primary interactive trigger executing actions on click or tap.",
+      "description": "BasisButton represents an action the user can take. It supports visual hierarchy through variants, interactive feedback states, icons, and accessible touch target compliance.",
+      "package": "io.github.alph_a07.basis.components.actions",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/fixture-commit/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/actions/BasisButton.kt",
+      "overview": {
+        "quickStartSample": "BasisButton(\n    onClick = { /* trigger action */ },\n    variant = BasisButtonDefaults.variantPrimary(),\n) {\n    Text(\"Get Started\")\n}",
+        "anatomy": {
+          "parts": [
+            {
+              "id": "Container",
+              "name": "Container",
+              "description": "Root interactive container providing background fill, border, elevation, and shape.",
+              "optional": false
+            },
+            {
+              "id": "Label",
+              "name": "Label",
+              "description": "Text content describing the action.",
+              "optional": false
+            },
+            {
+              "id": "LeadingIcon",
+              "name": "Leading Icon",
+              "description": "Optional decorative or identifying icon positioned before the label.",
+              "optional": true
+            },
+            {
+              "id": "TrailingIcon",
+              "name": "Trailing Icon",
+              "description": "Optional accessory icon or disclosure indicator positioned after the label.",
+              "optional": true
+            }
+          ],
+          "screenshot": {
+            "lightUrl": "/assets/components/button-anatomy-light.png",
+            "darkUrl": "/assets/components/button-anatomy-dark.png",
+            "width": 640,
+            "height": 360
+          },
+          "bounds": {
+            "Container": {
+              "x": 120,
+              "y": 80,
+              "width": 400,
+              "height": 48
+            },
+            "Label": {
+              "x": 168,
+              "y": 94,
+              "width": 120,
+              "height": 20
+            },
+            "LeadingIcon": {
+              "x": 136,
+              "y": 92,
+              "width": 24,
+              "height": 24
+            },
+            "TrailingIcon": {
+              "x": 480,
+              "y": 92,
+              "width": 24,
+              "height": 24
+            }
+          }
+        },
+        "variants": [
+          {
+            "id": "primary",
+            "name": "Primary",
+            "description": "High-emphasis action for the primary task in a view."
+          },
+          {
+            "id": "secondary",
+            "name": "Secondary",
+            "description": "Medium-emphasis action for secondary or alternative workflows."
+          },
+          {
+            "id": "outline",
+            "name": "Outline",
+            "description": "Bordered action with transparent background for balanced hierarchy."
+          },
+          {
+            "id": "ghost",
+            "name": "Ghost",
+            "description": "Subtle low-emphasis action with no container fill or border until interaction."
+          }
+        ],
+        "states": [
+          {
+            "id": "enabled",
+            "name": "Enabled",
+            "description": "Default interactive idle state ready for user input."
+          },
+          {
+            "id": "hovered",
+            "name": "Hovered",
+            "description": "Pointer hover indicating interactive affordance."
+          },
+          {
+            "id": "pressed",
+            "name": "Pressed",
+            "description": "Active pointer engagement with immediate visual feedback."
+          },
+          {
+            "id": "focused",
+            "name": "Focused",
+            "description": "Keyboard or programmatic navigation focus with distinct focus ring."
+          },
+          {
+            "id": "disabled",
+            "name": "Disabled",
+            "description": "Non-interactive state with muted contrast indicating unavailable action."
+          }
+        ],
+        "gallery": [
+          {
+            "variant": "primary",
+            "state": "enabled",
+            "mode": "light",
+            "url": "/assets/components/button-primary-enabled-light.png",
+            "width": 320,
+            "height": 112
+          },
+          {
+            "variant": "primary",
+            "state": "enabled",
+            "mode": "dark",
+            "url": "/assets/components/button-primary-enabled-dark.png",
+            "width": 320,
+            "height": 112
+          }
+        ]
+      },
+      "api": {
+        "signatures": [
+          {
+            "name": "BasisButton",
+            "declaration": "@Composable\npublic fun BasisButton(\n    onClick: () -> Unit,\n    modifier: Modifier = Modifier,\n    variant: BasisButtonVariant = BasisButtonDefaults.variantPrimary(),\n    enabled: Boolean = true,\n    leadingIcon: (@Composable () -> Unit)? = null,\n    trailingIcon: (@Composable () -> Unit)? = null,\n    content: @Composable RowScope.() -> Unit\n): Unit",
+            "parameters": [
+              {
+                "name": "onClick",
+                "type": "() -> Unit",
+                "description": "Callback executed when user activates the button.",
+                "optional": false
+              },
+              {
+                "name": "modifier",
+                "type": "Modifier",
+                "defaultValue": "Modifier",
+                "description": "Modifier applied to the outer button container.",
+                "optional": true
+              },
+              {
+                "name": "variant",
+                "type": "BasisButtonVariant",
+                "defaultValue": "BasisButtonDefaults.variantPrimary()",
+                "description": "Visual weight and styling configuration variant.",
+                "optional": true
+              },
+              {
+                "name": "enabled",
+                "type": "Boolean",
+                "defaultValue": "true",
+                "description": "Whether the button responds to user interaction.",
+                "optional": true
+              },
+              {
+                "name": "leadingIcon",
+                "type": "(@Composable () -> Unit)?",
+                "defaultValue": "null",
+                "description": "Optional icon composable rendered before the label.",
+                "optional": true
+              },
+              {
+                "name": "trailingIcon",
+                "type": "(@Composable () -> Unit)?",
+                "defaultValue": "null",
+                "description": "Optional icon composable rendered after the label.",
+                "optional": true
+              },
+              {
+                "name": "content",
+                "type": "@Composable RowScope.() -> Unit",
+                "description": "Slot for button content, typically a text label.",
+                "optional": false
+              }
+            ],
+            "returnType": "Unit",
+            "kdoc": "/**\n * Primary interactive button component executing an action on click or tap.\n *\n * @param onClick Callback executed when user activates the button.\n * @param modifier Modifier applied to the outer button container.\n * @param variant Visual weight and styling configuration variant.\n * @param enabled Whether the button responds to user interaction.\n * @param leadingIcon Optional icon composable rendered before the label.\n * @param trailingIcon Optional icon composable rendered after the label.\n * @param content Slot for button content, typically a text label.\n */"
+          }
+        ],
+        "samples": [
+          {
+            "id": "button-primary-basic",
+            "title": "Primary Button",
+            "code": "BasisButton(\n    onClick = { handleAction() },\n    variant = BasisButtonDefaults.variantPrimary()\n) {\n    Text(\"Save Changes\")\n}",
+            "description": "Standard high-emphasis primary button for main task completion."
+          },
+          {
+            "id": "button-with-icons",
+            "title": "Button with Icons",
+            "code": "BasisButton(\n    onClick = { downloadItem() },\n    variant = BasisButtonDefaults.variantSecondary(),\n    leadingIcon = { BasisIcon(Icons.Default.Download) }\n) {\n    Text(\"Download Asset\")\n}",
+            "description": "Secondary button pairing icon and text for enhanced scannability."
+          }
+        ]
+      },
+      "overrides": {
+        "universalFields": [
+          "surface",
+          "content",
+          "border",
+          "radius",
+          "typography",
+          "padding",
+          "gap",
+          "depth",
+          "prominence",
+          "treatment"
+        ],
+        "extraFamily": "Interactive",
+        "matrix": [
+          {
+            "variant": "*",
+            "state": "*",
+            "supportedFields": [
+              "surface",
+              "content",
+              "border",
+              "radius",
+              "padding"
+            ]
+          },
+          {
+            "variant": "outline",
+            "state": "enabled",
+            "supportedFields": [
+              "border",
+              "content"
+            ]
+          }
+        ]
+      },
+      "accessibility": {
+        "role": "Button",
+        "touchTarget": {
+          "minWidthDp": 48,
+          "minHeightDp": 48,
+          "enforced": true
+        },
+        "announcements": [],
+        "reducedMotion": {
+          "respectsReducedMotion": true,
+          "fallbackDescription": "Instantaneous color transition with zero duration scale animation."
+        },
+        "keyboardNavigation": [
+          "Enter",
+          "Space",
+          "Tab"
+        ],
+        "report": {
+          "status": "pass",
+          "checks": [
+            "ATF-TouchTarget-48dp",
+            "Compose-Role-Button",
+            "ColorContrast-AA"
+          ],
+          "version": "0.2.0"
+        }
+      }
+    }
+  ]
+}

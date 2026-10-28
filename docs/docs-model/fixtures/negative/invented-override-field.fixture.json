@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "0.2.0",
+  "provenance": "fixture",
+  "source": { "commit": "test" },
+  "components": [
+    {
+      "id": "button",
+      "name": "BasisButton",
+      "family": "Actions",
+      "kind": "component",
+      "lifecycle": { "status": "experimental", "addedIn": "0.1.0" },
+      "summary": "Valid summary.",
+      "description": "Button",
+      "package": "io.github.alph_a07.basis.components.actions",
+      "sourceUrl": "https://example.com",
+      "overview": {
+        "quickStartSample": "BasisButton()",
+        "anatomy": { "parts": [] },
+        "variants": [],
+        "states": []
+      },
+      "api": { "signatures": [], "samples": [] },
+      "overrides": {
+        "universalFields": [
+          "inventedMagicGlow"
+        ],
+        "matrix": []
+      },
+      "accessibility": {
+        "role": "Button",
+        "touchTarget": { "minWidthDp": 48, "minHeightDp": 48, "enforced": true },
+        "reducedMotion": { "respectsReducedMotion": true }
+      }
+    }
+  ]
+}

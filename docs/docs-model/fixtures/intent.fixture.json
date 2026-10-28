@@ -1,0 +1,314 @@
+{
+  "schemaVersion": "0.2.0",
+  "provenance": "generated",
+  "source": {
+    "commit": "afb2205ef17a1c0b5f39ecd9c2f2b851990aade1"
+  },
+  "identity": {
+    "presence": [
+      {
+        "id": "Subtle",
+        "label": "Subtle",
+        "summary": "Brand color reaches selection, focus, and gradients only."
+      },
+      {
+        "id": "Balanced",
+        "label": "Balanced",
+        "summary": "Subtle surfaces plus a brand-filled primary call to action."
+      },
+      {
+        "id": "Strong",
+        "label": "Strong",
+        "summary": "Balanced plus elevated tint and stronger borders."
+      },
+      {
+        "id": "Dominant",
+        "label": "Dominant",
+        "summary": "Balanced plus a mild tint on the default surface as well."
+      }
+    ],
+    "supportingColors": {
+      "max": 3
+    },
+    "fields": [
+      {
+        "id": "brandColor",
+        "label": "Brand Color",
+        "summary": "Primary brand color, in any supported intake color space."
+      },
+      {
+        "id": "supportingColors",
+        "label": "Supporting Colors",
+        "summary": "Secondary brand anchors; at most three are honored and extras are rejected during normalization."
+      },
+      {
+        "id": "presence",
+        "label": "Presence",
+        "summary": "How evident the brand color should be in semantic roles."
+      },
+      {
+        "id": "typography",
+        "label": "Typography",
+        "summary": "Brand typeface intent, as candidates, role pins, or both."
+      },
+      {
+        "id": "deriveColors",
+        "label": "Derive Colors",
+        "summary": "When `true` (default), colors are synthesized from mood, brand, and domain signals."
+      }
+    ]
+  },
+  "mood": {
+    "presets": [
+      {
+        "id": "Neutral",
+        "label": "Neutral",
+        "summary": "Balanced defaults with no stylistic lean."
+      },
+      {
+        "id": "Calm",
+        "label": "Calm",
+        "summary": "Low energy, soft contrast, and quiet motion."
+      },
+      {
+        "id": "Professional",
+        "label": "Professional",
+        "summary": "Restrained, trustworthy, and information-first."
+      },
+      {
+        "id": "Bold",
+        "label": "Bold",
+        "summary": "High chroma, punchy contrast, and forward typography."
+      },
+      {
+        "id": "Playful",
+        "label": "Playful",
+        "summary": "Rounded, lively, and playful."
+      },
+      {
+        "id": "Minimal",
+        "label": "Minimal",
+        "summary": "Reduced palette, generous space, and minimal ornament."
+      },
+      {
+        "id": "Expressive",
+        "label": "Expressive",
+        "summary": "Display-forward typography with expressive color and motion."
+      }
+    ],
+    "knobs": [
+      {
+        "id": "warmth",
+        "label": "Warmth",
+        "summary": "Cooler toward warmer.",
+        "negativeLabel": "Cooler",
+        "positiveLabel": "warmer",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "chroma",
+        "label": "Chroma",
+        "summary": "Muted toward saturated.",
+        "negativeLabel": "Muted",
+        "positiveLabel": "saturated",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "contrast",
+        "label": "Contrast",
+        "summary": "Softer toward punchier; a preference, never an accessibility floor.",
+        "negativeLabel": "Softer",
+        "positiveLabel": "punchier",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "density",
+        "label": "Density",
+        "summary": "Airy toward compact.",
+        "negativeLabel": "Airy",
+        "positiveLabel": "compact",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "roundness",
+        "label": "Roundness",
+        "summary": "Sharper toward rounder.",
+        "negativeLabel": "Sharper",
+        "positiveLabel": "rounder",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "typographyExpressiveness",
+        "label": "Typography Expressiveness",
+        "summary": "Restrained toward display-forward.",
+        "negativeLabel": "Restrained",
+        "positiveLabel": "display-forward",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "motionEnergy",
+        "label": "Motion Energy",
+        "summary": "Quiet toward lively.",
+        "negativeLabel": "Quiet",
+        "positiveLabel": "lively",
+        "min": -1.0,
+        "max": 1.0
+      },
+      {
+        "id": "playfulness",
+        "label": "Playfulness",
+        "summary": "Serious toward playful.",
+        "negativeLabel": "Serious",
+        "positiveLabel": "playful",
+        "min": -1.0,
+        "max": 1.0
+      }
+    ]
+  },
+  "domain": {
+    "domains": [
+      {
+        "id": "Finance",
+        "label": "Finance",
+        "summary": "Banking, investing, and money management."
+      },
+      {
+        "id": "Health",
+        "label": "Health",
+        "summary": "Wellness, clinical, and care products."
+      },
+      {
+        "id": "Social",
+        "label": "Social",
+        "summary": "Community, messaging, and identity-driven products."
+      },
+      {
+        "id": "Productivity",
+        "label": "Productivity",
+        "summary": "Tools, trackers, and work-focused products."
+      },
+      {
+        "id": "Commerce",
+        "label": "Commerce",
+        "summary": "Stores, marketplaces, and purchasing flows."
+      },
+      {
+        "id": "Media",
+        "label": "Media",
+        "summary": "Streaming, news, and entertainment products."
+      },
+      {
+        "id": "Education",
+        "label": "Education",
+        "summary": "Learning, courses, and reference products."
+      },
+      {
+        "id": "Travel",
+        "label": "Travel",
+        "summary": "Booking, planning, and trip products."
+      },
+      {
+        "id": "Utilities",
+        "label": "Utilities",
+        "summary": "Device, utility, and system-facing products."
+      },
+      {
+        "id": "Other",
+        "label": "Other",
+        "summary": "Anything outside the named domains."
+      }
+    ],
+    "interactions": [
+      {
+        "id": "DataNavigation",
+        "label": "Data Navigation",
+        "summary": "Tables, charts, and dense record browsing."
+      },
+      {
+        "id": "FormsEntry",
+        "label": "Forms Entry",
+        "summary": "Long and multi-field input flows."
+      },
+      {
+        "id": "ChatMessaging",
+        "label": "Chat Messaging",
+        "summary": "Conversational, message-heavy surfaces."
+      },
+      {
+        "id": "ContentFeed",
+        "label": "Content Feed",
+        "summary": "Scroll-first streams of mixed content."
+      },
+      {
+        "id": "ContentReading",
+        "label": "Content Reading",
+        "summary": "Focused long-form reading."
+      },
+      {
+        "id": "SearchDiscovery",
+        "label": "Search Discovery",
+        "summary": "Query-first finding and exploration."
+      },
+      {
+        "id": "MediaBrowse",
+        "label": "Media Browse",
+        "summary": "Visual grids of media items."
+      },
+      {
+        "id": "DashboardMonitoring",
+        "label": "Dashboard Monitoring",
+        "summary": "Live metrics and operational monitoring."
+      },
+      {
+        "id": "CheckoutCommerce",
+        "label": "Checkout Commerce",
+        "summary": "Cart, payment, and purchase completion."
+      },
+      {
+        "id": "AuthOnboarding",
+        "label": "Auth Onboarding",
+        "summary": "Sign-in, sign-up, and first-run experiences."
+      },
+      {
+        "id": "SettingsAdmin",
+        "label": "Settings Admin",
+        "summary": "Configuration-heavy preference surfaces."
+      }
+    ]
+  },
+  "control": {
+    "fields": [
+      {
+        "id": "tokens",
+        "label": "Tokens",
+        "summary": "Sparse typed token overrides mirroring the token tree; paths is the secondary path-map form for codegen and migrations."
+      },
+      {
+        "id": "components",
+        "label": "Components",
+        "summary": "Per-component, variant, and state style patches."
+      },
+      {
+        "id": "mode",
+        "label": "Mode",
+        "summary": "Preferred color mode and which modes are generated."
+      },
+      {
+        "id": "fonts",
+        "label": "Fonts",
+        "summary": "Deep type locks such as per-level families and weight clamps; brand-level typography identity belongs to TypographyIdentity."
+      },
+      {
+        "id": "constraints",
+        "label": "Constraints",
+        "summary": "Non-negotiable floors applied after all overrides."
+      }
+    ]
+  }
+}

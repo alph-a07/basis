@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://basis.alph-a07.github.io/schemas/patch-vocabulary.schema.json",
+  "title": "PatchVocabularyDocument",
+  "description": "Schema for the Basis design system patch vocabulary and token ladders.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "provenance",
+    "source",
+    "universalFields",
+    "extraFamilies",
+    "pathTypes"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic schema version, e.g. 0.2.0."
+    },
+    "provenance": {
+      "type": "string",
+      "enum": ["generated", "fixture"],
+      "description": "Origin of the document."
+    },
+    "source": {
+      "type": "object",
+      "required": ["commit"],
+      "properties": {
+        "commit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "universalFields": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "$ref": "#/definitions/UniversalFieldDoc"
+      }
+    },
+    "extraFamilies": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/definitions/ExtraFamilyDoc"
+      }
+    },
+    "pathTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PathTypeDoc"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "UniversalFieldDoc": {
+      "type": "object",
+      "required": ["name", "type", "summary"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["enum", "tokenPath"]
+        },
+        "typeName": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pathType": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExtraFieldDoc": {
+      "type": "object",
+      "required": ["name", "type", "pathType", "summary"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["tokenPath"]
+        },
+        "pathType": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExtraFamilyDoc": {
+      "type": "object",
+      "required": ["family", "summary", "fields"],
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": ["Surface", "Icon", "Divider", "Interactive", "Spacer"]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtraFieldDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "PathTypeDoc": {
+      "type": "object",
+      "required": ["pathType", "prefix", "ladder"],
+      "properties": {
+        "pathType": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "ladder": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

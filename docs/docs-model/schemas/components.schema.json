@@ -1,0 +1,749 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://basis.alph-a07.github.io/schemas/components.schema.json",
+  "title": "ComponentsDocument",
+  "description": "Schema for the Basis design system component catalog extracted from source.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "provenance",
+    "source",
+    "components"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic schema version, e.g. 0.2.0."
+    },
+    "provenance": {
+      "type": "string",
+      "enum": ["generated", "fixture"],
+      "description": "Origin of the document."
+    },
+    "source": {
+      "type": "object",
+      "required": ["commit"],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "description": "Git commit SHA of the source tree."
+        }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "array",
+      "description": "Catalog of Basis components, atoms, and modifiers.",
+      "items": {
+        "$ref": "#/definitions/ComponentDoc"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LifecycleStatus": {
+      "type": "string",
+      "description": "Component stability status.",
+      "enum": [
+        "experimental",
+        "stable",
+        "deprecated",
+        "discontinued"
+      ]
+    },
+    "LifecycleInfo": {
+      "type": "object",
+      "description": "Lifecycle evolution state for a component.",
+      "required": [
+        "status",
+        "addedIn"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/LifecycleStatus"
+        },
+        "addedIn": {
+          "type": "string",
+          "description": "Basis release version when the component was introduced."
+        },
+        "deprecatedIn": {
+          "type": "string",
+          "description": "Basis release version when the component was deprecated."
+        },
+        "discontinuedIn": {
+          "type": "string",
+          "description": "Basis release version when the component was discontinued/removed."
+        },
+        "deprecationReason": {
+          "type": "string",
+          "description": "Reason for deprecation and recommended replacement."
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "deprecated" } }
+          },
+          "then": {
+            "required": ["deprecatedIn"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "discontinued" } }
+          },
+          "then": {
+            "required": ["discontinuedIn"]
+          }
+        }
+      ]
+    },
+    "ComponentKind": {
+      "type": "string",
+      "description": "Structural role of the component.",
+      "enum": [
+        "component",
+        "atom",
+        "modifier"
+      ]
+    },
+    "ComponentFamily": {
+      "type": "string",
+      "description": "Component family grouping from taxonomy.",
+      "enum": [
+        "Actions",
+        "Containment",
+        "Foundation",
+        "Navigation",
+        "Selection",
+        "Feedback",
+        "Input"
+      ]
+    },
+    "UniversalFieldName": {
+      "type": "string",
+      "description": "Recognized universal styling fields.",
+      "enum": [
+        "surface",
+        "content",
+        "border",
+        "radius",
+        "typography",
+        "padding",
+        "gap",
+        "depth",
+        "prominence",
+        "treatment"
+      ]
+    },
+    "ExtraFamilyName": {
+      "type": "string",
+      "description": "Recognized extra styling patch families.",
+      "enum": [
+        "Surface",
+        "Icon",
+        "Divider",
+        "Interactive",
+        "Spacer"
+      ]
+    },
+    "PartDoc": {
+      "type": "object",
+      "description": "Anatomy part descriptor with PascalCase ID.",
+      "required": [
+        "id",
+        "name",
+        "description",
+        "optional"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z0-9]*$",
+          "description": "PascalCase enum identifier matching Kotlin part enum."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the part."
+        },
+        "description": {
+          "type": "string",
+          "description": "KDoc description of the part role and purpose."
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether this part is optional in the composable."
+        }
+      },
+      "additionalProperties": false
+    },
+    "GeometryRect": {
+      "type": "object",
+      "description": "Normalized bounding box rectangle.",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "description": "Horizontal offset in pixels."
+        },
+        "y": {
+          "type": "number",
+          "description": "Vertical offset in pixels."
+        },
+        "width": {
+          "type": "number",
+          "description": "Width in pixels."
+        },
+        "height": {
+          "type": "number",
+          "description": "Height in pixels."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ScreenshotSpec": {
+      "type": "object",
+      "description": "Screenshot asset references for component anatomy and variants.",
+      "required": [
+        "lightUrl",
+        "darkUrl"
+      ],
+      "properties": {
+        "lightUrl": {
+          "type": "string",
+          "description": "Relative URL or asset path to the light theme screenshot."
+        },
+        "darkUrl": {
+          "type": "string",
+          "description": "Relative URL or asset path to the dark theme screenshot."
+        },
+        "width": {
+          "type": "number",
+          "description": "Native pixel width of screenshot."
+        },
+        "height": {
+          "type": "number",
+          "description": "Native pixel height of screenshot."
+        }
+      },
+      "additionalProperties": false
+    },
+    "AnatomyDoc": {
+      "type": "object",
+      "description": "Component anatomy specification with callouts and bounds.",
+      "required": [
+        "parts"
+      ],
+      "properties": {
+        "parts": {
+          "type": "array",
+          "description": "List of anatomical constituent parts.",
+          "items": {
+            "$ref": "#/definitions/PartDoc"
+          }
+        },
+        "screenshot": {
+          "$ref": "#/definitions/ScreenshotSpec"
+        },
+        "bounds": {
+          "type": "object",
+          "description": "Measured geometry bounding boxes keyed by part ID.",
+          "additionalProperties": {
+            "$ref": "#/definitions/GeometryRect"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "VariantDoc": {
+      "type": "object",
+      "description": "Component variant descriptor.",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier, e.g. primary, secondary, outline, ghost."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the variant."
+        },
+        "description": {
+          "type": "string",
+          "description": "Explanation of semantic intent and visual weight."
+        }
+      },
+      "additionalProperties": false
+    },
+    "StateDoc": {
+      "type": "object",
+      "description": "Component interactive state descriptor.",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "State identifier, e.g. enabled, hovered, pressed, focused, disabled."
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the state."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the interaction trigger and visual response."
+        }
+      },
+      "additionalProperties": false
+    },
+    "GalleryEntry": {
+      "type": "object",
+      "description": "Screenshot gallery entry for variant, state, and mode combination.",
+      "required": [
+        "variant",
+        "state",
+        "mode",
+        "url",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "variant": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["light", "dark"]
+        },
+        "url": {
+          "type": "string"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OverviewDoc": {
+      "type": "object",
+      "description": "Overview tab content.",
+      "required": [
+        "quickStartSample",
+        "anatomy",
+        "variants",
+        "states"
+      ],
+      "properties": {
+        "quickStartSample": {
+          "type": "string",
+          "description": "Minimal idiomatic Compose usage snippet."
+        },
+        "anatomy": {
+          "$ref": "#/definitions/AnatomyDoc"
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VariantDoc"
+          }
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StateDoc"
+          }
+        },
+        "gallery": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GalleryEntry"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ParameterDoc": {
+      "type": "object",
+      "description": "Composable parameter documentation.",
+      "required": [
+        "name",
+        "type",
+        "description",
+        "optional"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Parameter name in Kotlin signature."
+        },
+        "type": {
+          "type": "string",
+          "description": "Fully qualified or idiomatic Kotlin type."
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "Default parameter expression if optional."
+        },
+        "description": {
+          "type": "string",
+          "description": "KDoc description from `@param`."
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Whether the parameter has a default value."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SignatureDoc": {
+      "type": "object",
+      "description": "API composable function signature.",
+      "required": [
+        "name",
+        "declaration",
+        "parameters",
+        "kdoc"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Composable function name."
+        },
+        "declaration": {
+          "type": "string",
+          "description": "Complete Kotlin function declaration header."
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParameterDoc"
+          }
+        },
+        "returnType": {
+          "type": "string",
+          "description": "Return type (typically Unit for Composables)."
+        },
+        "kdoc": {
+          "type": "string",
+          "description": "Full extracted KDoc string."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SampleDoc": {
+      "type": "object",
+      "description": "Compiled API sample snippet.",
+      "required": [
+        "id",
+        "title",
+        "code"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Sample identifier."
+        },
+        "title": {
+          "type": "string",
+          "description": "Sample title."
+        },
+        "code": {
+          "type": "string",
+          "description": "Kotlin Compose code snippet."
+        },
+        "description": {
+          "type": "string",
+          "description": "Contextual usage explanation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ApiDoc": {
+      "type": "object",
+      "description": "API tab content.",
+      "required": [
+        "signatures",
+        "samples"
+      ],
+      "properties": {
+        "signatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SignatureDoc"
+          }
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SampleDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OverrideMatrixEntry": {
+      "type": "object",
+      "description": "Supported patch fields for a specific variant and state pairing.",
+      "required": [
+        "variant",
+        "state",
+        "supportedFields"
+      ],
+      "properties": {
+        "variant": {
+          "type": "string",
+          "description": "Variant ID or '*' for all variants."
+        },
+        "state": {
+          "type": "string",
+          "description": "State ID or '*' for all states."
+        },
+        "supportedFields": {
+          "type": "array",
+          "description": "List of UniversalStylePatch or ExtraPatch field names applicable.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OverridesDoc": {
+      "type": "object",
+      "description": "Overrides tab content.",
+      "required": [
+        "universalFields",
+        "matrix"
+      ],
+      "properties": {
+        "universalFields": {
+          "type": "array",
+          "description": "Universal style patch fields honored by this component.",
+          "items": {
+            "$ref": "#/definitions/UniversalFieldName"
+          }
+        },
+        "extraFamily": {
+          "$ref": "#/definitions/ExtraFamilyName"
+        },
+        "matrix": {
+          "type": "array",
+          "description": "Matrix mapping variant and state to honored override fields.",
+          "items": {
+            "$ref": "#/definitions/OverrideMatrixEntry"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "TouchTargetDoc": {
+      "type": "object",
+      "description": "Touch target accessibility facts.",
+      "required": [
+        "minWidthDp",
+        "minHeightDp",
+        "enforced"
+      ],
+      "properties": {
+        "minWidthDp": {
+          "type": "number",
+          "description": "Minimum touch target width in dp (e.g. 48)."
+        },
+        "minHeightDp": {
+          "type": "number",
+          "description": "Minimum touch target height in dp (e.g. 48)."
+        },
+        "enforced": {
+          "type": "boolean",
+          "description": "Whether touch target expansion is enforced by BasisTouchTarget modifier."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReducedMotionDoc": {
+      "type": "object",
+      "description": "Reduced motion behavior.",
+      "required": [
+        "respectsReducedMotion"
+      ],
+      "properties": {
+        "respectsReducedMotion": {
+          "type": "boolean",
+          "description": "Whether animated transitions collapse when system reduced motion is enabled."
+        },
+        "fallbackDescription": {
+          "type": "string",
+          "description": "Behavior when reduced motion is requested (e.g. instantaneous cut)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "AccessibilityReport": {
+      "type": "object",
+      "description": "CI-proven test report for accessibility checks.",
+      "required": [
+        "status",
+        "checks",
+        "version"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "pending"]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AccessibilityDoc": {
+      "type": "object",
+      "description": "Accessibility facts and report.",
+      "required": [
+        "role",
+        "touchTarget",
+        "reducedMotion"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Compose Accessibility/Semantics Role assigned to the component."
+        },
+        "touchTarget": {
+          "$ref": "#/definitions/TouchTargetDoc"
+        },
+        "announcements": {
+          "type": "array",
+          "description": "Spoken accessibility announcements emitted during lifecycle or interaction.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reducedMotion": {
+          "$ref": "#/definitions/ReducedMotionDoc"
+        },
+        "keyboardNavigation": {
+          "type": "array",
+          "description": "Supported keyboard interaction keys (e.g. Space, Enter, Tab).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "report": {
+          "$ref": "#/definitions/AccessibilityReport"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComponentDoc": {
+      "type": "object",
+      "description": "Complete documentation entity for a single Basis component or atom.",
+      "required": [
+        "id",
+        "name",
+        "family",
+        "kind",
+        "lifecycle",
+        "summary",
+        "package",
+        "sourceUrl",
+        "overview",
+        "api",
+        "overrides",
+        "accessibility"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Kebab-case component identifier, e.g. button, surface."
+        },
+        "name": {
+          "type": "string",
+          "description": "PascalCase component composable name, e.g. BasisButton."
+        },
+        "family": {
+          "$ref": "#/definitions/ComponentFamily"
+        },
+        "kind": {
+          "$ref": "#/definitions/ComponentKind"
+        },
+        "lifecycle": {
+          "$ref": "#/definitions/LifecycleInfo"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Single-sentence concise summary from KDoc."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed explanation of component purpose and usage."
+        },
+        "package": {
+          "type": "string",
+          "description": "Kotlin package declaring the composable."
+        },
+        "sourceUrl": {
+          "type": "string",
+          "description": "Repository URL linking to the implementation source."
+        },
+        "overview": {
+          "$ref": "#/definitions/OverviewDoc"
+        },
+        "api": {
+          "$ref": "#/definitions/ApiDoc"
+        },
+        "overrides": {
+          "$ref": "#/definitions/OverridesDoc"
+        },
+        "accessibility": {
+          "$ref": "#/definitions/AccessibilityDoc"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "lifecycle": {
+                "properties": { "status": { "const": "stable" } }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "accessibility": {
+                "required": ["report"]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

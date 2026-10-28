@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://basis.alph-a07.github.io/schemas/intent.schema.json",
+  "title": "IntentDocument",
+  "description": "Schema for the Basis design system intent metadata extracted from source.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "provenance",
+    "source",
+    "identity",
+    "mood",
+    "domain",
+    "control"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic schema version, e.g. 0.2.0."
+    },
+    "provenance": {
+      "type": "string",
+      "enum": ["generated", "fixture"],
+      "description": "Origin of the document."
+    },
+    "source": {
+      "type": "object",
+      "required": ["commit"],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "description": "Git commit SHA."
+        }
+      },
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "required": ["presence", "supportingColors", "fields"],
+      "properties": {
+        "presence": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/definitions/ChoiceDoc"
+          }
+        },
+        "supportingColors": {
+          "type": "object",
+          "required": ["max"],
+          "properties": {
+            "max": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "mood": {
+      "type": "object",
+      "required": ["presets", "knobs"],
+      "properties": {
+        "presets": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "items": {
+            "$ref": "#/definitions/ChoiceDoc"
+          }
+        },
+        "knobs": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/definitions/KnobDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "type": "object",
+      "required": ["domains", "interactions"],
+      "properties": {
+        "domains": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/definitions/ChoiceDoc"
+          }
+        },
+        "interactions": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "items": {
+            "$ref": "#/definitions/ChoiceDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "control": {
+      "type": "object",
+      "required": ["fields"],
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldDoc"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChoiceDoc": {
+      "type": "object",
+      "required": ["id", "label", "summary"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FieldDoc": {
+      "type": "object",
+      "required": ["id", "label", "summary"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "KnobDoc": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "summary",
+        "negativeLabel",
+        "positiveLabel",
+        "min",
+        "max"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "negativeLabel": {
+          "type": "string"
+        },
+        "positiveLabel": {
+          "type": "string"
+        },
+        "min": {
+          "type": "number",
+          "enum": [-1.0]
+        },
+        "max": {
+          "type": "number",
+          "enum": [1.0]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

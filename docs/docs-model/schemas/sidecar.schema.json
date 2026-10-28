@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://basis.alph-a07.github.io/schemas/sidecar.schema.json",
+  "title": "SidecarFrontmatter",
+  "description": "Schema for component sidecar MDX frontmatter contract.",
+  "type": "object",
+  "required": [
+    "id",
+    "guidelines"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Component kebab-case identifier matching the component document."
+    },
+    "guidelines": {
+      "type": "object",
+      "required": ["do", "dont", "notes"],
+      "properties": {
+        "do": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Recommended authoring and design practices."
+        },
+        "dont": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Practices and patterns to avoid."
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Important architectural or usage notes."
+        }
+      },
+      "additionalProperties": false
+    },
+    "a11yReview": {
+      "type": "object",
+      "required": ["reviewer", "date", "version"],
+      "properties": {
+        "reviewer": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
