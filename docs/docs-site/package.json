@@ -8,7 +8,9 @@
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "tsx scripts/test-loader-validation.ts"
+    "test:loader": "tsx scripts/test-loader-validation.ts",
+    "test:a11y": "tsx scripts/test-a11y-layout.ts",
+    "test": "tsx scripts/test-loader-validation.ts && tsx scripts/test-a11y-layout.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",
@@ -18,7 +20,10 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@basis/docs-model": "*",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^22.13.0",
+    "axe-core": "^4.14.0",
+    "jsdom": "^30.1.3",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
