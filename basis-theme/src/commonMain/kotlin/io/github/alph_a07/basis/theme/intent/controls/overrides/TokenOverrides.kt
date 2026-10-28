@@ -1,6 +1,8 @@
 package io.github.alph_a07.basis.theme.intent.controls.overrides
 
 import io.github.alph_a07.basis.theme.tokens.core.ResolvedTheme
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -33,8 +35,23 @@ public data class TokenOverrides(
     public val size: SizeOverrides? = null,
     @Transient
     public val motion: MotionOverrides? = null,
-    public val paths: Map<String, OverrideValue> = emptyMap(),
+    @OptIn(ExperimentalSerializationApi::class)
+    @EncodeDefault(EncodeDefault.Mode.ALWAYS)
+    public val paths: Map<String, OverrideValue> =
+        flattenTokenOverrides(color, spacing, radius, size),
 ) {
+    init {
+        val flattened = flattenTokenOverrides(color, spacing, radius, size)
+
+        for ((path, value) in flattened) {
+            val explicit = paths[path]
+
+            require(explicit == null || explicit == value) {
+                "TokenOverrides conflict: typed property for '$path' has value $value but explicit path has $explicit"
+            }
+        }
+    }
+
     public companion object {
 
         /**

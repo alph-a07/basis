@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basis Docs Runtime Browser Verification</title>
+  <script src="../build/dist/js/productionLibrary/kotlin-kotlin-stdlib.js"></script>
+  <script src="../build/dist/js/productionLibrary/kotlinx-serialization-kotlinx-serialization-core.js"></script>
+  <script src="../build/dist/js/productionLibrary/kotlinx-serialization-kotlinx-serialization-json.js"></script>
+  <script src="../build/dist/js/productionLibrary/Basis-basis-theme.js"></script>
+  <script src="../build/dist/js/productionLibrary/Basis-docs-runtime.js"></script>
+</head>
+<body>
+  <h1>Basis Docs Runtime Verification</h1>
+  <div id="valid-output"></div>
+  <div id="invalid-output"></div>
+  <div id="malformed-output"></div>
+
+  <script>
+    const runtime = window['Basis:docs-runtime'];
+    const api = runtime.io.github.alph_a07.basis.docs.runtime;
+    
+    // 1. Valid intent
+    const resValid = JSON.parse(api.resolve("{}"));
+    document.getElementById("valid-output").textContent = 
+      "VALID: ok=" + resValid.ok + ", tokens=" + (resValid.tokens != null);
+
+    // 2. Invalid intent
+    const resInvalid = JSON.parse(api.resolve('{"identity":{"presence":"UnknownPresence"}}'));
+    document.getElementById("invalid-output").textContent = 
+      "INVALID: ok=" + resInvalid.ok + ", violations=" + (resInvalid.violations ? resInvalid.violations.length : 0);
+
+    // 3. Malformed JSON
+    const resMalformed = JSON.parse(api.resolve('{not valid json'));
+    document.getElementById("malformed-output").textContent = 
+      "MALFORMED: ok=" + resMalformed.ok + ", violations=" + (resMalformed.violations ? resMalformed.violations.length : 0);
+  </script>
+</body>
+</html>

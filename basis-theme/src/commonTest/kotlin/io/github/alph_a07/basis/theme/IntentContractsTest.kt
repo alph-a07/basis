@@ -220,7 +220,8 @@ internal class IntentContractsTest {
         assertEquals(OverrideMode.Both(Oklch(0.98f, 0.01f, 255f)), tokens.color?.surface?.default)
         assertEquals(DpValue(20f), tokens.spacing?.level4)
         assertNull(tokens.radius)
-        assertTrue(tokens.paths.isEmpty())
+        assertEquals(2, tokens.paths.size)
+        assertEquals(OverrideValue.Dp(DpValue(20f)), tokens.paths["spacing.level4"])
 
         val fromPaths =
             TokenOverrides.fromPaths(
