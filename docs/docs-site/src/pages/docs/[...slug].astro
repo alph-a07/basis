@@ -292,32 +292,36 @@ if (props.type === 'component') {
     margin-bottom: 0;
   }
 
-  .doc-body :global(code) {
+  .doc-body :global(code:not(pre code)) {
     font-family: var(--docs-font-mono, ui-monospace, monospace);
     font-size: 0.875em;
-    background: var(--docs-code-bg, rgba(255, 255, 255, 0.05));
-    border: 1px solid var(--docs-code-border, rgba(255, 255, 255, 0.1));
+    background: var(--docs-code-bg);
+    border: 1px solid var(--docs-code-border);
     border-radius: 4px;
     padding: 0.15em 0.35em;
-    color: var(--docs-accent, #58a6ff);
+    color: var(--docs-text);
   }
 
-  .doc-body :global(pre) {
-    background: var(--docs-code-bg, #161b22);
-    border: 1px solid var(--docs-code-border, #21262d);
+  .doc-body :global(pre:not(.mermaid)) {
+    background: var(--docs-code-bg) !important;
+    border: 1px solid var(--docs-code-border) !important;
     border-radius: 8px;
     padding: 0.85rem 1.15rem;
     overflow-x: auto;
     font-family: var(--docs-font-mono, ui-monospace, monospace);
     font-size: 0.875rem;
-    margin: 0.25rem 0;
+    line-height: 1.6;
+    margin: 0.35rem 0;
+    color: var(--docs-text);
   }
 
-  .doc-body :global(pre code) {
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--docs-text, #e6edf3);
+  .doc-body :global(pre:not(.mermaid) code) {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    color: inherit;
   }
 
   .doc-body :global(table) {

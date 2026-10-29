@@ -137,9 +137,9 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
 
 <style>
   .code-block-container {
-    border: 1px solid var(--docs-code-border, #21262d);
+    border: 1px solid var(--docs-code-border);
     border-radius: 6px;
-    background: var(--docs-code-bg, #161b22);
+    background: var(--docs-code-bg);
     overflow: hidden;
     margin: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -152,8 +152,8 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     justify-content: space-between;
     align-items: center;
     padding: 0.35rem 0.75rem;
-    background: var(--docs-surface-recessed, #0d0f12);
-    border-bottom: 1px solid var(--docs-code-border, #21262d);
+    background: var(--docs-surface-recessed);
+    border-bottom: 1px solid var(--docs-code-border);
     user-select: none;
   }
 
@@ -168,7 +168,7 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--docs-text-muted, #8b949e);
+    color: var(--docs-text-muted);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
@@ -176,7 +176,7 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     background: transparent;
     border: 1px solid transparent;
     border-radius: 4px;
-    color: var(--docs-text-muted, #8b949e);
+    color: var(--docs-text-muted);
     padding: 0.2rem 0.5rem;
     font-size: 0.75rem;
     font-weight: 600;
@@ -194,13 +194,13 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
   }
 
   .copy-button:hover {
-    color: var(--docs-text, #e6edf3);
-    background: var(--docs-card-hover, #21262d);
-    border-color: var(--docs-border-subtle, #30363d);
+    color: var(--docs-text);
+    background: var(--docs-card-hover);
+    border-color: var(--docs-border-subtle);
   }
 
   .copy-button:focus-visible {
-    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline: 2px solid var(--docs-focus-ring);
     outline-offset: 1px;
   }
 

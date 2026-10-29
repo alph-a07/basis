@@ -6,4 +6,13 @@ export default defineConfig({
   site: 'https://basis.alph-a07.github.io',
   integrations: [mdx()],
   output: 'static',
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      defaultColor: false,
+    },
+  },
 });
