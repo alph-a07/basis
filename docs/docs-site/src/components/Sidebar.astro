@@ -117,8 +117,24 @@ function isPathActive(itemHref: string): boolean {
           <h2 class="nav-group-title">Components</h2>
           <div class="component-families">
             {componentGroups.map((group) => (
-              <div class="nav-subgroup">
-                <h3 class="nav-subgroup-title">{group.family}</h3>
+              <details class="nav-subgroup" data-family={group.family.toLowerCase()} open>
+                <summary class="nav-subgroup-title">
+                  <span class="nav-subgroup-label">{group.family}</span>
+                  <svg
+                    class="nav-subgroup-chevron"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </summary>
                 <ul class="nav-group-list subgroup-list">
                   {group.components.map((comp) => {
                     const href = `/docs/components/${comp.id}`;
@@ -136,7 +152,7 @@ function isPathActive(itemHref: string): boolean {
                     );
                   })}
                 </ul>
-              </div>
+              </details>
             ))}
           </div>
         </div>
@@ -240,6 +256,33 @@ function isPathActive(itemHref: string): boolean {
       try {
         localStorage.setItem('basis-theme', newTheme);
       } catch (_) {}
+    });
+
+    // Subgroup collapse/expand state persistence
+    const subgroups = document.querySelectorAll<HTMLDetailsElement>('details.nav-subgroup');
+    subgroups.forEach((details) => {
+      const family = details.dataset.family;
+      if (!family) return;
+
+      const hasActiveChild = details.querySelector('.nav-link.active') !== null;
+      if (hasActiveChild) {
+        details.open = true;
+      } else {
+        try {
+          const saved = localStorage.getItem(`basis-subgroup-${family}`);
+          if (saved === 'closed') {
+            details.open = false;
+          } else if (saved === 'open') {
+            details.open = true;
+          }
+        } catch (_) {}
+      }
+
+      details.addEventListener('toggle', () => {
+        try {
+          localStorage.setItem(`basis-subgroup-${family}`, details.open ? 'open' : 'closed');
+        } catch (_) {}
+      });
     });
   }
 
@@ -396,7 +439,7 @@ function isPathActive(itemHref: string): boolean {
   .component-families {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.35rem;
     margin-top: 0.25rem;
   }
 
@@ -406,14 +449,55 @@ function isPathActive(itemHref: string): boolean {
   }
 
   .nav-subgroup-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: 0.6875rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--docs-text-muted, #8b949e);
-    padding: 0.15rem 0.5rem;
-    margin: 0.15rem 0 0.15rem 0.15rem;
-    opacity: 0.85;
+    padding: 0.2rem 0.5rem;
+    margin: 0.1rem 0;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    transition: color 0.12s ease, background 0.12s ease;
+  }
+
+  .nav-subgroup-title::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-subgroup-title:hover {
+    color: var(--docs-text, #e6edf3);
+    background: color-mix(in srgb, var(--docs-text-muted, #8b949e) 8%, transparent);
+  }
+
+  .nav-subgroup-title:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline-offset: -1px;
+  }
+
+  .nav-subgroup-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .nav-subgroup-chevron {
+    color: var(--docs-text-muted, #8b949e);
+    transition: transform 0.15s ease, color 0.12s ease;
+    flex-shrink: 0;
+  }
+
+  .nav-subgroup[open] > .nav-subgroup-title .nav-subgroup-chevron {
+    transform: rotate(90deg);
+  }
+
+  .nav-subgroup-title:hover .nav-subgroup-chevron {
+    color: var(--docs-text, #e6edf3);
   }
 
   .subgroup-list {
@@ -422,6 +506,9 @@ function isPathActive(itemHref: string): boolean {
     border-left: 1px solid var(--docs-border-subtle, #21262d);
     display: flex;
     flex-direction: column;
+    gap: 0.1rem;
+    margin-top: 0.15rem;
+  }
     gap: 0.1rem;
   }
 
