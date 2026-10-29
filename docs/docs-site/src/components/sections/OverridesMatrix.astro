@@ -212,7 +212,7 @@ const matrix = overrides?.matrix || [];
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     border-left: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
     border-right: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
-    border-radius: 8px;
+    border-radius: 0;
     background: transparent;
     box-sizing: border-box;
   }
@@ -251,14 +251,6 @@ const matrix = overrides?.matrix || [];
     white-space: nowrap;
   }
 
-  .matrix-table th:first-child {
-    border-top-left-radius: 7px;
-  }
-
-  .matrix-table th:last-child {
-    border-top-right-radius: 7px;
-  }
-
   :global([data-theme="light"]) .matrix-table th {
     background: var(--docs-surface-recessed, #f6f8fa);
   }
@@ -282,14 +274,6 @@ const matrix = overrides?.matrix || [];
 
   .matrix-table tr:last-child td {
     border-bottom: none;
-  }
-
-  .matrix-table tr:last-child td:first-child {
-    border-bottom-left-radius: 7px;
-  }
-
-  .matrix-table tr:last-child td:last-child {
-    border-bottom-right-radius: 7px;
   }
 
   .matrix-variant-cell code,

@@ -185,7 +185,7 @@ const { signatures = [], samples = [] } = Astro.props;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     border-left: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
     border-right: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
-    border-radius: 8px;
+    border-radius: 0;
     background: transparent;
     box-sizing: border-box;
   }
@@ -228,14 +228,6 @@ const { signatures = [], samples = [] } = Astro.props;
     white-space: nowrap;
   }
 
-  .params-table th:first-child {
-    border-top-left-radius: 7px;
-  }
-
-  .params-table th:last-child {
-    border-top-right-radius: 7px;
-  }
-
   :global([data-theme="light"]) .params-table th {
     background: var(--docs-surface-recessed, #f6f8fa);
   }
@@ -260,14 +252,6 @@ const { signatures = [], samples = [] } = Astro.props;
 
   .params-table tr:last-child td {
     border-bottom: none;
-  }
-
-  .params-table tr:last-child td:first-child {
-    border-bottom-left-radius: 7px;
-  }
-
-  .params-table tr:last-child td:last-child {
-    border-bottom-right-radius: 7px;
   }
 
   .param-name-cell code {
