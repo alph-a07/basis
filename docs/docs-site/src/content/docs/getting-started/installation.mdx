@@ -7,18 +7,16 @@ description: Add Basis dependencies, repositories, and lint checks to your Andro
 ---
 import DocSnippet from '../../../components/DocSnippet.astro';
 
-Add Basis dependencies to your Gradle build scripts to access foundation modifiers, token resolution, and build-time lint enforcement in your Android app.
+Add three Gradle dependencies and you are ready to call `BasisTheme`. This page covers tool requirements, repository setup, and the ProGuard posture.
 
 ## Requirements
-
-Ensure your build environment meets the following baseline tool versions:
 
 | Tool | Minimum Version | Notes |
 | :--- | :--- | :--- |
 | **JDK** | 17 | JDK 21 recommended |
 | **Android Gradle Plugin (AGP)** | 8.8.0 | Compatible with Gradle 8.11+ / 9.2+ |
 | **Kotlin** | 2.0.0 | Compatible with Kotlin 2.1+ and Compose Compiler |
-| **Android SDK** | `minSdk 24`, `compileSdk 37` | Target SDK `targetSdk 36` |
+| **Android SDK** | `minSdk 24`, `compileSdk 37` | `targetSdk 36` |
 
 ## Repository Setup
 
@@ -41,7 +39,7 @@ Basis publishes three artifacts:
 
 - **`basis-components`**: Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals.
 - **`basis-theme`**: Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees.
-- **`basis-lint`**: Android Lint checks enforcing typography units (`sp` only for font size, line height, and letter spacing) at build time.
+- **`basis-lint`**: Android Lint check (`SpOnlyFontSizeDetector`) enforcing `sp` units for font size, line height, and letter spacing.
 
 Add the dependencies to your application module's `build.gradle.kts`:
 
@@ -49,7 +47,7 @@ Add the dependencies to your application module's `build.gradle.kts`:
 
 ## ProGuard and R8
 
-Basis relies on zero reflection. All token structures and modifiers are pure Kotlin classes. Verified with a full-mode R8 release build of `demo-app` without requiring custom `-keep` rules.
+Basis uses no reflection. All token structures and modifiers are pure Kotlin classes. Verified with a full-mode R8 release build of `demo-app` without requiring custom `-keep` rules.
 
 ## Verify the Installation
 
@@ -59,7 +57,7 @@ Compile the debug variant from your terminal:
 ./gradlew assembleDebug
 ```
 
-You should see `BUILD SUCCESSFUL`. The compiler resolves `BasisTheme` and registers `basis-lint` checks in your build pipeline.
+You should see `BUILD SUCCESSFUL`. The compiler resolves `BasisTheme` and registers the `basis-lint` typography check in your build pipeline.
 
 ## Next Step
 

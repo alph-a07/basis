@@ -7,41 +7,16 @@ description: Learn how Basis derives Jetpack Compose design tokens and accessibl
 ---
 import DocSnippet from '../../../components/DocSnippet.astro';
 
-Basis provides a complete token system and accessible Jetpack Compose foundation modifiers derived from a four-part intent. You declare your brand color, mood, and product domain once, and get light and dark themes with verified contrast, 48dp touch targets, and scalable typography.
-
-<div class="visual-preview-card">
-  <div class="preview-split">
-    <div class="preview-pane light">
-      <div class="preview-header-label">Light Theme • Brand #0284C7</div>
-      <div class="preview-surface-card">
-        <strong>Surface Elevated (L = 1.00)</strong>
-        <span>Content body text meeting ≥ 4.5:1 contrast floor</span>
-      </div>
-      <div>
-        <span class="mock-button brand">Primary Action</span>
-      </div>
-    </div>
-    <div class="preview-pane dark">
-      <div class="preview-header-label">Dark Theme • Brand #0284C7</div>
-      <div class="preview-surface-card">
-        <strong>Surface Elevated (L = 0.22)</strong>
-        <span>Content body text meeting ≥ 4.5:1 contrast floor</span>
-      </div>
-      <div>
-        <span class="mock-button brand">Primary Action</span>
-      </div>
-    </div>
-  </div>
-</div>
+Declare your brand color, mood, and product domain once. Basis derives light and dark themes with verified WCAG contrast, 48dp touch targets, and scalable typography — no manual token arithmetic.
 
 ## How Basis Works
 
 Basis structures design tokens around four functional pillars:
 
-1. **Intent-Driven Derivation**: You provide high-level intent—such as a primary brand color and a mood preset. The resolution engine derives complete color ladders, type scales, spacing steps, and elevation curves.
-2. **Accessible Contrast Floors**: Contrast thresholds (≥ 4.5:1 for body text, ≥ 3:1 for controls) are evaluated during resolution. If an input combination produces insufficient contrast, the resolver adjusts lightness to meet accessibility standards.
-3. **Perceptual Dark Mode**: Rather than relying on drop shadows that disappear on dark backgrounds, dark surfaces step up in lightness (0.12 / 0.16 / 0.22) instead of using shadows.
-4. **Touch Targets**: Foundation modifiers and components apply a 48dp minimum by default to ensure touch accessibility.
+1. **Intent-Driven Derivation**: You supply high-level intent — a brand color, a mood preset, and a product domain. The resolution engine derives complete color ladders, type scales, spacing steps, and elevation curves from that input.
+2. **Accessible Contrast Floors**: Contrast thresholds (≥ 4.5:1 for body text, ≥ 3:1 for controls) are evaluated during resolution. If an input combination produces insufficient contrast, the resolver adjusts lightness to meet the floor.
+3. **Perceptual Dark Mode**: Shadows are hard to see on dark backgrounds, so dark surfaces step up in lightness (0.12 / 0.16 / 0.22) instead of using shadows.
+4. **Touch Targets**: Foundation modifiers and components apply a 48dp minimum by default.
 
 ## Repository Modules and Artifacts
 
@@ -51,8 +26,8 @@ The Basis repository is organized into four modules, publishing three artifacts:
 | :--- | :--- | :--- |
 | `basis-components` | `io.github.alph_a07:basis-components` | Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals. |
 | `basis-theme` | `io.github.alph_a07:basis-theme` | Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees. |
-| `basis-lint` | `io.github.alph_a07:basis-lint` | Android Lint checks enforcing typography units (`sp` only for font size, line height, and letter spacing) at build time. |
-| `demo-app` | *(Sample application)* | Reference Android application used to verify integrations, component behavior, and compile documentation snippets. |
+| `basis-lint` | `io.github.alph_a07:basis-lint` | Android Lint check (`SpOnlyFontSizeDetector`) enforcing `sp` units for font size, line height, and letter spacing. |
+| `demo-app` | *(Sample application)* | Reference Android app used to verify integrations and compile documentation snippets. |
 
 ## Quick Example
 

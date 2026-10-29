@@ -261,9 +261,9 @@ if (props.type === 'component') {
 
   /* Guide Visual Previews & Swatches */
   .doc-body :global(.visual-preview-card) {
-    border: 1px solid var(--docs-border-subtle, #21262d);
+    border: 1px solid var(--docs-border-subtle);
     border-radius: 8px;
-    background: var(--docs-surface-sunken, #090d13);
+    background: var(--docs-surface-recessed);
     padding: 1.25rem;
     margin: 1.25rem 0;
     overflow: hidden;
@@ -275,19 +275,27 @@ if (props.type === 'component') {
     gap: 1rem;
   }
 
+  /* Base pane: adapts to the active site theme */
   .doc-body :global(.preview-pane) {
     border-radius: 6px;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    border: 1px solid var(--docs-border-subtle, #30363d);
+    background: var(--docs-surface);
+    color: var(--docs-text);
+    border: 1px solid var(--docs-border-subtle);
   }
 
+  /* Explicit .light/.dark classes: used only for intentional dual-mode comparisons */
   .doc-body :global(.preview-pane.light) {
     background: #f8fafc;
     color: #0f172a;
     border-color: #cbd5e1;
+  }
+
+  .doc-body :global(.preview-pane.light .preview-header-label) {
+    color: #64748b;
   }
 
   .doc-body :global(.preview-pane.dark) {
@@ -296,12 +304,17 @@ if (props.type === 'component') {
     border-color: #1e293b;
   }
 
+  .doc-body :global(.preview-pane.dark .preview-header-label) {
+    color: #94a3b8;
+  }
+
   .doc-body :global(.preview-header-label) {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    opacity: 0.7;
+    color: var(--docs-text-muted);
+    opacity: 0.85;
     margin-bottom: 0.25rem;
   }
 
@@ -311,8 +324,11 @@ if (props.type === 'component') {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+    background: var(--docs-bg);
+    border: 1px solid var(--docs-border-subtle);
   }
 
+  /* Explicit mode overrides for dual-mode comparisons */
   .doc-body :global(.preview-pane.light .preview-surface-card) {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -332,8 +348,8 @@ if (props.type === 'component') {
   .doc-body :global(.swatch-card) {
     border-radius: 6px;
     padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--docs-border-subtle, #21262d);
+    background: var(--docs-surface);
+    border: 1px solid var(--docs-border-subtle);
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
@@ -343,19 +359,19 @@ if (props.type === 'component') {
     height: 40px;
     border-radius: 4px;
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--docs-border-muted);
   }
 
   .doc-body :global(.swatch-name) {
     font-size: 0.8125rem;
     font-weight: 600;
     font-family: var(--docs-font-mono, ui-monospace, monospace);
-    color: var(--docs-text-strong, #ffffff);
+    color: var(--docs-text);
   }
 
   .doc-body :global(.swatch-sub) {
     font-size: 0.6875rem;
-    color: var(--docs-text-muted, #8b949e);
+    color: var(--docs-text-muted);
   }
 
   .doc-body :global(.mock-button) {
@@ -578,26 +594,52 @@ if (props.type === 'component') {
 
   .doc-body :global(table) {
     width: 100%;
+    table-layout: auto;
     border-collapse: collapse;
-    margin: 0.35rem 0;
+    margin: 0.5rem 0;
     font-size: 0.875rem;
+    border-top: 1px solid var(--docs-border-subtle);
+    border-bottom: 1px solid var(--docs-border-subtle);
   }
 
   .doc-body :global(th),
   .doc-body :global(td) {
     padding: 0.55rem 0.75rem;
     text-align: left;
-    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-bottom: 1px solid var(--docs-border-subtle);
+    vertical-align: top;
   }
 
   .doc-body :global(th) {
-    background: var(--docs-surface-sunken, #161b22);
+    background: var(--docs-surface-recessed);
     font-weight: 600;
-    color: var(--docs-text, #e6edf3);
+    font-size: 0.8125rem;
+    color: var(--docs-text-muted);
+    white-space: nowrap;
   }
 
-  .doc-body :global(tr:nth-child(even)) {
-    background: var(--docs-table-row-alt, rgba(255, 255, 255, 0.015));
+  .doc-body :global(td) {
+    color: var(--docs-text);
+    background: transparent;
+    line-height: 1.5;
+    transition: background 0.12s ease;
+  }
+
+  .doc-body :global(tbody tr:nth-child(even) td) {
+    background: var(--docs-table-row-alt);
+  }
+
+  .doc-body :global(tbody tr:hover td) {
+    background: var(--docs-table-row-hover);
+  }
+
+  .doc-body :global(tr:last-child td) {
+    border-bottom: none;
+  }
+
+  .doc-body :global(td code),
+  .doc-body :global(th code) {
+    font-weight: 600;
   }
 
   .doc-body :global(.mermaid-container) {

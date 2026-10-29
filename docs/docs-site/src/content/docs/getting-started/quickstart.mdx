@@ -7,29 +7,17 @@ description: Initialize the root Basis theme and render styled, accessible compo
 ---
 import DocSnippet from '../../../components/DocSnippet.astro';
 
-Wrap your app hierarchy with `BasisTheme` to access semantic design tokens and build layouts using foundation modifiers.
-
-<div class="visual-preview-card">
-  <div class="preview-header-label">Result Preview • QuickstartApp</div>
-  <div class="preview-pane dark" style="max-width: 360px;">
-    <div class="preview-surface-card" style="border-radius: 8px;">
-      <span style="font-size: 1rem; font-weight: 600;">Welcome to Basis</span>
-    </div>
-    <div style="margin-top: 0.5rem;">
-      <span class="mock-button brand" style="border-radius: 8px;">Get Started</span>
-    </div>
-  </div>
-</div>
+Wrap your app root with `BasisTheme`, use `basisSurface` on containers, and call `BasisButton` for interactive targets. You get semantic tokens, verified contrast, and 48dp touch targets without any additional configuration.
 
 ## 1. Wrap Your Hierarchy in BasisTheme
 
-Place `BasisTheme` at the root of your Compose hierarchy. This provides ambient token locals for colors, typography, spacing, corner radii, and depth down the composition tree:
+Place `BasisTheme` at the root of your Compose hierarchy. It provides ambient token locals for colors, typography, spacing, corner radii, and depth down the composition tree:
 
 <DocSnippet name="quickstart_app" />
 
 ## 2. Access Semantic Tokens
 
-Access resolved tokens directly through `BasisTheme`:
+Read resolved tokens directly through `BasisTheme`:
 
 ```kotlin
 Modifier.basisSurface(
@@ -40,18 +28,18 @@ Modifier.basisSurface(
 
 ## 3. Apply Foundation Modifiers
 
-Basis foundation modifiers bind component layouts to theme tokens:
+Basis foundation modifiers bind layouts to theme tokens:
 
 - **`Modifier.basisSurface(shape, color)`**: Clips, colors, and applies depth shadows matching theme tokens.
-- **`Modifier.basisMinTouchTarget()`**: Enforces a 48dp minimum accessible touch target bounding box.
+- **`Modifier.basisMinTouchTarget()`**: Enforces a 48dp minimum touch target bounding box.
 - **`Modifier.basisClickable(onClick)`**: Attaches accessible click semantics and interaction indication.
 
 ## Verify the Result
 
-Run your app in the Android emulator or inspect your `@Preview` composable in Android Studio.
+Run your app in an emulator or open the `@Preview` in Android Studio.
 
-You should see an elevated container displaying "Welcome to Basis" and a primary "Get Started" action button styled with your brand fill, 8dp corner radius, and a 48dp minimum touch target.
+You should see an elevated container displaying "Welcome to Basis" and a "Get Started" button styled with your brand fill, 8dp corner radius, and a 48dp minimum touch target — with no additional theme configuration.
 
 ## Next Step
 
-Customize the color palette to match your company assets in [Set your brand color](/docs/theming/set-brand).
+Customize the color palette to match your brand in [Set your brand color](/docs/theming/set-brand).
