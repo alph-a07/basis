@@ -343,4 +343,97 @@ if (props.type === 'component') {
   .doc-body :global(tr:nth-child(even)) {
     background: var(--docs-table-row-alt, rgba(255, 255, 255, 0.015));
   }
+
+  .doc-body :global(.mermaid-container) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--docs-code-bg, #161b22);
+    border: 1px solid var(--docs-code-border, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem 1rem;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+  }
+
+  .doc-body :global(.mermaid-container svg) {
+    max-width: 100%;
+    height: auto;
+  }
 </style>
+
+<script>
+  import mermaid from 'mermaid';
+
+  let isRendering = false;
+
+  async function renderMermaid() {
+    if (isRendering) return;
+    const blocks = document.querySelectorAll<HTMLElement>('.doc-body pre > code.language-mermaid');
+    if (blocks.length === 0) return;
+
+    isRendering = true;
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        darkMode: isDark,
+        background: 'transparent',
+        primaryColor: isDark ? '#1e242c' : '#ffffff',
+        primaryTextColor: isDark ? '#e6edf3' : '#1f2328',
+        primaryBorderColor: isDark ? '#38434f' : '#d0d7de',
+        lineColor: isDark ? '#58a6ff' : '#0969da',
+        secondaryColor: isDark ? '#161b22' : '#f6f8fa',
+        tertiaryColor: isDark ? '#0d1117' : '#ffffff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontSize: '13px',
+      },
+    });
+
+    try {
+      for (let i = 0; i < blocks.length; i++) {
+        const codeEl = blocks[i];
+        const preEl = codeEl.closest('pre');
+        if (!preEl) continue;
+
+        const rawCode = codeEl.textContent?.trim() || '';
+        if (!rawCode) continue;
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        container.setAttribute('data-original-code', rawCode);
+        const id = `mermaid-svg-${Date.now()}-${i}`;
+        const { svg } = await mermaid.render(id, rawCode);
+        container.innerHTML = svg;
+        preEl.replaceWith(container);
+      }
+    } catch (e) {
+      console.warn('Failed to render Mermaid diagram:', e);
+    } finally {
+      isRendering = false;
+    }
+  }
+
+  renderMermaid();
+  document.addEventListener('astro:page-load', renderMermaid);
+
+  const themeObserver = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+        const containers = document.querySelectorAll<HTMLElement>('.doc-body .mermaid-container[data-original-code]');
+        containers.forEach((c) => {
+          const pre = document.createElement('pre');
+          const code = document.createElement('code');
+          code.className = 'language-mermaid';
+          code.textContent = c.getAttribute('data-original-code') || '';
+          pre.appendChild(code);
+          c.replaceWith(pre);
+        });
+        renderMermaid();
+      }
+    }
+  });
+  themeObserver.observe(document.documentElement, { attributes: true });
+</script>

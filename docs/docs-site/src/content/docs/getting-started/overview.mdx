@@ -3,60 +3,46 @@ title: Overview
 section: Getting Started
 order: 1
 status: published
-description: Introduction to Basis, a modern, accessible Jetpack Compose design system.
+description: The modern, deterministic Jetpack Compose design system.
 ---
 
-Basis is a modern, accessible design system for Jetpack Compose. It gives you ready-to-use UI components, foundation modifiers, and an intelligent theming engine that delivers visual harmony and effortless dark mode support.
+Basis is a modern design system for Jetpack Compose that automates token derivation, dark mode harmony, and WCAG accessibility compliance from high-level brand intent.
 
-Instead of hand-tuning dozens of discrete color codes and wrestling with inconsistent elevation across light and dark modes, you define your brand identity and aesthetic preferences. Basis automatically generates a complete, visually balanced theme where every surface, text style, and interaction state works together out of the box.
+Instead of handcrafting hundreds of static color hexes and wrestling with broken dark-mode contrast, you declare your brand seed and aesthetic goals. Basis computes a mathematically verified design system with guaranteed contrast, standardized touch targets, and natural tonal depth.
 
-## Why Choose Basis?
+```mermaid
+flowchart LR
+    A["<b>1. Aesthetic Intent</b><br/>Seed Color • Mood • Domain"] --> B["<b>2. Basis Engine</b><br/>OKLCH Math • Contrast Audit"]
+    B --> C["<b>3. Compose UI</b><br/>BasisTheme • Components • Modifiers"]
+```
 
-Building consistent, accessible Android user interfaces with standard Material or custom XML styles often leads to common pain points:
+## Core Tenets
 
-- **Manual Color Palette Management**: Maintaining matching shades for disabled, pressed, hovered, and container states across light and dark themes requires extensive manual tuning.
-- **Inconsistent Dark Mode**: In dark mode, traditional drop shadows disappear against dark backgrounds, making surface elevation hard to distinguish without careful tonal adjustments.
-- **Accessibility Oversight**: Ensuring sufficient color contrast, keyboard focus indicators, and 48dp touch targets on every interactive element requires constant vigilance and testing.
+Basis is engineered around three non-negotiable guarantees:
 
-Basis solves these problems by handling the visual design and accessibility rules for you:
+1. **System Over Manual Specs**: Define visual intent once. All container fills, interactive state layers (hover, press, focus, disable), and border hairlines derive automatically without manual synchronization.
+2. **Accessible by Construction**: Contrast ratios ($\ge 4.5:1$ for body text, $\ge 3:1$ for controls) are enforced algorithmically during theme resolution. Interactive elements strictly enforce 48dp physical touch target floors.
+3. **Tonal Dark Mode**: Replaces invisible drop shadows with luminous surface lightness steps, creating natural physical depth on OLED and LCD screens alike.
 
-- **Cohesive by Default**: All component states (enabled, hovered, pressed, focused, disabled) inherit their appearance from your theme, ensuring uniform feedback across your entire application.
-- **Tonal Elevation in Dark Mode**: Surfaces use subtle luminance steps rather than drop shadows in dark mode, maintaining clear depth and visual hierarchy on OLED and LCD screens alike.
-- **Accessible by Construction**: Every interactive component enforces a 48dp minimum touch target, high-contrast focus rings for hardware keyboards and accessibility services, and verified color contrast.
+## What's Included
 
-## What's in the Box?
+The system ships in three cohesive layers designed for Android and multiplatform projects:
 
-Basis provides everything needed to build production-grade Compose applications:
+| Layer | Module | Description |
+| :--- | :--- | :--- |
+| **Components** | `basis-components` | Accessible composables (`BasisButton`, `BasisDivider`) with built-in state machines. |
+| **Foundation** | `basis-components` | Atomic modifiers (`Modifier.surface()`, `.focusRing()`, `.touchTarget()`) for custom layouts. |
+| **Theming Engine** | `basis-theme` | Pure KMP resolution compiler generating token trees from intent. |
+| **Lint Rules** | `basis-lint` | Detekt rules preventing hardcoded hexes, missing touch targets, and convention drift. |
 
-### 1. UI Components
+## Quick Example
 
-Production-ready composables designed for high usability and consistent visual hierarchy:
-- **`BasisButton`**: Primary, secondary, outline, and ghost variants with integrated loading and icon support.
-- **`BasisDivider`**: Subtle, responsive line separators that align with your layout spacing scale.
-
-### 2. Foundation Modifiers
-
-Modular Jetpack Compose modifiers that bring design system behaviors to any custom layout:
-- **`Modifier.surface()`**: Applies theme-aware background colors, corner shapes, borders, and tonal elevation.
-- **`Modifier.focusRing()`**: Renders a crisp 2px focus indicator with high-contrast outlines for accessible keyboard navigation.
-- **`Modifier.touchTarget()`**: Automatically expands tap boundaries to meet the 48dp physical target requirement without altering your visual layout.
-
-### 3. Design Tokens
-
-A centralized token hierarchy accessible from any `@Composable` via `BasisTheme`:
-- **Colors**: Semantic roles (`primary`, `surface`, `outline`, `onSurface`, etc.) for light and dark modes.
-- **Typography**: Complete type scale from display headlines to captions.
-- **Spacing**: Consistent 4dp-based spacing scale (`xs`, `sm`, `md`, `lg`, `xl`).
-- **Shapes**: Corner radii from sharp to fully rounded pills.
-- **Depth & Motion**: Elevation levels and choreographed animation easings.
-
-## A Quick Taste
-
-Here is what building with Basis looks like in your Jetpack Compose code:
+Wrap your Compose hierarchy in `BasisTheme` to access semantic tokens and components:
 
 ```kotlin
 @Composable
 fun App() {
+    // Automatically synchronizes with Android system light/dark mode
     BasisTheme(mode = ThemeMode.System) {
         Column(
             modifier = Modifier
@@ -64,28 +50,27 @@ fun App() {
                 .padding(BasisTheme.spacing.lg)
         ) {
             Text(
-                text = "Dashboard",
-                style = BasisTheme.typography.headlineMedium,
+                text = "Workspace",
+                style = BasisTheme.typography.headlineLarge,
                 color = BasisTheme.colors.onSurface
             )
 
             Spacer(modifier = Modifier.height(BasisTheme.spacing.md))
 
             BasisButton(
-                onClick = { /* Handle action */ },
+                onClick = { /* trigger action */ },
                 variant = BasisButtonDefaults.variantPrimary()
             ) {
-                Text("Get Started")
+                Text("Deploy Application")
             }
         }
     }
 }
 ```
 
-## Next Steps
+## Documentation Roadmap
 
-Get up and running with Basis in your project:
-
-1. [Installation](/docs/getting-started/installation): Add Basis dependencies to your Gradle build.
-2. [Quickstart](/docs/getting-started/quickstart): Set up your root theme and build your first screen.
-3. [Theme Definition](/docs/getting-started/theme-definition): Customize your brand color, mood, and typography.
+- [Installation](/docs/getting-started/installation): Add Basis dependencies and plugins to Gradle.
+- [Quickstart](/docs/getting-started/quickstart): Build your first themed screen in under five minutes.
+- [Theming Architecture](/docs/theming/overview): Explore the intent-to-token compilation model.
+- [Components](/docs/components/button): Inspect production-ready composables and API contracts.

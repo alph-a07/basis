@@ -3,105 +3,113 @@ title: ThemeMode
 section: Theming
 order: 4
 status: published
-description: Working with Light, Dark, and System theme modes in Basis.
+description: Managing Light, Dark, and System theme modes with automatic tonal elevation.
 ---
 
-Basis makes supporting dark mode effortless. With the `ThemeMode` configuration, your application seamlessly transitions between bright, crisp light surfaces and rich, comfortable dark surfaces without requiring duplicate styling code.
+Basis treats Light and Dark modes as two distinct perceptual environments rather than simple color inversions. With `ThemeMode`, your application seamlessly toggles between daytime clarity and comfortable nighttime hierarchy.
+
+```mermaid
+flowchart LR
+    subgraph Light["☀️ Light Mode"]
+        L1["Canvas (White)"]
+        L2["Card + Ambient Shadow"]
+        L3["Dialog + Key Shadow"]
+        L1 --> L2 --> L3
+    end
+
+    subgraph Dark["🌙 Dark Mode (Tonal Elevation)"]
+        D1["Canvas (L: 0.12)"]
+        D2["Card (L: 0.16)"]
+        D3["Dialog (L: 0.22)"]
+        D1 --> D2 --> D3
+    end
+```
 
 ## The `ThemeMode` Options
 
-The `ThemeMode` enum controls which color palette is active:
-
 ```kotlin
 enum class ThemeMode {
-    Light,  // Forces the light palette
-    Dark,   // Forces the dark palette
-    System  // Automatically tracks the Android system setting
+    Light,  // Forces light palette
+    Dark,   // Forces dark palette with tonal elevation
+    System  // Automatically tracks the Android OS system setting
 }
 ```
 
-- **`ThemeMode.System` (Recommended)**: Follows the user's device settings. If the user toggles dark mode in their Android system settings or sets a nighttime schedule, your app adapts instantly.
-- **`ThemeMode.Light`**: Renders the light palette regardless of the device setting.
-- **`ThemeMode.Dark`**: Renders the dark palette regardless of the device setting.
+- **`ThemeMode.System` (Recommended)**: Follows the device's system setting, adapting automatically when the user toggles dark mode in Quick Settings or on a sunset schedule.
+- **`ThemeMode.Light`**: Renders the light palette regardless of device settings.
+- **`ThemeMode.Dark`**: Renders the dark palette with tonal elevation regardless of device settings.
 
-## Light vs Dark Mode Paradigms
+## Tonal Elevation in Dark Mode
 
-Basis treats light and dark modes as distinct visual environments rather than simple color inversions:
+Traditional drop shadows disappear on dark canvases, causing cards and modal dialogs to look flat and indistinguishable. Basis solves this through **Tonal Elevation**:
 
-### Light Mode
-- **Surfaces**: Crisp, bright backgrounds (`#FFFFFF` to light grays) that maximize daytime readability.
-- **Elevation**: Physical depth is expressed through natural ambient and key drop shadows (`BasisTheme.depth`).
-- **Borders**: Hairline borders provide clean separation between cards and backgrounds.
+| Elevation Level | Light Mode Representation | Dark Mode Representation | Use Case |
+| :--- | :--- | :--- | :--- |
+| **`BasisTheme.depth.level0`** | Flat surface, no shadow | Base canvas luminance (`L: 0.12`) | Background screen scaffold |
+| **`BasisTheme.depth.level1`** | Subtle 1dp ambient shadow | First tonal step (`L: 0.15`) | List items, inline banners |
+| **`BasisTheme.depth.level2`** | 3dp key & ambient shadow | Elevated card step (`L: 0.18`) | Interactive cards, tiles |
+| **`BasisTheme.depth.level3`** | 6dp prominent shadow | Prominent tonal step (`L: 0.22`) | Floating action bars, menus |
+| **`BasisTheme.depth.level4`** | 12dp modal shadow | Highest luminous step (`L: 0.26`) | Modal dialogs, bottom sheets |
 
-### Dark Mode
-- **Surfaces**: Deep, restful tones that prevent eye strain and save battery on OLED displays.
-- **Tonal Elevation**: Because drop shadows are invisible against dark backgrounds, elevated surfaces (such as cards, menus, and dialogs) are rendered with subtle, luminous lightness steps. A modal sheet appears visibly lighter than the background canvas, preserving clear visual hierarchy.
-- **Border Softening**: Borders use subdued alpha values in dark mode to prevent harsh wireframe effects while maintaining clean boundaries.
+Because elevation is expressed through semantic tokens, you never need to write conditional `if (isDark)` statements in your Compose UI.
 
-## Implementing Theme Switching in Compose
+## Implementing Theme Toggling
 
-Here is how you can implement an in-app theme toggle with persistent state:
+Here is an idiomatic Jetpack Compose pattern for an in-app theme switcher:
 
 ```kotlin
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.material3.RadioButton
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import io.github.alph_a07.basis.components.theme.BasisTheme
-import io.github.alph_a07.basis.theme.core.ThemeMode
-
 @Composable
-fun ThemedApplication() {
-    // In production, back this state with DataStore or SharedPreferences
-    var currentMode by remember { mutableStateOf(ThemeMode.System) }
+fun App() {
+    var themeMode by remember { mutableStateOf(ThemeMode.System) }
 
-    BasisTheme(mode = currentMode) {
-        ThemeSettingsScreen(
-            selectedMode = currentMode,
-            onModeSelect = { currentMode = it }
-        )
+    BasisTheme(mode = themeMode) {
+        Scaffold { padding ->
+            ThemeSelector(
+                selectedMode = themeMode,
+                onModeSelected = { themeMode = it },
+                modifier = Modifier.padding(padding)
+            )
+        }
     }
 }
 
 @Composable
-fun ThemeSettingsScreen(
+fun ThemeSelector(
     selectedMode: ThemeMode,
-    onModeSelect: (ThemeMode) -> Unit
+    onModeSelected: (ThemeMode) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(BasisTheme.spacing.lg)
-    ) {
+    Column(modifier = modifier.padding(BasisTheme.spacing.md)) {
         Text(
             text = "Appearance",
-            style = BasisTheme.typography.titleLarge,
+            style = BasisTheme.typography.titleMedium,
             color = BasisTheme.colors.onSurface
         )
 
-        Spacer(modifier = Modifier.height(BasisTheme.spacing.md))
+        Spacer(modifier = Modifier.height(BasisTheme.spacing.sm))
 
         ThemeMode.entries.forEach { mode ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = BasisTheme.spacing.xs),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .clickable { onModeSelected(mode) }
+                    .padding(vertical = BasisTheme.spacing.sm),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = when (mode) {
-                        ThemeMode.System -> "Follow system"
-                        ThemeMode.Light -> "Always light"
-                        ThemeMode.Dark -> "Always dark"
+                        ThemeMode.System -> "Follow system settings"
+                        ThemeMode.Light -> "Light theme"
+                        ThemeMode.Dark -> "Dark theme"
                     },
-                    style = BasisTheme.typography.bodyLarge,
+                    style = BasisTheme.typography.bodyMedium,
                     color = BasisTheme.colors.onSurface
                 )
 
                 RadioButton(
                     selected = (selectedMode == mode),
-                    onClick = { onModeSelect(mode) }
+                    onClick = { onModeSelected(mode) }
                 )
             }
         }
@@ -109,12 +117,7 @@ fun ThemeSettingsScreen(
 }
 ```
 
-## Best Practices for Consumers
+## Next Steps
 
-To ensure your UI transitions seamlessly between theme modes:
-
-1. **Always use semantic color tokens**: Reference `BasisTheme.colors.surface`, `BasisTheme.colors.onSurface`, and `BasisTheme.colors.primary` rather than hardcoded hex colors like `Color.White` or `Color(0xFF1E1E1E)`.
-2. **Rely on `LocalBasisContentColor`**: When you place text or icons inside a `Surface`, their color automatically adapts to match the background surface's contrast requirements.
-3. **Use semantic depth levels**: Apply `BasisTheme.depth.level1`, `level2`, or `level3` for elevation; Basis will handle shadows in light mode and tonal lightness in dark mode automatically.
-
-Next, learn how Basis derives colors perceptually in [OKLCH Color](/docs/theming/oklch).
+- [OKLCH Color](/docs/theming/oklch): Learn how the color engine derives uniform lightness across all hues.
+- [Surface Foundation](/docs/foundation/surface): Inspect how surfaces coordinate background tone and content color.

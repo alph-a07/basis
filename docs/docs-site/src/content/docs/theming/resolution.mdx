@@ -3,72 +3,79 @@ title: Resolution and Reports
 section: Theming
 order: 6
 status: published
-description: How Basis compiles your intent into resolved tokens, validates contrast, and reports diagnostics.
+description: How ThemeResolver validates intent, verifies contrast floors, and emits diagnostic reports.
 ---
 
-When you configure a `BasisIntent`, the Basis theme engine compiles your preferences into a `ResolvedTheme`. This process ensures that every token used in your Jetpack Compose application is mathematically validated, accessible, and ready for production.
+When your application initializes `BasisTheme`, the `ThemeResolver` compiles your `BasisIntent` into a `ResolvedThemePair` containing concrete light and dark token palettes, accompanied by a diagnostic `ResolutionReport`.
 
-## The Resolution Flow
-
-Theme resolution transforms your high-level intent into the concrete design tokens you use in your app:
-
-1. **Input Validation**: Verifies that seed colors and aesthetic knobs are within valid ranges.
-2. **Palette Derivation**: Generates primary, secondary, and neutral surface palettes for both light and dark modes using the OKLCH color space.
-3. **Accessibility Verification**: Tests contrast ratios across all text and surface pairings to guarantee compliance with WCAG 2.1 AA standards.
-4. **Resolved Theme Emission**: Produces concrete `ResolvedTheme` pairs (`light` and `dark`) containing all token trees.
-
-```kotlin
-// Resolving intent into light and dark theme token sets
-val resolvedThemePair = ThemeResolver.resolve(myAppIntent)
-val lightTheme = resolvedThemePair.light
-val darkTheme = resolvedThemePair.dark
+```mermaid
+flowchart LR
+    Intent["BasisIntent"] --> Resolver["ThemeResolver.resolve()"]
+    Resolver --> Theme["ResolvedThemePair<br/>(Light & Dark Palettes)"]
+    Resolver --> Report["ResolutionReport<br/>(Audit Results & Warnings)"]
 ```
 
-## Accessibility & Contrast Checks
+## The Resolution Audit
 
-During resolution, Basis audits every color pairing to ensure your application remains accessible:
+During compilation, every semantic pairing is audited against accessibility thresholds:
 
-| Token Pairing | Minimum Contrast Ratio | Standard |
-| :--- | :--- | :--- |
-| **`onPrimary` on `primary`** | $\ge 4.5:1$ | WCAG AA Normal Text |
-| **`onSurface` on `surface`** | $\ge 4.5:1$ | WCAG AA Normal Text |
-| **`onSurfaceVariant` on `surfaceVariant`** | $\ge 4.5:1$ | WCAG AA Secondary Text |
-| **`outline` on `surface`** | $\ge 3.0:1$ | WCAG AA UI Boundaries |
-| **`focusRing` on `surface`** | $\ge 3.0:1$ | WCAG AA Focus Indicators |
+| Pairing | Target Element | Minimum Ratio | WCAG Standard |
+| :--- | :--- | :--- | :--- |
+| **`onPrimary` on `primary`** | Primary button labels | $\ge 4.5:1$ | AA Normal Text |
+| **`onSurface` on `surface`** | Body typography | $\ge 4.5:1$ | AA Normal Text |
+| **`onSurfaceVariant` on `surfaceVariant`** | Secondary captions | $\ge 4.5:1$ | AA Normal Text |
+| **`outline` on `surface`** | Card & input borders | $\ge 3.0:1$ | AA UI Component |
+| **`focusRing` on `surface`** | Keyboard focus indicator | $\ge 3.0:1$ | AA Focus Visible |
 
-If a custom seed color would produce illegible text (for example, putting white text on a bright pastel background), the resolver automatically adjusts luminance to meet the required contrast floor.
+## The `ResolutionReport` Structure
 
-## Diagnostic Reports (`ResolutionReport`)
+The `ResolutionReport` provides diagnostic visibility into how your intent was compiled:
 
-Every time a theme is resolved, the engine generates a `ResolutionReport` that details the health and compliance of your theme:
+```kotlin
+val result = ThemeResolver.resolve(AppThemeIntent)
+val report = result.report
 
-- **`isValid`**: A boolean indicating whether all tokens compiled without critical contract violations.
-- **`warnings`**: Informational notices, such as notifications when a vivid color underwent chroma reduction to fit sRGB screens, or when contrast adjustments were applied.
-- **`contrastAudit`**: Detailed contrast scores for key text and container combinations.
+// 1. Check whether theme compiled cleanly
+val isValid: Boolean = report.isValid
 
-## Unit Testing Your Theme
+// 2. Inspect non-fatal diagnostic notices (e.g. gamut clipping, contrast adjustments)
+val warnings: List<ThemeWarning> = report.warnings
 
-You can include theme resolution in your project's automated test suite to ensure that future brand tweaks never introduce unexpected contrast warnings or regressions:
+// 3. Inspect computed contrast scores for specific pairings
+val primaryContrast: Float = report.contrastScores["onPrimary_primary"] ?: 0f
+```
+
+### Common Diagnostic Warnings
+
+- **`GamutReductionWarning`**: Notifies you that an intense chroma seed was reduced slightly to prevent color clipping on sRGB displays.
+- **`ContrastAdjustmentNotice`**: Notifies you that an input seed color was lightened or darkened to guarantee the 4.5:1 text contrast floor.
+
+## Unit Testing Your Theme in CI
+
+You can add theme resolution directly to your automated test suite to ensure that team brand adjustments never introduce unexpected contrast failures:
 
 ```kotlin
 import io.github.alph_a07.basis.theme.resolution.ThemeResolver
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class AppThemeTest {
+class ThemeComplianceTest {
 
     @Test
     fun appThemeResolvesWithoutErrors() {
-        val resolution = ThemeResolver.resolve(AppThemeIntent)
+        val result = ThemeResolver.resolve(AppThemeIntent)
 
-        // Verify that the theme compiles successfully
-        assertTrue("Theme resolution failed", resolution.report.isValid)
+        // Verify compilation succeeds
+        assertTrue("Theme failed to compile", result.report.isValid)
 
-        // Verify that there are no critical contrast warnings
-        val severeWarnings = resolution.report.warnings.filter { it.isSevere }
-        assertTrue("Theme generated severe warnings: $severeWarnings", severeWarnings.isEmpty())
+        // Ensure no severe contrast violations occurred
+        val severeIssues = result.report.warnings.filter { it.isSevere }
+        assertTrue("Severe theme warnings detected: $severeIssues", severeIssues.isEmpty())
     }
 }
 ```
 
-With resolution understood, learn how to surgically customize individual components in [Overrides](/docs/theming/overrides).
+## Next Steps
+
+- [Overrides](/docs/theming/overrides): Customize component styles without breaking accessibility floors.
+- [Foundation Atoms](/docs/foundation/surface): Inspect how surfaces and focus rings consume resolved tokens.

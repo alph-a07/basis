@@ -3,63 +3,50 @@ title: Overrides
 section: Theming
 order: 7
 status: published
-description: Customizing specific components, surfaces, and variants without breaking global theme coherence.
+description: Customizing component styles, the 10 universal properties, and precedence rules.
 ---
 
-While Basis intent rules provide consistent, accessible styling across 95% of your application, specific use cases—such as a promotional call-to-action or a branded card—require targeted customization.
+While global intent rules govern 95% of your application, specific screens or promotional components require surgical visual adjustments. Basis provides a structured **Overrides** system that allows targeted styling without breaking systemic accessibility floors.
 
-Basis provides an **Overrides** system that allows you to customize component properties while maintaining theme coherence and accessibility guarantees.
+```mermaid
+flowchart TD
+    P1["1. Local Composable Modifiers<br/>(Modifier.padding, Modifier.background)"]
+    P2["2. Component Variant Override<br/>(Custom Button Variant)"]
+    P3["3. Global Component Override<br/>(UniversalStylePatch on all buttons)"]
+    P4["4. Domain & Mood Defaults<br/>(e.g. Productivity spacing)"]
+    P5["5. Base Theme Intent<br/>(Brand seed color)"]
 
-## Precedence Hierarchy
-
-When multiple styles apply to a component, Basis evaluates them according to a clear precedence hierarchy:
-
-```
-[ Local Composable Modifiers ]
-             ▼
-[ Component Variant Override ]  (e.g., custom primary button styling)
-             ▼
-[ Global Component Override ]   (e.g., all buttons in the app)
-             ▼
-[ Domain & Mood Defaults ]     (e.g., Productivity domain conventions)
-             ▼
-[ Base Theme Intent ]           (e.g., brand seed color)
+    P1 -->|Overrides| P2
+    P2 -->|Overrides| P3
+    P3 -->|Overrides| P4
+    P4 -->|Overrides| P5
 ```
 
-Styles specified closer to the component instance always take precedence over global theme defaults.
+## The 10 Universal Style Properties
 
-## The 10 Universal Style Fields
-
-Basis standardizes component customization through ten universal style properties supported across all interactive composables:
+All interactive composables and surfaces in Basis support ten standardized style properties:
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
-| **`background`** | `Color` | The background fill color of the container. |
-| **`contentColor`** | `Color` | The foreground color applied to text and icons. |
-| **`borderColor`** | `Color` | The stroke color for container outlines. |
-| **`borderWidth`** | `Dp` | The thickness of the outline boundary. |
-| **`cornerRadius`** | `Dp` | The corner rounding radius. |
-| **`elevation`** | `Dp` | Physical elevation or tonal lightness depth. |
+| **`background`** | `Color` | Container fill color. Automatically updates `LocalBasisContentColor`. |
+| **`contentColor`** | `Color` | Foreground color applied to child text and icons. |
+| **`borderColor`** | `Color` | Stroke color for outline boundaries. |
+| **`borderWidth`** | `Dp` | Thickness of the outline boundary. |
+| **`cornerRadius`** | `Dp` | Corner rounding radius. |
+| **`elevation`** | `Dp` | Depth index (ambient shadow in light mode; tonal lightness in dark mode). |
 | **`padding`** | `PaddingValues` | Internal padding between container boundary and content. |
 | **`spacing`** | `Dp` | Gap spacing between child elements (e.g. icon and label). |
-| **`opacity`** | `Float` | Alpha transparency (0.0 to 1.0). |
+| **`opacity`** | `Float` | Alpha transparency (`0.0` to `1.0`). |
 | **`interactionSource`** | `MutableInteractionSource` | Interaction state stream for hover, press, and focus. |
 
 ## Applying Overrides
 
-You can apply overrides either globally at the theme level or locally on a specific component instance:
-
 ### 1. Global Component Overrides
 
-To customize the default appearance of all buttons or surfaces across your entire app, specify overrides in your theme declaration:
+To modify the default appearance of all buttons or surfaces across your application, declare overrides in your `ControlIntent`:
 
 ```kotlin
-import io.github.alph_a07.basis.theme.intent.BasisIntent
-import io.github.alph_a07.basis.theme.intent.ControlIntent
-import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
-import io.github.alph_a07.basis.theme.intent.controls.overrides.UniversalStylePatch
-
-val customThemeIntent = BasisIntent(
+val customIntent = BasisIntent(
     identity = IdentityIntent(seedColor = "#0284C7"),
     control = ControlIntent(
         overrides = ComponentOverrides(
@@ -74,7 +61,7 @@ val customThemeIntent = BasisIntent(
 
 ### 2. Local Instance Customization
 
-For single-screen variations, use standard Compose modifiers and parameters on the component directly:
+For single-instance styling, apply standard Jetpack Compose parameters or modifiers directly to the composable:
 
 ```kotlin
 BasisButton(
@@ -84,15 +71,18 @@ BasisButton(
         .fillMaxWidth()
         .padding(BasisTheme.spacing.md)
 ) {
-    Text("Complete Purchase")
+    Text("Complete Checkout")
 }
 ```
 
-## Maintaining Accessibility Invariants
+## Enforced Invariants During Overrides
 
-Overrides are designed to give developers creative freedom without compromising accessibility:
+Overrides allow creative visual styling while guaranteeing that core accessibility contracts remain intact:
 
 - **Touch Target Floor**: Even if you reduce a button's visual padding to `4.dp`, Basis automatically preserves the **48dp minimum physical touch target** via `Modifier.touchTarget()` to prevent missed taps.
 - **Content Color Propagation**: When you override a container's `background`, `LocalBasisContentColor` automatically updates so that child text and icons maintain readable contrast against the new background.
 
-Next, explore foundational building blocks in the [Foundation](/docs/foundation/surface) section.
+## Next Steps
+
+- [Surface Foundation](/docs/foundation/surface): Inspect how surfaces coordinate background tone and content color.
+- [BasisButton Component](/docs/components/button): Explore all available button variants and parameters.
