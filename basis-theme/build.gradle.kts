@@ -6,6 +6,8 @@ plugins {
     id("ktlint-conventions")
 }
 
+version = project(":basis-components").version.toString()
+
 kotlin {
     explicitApi()
     jvmToolchain(21)

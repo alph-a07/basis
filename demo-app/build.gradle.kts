@@ -17,7 +17,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = project(":basis-components").version.toString()
     }
 
     buildFeatures {
@@ -36,6 +36,10 @@ android {
 dependencies {
     lintChecks(project(":basis-lint"))
     implementation(project(":basis-components"))
+    implementation(project(":basis-theme"))
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.ui)
     // Note: build-logic holds common Gradle config (detekt/ktlint conventions); basis-lint holds lint rules
 }

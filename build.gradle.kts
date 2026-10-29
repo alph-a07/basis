@@ -43,7 +43,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("io.github.alph-a07", "basis", "0.1.0")
+    coordinates("io.github.alph-a07", "basis", project(":basis-components").version.toString())
 
     pom {
         name.set("Basis")

@@ -4,6 +4,8 @@ plugins {
     id("ktlint-conventions")
 }
 
+version = project(":basis-components").version.toString()
+
 val lintApi: Configuration by configurations.creating
 
 configurations {

@@ -40,8 +40,13 @@ assert(titleEl && titleEl.textContent?.includes('BasisButton'), 'BasisButton tit
 const statusChip = buttonOverviewDoc.querySelector('.status-chip');
 assert(statusChip && statusChip.textContent?.includes('stable'), 'Lifecycle status must be stable');
 
+const gradleFile = path.resolve(__dirname, '../../../basis-components/build.gradle.kts');
+const gradleContent = fs.readFileSync(gradleFile, 'utf-8');
+const versionMatch = gradleContent.match(/version\s*=\s*["']([^"']+)["']/);
+const expectedVersion = versionMatch ? `v${versionMatch[1]}` : 'v0.1.0';
+
 const versionChip = buttonOverviewDoc.querySelector('.version-chip');
-assert(versionChip && versionChip.textContent?.includes('v0.1.0'), 'Version chip must show v0.1.0');
+assert(versionChip && versionChip.textContent?.includes(expectedVersion), `Version chip must show ${expectedVersion}`);
 
 const familyChip = buttonOverviewDoc.querySelector('.family-chip');
 assert(familyChip && familyChip.textContent?.includes('Actions'), 'Family chip must show Actions');
