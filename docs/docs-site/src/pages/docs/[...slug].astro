@@ -351,21 +351,66 @@ if (props.type === 'component') {
     background: var(--docs-code-bg, #161b22);
     border: 1px solid var(--docs-code-border, #21262d);
     border-radius: 8px;
-    padding: 1.25rem 1rem;
-    margin: 0.65rem 0;
+    padding: 1.5rem 1.25rem;
+    margin: 1rem 0;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .doc-body :global(.mermaid-container pre.mermaid) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: transparent;
     border: none;
     padding: 0;
     margin: 0;
+    width: 100%;
+    min-width: fit-content;
   }
 
   .doc-body :global(.mermaid-container svg) {
-    max-width: 100%;
+    display: block;
     height: auto;
+    max-width: 100%;
+  }
+
+  .doc-body :global(.mermaid-container .node rect),
+  .doc-body :global(.mermaid-container .node polygon),
+  .doc-body :global(.mermaid-container .node circle) {
+    rx: 6px;
+    ry: 6px;
+  }
+
+  .doc-body :global(.mermaid-container .nodeLabel) {
+    color: var(--docs-text, #f0f6fc) !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    line-height: 1.45 !important;
+    text-align: center;
+  }
+
+  .doc-body :global(.mermaid-container .nodeLabel p) {
+    margin: 0 !important;
+    padding: 0 !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+  }
+
+  .doc-body :global(.mermaid-container .cluster rect) {
+    rx: 8px;
+    ry: 8px;
+    stroke-width: 1px !important;
+  }
+
+  .doc-body :global(.mermaid-container .cluster-label span) {
+    color: var(--docs-accent, #58a6ff) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 </style>
 
@@ -387,10 +432,58 @@ if (props.type === 'component') {
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: 'loose',
-      theme: isDark ? 'dark' : 'default',
-      themeVariables: {
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        fontSize: '13px',
+      theme: 'base',
+      themeVariables: isDark
+        ? {
+            darkMode: true,
+            background: 'transparent',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontSize: '13.5px',
+            primaryColor: '#21262d',
+            primaryTextColor: '#f0f6fc',
+            primaryBorderColor: '#388bfd',
+            lineColor: '#58a6ff',
+            secondaryColor: '#161b22',
+            secondaryTextColor: '#e6edf3',
+            secondaryBorderColor: '#30363d',
+            tertiaryColor: '#0d1117',
+            tertiaryTextColor: '#c9d1d9',
+            tertiaryBorderColor: '#30363d',
+            clusterBkg: '#161b22',
+            clusterBorder: '#30363d',
+            titleColor: '#58a6ff',
+            edgeLabelBackground: '#161b22',
+            nodeBorder: '#388bfd',
+            nodeTextColor: '#f0f6fc',
+          }
+        : {
+            darkMode: false,
+            background: 'transparent',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontSize: '13.5px',
+            primaryColor: '#f6f8fa',
+            primaryTextColor: '#1f2328',
+            primaryBorderColor: '#0969da',
+            lineColor: '#0969da',
+            secondaryColor: '#ffffff',
+            secondaryTextColor: '#24292f',
+            secondaryBorderColor: '#d0d7de',
+            tertiaryColor: '#f6f8fa',
+            tertiaryTextColor: '#57606a',
+            tertiaryBorderColor: '#d0d7de',
+            clusterBkg: '#f6f8fa',
+            clusterBorder: '#d0d7de',
+            titleColor: '#0969da',
+            edgeLabelBackground: '#ffffff',
+            nodeBorder: '#0969da',
+            nodeTextColor: '#1f2328',
+          },
+      flowchart: {
+        htmlLabels: true,
+        curve: 'basis',
+        nodeSpacing: 40,
+        rankSpacing: 40,
+        wrappingWidth: 380,
       },
     });
 

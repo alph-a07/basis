@@ -10,11 +10,12 @@ description: Complete reference for IdentityIntent, MoodIntent presets, continuo
 
 ```mermaid
 flowchart TD
-    Root["BasisIntent"] --> ID["IdentityIntent (Brand Color & Identity)"]
-    Root --> Mood["MoodIntent (7 Presets • 8 Knobs)"]
-    Root --> Dom["DomainIntent (10 Industry Presets)"]
+    Root["<b>BasisIntent</b><br/>Root aesthetic specification"]
+    Root --> ID["<b>IdentityIntent</b><br/>Brand seed color"]
+    Root --> Mood["<b>MoodIntent</b><br/>Presets & knobs"]
+    Root --> Dom["<b>DomainIntent</b><br/>Domain defaults"]
 
-    ID --> Out["Resolved Theme Tokens"]
+    ID --> Out["<b>ThemeResolver</b><br/>Compiles token palettes"]
     Mood --> Out
     Dom --> Out
 ```

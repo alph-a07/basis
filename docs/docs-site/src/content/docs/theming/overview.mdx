@@ -10,27 +10,19 @@ Basis theming replaces manually maintained style constants with an algorithmic c
 
 ```mermaid
 flowchart TD
-    subgraph Input["1. Intent Declaration"]
-        A["IdentityIntent (Brand Seed Color)"]
-        B["MoodIntent (7 Presets • 8 Knobs)"]
-        C["DomainIntent (10 Industry Presets)"]
+    subgraph Step1["1. Intent Declaration"]
+        A["<b>BasisIntent</b><br/>Brand Seed Color • Mood Presets • Domain Defaults"]
     end
 
-    subgraph Engine["2. Resolution Pipeline"]
-        D["OKLCH Color Derivation"]
-        E["WCAG AA Contrast Verification"]
-        F["Tonal Depth & Gamut Mapping"]
+    subgraph Step2["2. Resolution Pipeline"]
+        B["<b>ThemeResolver</b><br/>OKLCH Perceptual Math • Gamut Mapping • WCAG AA Contrast Audit"]
     end
 
-    subgraph Output["3. Resolved Design Tokens"]
-        G["BasisTheme.colors"]
-        H["BasisTheme.typography"]
-        I["BasisTheme.spacing & shapes"]
-        J["BasisTheme.depth & motion"]
+    subgraph Step3["3. Resolved Design Tokens"]
+        C["<b>BasisTheme Palettes</b><br/>Colors • Typography • Spacing • Depth & Motion"]
     end
 
-    Input --> Engine
-    Engine --> Output
+    Step1 --> Step2 --> Step3
 ```
 
 ## How It Works

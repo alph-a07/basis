@@ -9,10 +9,11 @@ description: How ThemeResolver validates intent, verifies contrast floors, and e
 When your application initializes `BasisTheme`, the `ThemeResolver` compiles your `BasisIntent` into a `ResolvedThemePair` containing concrete light and dark token palettes, accompanied by a diagnostic `ResolutionReport`.
 
 ```mermaid
-flowchart LR
-    Intent["BasisIntent"] --> Resolver["ThemeResolver.resolve()"]
-    Resolver --> Theme["ResolvedThemePair (Light & Dark Palettes)"]
-    Resolver --> Report["ResolutionReport (Audit Results & Warnings)"]
+flowchart TD
+    Intent["<b>BasisIntent</b><br/>Brand seed & aesthetic rules"]
+    --> Resolver["<b>ThemeResolver.resolve()</b><br/>OKLCH derivation & contrast audit"]
+    Resolver --> Theme["<b>ResolvedThemePair</b><br/>Light & Dark token trees"]
+    Resolver --> Report["<b>ResolutionReport</b><br/>Diagnostic contrast scores"]
 ```
 
 ## The Resolution Audit

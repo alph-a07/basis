@@ -9,20 +9,18 @@ description: Managing Light, Dark, and System theme modes with automatic tonal e
 Basis treats Light and Dark modes as two distinct perceptual environments rather than simple color inversions. With `ThemeMode`, your application seamlessly toggles between daytime clarity and comfortable nighttime hierarchy.
 
 ```mermaid
-flowchart LR
-    subgraph Light["Light Mode"]
-        L1["Canvas (White)"]
-        L2["Card + Ambient Shadow"]
-        L3["Dialog + Key Shadow"]
-        L1 --> L2 --> L3
+flowchart TD
+    subgraph Light["Light Mode: Shadow-Based Depth"]
+        direction LR
+        L1["<b>Canvas</b><br/>Flat white"] --> L2["<b>Card</b><br/>1dp shadow"] --> L3["<b>Dialog</b><br/>6dp shadow"]
     end
 
-    subgraph Dark["Dark Mode (Tonal Elevation)"]
-        D1["Canvas (L: 0.12)"]
-        D2["Card (L: 0.16)"]
-        D3["Dialog (L: 0.22)"]
-        D1 --> D2 --> D3
+    subgraph Dark["Dark Mode: Luminous Tonal Elevation"]
+        direction LR
+        D1["<b>Canvas</b><br/>L: 0.12 (Base)"] --> D2["<b>Card</b><br/>L: 0.16 (+33%)"] --> D3["<b>Dialog</b><br/>L: 0.22 (+83%)"]
     end
+
+    Light ~~~ Dark
 ```
 
 ## The `ThemeMode` Options
