@@ -303,9 +303,17 @@ const { headings = [] } = Astro.props;
     color: var(--docs-text, #e6edf3);
   }
 
+  .toc-link:visited {
+    color: var(--docs-text-muted, #8b949e);
+  }
+
   .toc-link.active {
     color: var(--docs-toc-active, #58a6ff);
     font-weight: 600;
+  }
+
+  .toc-link.active:visited {
+    color: var(--docs-toc-active, #58a6ff);
   }
 
   .toc-link:focus-visible {

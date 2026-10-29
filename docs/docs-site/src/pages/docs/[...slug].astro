@@ -247,6 +247,36 @@ if (props.type === 'component') {
     line-height: 1.6;
   }
 
+  .doc-body :global(a) {
+    color: var(--docs-link, #58a6ff);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    text-decoration-color: color-mix(in srgb, var(--docs-link, #58a6ff) 40%, transparent);
+    font-weight: 500;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+
+  .doc-body :global(a:visited) {
+    color: var(--docs-link-visited, var(--docs-link, #58a6ff));
+    text-decoration-color: color-mix(in srgb, var(--docs-link-visited, var(--docs-link, #58a6ff)) 40%, transparent);
+  }
+
+  .doc-body :global(a:hover) {
+    color: var(--docs-link-hover, #79c0ff);
+    text-decoration-color: var(--docs-link-hover, #79c0ff);
+  }
+
+  .doc-body :global(a:focus-visible) {
+    outline: 2px solid var(--docs-focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .doc-body :global(a code) {
+    color: inherit;
+  }
+
   .doc-body :global(ul),
   .doc-body :global(ol) {
     margin: 0;

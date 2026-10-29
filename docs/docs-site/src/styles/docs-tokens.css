@@ -26,9 +26,12 @@
   --docs-border-strong: var(--d-color-border-strong);
   --docs-border-subtle: var(--d-color-border-default);
 
-  /* Interactive, Focus, and Selection */
+  /* Interactive, Focus, Selection, and Links */
   --docs-focus-ring: var(--d-color-focus-ring);
   --docs-accent: var(--d-color-brand-primary);
+  --docs-link: #0969da;
+  --docs-link-hover: #0550ae;
+  --docs-link-visited: #0969da;
   --docs-selection-surface: var(--d-color-selection-surface);
   --docs-selection-content: var(--d-color-selection-content);
 
@@ -76,6 +79,11 @@
   --docs-border-muted: var(--d-color-border-muted);
   --docs-border-strong: var(--d-color-border-strong);
   --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 22%, transparent);
+
+  /* Interactive, Links - high contrast accessible blues in dark mode (WCAG AA/AAA >= 7:1) */
+  --docs-link: #58a6ff;
+  --docs-link-hover: #79c0ff;
+  --docs-link-visited: #58a6ff;
 
   /* Chrome-specific derived tokens */
   --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));

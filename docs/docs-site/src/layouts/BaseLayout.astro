@@ -90,6 +90,20 @@ const { title, description = 'Basis — Jetpack Compose design system' } = Astro
     color: var(--docs-selection-content);
   }
 
+  a {
+    color: var(--docs-link, #58a6ff);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  a:visited {
+    color: var(--docs-link-visited, var(--docs-link, #58a6ff));
+  }
+
+  a:hover {
+    color: var(--docs-link-hover, #79c0ff);
+  }
+
   :focus-visible {
     outline: 2px solid var(--docs-focus-ring);
     outline-offset: 2px;

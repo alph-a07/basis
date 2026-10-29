@@ -544,9 +544,17 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
     color: var(--docs-text, #e6edf3);
   }
 
+  .nav-link:visited {
+    color: var(--docs-text-muted, #8b949e);
+  }
+
   .nav-link.active {
     color: var(--docs-accent, #58a6ff);
     font-weight: 600;
+  }
+
+  .nav-link.active:visited {
+    color: var(--docs-accent, #58a6ff);
   }
 
   .nav-badge {
