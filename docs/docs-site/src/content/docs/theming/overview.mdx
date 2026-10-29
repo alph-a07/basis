@@ -2,18 +2,79 @@
 title: Theming Overview
 section: Theming
 order: 1
-status: stub
-description: Learn how Basis resolves intent into fully deterministic themes.
+status: published
+description: How Basis derives comprehensive, accessible design tokens from high-level aesthetic intent.
 ---
 
-## Theme Pipeline
+Basis theming is built on a simple premise: **you describe the intent, and the system delivers visual harmony**. Instead of manually managing hundreds of discrete color codes and style variants across your codebase, you declare high-level aesthetic goals, and Basis automatically provides a complete set of accessible design tokens for your Jetpack Compose UI.
 
-Basis uses a pure, multiplatform resolution pipeline that converts aesthetic intent into token trees on both JVM and JS runtimes.
+## The Intent-to-Token Flow
 
-## Deterministic Output
+In traditional Android apps, adding dark mode or changing brand colors often requires updating dozens of XML resource files or scattered Compose constants. With Basis, theming follows a single, predictable flow:
 
-Every intent configuration produces identical token values with guaranteed contrast, removing human guesswork and runtime divergence.
+```
+[ Your Aesthetic Intent ] ────────► [ Basis Theme Engine ] ────────► [ BasisTheme in Compose ]
+  • Brand Seed Color                  • Contrast Validation            • BasisTheme.colors
+  • Visual Mood (e.g. Refined)        • Tonal Palette Derivation       • BasisTheme.typography
+  • Domain (e.g. Finance)             • Dark Mode Tonal Elevation      • BasisTheme.spacing
+  • ThemeMode (Light/Dark/System)                                      • BasisTheme.shapes
+```
 
-## Integration
+1. **You provide intent**: You define your primary brand color, pick an aesthetic mood preset, and select your business domain.
+2. **Basis resolves the theme**: The engine computes perceptually balanced color palettes, validates that all text meets WCAG AA contrast standards, and generates matching light and dark themes.
+3. **You consume tokens**: In your composables, you access clean semantic tokens via `BasisTheme.colors`, `BasisTheme.typography`, `BasisTheme.spacing`, and other token accessors.
 
-Use `BasisTheme` in Android applications or export CSS token blocks for web documentation and design tools.
+## The Token Hierarchy
+
+When you wrap your app in `BasisTheme`, you gain access to cohesive token families designed to cover every layout and styling need:
+
+### 1. Colors (`BasisTheme.colors`)
+
+Semantic color roles that automatically switch between light and dark palettes:
+- **Brand & Action**: `primary`, `onPrimary`, `primaryContainer`, `onPrimaryContainer`
+- **Surfaces & Backgrounds**: `surface`, `onSurface`, `surfaceElevated`, `surfaceSunken`, `surfaceVariant`
+- **Boundaries & Dividers**: `outline`, `outlineVariant`, `focusRing`
+- **Feedback & Status**: `success`, `warning`, `error`, `info` with corresponding `on*` content colors
+
+### 2. Typography (`BasisTheme.typography`)
+
+A proportional typographic hierarchy with consistent line heights and letter spacings:
+- **Display**: Large, high-impact numbers and marketing hero text (`displayLarge`, `displayMedium`, `displaySmall`).
+- **Headline**: Screen headers and major section titles (`headlineLarge`, `headlineMedium`, `headlineSmall`).
+- **Title**: Card headers, dialog titles, and list section markers (`titleLarge`, `titleMedium`, `titleSmall`).
+- **Body**: Reading text, paragraphs, and multi-line descriptions (`bodyLarge`, `bodyMedium`, `bodySmall`).
+- **Label**: Button text, form field labels, and caption tags (`labelLarge`, `labelMedium`, `labelSmall`).
+
+### 3. Spacing (`BasisTheme.spacing`)
+
+A predictable spacing scale built on an accessible 4dp baseline grid:
+- `none` (0dp), `xxs` (2dp), `xs` (4dp), `sm` (8dp), `md` (16dp), `lg` (24dp), `xl` (32dp), `xxl` (48dp), `xxxl` (64dp)
+
+Using these tokens ensures that margins, padding, and layout gaps scale proportionally throughout your entire app.
+
+### 4. Shapes & Radii (`BasisTheme.shapes`)
+
+Corner radius definitions that adapt to your chosen mood (from crisp and geometric to soft and rounded):
+- `sharp` (0dp), `extraSmall` (2dp), `small` (4dp), `medium` (8dp), `large` (12dp), `extraLarge` (16dp), `full` (pill shape)
+
+### 5. Depth & Elevation (`BasisTheme.depth`)
+
+Elevation levels for layering content:
+- In **Light Mode**: Generates subtle key and ambient drop shadows.
+- In **Dark Mode**: Automatically shifts surface background lightness (tonal elevation) so cards and dialogs remain visibly distinct from the background canvas.
+
+### 6. Motion (`BasisTheme.motion`)
+
+Consistent animation timings and easing curves for transitions, button presses, and modal disclosures:
+- Durations: `short1` (50ms) through `long4` (600ms)
+- Easing: `standard`, `decelerate`, `accelerate`, `emphasized`
+
+## Deep Dives
+
+Explore each facet of the theming system:
+
+- [Philosophy](/docs/theming/philosophy): The core principles behind Basis theming.
+- [Intent Model](/docs/theming/intent): Learn about mood presets, aesthetic knobs, and domain controls.
+- [ThemeMode](/docs/theming/theme-mode): Managing Light, Dark, and System theme modes.
+- [OKLCH Color](/docs/theming/oklch): How perceptual color modeling guarantees contrast and prevents muddy hues.
+- [Overrides](/docs/theming/overrides): Customizing specific components while preserving theme harmony.

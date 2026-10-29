@@ -2,18 +2,62 @@
 title: OKLCH Color
 section: Theming
 order: 5
-status: stub
-description: Perceptually uniform color modeling and derivation in Basis.
+status: published
+description: How Basis uses the perceptually uniform OKLCH color space to guarantee contrast and harmonious color palettes.
 ---
 
-## Perceptual Uniformity
+Basis calculates all color palettes using the **OKLCH** color space rather than traditional sRGB or HSL. This choice directly benefits your application's visual quality: it guarantees accessible contrast, prevents muddy colors, and ensures that brand colors scale consistently across light and dark modes.
 
-Basis calculates colors in the OKLCH color space (`Lightness`, `Chroma`, `Hue`) to guarantee linear perceived brightness steps across diverse hues.
+## The Problem with Traditional RGB and HSL
 
-## Contrast Math
+When developers and designers work with standard HSL (Hue, Saturation, Lightness), they quickly discover that human vision does not perceive lightness uniformly across different colors:
 
-Because OKLCH aligns with human visual perception, calculating APCA and WCAG contrast ratios becomes predictable and deterministic.
+- In HSL, **Pure Blue** (`hsl(240, 100%, 50%)`) and **Pure Yellow** (`hsl(60, 100%, 50%)`) have the exact same mathematical lightness (50%).
+- However, to the human eye, yellow appears blazing bright, while blue appears dark and heavy.
+- White text placed on yellow at 50% lightness is illegible, while white text on blue at 50% lightness is easily readable.
 
-## Gamut Mapping
+Because HSL does not match how humans perceive light, systems that generate themes using HSL or RGB often produce unreadable text, dull gray buttons, or harsh neon accents when switching hues.
 
-Colors exceeding standard sRGB display bounds are mapped using chroma reduction while preserving lightness and hue angle.
+## What is OKLCH?
+
+OKLCH is a modern color space engineered around human visual perception. It models color using three intuitive coordinates:
+
+| Coordinate | Name | Range | Description |
+| :--- | :--- | :--- | :--- |
+| **`L`** | **Perceived Lightness** | 0.0 to 1.0 | True perceived brightness. An `L` of 0.7 appears equally bright whether the color is blue, green, or yellow. |
+| **`C`** | **Chroma** | 0.0 to 0.4+ | The purity or saturation of the color. 0.0 is pure neutral gray, while higher numbers yield vibrant color. |
+| **`H`** | **Hue Angle** | 0° to 360° | The tint on the color wheel (e.g. 25° for red, 140° for green, 260° for blue). |
+
+## Practical Benefits in Your Application
+
+Using OKLCH under the hood gives your application several distinct advantages:
+
+### 1. Reliable Text Contrast Across Any Brand Hue
+Because OKLCH lightness aligns with human vision, Basis can calculate and enforce WCAG 2.1 AA contrast ratios ($\ge 4.5:1$) accurately. Regardless of whether your brand seed color is yellow, purple, or cyan, your button text and label colors are guaranteed to be legible.
+
+### 2. Consistent Interactive States
+When a user presses or hovers over a button, the visual feedback should feel natural. With OKLCH, Basis adjusts lightness and chroma in uniform perceptual steps, ensuring that state changes feel identical across all themes:
+
+```kotlin
+// In Compose, interactive states maintain consistent perceptual steps:
+BasisButton(
+    onClick = { /* ... */ },
+    variant = BasisButtonDefaults.variantPrimary()
+) {
+    Text("Action") // Text contrast remains verified across enabled, pressed, and disabled states
+}
+```
+
+### 3. Vibrant, Clean Tonal Palettes
+In traditional RGB math, creating lighter tints often introduces muddy gray or washed-out undertones. In OKLCH, decreasing chroma while adjusting lightness produces clean, modern pastel containers and surface tints that remain visually connected to your brand color.
+
+## Gamut Management on Android Displays
+
+Different Android devices have different screen capabilities, ranging from standard sRGB displays to wide-gamut OLED panels (Display P3).
+
+When generating intense, saturated colors, some mathematical combinations can fall outside the bounds of standard sRGB screens. Basis automatically handles this through **chroma-reduction gamut mapping**:
+- It keeps the exact perceived lightness (`L`) and hue (`H`) unchanged.
+- It gently reduces chroma (`C`) just enough to fit comfortably within the device's display gamut.
+- The result is vivid, attractive color without harsh clipping or distorted hues.
+
+Next, learn how theme resolution works in [Resolution and Reports](/docs/theming/resolution).

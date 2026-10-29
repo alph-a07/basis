@@ -2,17 +2,122 @@
 title: Intent Model
 section: Theming
 order: 3
-status: stub
-description: High-level aesthetic controls driving design system tokens.
+status: published
+description: Complete guide to shaping your application's appearance with IdentityIntent, MoodIntent, and DomainIntent.
 ---
 
-## Intent Parameters
+The Basis intent model allows you to define your application's visual personality through high-level aesthetic decisions rather than manual color palettes. The primary container is `BasisIntent`, composed of three main building blocks:
 
-The `BasisIntent` model captures aesthetic decisions across distinct dimensions:
-- **Identity**: Brand primary color, supporting palette, and presence.
-- **Mood**: Presets and continuous aesthetic knobs (-1 to +1).
-- **Domain**: Domain semantics and interaction patterns.
+- **`IdentityIntent`**: Brand colors and core visual identity.
+- **`MoodIntent`**: Emotional tone, vibrancy, corner roundness, and spacing density.
+- **`DomainIntent`**: Industry-specific conventions for contrast, layout density, and information hierarchy.
 
-## Compilation
+```kotlin
+val intent = BasisIntent(
+    identity = IdentityIntent(seedColor = "#4F46E5"),
+    mood = MoodIntent(preset = MoodIntent.Preset.Refined),
+    domain = DomainIntent(domain = DomainIntent.Domain.Productivity)
+)
+```
 
-The resolver consumes a `BasisIntent` structure and outputs a fully resolved `ResolvedTheme` containing light and dark token palettes.
+## 1. IdentityIntent (Brand Identity)
+
+`IdentityIntent` captures the visual signature of your brand:
+
+```kotlin
+val identity = IdentityIntent(
+    seedColor = "#0284C7", // Sky blue brand seed
+    brandName = "Pulse",
+    secondarySeedColor = "#6366F1" // Optional accent color
+)
+```
+
+- **`seedColor`**: Your primary brand color (in hex format, such as `"#0284C7"`). Basis extracts the perceptual hue and saturation from this seed, automatically creating primary buttons, focused outlines, container tints, and state layers that satisfy accessibility contrast requirements.
+- **`secondarySeedColor`**: An optional secondary color for badges, complementary accents, or split-theme branding.
+- **`brandName`**: The name of your product or theme for documentation clarity.
+
+## 2. MoodIntent (Emotional Tone)
+
+`MoodIntent` defines how your app feels. You can choose a preset or fine-tune individual aesthetic knobs.
+
+### High-Level Presets
+
+Basis includes seven predefined mood presets tailored for common application styles:
+
+| Preset | Description | Corner Radius | Color Feel |
+| :--- | :--- | :--- | :--- |
+| **`Balanced`** | Default modern feel suitable for most general applications. | Medium (8dp) | Neutral, natural saturation |
+| **`Refined`** | Understated, crisp, and professional. Ideal for enterprise or desktop apps. | Crisp (4dp) | Subdued chroma, subtle elevation |
+| **`Energetic`** | High-energy and dynamic. Great for fitness, gaming, or media. | Dynamic | Saturated accents, punchy contrast |
+| **`Calm`** | Soothing and relaxed. Ideal for meditation, wellness, or reader apps. | Soft (12dp) | Pastel accents, gentle boundaries |
+| **`Technical`** | High-density information clarity for developer tools and consoles. | Sharp (2dp) | High contrast, minimal ornamentation |
+| **`Playful`** | Fun, friendly, and approachable. Ideal for education and casual apps. | Rounded (16dp) | Warm, bouncy, and colorful |
+| **`Warm`** | Cozy and inviting. Great for food, lifestyle, and hospitality. | Soft (10dp) | Amber undertones, warm surfaces |
+
+### The 8 Continuous Aesthetic Knobs
+
+When you need custom styling beyond presets, adjust any of the 8 continuous knobs from `-1.0` (minimum) to `+1.0` (maximum):
+
+```kotlin
+val mood = MoodIntent(
+    preset = MoodIntent.Preset.Balanced,
+    chroma = 0.2f,        // Color vibrancy
+    warmth = -0.1f,       // Color temperature (cool to warm)
+    contrast = 0.15f,     // Visual separation between surfaces
+    depth = 0.0f,         // Flat vs dimensional elevation
+    sharpness = -0.3f,    // Rounded vs geometric corners
+    density = 0.2f,       // Compact vs spacious spacing
+    prominence = 0.1f,    // Visual weight of interactive buttons
+    expressiveness = 0.0f // Restrained vs animated motion
+)
+```
+
+- **`chroma`**: Controls saturation. Negative values lean toward neutral grays; positive values create more saturated, punchy accent colors.
+- **`warmth`**: Shifts the color temperature of neutral surfaces. Negative values provide cool slate undertones; positive values introduce warm stone or amber warmth.
+- **`contrast`**: Adjusts surface and border differentiation. Higher contrast makes card boundaries and dividers crisper and more distinct.
+- **`depth`**: Controls physical elevation depth, enhancing shadow intensity in light mode and tonal lightness in dark mode.
+- **`sharpness`**: Controls corner roundness. Positive values make corners sharper; negative values make corners rounder.
+- **`density`**: Controls spacing scales. Positive values create compact, space-efficient layouts (great for data tables); negative values add generous breathing room.
+- **`prominence`**: Controls button visual weight, making primary actions stand out more boldly against background surfaces.
+- **`expressiveness`**: Scales animation durations and springiness in motion tokens.
+
+## 3. DomainIntent (Business Domains)
+
+Every industry has established user experience patterns. `DomainIntent` configures industry-aligned defaults so you don't have to configure them from scratch:
+
+```kotlin
+val domain = DomainIntent(
+    domain = DomainIntent.Domain.Finance
+)
+```
+
+Available domains include:
+
+- **`Productivity`**: Optimized for daily workflows, task lists, and forms. Features compact spacing and crisp outlines.
+- **`Finance`**: Designed for fintech and banking. Features high-contrast data presentation, tabular number formatting, and conservative elevation.
+- **`Healthcare`**: Prioritizes legibility, calm surface tones, and prominent, accessible buttons.
+- **`Developer`**: Tailored for developer tools, code editors, and consoles with dense spacing and dark-mode optimization.
+- **`Commerce`**: Highlights product imagery, bold action buttons, and clear price tags.
+- **`Reader`**: Optimized for long-form reading with comfortable line spacing, subdued borders, and warm paper-like surfaces.
+- **`Dashboard`**: High information density designed for analytics charts, data grids, and multi-column panels.
+- **`Social`**: Focuses on avatars, interactive reaction badges, and energetic content feeds.
+- **`Media`**: Immersive dark surfaces that put video, photography, and audio players front and center.
+- **`Generic`**: Standard balanced baseline for general-purpose applications.
+
+## Applying Intent to Your App
+
+Pass your configured intent to `BasisTheme` at the root of your Compose tree:
+
+```kotlin
+@Composable
+fun MyApp() {
+    BasisTheme(
+        intent = myCustomIntent,
+        mode = ThemeMode.System
+    ) {
+        AppContent()
+    }
+}
+```
+
+Next, read [ThemeMode](/docs/theming/theme-mode) to learn how Basis manages light, dark, and system themes.

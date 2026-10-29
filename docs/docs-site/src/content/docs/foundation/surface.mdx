@@ -2,18 +2,93 @@
 title: Surface
 section: Foundation
 order: 1
-status: stub
-description: Foundational container providing tone, elevation, and shape.
+status: published
+description: The foundational container providing shape, tonal background, elevation, and content color coordination.
 ---
 
-## Overview
+`Surface` is the visual foundation of your application. Every card, dialog, bottom sheet, and list item is built upon a surface that coordinates background fill, corner shape, border hairlines, and content colors.
 
-The `Surface` atom serves as the visual bedrock for components, mapping semantic elevations to background tones and border hairlines.
+In Basis, `Surface` is available both as a standalone composable (`BasisSurface`) and as a flexible Jetpack Compose modifier (`Modifier.surface()`).
 
-## Tonal Elevation
+## Tonal Elevation and Surface Roles
 
-Unlike traditional drop-shadow elevation, Basis surfaces utilize tonal elevation in dark mode to preserve contrast and luminous depth.
+Rather than using flat white or arbitrary gray backgrounds, Basis organizes surfaces into semantic levels that adapt cleanly across light and dark modes:
 
-## Borders & Corners
+| Surface Token | Purpose | Light Mode Behavior | Dark Mode Behavior |
+| :--- | :--- | :--- | :--- |
+| **`surface`** | Main background canvas | Crisp white or soft off-white | Deep, comfortable dark background |
+| **`surfaceElevated`** | Cards, list tiles, top bars | Subtle ambient drop shadow | Lighter tonal lightness step |
+| **`surfaceSunken`** | Inset input fields, code blocks | Recessed gray tone | Darker recessed container |
+| **`surfaceOverlay`** | Dialogs, menus, modal sheets | Prominent drop shadow | Highest luminous surface step |
+| **`surfaceInverse`** | Snackbars, high-contrast tooltips | High-contrast dark tone | High-contrast light tone |
 
-Surfaces accept token-driven border widths and corner radii conforming to the Basis spacing scale.
+## Automatic Content Color Coordination
+
+One of the most powerful features of `Surface` is automatic text and icon color management through `LocalBasisContentColor`:
+
+- When you place content inside a `Surface`, it automatically sets the ambient `LocalBasisContentColor` to a contrast-compliant foreground color (`onSurface`, `onPrimary`, etc.).
+- Nested text composables and icons read this ambient color automatically, eliminating the need to pass manual color parameters to every `Text` call.
+
+```kotlin
+BasisSurface(
+    color = BasisTheme.colors.surfaceElevated,
+    shape = BasisTheme.shapes.medium
+) {
+    // Both Text composables automatically inherit the correct contrasting color
+    Column(modifier = Modifier.padding(BasisTheme.spacing.md)) {
+        Text(
+            text = "Order Details",
+            style = BasisTheme.typography.titleMedium
+        )
+        Text(
+            text = "Delivered on Thursday",
+            style = BasisTheme.typography.bodySmall,
+            color = BasisTheme.colors.onSurfaceVariant
+        )
+    }
+}
+```
+
+## Using `Modifier.surface()`
+
+When building custom layouts where you already have a `Box` or `Row`, apply the `surface` modifier directly:
+
+```kotlin
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.foundation.modifier.surface
+import io.github.alph_a07.basis.components.theme.BasisTheme
+
+@Composable
+fun StatusBadge(label: String) {
+    Box(
+        modifier = Modifier
+            .surface(
+                shape = BasisTheme.shapes.small,
+                color = BasisTheme.colors.surfaceVariant,
+                border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)
+            )
+            .padding(
+                horizontal = BasisTheme.spacing.sm,
+                vertical = BasisTheme.spacing.xxs
+            )
+    ) {
+        Text(
+            text = label,
+            style = BasisTheme.typography.labelSmall
+        )
+    }
+}
+```
+
+## Best Practices
+
+- **Use semantic surfaces for hierarchy**: Reserve `surfaceOverlay` for floating modals and menus, `surfaceElevated` for cards, and `surface` for the root scaffold.
+- **Rely on `outlineVariant` for hairlines**: When adding card borders, use `BasisTheme.colors.outlineVariant` for a subtle, accessible boundary that adapts between light and dark modes.
+- **Pair with `Modifier.touchTarget()` on interactive surfaces**: If the surface is clickable, ensure it satisfies the 48dp touch target requirement.
+
+Next, learn how focus indicators work in [Focusable](/docs/foundation/focusable).

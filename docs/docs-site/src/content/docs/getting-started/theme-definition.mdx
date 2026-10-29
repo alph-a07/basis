@@ -2,21 +2,118 @@
 title: Theme Definition
 section: Getting Started
 order: 4
-status: stub
-description: Understanding theme definition and its runtime effect across composables.
+status: published
+description: How to define your brand identity, mood, and domain presets using BasisIntent.
 ---
 
-## Theme Structure
+In Basis, you do not need to configure hundreds of individual color values or font styles manually. Instead, you define your brand identity and aesthetic preferences through a `BasisIntent`. Basis then derives a complete, harmonious theme tailored to your application.
 
-A theme in Basis is resolved deterministically from high-level `BasisIntent` declarations into concrete token values.
+## Declaring Your Theme Intent
 
-## Runtime Effects
+A `BasisIntent` brings together three key aspects of your design:
 
-When a theme is applied:
-- Surfaces inherit semantic background and elevation tokens.
-- Interactive controls adapt contrast and focus ring geometry.
-- Typography styles scale according to accessibility settings.
+1. **Identity**: Your brand seed color and primary visual signature.
+2. **Mood**: The emotional feel and energy of your interface (e.g., calm, energetic, refined).
+3. **Domain**: Industry-aligned conventions for density, contrast, and layout patterns (e.g., Finance, Productivity, Reader).
 
-## Overrides & Precedence
+Here is a typical theme definition in your Android application:
 
-Component-level overrides take precedence over global intent tokens while preserving contrast invariants.
+```kotlin
+import io.github.alph_a07.basis.components.theme.BasisTheme
+import io.github.alph_a07.basis.theme.core.ThemeMode
+import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.intent.IdentityIntent
+import io.github.alph_a07.basis.theme.intent.MoodIntent
+import io.github.alph_a07.basis.theme.intent.DomainIntent
+
+val AppThemeIntent = BasisIntent(
+    identity = IdentityIntent(
+        seedColor = "#0284C7", // Brand primary color (Sky Blue)
+        brandName = "Acme App"
+    ),
+    mood = MoodIntent(
+        preset = MoodIntent.Preset.Refined
+    ),
+    domain = DomainIntent(
+        domain = DomainIntent.Domain.Productivity
+    )
+)
+
+@Composable
+fun App() {
+    BasisTheme(
+        intent = AppThemeIntent,
+        mode = ThemeMode.System
+    ) {
+        MainScreen()
+    }
+}
+```
+
+## Configuring Brand Identity
+
+The `IdentityIntent` sets the core chromatic anchor of your application:
+
+- **`seedColor`**: A hex string (e.g. `"#3B82F6"`) or RGB color. Basis extracts the hue and chroma to generate your primary palette, container tones, and state variations while guaranteeing WCAG AA contrast.
+- **`brandName`**: A label for documentation and team alignment.
+
+```kotlin
+val identity = IdentityIntent(
+    seedColor = "#10B981", // Emerald Green
+    brandName = "FinTrack"
+)
+```
+
+## Selecting a Mood Preset
+
+The `MoodIntent` controls the visual personality of your application. Basis provides seven ready-to-use presets:
+
+| Preset | Visual Character | Recommended Use |
+| :--- | :--- | :--- |
+| **`Balanced`** | Neutral chroma, moderate contrast, standard radii | General consumer applications |
+| **`Refined`** | Subdued chroma, subtle elevation, crisp typography | Professional tools, enterprise software |
+| **`Energetic`** | Vibrant accents, punchy contrast, lively motion | Fitness, gaming, creative platforms |
+| **`Calm`** | Soft pastel undertones, gentle contrast, rounded corners | Wellness, meditation, journaling |
+| **`Technical`** | Crisp edges, compact density, high information clarity | Developer tools, terminal dashboards |
+| **`Playful`** | Bouncy shapes, warm hues, generous spacing | Social, entertainment, education |
+| **`Warm`** | Amber/golden undertones, cozy surface warmth | Lifestyle, food, hospitality |
+
+### Fine-Tuning Aesthetic Knobs
+
+If you want fine-grained control beyond presets, you can adjust continuous aesthetic knobs from `-1.0` to `+1.0`:
+
+```kotlin
+val customMood = MoodIntent(
+    preset = MoodIntent.Preset.Balanced,
+    chroma = 0.2f,     // Slightly more vibrant accent colors
+    contrast = 0.1f,   // Slightly higher separation between surfaces
+    density = 0.3f,    // Slightly more compact layout spacing
+    sharpness = -0.2f  // Slightly softer, rounder corners
+)
+```
+
+## Choosing a Business Domain
+
+The `DomainIntent` tailors your design system to conventions expected in specific industries:
+
+- **`Productivity`**: Clean typography, compact form fields, and subtle focus outlines.
+- **`Finance`**: High-contrast tabular numbers, clear positive/negative status indicators, and conservative elevation.
+- **`Healthcare`**: Calm visual tone, high legibility, and prominent action buttons.
+- **`Developer`**: Monospace accents, dense tables, and subdued backgrounds.
+- **`Reader`**: Comfortable line lengths, generous typographic line-heights, and reduced chromatic distraction.
+
+```kotlin
+val domain = DomainIntent(
+    domain = DomainIntent.Domain.Finance
+)
+```
+
+## How Intent Maps to Tokens
+
+When you pass a `BasisIntent` into `BasisTheme`, it automatically derives the design tokens you access in Compose:
+
+- Your **seed color** expands into `BasisTheme.colors.primary`, `onPrimary`, `primaryContainer`, and interactive hover/pressed states.
+- Your **mood contrast** adjusts surface boundaries, divider visibility, and dark mode luminance steps.
+- Your **density setting** scales `BasisTheme.spacing` so that standard padding throughout your app expands or compacts proportionally.
+
+To learn more about how tokens can be customized for specific components, see [Overrides](/docs/theming/overrides).

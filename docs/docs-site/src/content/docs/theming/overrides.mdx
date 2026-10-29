@@ -2,16 +2,97 @@
 title: Overrides
 section: Theming
 order: 7
-status: stub
-description: Token overrides, precedence rules, and patch vocabulary.
+status: published
+description: Customizing specific components, surfaces, and variants without breaking global theme coherence.
 ---
 
-## Override Structure
+While Basis intent rules provide consistent, accessible styling across 95% of your application, specific use cases—such as a promotional call-to-action or a branded card—require targeted customization.
 
-Component and surface overrides allow targeted token customization without breaking system-wide coherence:
-- **Universal Fields**: Surface background, border color, corner radius, and content tint.
-- **Extra Families**: Domain-specific patches (e.g. `SurfaceExtraPatch`, `IconExtraPatch`).
+Basis provides an **Overrides** system that allows you to customize component properties while maintaining theme coherence and accessibility guarantees.
 
-## Precedence Rules
+## Precedence Hierarchy
 
-Component-level overrides take precedence over global intent tokens while maintaining contrast safety invariants.
+When multiple styles apply to a component, Basis evaluates them according to a clear precedence hierarchy:
+
+```
+[ Local Composable Modifiers ]
+             ▼
+[ Component Variant Override ]  (e.g., custom primary button styling)
+             ▼
+[ Global Component Override ]   (e.g., all buttons in the app)
+             ▼
+[ Domain & Mood Defaults ]     (e.g., Productivity domain conventions)
+             ▼
+[ Base Theme Intent ]           (e.g., brand seed color)
+```
+
+Styles specified closer to the component instance always take precedence over global theme defaults.
+
+## The 10 Universal Style Fields
+
+Basis standardizes component customization through ten universal style properties supported across all interactive composables:
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| **`background`** | `Color` | The background fill color of the container. |
+| **`contentColor`** | `Color` | The foreground color applied to text and icons. |
+| **`borderColor`** | `Color` | The stroke color for container outlines. |
+| **`borderWidth`** | `Dp` | The thickness of the outline boundary. |
+| **`cornerRadius`** | `Dp` | The corner rounding radius. |
+| **`elevation`** | `Dp` | Physical elevation or tonal lightness depth. |
+| **`padding`** | `PaddingValues` | Internal padding between container boundary and content. |
+| **`spacing`** | `Dp` | Gap spacing between child elements (e.g. icon and label). |
+| **`opacity`** | `Float` | Alpha transparency (0.0 to 1.0). |
+| **`interactionSource`** | `MutableInteractionSource` | Interaction state stream for hover, press, and focus. |
+
+## Applying Overrides
+
+You can apply overrides either globally at the theme level or locally on a specific component instance:
+
+### 1. Global Component Overrides
+
+To customize the default appearance of all buttons or surfaces across your entire app, specify overrides in your theme declaration:
+
+```kotlin
+import io.github.alph_a07.basis.theme.intent.BasisIntent
+import io.github.alph_a07.basis.theme.intent.ControlIntent
+import io.github.alph_a07.basis.theme.intent.controls.overrides.ComponentOverrides
+import io.github.alph_a07.basis.theme.intent.controls.overrides.UniversalStylePatch
+
+val customThemeIntent = BasisIntent(
+    identity = IdentityIntent(seedColor = "#0284C7"),
+    control = ControlIntent(
+        overrides = ComponentOverrides(
+            button = UniversalStylePatch(
+                cornerRadius = 12.dp, // Give all buttons a softer 12dp radius
+                borderWidth = 1.dp
+            )
+        )
+    )
+)
+```
+
+### 2. Local Instance Customization
+
+For single-screen variations, use standard Compose modifiers and parameters on the component directly:
+
+```kotlin
+BasisButton(
+    onClick = { /* checkout */ },
+    variant = BasisButtonDefaults.variantPrimary(),
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(BasisTheme.spacing.md)
+) {
+    Text("Complete Purchase")
+}
+```
+
+## Maintaining Accessibility Invariants
+
+Overrides are designed to give developers creative freedom without compromising accessibility:
+
+- **Touch Target Floor**: Even if you reduce a button's visual padding to `4.dp`, Basis automatically preserves the **48dp minimum physical touch target** via `Modifier.touchTarget()` to prevent missed taps.
+- **Content Color Propagation**: When you override a container's `background`, `LocalBasisContentColor` automatically updates so that child text and icons maintain readable contrast against the new background.
+
+Next, explore foundational building blocks in the [Foundation](/docs/foundation/surface) section.

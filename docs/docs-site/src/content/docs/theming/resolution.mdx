@@ -2,17 +2,73 @@
 title: Resolution and Reports
 section: Theming
 order: 6
-status: stub
-description: Resolution pipeline stages, diagnostics, and compliance reports.
+status: published
+description: How Basis compiles your intent into resolved tokens, validates contrast, and reports diagnostics.
 ---
 
-## Pipeline Stages
+When you configure a `BasisIntent`, the Basis theme engine compiles your preferences into a `ResolvedTheme`. This process ensures that every token used in your Jetpack Compose application is mathematically validated, accessible, and ready for production.
 
-Theme resolution proceeds through sequential, validated stages:
-1. **Normalization**: Intent validation and clamp boundaries.
-2. **Derivation**: Palette generation, chroma stepping, and surface calculations.
-3. **Synthesis**: Component token assembly and patch resolution.
+## The Resolution Flow
 
-## Resolution Reports
+Theme resolution transforms your high-level intent into the concrete design tokens you use in your app:
 
-When a theme resolves, the resolver emits a `ResolutionReport` documenting generated tokens, contrast metrics, and any warnings.
+1. **Input Validation**: Verifies that seed colors and aesthetic knobs are within valid ranges.
+2. **Palette Derivation**: Generates primary, secondary, and neutral surface palettes for both light and dark modes using the OKLCH color space.
+3. **Accessibility Verification**: Tests contrast ratios across all text and surface pairings to guarantee compliance with WCAG 2.1 AA standards.
+4. **Resolved Theme Emission**: Produces concrete `ResolvedTheme` pairs (`light` and `dark`) containing all token trees.
+
+```kotlin
+// Resolving intent into light and dark theme token sets
+val resolvedThemePair = ThemeResolver.resolve(myAppIntent)
+val lightTheme = resolvedThemePair.light
+val darkTheme = resolvedThemePair.dark
+```
+
+## Accessibility & Contrast Checks
+
+During resolution, Basis audits every color pairing to ensure your application remains accessible:
+
+| Token Pairing | Minimum Contrast Ratio | Standard |
+| :--- | :--- | :--- |
+| **`onPrimary` on `primary`** | $\ge 4.5:1$ | WCAG AA Normal Text |
+| **`onSurface` on `surface`** | $\ge 4.5:1$ | WCAG AA Normal Text |
+| **`onSurfaceVariant` on `surfaceVariant`** | $\ge 4.5:1$ | WCAG AA Secondary Text |
+| **`outline` on `surface`** | $\ge 3.0:1$ | WCAG AA UI Boundaries |
+| **`focusRing` on `surface`** | $\ge 3.0:1$ | WCAG AA Focus Indicators |
+
+If a custom seed color would produce illegible text (for example, putting white text on a bright pastel background), the resolver automatically adjusts luminance to meet the required contrast floor.
+
+## Diagnostic Reports (`ResolutionReport`)
+
+Every time a theme is resolved, the engine generates a `ResolutionReport` that details the health and compliance of your theme:
+
+- **`isValid`**: A boolean indicating whether all tokens compiled without critical contract violations.
+- **`warnings`**: Informational notices, such as notifications when a vivid color underwent chroma reduction to fit sRGB screens, or when contrast adjustments were applied.
+- **`contrastAudit`**: Detailed contrast scores for key text and container combinations.
+
+## Unit Testing Your Theme
+
+You can include theme resolution in your project's automated test suite to ensure that future brand tweaks never introduce unexpected contrast warnings or regressions:
+
+```kotlin
+import io.github.alph_a07.basis.theme.resolution.ThemeResolver
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class AppThemeTest {
+
+    @Test
+    fun appThemeResolvesWithoutErrors() {
+        val resolution = ThemeResolver.resolve(AppThemeIntent)
+
+        // Verify that the theme compiles successfully
+        assertTrue("Theme resolution failed", resolution.report.isValid)
+
+        // Verify that there are no critical contrast warnings
+        val severeWarnings = resolution.report.warnings.filter { it.isSevere }
+        assertTrue("Theme generated severe warnings: $severeWarnings", severeWarnings.isEmpty())
+    }
+}
+```
+
+With resolution understood, learn how to surgically customize individual components in [Overrides](/docs/theming/overrides).

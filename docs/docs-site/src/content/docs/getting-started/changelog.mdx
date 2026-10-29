@@ -2,21 +2,67 @@
 title: Changelog
 section: Getting Started
 order: 5
-status: stub
-description: Release history and version migration notes for Basis.
+status: published
+description: Release history, new features, and migration guidance across Basis versions.
 ---
 
-## Latest Releases
-
-Track recent features, fixes, and API migrations across Basis modules.
+This page documents release highlights, new features, bug fixes, and API migrations across Basis releases.
 
 ## Versioning Policy
 
-Basis follows Semantic Versioning with strict public API contracts:
-- Breaking changes increment the major version.
-- Non-breaking additions increment the minor version.
-- Bug fixes increment the patch version.
+Basis strictly adheres to [Semantic Versioning (SemVer)](https://semver.org/):
 
-## Automated Changelogs
+- **Major (`X.0.0`)**: Incompatible API changes or breaking visual contracts.
+- **Minor (`0.X.0`)**: Backwards-compatible new features, components, or intent options.
+- **Patch (`0.0.X`)**: Backwards-compatible bug fixes and performance improvements.
 
-Changelogs are generated from Conventional Commits during release tag builds.
+### Deprecation Guarantee
+
+When an API is scheduled for replacement, it is marked with Kotlin's `@Deprecated` annotation with an explicit `ReplaceWith` suggestion. Deprecated APIs remain functional for at least two minor releases before removal, giving you plenty of time to migrate.
+
+---
+
+## Release History
+
+### v0.2.0
+
+*Current stable release*
+
+#### New Features
+- **Foundation Modifiers**: Added `Modifier.surface()`, `Modifier.focusRing()`, and `Modifier.touchTarget()` for applying design system behaviors to custom layouts.
+- **10 Business Domains**: Introduced industry-specific presets in `DomainIntent` (`Finance`, `Healthcare`, `Developer`, `Commerce`, `Reader`, `Productivity`, `Dashboard`, `Social`, `Media`, `Generic`).
+- **7 Mood Presets & Continuous Knobs**: Added high-level presets (`Refined`, `Energetic`, `Calm`, `Technical`, `Playful`, `Warm`, `Balanced`) along with 8 continuous aesthetic knobs (`chroma`, `contrast`, `density`, `sharpness`, etc.).
+- **Tonal Elevation**: Refined dark mode surface rendering to use luminous lightness steps instead of drop shadows.
+- **Accessibility Enhancements**: Integrated automatic 48dp minimum touch target enforcement and high-contrast focus rings.
+
+#### Improvements & Fixes
+- Enhanced OKLCH color derivation to prevent gamut clipping on vivid display panels.
+- Optimized Compose recomposition boundaries across `BasisButton` state transitions.
+
+---
+
+### v0.1.0
+
+*Initial public release*
+
+#### Features
+- **Core Design Tokens**: Complete token structure including `colors`, `typography`, `spacing`, `shapes`, `depth`, and `motion`.
+- **`BasisTheme` Composable**: Root theme wrapper supporting `ThemeMode.Light`, `ThemeMode.Dark`, and `ThemeMode.System`.
+- **`BasisButton`**: Production-ready button with primary, secondary, outline, and ghost variants.
+- **`BasisDivider`**: Responsive line separators matching layout spacing tokens.
+- **Static Analysis**: Initial release of `basis-lint` Detekt rules for design system compliance.
+
+---
+
+## Migrating Between Versions
+
+To upgrade Basis in your project:
+
+1. Update the version number in your `build.gradle.kts`:
+   ```kotlin
+   val basisVersion = "0.2.0"
+   implementation("io.github.alph-a07:basis-components:$basisVersion")
+   implementation("io.github.alph-a07:basis-theme:$basisVersion")
+   ```
+2. Sync your Gradle project.
+3. Check for any compiler deprecation warnings and apply the recommended IDE quick-fixes.

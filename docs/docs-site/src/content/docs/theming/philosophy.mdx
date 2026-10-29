@@ -2,16 +2,55 @@
 title: Philosophy
 section: Theming
 order: 2
-status: stub
-description: The core design and mathematical principles underpinning Basis theming.
+status: published
+description: The core design principles and accessibility guarantees guiding the Basis design system.
 ---
 
-## Principles
+Basis was created to eliminate the friction, inconsistencies, and accessibility gaps that often emerge when scaling mobile user interfaces. Rather than treating design tokens as a static list of hardcoded constants, Basis treats theming as a coherent system of mathematical relationships and accessibility guarantees.
 
-1. **System over Specs**: Colors and metrics derive mathematically from semantic relationships rather than arbitrary values.
-2. **Accessible by Construction**: Contrast ratios are enforced at derivation time, preventing non-compliant themes from compiling.
-3. **Multiplatform Parity**: Theme resolution generates byte-identical tokens on JVM and JS.
+## 1. System Over Manual Specs
 
-## Invariant Enforcement
+In many design systems, designers produce static specs containing dozens of discrete color codes for every possible surface, border, and interaction state. When an organization rebrands or introduces dark mode, engineers must manually reconcile hundreds of values.
 
-Theme resolution rejects combinations that violate WCAG contrast minimums or produce out-of-gamut representations.
+Basis shifts the focus from manual values to **systemic intent**:
+
+- You declare your brand identity and desired aesthetic mood once.
+- The system derives container tones, hover states, border hairlines, and contrast pairings algorithmically.
+- If you tweak your brand hue or adjust density, every screen updates consistently without visual drift or orphaned color styles.
+
+## 2. Accessible by Construction
+
+Accessibility should not depend on individual developers remembering to verify contrast or test with TalkBack before submitting a pull request. In Basis, accessibility is built directly into the foundation:
+
+### Guaranteed Color Contrast
+Basis enforces WCAG 2.1 AA standards:
+- **Normal Text**: Guaranteed minimum contrast of **4.5:1** against underlying surfaces.
+- **Large Text & Headings**: Guaranteed minimum contrast of **3.0:1**.
+- **Interactive Controls & Focus Rings**: Guaranteed minimum contrast of **3.0:1** against adjacent elements.
+
+If a chosen brand color lacks sufficient contrast against dark or light surfaces, the theming engine automatically adjusts luminance to ensure readability before the theme is applied.
+
+### Touch Target Floors
+Interactive elements—whether buttons, icon toggles, or list items—automatically enforce a **48dp minimum physical touch target**. Even compact visual designs expand their interactive bounds so all users can tap reliably.
+
+### Predictable Keyboard & Focus Navigation
+For users navigating with hardware keyboards, accessibility switches, or screen readers, every interactive component displays a standardized 2px focus ring with high-contrast outlines that remain clearly visible in both light and dark modes.
+
+## 3. Seamless Dark Mode
+
+A common pitfall in dark themes is simply swapping white backgrounds for dark gray while keeping drop shadows. On dark backgrounds, drop shadows become invisible, flattening the UI and obscuring depth.
+
+Basis uses **Tonal Elevation**:
+- In Light mode, depth is expressed through subtle, natural ambient drop shadows.
+- In Dark mode, surfaces express elevation through subtle, luminous lightness steps. A modal dialog is visibly lighter than a card, which is lighter than the background canvas.
+- As a developer, you use the same semantic depth tokens (`BasisTheme.depth.level1`, `level2`, etc.) in both modes without writing conditional branches.
+
+## 4. Developer Ergonomics
+
+A design system is only as good as its daily developer experience:
+
+- **Type-Safe Access**: All tokens are accessible via `BasisTheme` with full IDE autocomplete.
+- **Zero Reflection**: Built entirely with standard Kotlin data classes and Compose ambient locals for peak runtime performance.
+- **Clear Vocabulary**: Consistent naming across colors, spacing, and typography makes it easy for engineering and design teams to speak the same language.
+
+Proceed to the [Intent Model](/docs/theming/intent) to explore the controls you use to shape your application's aesthetic.

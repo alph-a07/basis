@@ -2,16 +2,88 @@
 title: Focusable
 section: Foundation
 order: 2
-status: stub
-description: Accessible focus boundary handling keyboard navigation and outline rings.
+status: published
+description: Accessible keyboard focus management, focus rings, and navigation semantics.
 ---
 
-## Focus Rings
+As Android expands across tablets, foldables, Chromebooks, and desktop-class environments, hardware keyboard and accessibility switch navigation become essential. The `Focusable` foundation atom standardizes keyboard focus rings and navigation semantics across all interactive components.
 
-The `Focusable` foundation atom standardizes focus indicator styling across all interactive composables:
-- Uses `--docs-focus-ring` (and `--d-color-focus-ring`) with an explicit 2px offset.
-- Enforces high contrast against adjacent surfaces in light and dark modes.
+## The Basis Focus Ring Specification
 
-## Keyboard Support
+A common accessibility failure in Android apps is a focus indicator that blends into the background or disappears during dark mode transitions. Basis guarantees focus visibility through a standardized specification:
 
-Ensures consistent Tab navigation order, hardware keyboard traversal, and accessibility service announcements.
+- **2px Stroke Width**: Thick enough to remain instantly noticeable on high-density mobile and desktop displays.
+- **2px Outward Offset**: Renders with an explicit 2px gap outside the component boundary, preventing the focus ring from obscuring button labels or icons.
+- **Guaranteed 3.0:1 Contrast**: Uses `BasisTheme.colors.focusRing`, which is derived to guarantee a minimum contrast ratio of 3.0:1 against adjacent surfaces in both light and dark modes.
+- **Adaptive Corner Radii**: Automatically matches the corner radius of the underlying component.
+
+## `focus-visible` Behavior
+
+Focus rings are designed to be helpful without creating visual noise for touch-only users:
+
+- **Touch & Mouse Clicks**: Tapping an element with a finger or stylus does not display the persistent focus ring.
+- **Hardware Keyboard Navigation**: Navigating with the `Tab` key, arrow keys, or D-pad immediately reveals the 2px focus ring.
+- **Accessibility Services**: Screen readers (TalkBack) and Switch Access consistently display the focus boundary for the currently active element.
+
+## Using `Modifier.focusRing()`
+
+When creating a custom interactive composable, apply `Modifier.focusRing()` to add standardized focus handling:
+
+```kotlin
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.foundation.modifier.focusRing
+import io.github.alph_a07.basis.components.foundation.modifier.surface
+import io.github.alph_a07.basis.components.foundation.modifier.touchTarget
+import io.github.alph_a07.basis.components.theme.BasisTheme
+
+@Composable
+fun SelectableCard(
+    title: String,
+    selected: Boolean,
+    onSelect: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier = Modifier
+            .touchTarget()
+            .surface(
+                shape = BasisTheme.shapes.medium,
+                color = if (selected) BasisTheme.colors.primaryContainer else BasisTheme.colors.surfaceElevated
+            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onSelect
+            )
+            .focusRing(
+                interactionSource = interactionSource,
+                shape = BasisTheme.shapes.medium
+            )
+            .padding(BasisTheme.spacing.md)
+    ) {
+        Text(
+            text = title,
+            style = BasisTheme.typography.bodyLarge
+        )
+    }
+}
+```
+
+## Accessibility Checklist for Custom Controls
+
+When building custom interactive components:
+
+1. **Always provide an interaction source**: Share a single `MutableInteractionSource` between your `.clickable()` and `.focusRing()` modifiers.
+2. **Assign appropriate semantics**: Use `.semantics { role = Role.Button }` or `Role.Tab` so accessibility services announce the correct interaction type.
+3. **Respect touch target floors**: Always chain `Modifier.touchTarget()` to guarantee 48dp minimum physical target floors.
+
+Next, explore modal scrims and dialog backdrops in [Overlay](/docs/foundation/overlay).
