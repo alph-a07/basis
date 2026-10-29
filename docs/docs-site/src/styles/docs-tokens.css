@@ -42,6 +42,11 @@
   --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 32%, transparent);
   --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 60%, transparent);
 
+  /* Table tokens - subtle vertical outlines and clean zebra striping */
+  --docs-table-border-v: color-mix(in srgb, var(--d-color-border-default) 18%, transparent);
+  --docs-table-row-alt: color-mix(in srgb, var(--d-color-surface-recessed) 55%, var(--d-color-surface-elevated));
+  --docs-table-row-hover: color-mix(in srgb, var(--d-color-surface-recessed) 88%, var(--d-color-surface-elevated));
+
   /* Status Colors */
   --docs-status-pass-bg: var(--d-color-positive-surface);
   --docs-status-pass-text: var(--d-color-positive-content);
@@ -78,4 +83,9 @@
   --docs-scrollbar-track: transparent;
   --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 28%, transparent);
   --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 55%, transparent);
+
+  /* Table tokens - delicate vertical outlines and soft translucent alternating rows */
+  --docs-table-border-v: color-mix(in srgb, var(--d-color-border-default) 9%, transparent);
+  --docs-table-row-alt: color-mix(in srgb, var(--d-color-content-default) 2.5%, transparent);
+  --docs-table-row-hover: color-mix(in srgb, var(--d-color-content-default) 5.5%, transparent);
 }

@@ -181,7 +181,10 @@ const { signatures = [], samples = [] } = Astro.props;
   .table-responsive {
     width: 100%;
     overflow-x: auto;
-    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-top: 1px solid var(--docs-border-subtle, #21262d);
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    border-left: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
+    border-right: 1px solid var(--docs-table-border-v, rgba(255, 255, 255, 0.04));
     border-radius: 8px;
     background: transparent;
     box-sizing: border-box;
@@ -217,12 +220,20 @@ const { signatures = [], samples = [] } = Astro.props;
 
   .params-table th {
     padding: 0.5rem 0.75rem;
-    background: color-mix(in srgb, var(--docs-text, #e6edf3) 3%, transparent);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 4%, transparent);
     color: var(--docs-text-muted, #8b949e);
     font-weight: 600;
     font-size: 0.75rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     white-space: nowrap;
+  }
+
+  .params-table th:first-child {
+    border-top-left-radius: 7px;
+  }
+
+  .params-table th:last-child {
+    border-top-right-radius: 7px;
   }
 
   :global([data-theme="light"]) .params-table th {
@@ -239,12 +250,24 @@ const { signatures = [], samples = [] } = Astro.props;
     transition: background 0.12s ease;
   }
 
-  .params-table tr:hover td {
-    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
+  .params-table tbody tr:nth-child(even) td {
+    background: var(--docs-table-row-alt, rgba(255, 255, 255, 0.025));
+  }
+
+  .params-table tbody tr:hover td {
+    background: var(--docs-table-row-hover, rgba(255, 255, 255, 0.055));
   }
 
   .params-table tr:last-child td {
     border-bottom: none;
+  }
+
+  .params-table tr:last-child td:first-child {
+    border-bottom-left-radius: 7px;
+  }
+
+  .params-table tr:last-child td:last-child {
+    border-bottom-right-radius: 7px;
   }
 
   .param-name-cell code {
