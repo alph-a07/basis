@@ -44,7 +44,6 @@ const { signatures = [], samples = [] } = Astro.props;
       <CodeBlock
         code={sig.declaration}
         lang="kotlin"
-        title="Signature"
       />
 
       <!-- Parameters Table -->
@@ -116,7 +115,6 @@ const { signatures = [], samples = [] } = Astro.props;
             <CodeBlock
               code={sample.code}
               lang="kotlin"
-              title={sample.title}
             />
           </div>
         ))}

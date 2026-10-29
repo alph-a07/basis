@@ -16,13 +16,32 @@ const {
 } = Astro.props;
 
 const trimmedCode = code ? code.trim() : '';
-const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase());
+
+// Language label map - title of codeblock indicates language
+const langMap: Record<string, string> = {
+  kotlin: 'Kotlin',
+  kt: 'Kotlin',
+  groovy: 'Groovy',
+  gradle: 'Gradle',
+  xml: 'XML',
+  json: 'JSON',
+  bash: 'Bash',
+  sh: 'Shell',
+  ts: 'TypeScript',
+  tsx: 'TSX',
+  js: 'JavaScript',
+  jsx: 'JSX',
+  html: 'HTML',
+  css: 'CSS',
+};
+
+const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpperCase() : 'Kotlin');
 ---
 
 <div class={`code-block-container ${className}`} data-code-block>
   <div class="code-header">
     <div class="code-meta">
-      <span class="lang-tag">{displayTitle}</span>
+      <span class="lang-tag">{displayLang}</span>
     </div>
     <button
       type="button"
@@ -75,6 +94,7 @@ const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase()
         light: 'github-light',
         dark: 'github-dark',
       }}
+      defaultColor={false}
     />
   </div>
 </div>
@@ -213,6 +233,7 @@ const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase()
   .code-viewport :global(pre.shiki) {
     margin: 0 !important;
     padding: 1.15rem 1.25rem !important;
+    background-color: transparent !important;
     background: transparent !important;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
     font-size: 0.85rem !important;
@@ -226,10 +247,11 @@ const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase()
     font-family: inherit !important;
     font-size: inherit !important;
     background: transparent !important;
+    background-color: transparent !important;
     padding: 0 !important;
   }
 
-  /* Dual Theme Styling */
+  /* Dual Theme Styling for Dark Mode */
   :global(html[data-theme='dark']) .code-viewport :global(pre.astro-code),
   :global(html[data-theme='dark']) .code-viewport :global(pre.astro-code span),
   :global(html[data-theme='dark']) .code-viewport :global(pre.shiki),
@@ -240,6 +262,18 @@ const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase()
     text-decoration: var(--shiki-dark-text-decoration) !important;
   }
 
+  /* Dual Theme Styling for Light Mode */
+  :global(html[data-theme='light']) .code-viewport :global(pre.astro-code),
+  :global(html[data-theme='light']) .code-viewport :global(pre.astro-code span),
+  :global(html[data-theme='light']) .code-viewport :global(pre.shiki),
+  :global(html[data-theme='light']) .code-viewport :global(pre.shiki span) {
+    color: var(--shiki-light) !important;
+    font-style: var(--shiki-light-font-style) !important;
+    font-weight: var(--shiki-light-font-weight) !important;
+    text-decoration: var(--shiki-light-text-decoration) !important;
+  }
+
+  /* Fallbacks for system preference when data-theme is not yet set */
   @media (prefers-color-scheme: dark) {
     :global(html:not([data-theme])) .code-viewport :global(pre.astro-code),
     :global(html:not([data-theme])) .code-viewport :global(pre.astro-code span),
@@ -249,6 +283,18 @@ const displayTitle = title || (lang === 'kotlin' ? 'Kotlin' : lang.toUpperCase()
       font-style: var(--shiki-dark-font-style) !important;
       font-weight: var(--shiki-dark-font-weight) !important;
       text-decoration: var(--shiki-dark-text-decoration) !important;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :global(html:not([data-theme])) .code-viewport :global(pre.astro-code),
+    :global(html:not([data-theme])) .code-viewport :global(pre.astro-code span),
+    :global(html:not([data-theme])) .code-viewport :global(pre.shiki),
+    :global(html:not([data-theme])) .code-viewport :global(pre.shiki span) {
+      color: var(--shiki-light) !important;
+      font-style: var(--shiki-light-font-style) !important;
+      font-weight: var(--shiki-light-font-weight) !important;
+      text-decoration: var(--shiki-light-text-decoration) !important;
     }
   }
 
