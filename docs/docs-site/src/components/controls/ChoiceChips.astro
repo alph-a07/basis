@@ -1,0 +1,348 @@
+---
+/**
+ * ChoiceChips.astro - Accessible chip selector supporting single and multi-choice modes.
+ *
+ * Generated directly from Intent choices (Presets, Presence, Domains, Interactions).
+ * Satisfies:
+ * - Keyboard operable: Arrow keys for radiogroup; Space/Enter for toggling checkboxes
+ * - Accessible tooltips displaying KDoc summary
+ * - Dynamic: adding a new choice renders automatically without site code change
+ */
+import type { SingleChoiceControlSpec, MultiChoiceControlSpec, ChoiceOption } from '../../types/controls';
+
+export interface Props {
+  spec: SingleChoiceControlSpec | MultiChoiceControlSpec;
+  value?: string | string[] | null;
+  id?: string;
+  name?: string;
+  disabled?: boolean;
+  showLabel?: boolean;
+}
+
+const {
+  spec,
+  value = spec.type === 'single-choice' ? spec.defaultValue : (spec.defaultValues ?? []),
+  id = `control-${spec.id}`,
+  name = spec.id,
+  disabled = false,
+  showLabel = true,
+} = Astro.props;
+
+const isSingle = spec.type === 'single-choice';
+const options: ChoiceOption[] = spec.options || [];
+
+const selectedSet = new Set<string>(
+  Array.isArray(value) ? value : value ? [value] : []
+);
+---
+
+<div
+  class:list={['control-field', 'choice-chips-field', { 'is-disabled': disabled }]}
+  id={id}
+  data-control-type={spec.type}
+  data-path={spec.path}
+  data-name={name}
+>
+  {showLabel && (
+    <div class="control-header">
+      <span class="control-label" id={`${id}-label`}>
+        {spec.label}
+      </span>
+      {spec.summary && (
+        <span class="control-summary-hint" title={spec.summary}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </span>
+      )}
+    </div>
+  )}
+
+  <div
+    class="chips-container"
+    role={isSingle ? 'radiogroup' : 'group'}
+    aria-labelledby={showLabel ? `${id}-label` : undefined}
+    aria-label={!showLabel ? spec.label : undefined}
+    aria-disabled={disabled ? 'true' : undefined}
+  >
+    {options.map((opt, index) => {
+      const isChecked = selectedSet.has(opt.id);
+      const chipId = `${id}-opt-${opt.id}`;
+      const tooltipId = `${id}-tip-${opt.id}`;
+      // In radiogroup, only the selected radio or the first radio has tabindex 0
+      const isFocusable = isSingle
+        ? isChecked || (selectedSet.size === 0 && index === 0)
+        : true;
+
+      return (
+        <div class="chip-wrapper">
+          <button
+            type="button"
+            id={chipId}
+            class:list={['choice-chip', { 'is-active': isChecked }]}
+            role={isSingle ? 'radio' : 'checkbox'}
+            aria-checked={isChecked ? 'true' : 'false'}
+            aria-describedby={tooltipId}
+            tabindex={disabled ? -1 : isFocusable ? 0 : -1}
+            disabled={disabled}
+            data-value={opt.id}
+            title={opt.summary}
+          >
+            <span class="chip-label">{opt.label}</span>
+          </button>
+
+          <span
+            id={tooltipId}
+            class="chip-tooltip"
+            role="tooltip"
+          >
+            {opt.summary}
+          </span>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  function setupChoiceChips() {
+    document.querySelectorAll<HTMLElement>('.choice-chips-field').forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const isSingle = container.dataset.controlType === 'single-choice';
+      const chips = Array.from(container.querySelectorAll<HTMLButtonElement>('.choice-chip'));
+
+      function emitChange() {
+        const activeChips = chips.filter((c) => c.getAttribute('aria-checked') === 'true');
+        const value = isSingle
+          ? activeChips[0]?.dataset.value || null
+          : activeChips.map((c) => c.dataset.value as string);
+
+        container.dispatchEvent(
+          new CustomEvent('control-change', {
+            bubbles: true,
+            detail: {
+              path: container.dataset.path,
+              name: container.dataset.name,
+              value,
+            },
+          })
+        );
+      }
+
+      function selectRadio(targetChip: HTMLButtonElement) {
+        chips.forEach((chip) => {
+          const isTarget = chip === targetChip;
+          chip.setAttribute('aria-checked', isTarget ? 'true' : 'false');
+          chip.classList.toggle('is-active', isTarget);
+          chip.tabIndex = isTarget ? 0 : -1;
+        });
+        targetChip.focus();
+        emitChange();
+      }
+
+      function toggleCheckbox(chip: HTMLButtonElement) {
+        const wasChecked = chip.getAttribute('aria-checked') === 'true';
+        const isChecked = !wasChecked;
+        chip.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+        chip.classList.toggle('is-active', isChecked);
+        emitChange();
+      }
+
+      chips.forEach((chip, index) => {
+        chip.addEventListener('click', () => {
+          if (chip.disabled) return;
+          if (isSingle) {
+            selectRadio(chip);
+          } else {
+            toggleCheckbox(chip);
+          }
+        });
+
+        chip.addEventListener('keydown', (e: KeyboardEvent) => {
+          if (chip.disabled) return;
+
+          if (isSingle) {
+            let nextIndex = -1;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+              e.preventDefault();
+              nextIndex = (index + 1) % chips.length;
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+              e.preventDefault();
+              nextIndex = (index - 1 + chips.length) % chips.length;
+            } else if (e.key === 'Home') {
+              e.preventDefault();
+              nextIndex = 0;
+            } else if (e.key === 'End') {
+              e.preventDefault();
+              nextIndex = chips.length - 1;
+            } else if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              selectRadio(chip);
+            }
+
+            if (nextIndex !== -1 && chips[nextIndex]) {
+              selectRadio(chips[nextIndex]);
+            }
+          } else {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              toggleCheckbox(chip);
+            }
+          }
+        });
+      });
+    });
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupChoiceChips);
+    } else {
+      setupChoiceChips();
+    }
+  }
+</script>
+
+<style>
+  .choice-chips-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .choice-chips-field.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .control-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .control-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--docs-text, #f0f6fc);
+  }
+
+  .control-summary-hint {
+    color: var(--docs-text-muted, #8b949e);
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+  }
+
+  .chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .chip-wrapper {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .choice-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.32rem 0.75rem;
+    font-size: 0.8125rem;
+    font-family: var(--docs-font-sans);
+    font-weight: 500;
+    color: var(--docs-text-muted);
+    background: var(--docs-surface, #0d0d0d);
+    border: 1px solid var(--docs-border, rgba(255, 255, 255, 0.12));
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 140ms cubic-bezier(0.2, 0, 0, 1);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .choice-chip:hover:not(:disabled) {
+    color: var(--docs-text);
+    background: var(--docs-card-hover, #161616);
+    border-color: var(--docs-border-strong, rgba(255, 255, 255, 0.25));
+  }
+
+  .choice-chip:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  .choice-chip.is-active {
+    color: #ffffff;
+    font-weight: 600;
+    background: #1c1c1c;
+    border-color: var(--docs-accent, #3b82f6);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  :global([data-theme="light"]) .choice-chip {
+    background: #ffffff;
+    border-color: var(--docs-border, #e2e8f0);
+    color: var(--docs-text-muted, #64748b);
+  }
+
+  :global([data-theme="light"]) .choice-chip:hover:not(:disabled) {
+    background: var(--docs-surface-recessed, #f1f5f9);
+    color: var(--docs-text, #1e293b);
+  }
+
+  :global([data-theme="light"]) .choice-chip.is-active {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: var(--docs-accent, #2563eb);
+    color: var(--docs-accent, #2563eb);
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.15);
+  }
+
+  /* Accessible Floating Tooltip */
+  .chip-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 0.4rem 0.65rem;
+    background: var(--docs-surface-inverse, #24292f);
+    color: var(--docs-text-inverse, #ffffff);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    font-weight: 400;
+    white-space: normal;
+    max-width: 260px;
+    width: max-content;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+    z-index: 100;
+    text-align: center;
+  }
+
+  .chip-wrapper:hover .chip-tooltip,
+  .choice-chip:focus-visible + .chip-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .choice-chip,
+    .chip-tooltip,
+    .chip-indicator {
+      transition: none !important;
+    }
+  }
+</style>

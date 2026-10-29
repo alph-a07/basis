@@ -1,0 +1,256 @@
+---
+/**
+ * ToggleControl.astro - Accessible switch toggle for Boolean intent fields (e.g. deriveColors).
+ */
+import type { ToggleControlSpec } from '../../types/controls';
+
+export interface Props {
+  spec: ToggleControlSpec;
+  checked?: boolean;
+  id?: string;
+  disabled?: boolean;
+}
+
+const {
+  spec,
+  checked = spec.defaultValue,
+  id = `toggle-${spec.id}`,
+  disabled = false,
+} = Astro.props;
+
+const tooltipId = `${id}-summary-tip`;
+---
+
+<div
+  class:list={['control-field', 'toggle-field-container', { 'is-disabled': disabled }]}
+  id={id}
+  data-path={spec.path}
+  data-field-id={spec.id}
+>
+  <div class="toggle-header">
+    <div class="toggle-title-wrap">
+      <span class="toggle-label" id={`${id}-label`}>
+        {spec.label}
+      </span>
+      {spec.summary && (
+        <span
+          class="toggle-summary-badge"
+          tabindex="0"
+          role="button"
+          aria-describedby={tooltipId}
+          aria-label={`Summary for ${spec.label}: ${spec.summary}`}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </span>
+      )}
+      {spec.summary && (
+        <span id={tooltipId} class="toggle-tooltip" role="tooltip">
+          {spec.summary}
+        </span>
+      )}
+    </div>
+
+    <button
+      type="button"
+      id={`${id}-switch`}
+      class:list={['toggle-switch', { 'is-checked': checked }]}
+      role="switch"
+      aria-checked={checked ? 'true' : 'false'}
+      aria-labelledby={`${id}-label`}
+      aria-describedby={spec.summary ? tooltipId : undefined}
+      disabled={disabled}
+      tabindex={disabled ? -1 : 0}
+    >
+      <span class="toggle-thumb" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>
+
+<script>
+  function setupToggleControls() {
+    document.querySelectorAll<HTMLElement>('.toggle-field-container').forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const switchBtn = container.querySelector<HTMLButtonElement>('.toggle-switch');
+      if (!switchBtn) return;
+
+      function toggle() {
+        if (!switchBtn || switchBtn.disabled) return;
+        const wasChecked = switchBtn.getAttribute('aria-checked') === 'true';
+        const isChecked = !wasChecked;
+
+        switchBtn.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+        switchBtn.classList.toggle('is-checked', isChecked);
+
+        container.dispatchEvent(
+          new CustomEvent('control-change', {
+            bubbles: true,
+            detail: {
+              path: container.dataset.path,
+              fieldId: container.dataset.fieldId,
+              value: isChecked,
+            },
+          })
+        );
+      }
+
+      switchBtn.addEventListener('click', toggle);
+
+      switchBtn.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupToggleControls);
+    } else {
+      setupToggleControls();
+    }
+  }
+</script>
+
+<style>
+  .toggle-field-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+  }
+
+  .toggle-field-container.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .toggle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .toggle-title-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .toggle-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--docs-text, #f0f6fc);
+  }
+
+  .toggle-summary-badge {
+    color: var(--docs-text-muted, #8b949e);
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    border-radius: 50%;
+    padding: 1px;
+  }
+
+  .toggle-summary-badge:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+  }
+
+  .toggle-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    transform: translateY(4px);
+    padding: 0.4rem 0.65rem;
+    background: var(--docs-surface-inverse, #24292f);
+    color: var(--docs-text-inverse, #ffffff);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    font-weight: 400;
+    white-space: normal;
+    max-width: 260px;
+    width: max-content;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+    z-index: 100;
+  }
+
+  .toggle-title-wrap:hover .toggle-tooltip,
+  .toggle-summary-badge:focus-visible + .toggle-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .toggle-switch {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    background: var(--docs-surface-recessed, #050505);
+    border: 1px solid var(--docs-border, rgba(255, 255, 255, 0.12));
+    border-radius: 9999px;
+    cursor: pointer;
+    padding: 2px;
+    transition: background 140ms ease, border-color 140ms ease;
+  }
+
+  .toggle-switch:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  .toggle-switch.is-checked {
+    background: var(--docs-accent, #3b82f6);
+    border-color: var(--docs-accent, #3b82f6);
+  }
+
+  .toggle-thumb {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    transition: transform 140ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .toggle-switch.is-checked .toggle-thumb {
+    transform: translateX(16px);
+  }
+
+  :global([data-theme="light"]) .toggle-switch {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+  }
+
+  :global([data-theme="light"]) .toggle-switch.is-checked {
+    background: var(--docs-accent, #2563eb);
+    border-color: var(--docs-accent, #2563eb);
+  }
+
+  :global([data-theme="dark"]) .toggle-switch.is-checked {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toggle-field-container,
+    .toggle-switch,
+    .toggle-thumb,
+    .toggle-tooltip {
+      transition: none !important;
+    }
+  }
+</style>

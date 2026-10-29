@@ -1,0 +1,400 @@
+---
+/**
+ * ColorField.astro - Accessible color picker and text hex input for Basis theme identity.
+ *
+ * Implements:
+ * - Color swatch and native color picker (<input type="color">)
+ * - Text field with validation and real-time synchronization
+ * - Clear/Unset action for optional brand/supporting colors
+ * - Tooltip displaying KDoc summary
+ * - Full keyboard operability and accessible labeling
+ */
+import type { ColorControlSpec } from '../../types/controls';
+
+export interface Props {
+  spec: ColorControlSpec;
+  value?: string | null;
+  id?: string;
+  disabled?: boolean;
+  showLabel?: boolean;
+}
+
+const {
+  spec,
+  value = spec.defaultValue,
+  id = `color-${spec.id}`,
+  disabled = false,
+  showLabel = true,
+} = Astro.props;
+
+const tooltipId = `${id}-summary-tip`;
+const hexValue = value || '';
+const previewColor = value || '#58a6ff';
+---
+
+<div
+  class:list={['control-field', 'color-field-container', { 'is-empty': !value, 'is-disabled': disabled }]}
+  id={id}
+  data-path={spec.path}
+  data-field-id={spec.id}
+>
+  {showLabel && (
+    <div class="color-header">
+      <div class="color-title-wrap">
+        <label for={`${id}-text`} class="color-label">
+          {spec.label}
+        </label>
+        {spec.summary && (
+          <span
+            class="color-summary-badge"
+            tabindex="0"
+            role="button"
+            aria-describedby={tooltipId}
+            aria-label={`Summary for ${spec.label}: ${spec.summary}`}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
+          </span>
+        )}
+        {spec.summary && (
+          <span id={tooltipId} class="color-tooltip" role="tooltip">
+            {spec.summary}
+          </span>
+        )}
+      </div>
+
+      <button
+        type="button"
+        id={`${id}-clear-btn`}
+        class="color-clear-btn"
+        aria-label={`Clear ${spec.label}`}
+        disabled={disabled || !value}
+        title="Clear color value"
+      >
+        Clear
+      </button>
+    </div>
+  )}
+
+  <div class="color-input-group">
+    <label class="color-picker-label" title="Choose color">
+      <span class="color-swatch-preview" style={`background-color: ${previewColor}`}></span>
+      <input
+        type="color"
+        id={`${id}-native`}
+        class="native-color-input"
+        value={value || '#58a6ff'}
+        disabled={disabled}
+        aria-label={`Pick ${spec.label} visually`}
+      />
+    </label>
+
+    <div class="hex-input-wrap">
+      <span class="hex-prefix" aria-hidden="true">#</span>
+      <input
+        type="text"
+        id={`${id}-text`}
+        class="hex-text-input"
+        placeholder={spec.placeholder ? spec.placeholder.replace(/^#/, '') : '2ea043'}
+        value={hexValue.replace(/^#/, '')}
+        maxlength="6"
+        spellcheck="false"
+        autocomplete="off"
+        disabled={disabled}
+        aria-label={`${spec.label} hex code`}
+      />
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupColorFields() {
+    document.querySelectorAll<HTMLElement>('.color-field-container').forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const nativeInput = container.querySelector<HTMLInputElement>('.native-color-input');
+      const textInput = container.querySelector<HTMLInputElement>('.hex-text-input');
+      const swatch = container.querySelector<HTMLElement>('.color-swatch-preview');
+      const clearBtn = container.querySelector<HTMLButtonElement>('.color-clear-btn');
+
+      if (!nativeInput || !textInput || !swatch || !clearBtn) return;
+
+      function emitChange(hexVal: string | null) {
+        container.dispatchEvent(
+          new CustomEvent('control-change', {
+            bubbles: true,
+            detail: {
+              path: container.dataset.path,
+              fieldId: container.dataset.fieldId,
+              value: hexVal,
+            },
+          })
+        );
+      }
+
+      function updateColor(hex: string | null) {
+        if (!nativeInput || !textInput || !swatch || !clearBtn) return;
+        if (!hex) {
+          container.classList.add('is-empty');
+          clearBtn.disabled = true;
+          textInput.value = '';
+          swatch.style.backgroundColor = '#58a6ff';
+          emitChange(null);
+          return;
+        }
+
+        const normalized = hex.startsWith('#') ? hex : `#${hex}`;
+        container.classList.remove('is-empty');
+        clearBtn.disabled = false;
+        nativeInput.value = normalized;
+        textInput.value = normalized.replace(/^#/, '');
+        swatch.style.backgroundColor = normalized;
+        emitChange(normalized);
+      }
+
+      nativeInput.addEventListener('input', () => {
+        updateColor(nativeInput.value);
+      });
+
+      textInput.addEventListener('input', () => {
+        const val = textInput.value.trim().replace(/^#/, '');
+        if (/^[0-9a-fA-F]{6}$/.test(val)) {
+          updateColor(`#${val}`);
+        } else if (val === '') {
+          updateColor(null);
+        }
+      });
+
+      clearBtn.addEventListener('click', () => {
+        updateColor(null);
+        textInput.focus();
+      });
+    });
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupColorFields);
+    } else {
+      setupColorFields();
+    }
+  }
+</script>
+
+<style>
+  .color-field-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .color-field-container.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .color-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .color-title-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .color-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--docs-text, #f0f6fc);
+    cursor: pointer;
+  }
+
+  .color-summary-badge {
+    color: var(--docs-text-muted, #8b949e);
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    border-radius: 50%;
+    padding: 1px;
+  }
+
+  .color-summary-badge:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+  }
+
+  .color-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    transform: translateY(4px);
+    padding: 0.4rem 0.65rem;
+    background: var(--docs-surface-inverse, #24292f);
+    color: var(--docs-text-inverse, #ffffff);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    font-weight: 400;
+    white-space: normal;
+    max-width: 260px;
+    width: max-content;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+    z-index: 100;
+  }
+
+  .color-title-wrap:hover .color-tooltip,
+  .color-summary-badge:focus-visible + .color-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .color-clear-btn {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    background: transparent;
+    color: var(--docs-text-muted, #8b949e);
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .color-clear-btn:hover:not(:disabled) {
+    color: var(--docs-text, #f0f6fc);
+    background: var(--docs-card-hover, #1f242c);
+    border-color: var(--docs-border, #30363d);
+  }
+
+  .color-clear-btn:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline-offset: 1px;
+  }
+
+  .color-clear-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .color-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .color-picker-label {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  .color-swatch-preview {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid var(--docs-border, #30363d);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: transform 120ms ease;
+  }
+
+  .color-picker-label:hover .color-swatch-preview {
+    transform: scale(1.05);
+  }
+
+  .native-color-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .hex-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--docs-surface, #0d0d0d);
+    border: 1px solid var(--docs-border, rgba(255, 255, 255, 0.12));
+    border-radius: 6px;
+    padding: 0 0.65rem;
+    height: 34px;
+    width: 140px;
+    transition: border-color 140ms ease;
+  }
+
+  .hex-input-wrap:focus-within {
+    border-color: var(--docs-focus-ring, #3b82f6);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  }
+
+  .hex-prefix {
+    font-size: 0.8125rem;
+    font-family: var(--docs-font-mono, monospace);
+    color: var(--docs-text-muted);
+    margin-right: 0.25rem;
+  }
+
+  .hex-text-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--docs-text, #f5f5f7);
+    font-size: 0.8125rem;
+    font-family: var(--docs-font-mono, monospace);
+    outline: none;
+    text-transform: uppercase;
+  }
+
+  .hex-text-input::placeholder {
+    color: var(--docs-text-muted);
+    opacity: 0.45;
+  }
+
+  .color-field-container.is-empty .color-swatch-preview {
+    background: repeating-conic-gradient(#1e1e1e 0% 25%, #0d0d0d 0% 50%) 50% / 8px 8px !important;
+  }
+
+  :global([data-theme="light"]) .hex-input-wrap {
+    background: #ffffff;
+    border-color: var(--docs-border, #e2e8f0);
+  }
+
+  :global([data-theme="light"]) .hex-text-input {
+    color: var(--docs-text, #1e293b);
+  }
+
+  :global([data-theme="light"]) .color-swatch-preview {
+    border-color: var(--docs-border, #e2e8f0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  :global([data-theme="light"]) .color-field-container.is-empty .color-swatch-preview {
+    background: repeating-conic-gradient(#e2e8f0 0% 25%, #ffffff 0% 50%) 50% / 8px 8px !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .color-field-container,
+    .color-tooltip,
+    .color-swatch-preview,
+    .color-clear-btn {
+      transition: none !important;
+    }
+  }
+</style>

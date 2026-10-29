@@ -1,0 +1,468 @@
+---
+/**
+ * KnobSlider.astro - Tri-state continuous knob control for Basis mood axes.
+ *
+ * Implements:
+ * - Continuous range [-1.0, 1.0] with configurable step
+ * - Explicit "unset (inherit preset)" state (value = null)
+ * - Negative and positive directional labels
+ * - Keyboard operable: Arrow keys adjust value; Delete/Backspace or Inherit button resets to unset
+ * - Tooltip displaying KDoc summary
+ */
+import type { KnobControlSpec } from '../../types/controls';
+
+export interface Props {
+  spec: KnobControlSpec;
+  value?: number | null;
+  id?: string;
+  disabled?: boolean;
+}
+
+const {
+  spec,
+  value = spec.defaultValue, // default is null (unset / inherit preset)
+  id = `knob-${spec.id}`,
+  disabled = false,
+} = Astro.props;
+
+const isUnset = value === null || value === undefined;
+const numericValue = isUnset ? 0.0 : value;
+const tooltipId = `${id}-summary-tip`;
+---
+
+<div
+  class:list={['control-field', 'knob-slider-field', { 'is-unset': isUnset, 'is-disabled': disabled }]}
+  id={id}
+  data-path={spec.path}
+  data-knob-id={spec.id}
+  data-is-unset={isUnset ? 'true' : 'false'}
+>
+  <div class="knob-header">
+    <div class="knob-title-wrap">
+      <label for={`${id}-range`} class="knob-label">
+        {spec.label}
+      </label>
+      <span
+        class="knob-summary-badge"
+        tabindex="0"
+        role="button"
+        aria-describedby={tooltipId}
+        aria-label={`Summary for ${spec.label}: ${spec.summary}`}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 16v-4"></path>
+          <path d="M12 8h.01"></path>
+        </svg>
+      </span>
+      <span id={tooltipId} class="knob-tooltip" role="tooltip">
+        {spec.summary}
+      </span>
+    </div>
+
+    <div class="knob-status-wrap">
+      <span class="knob-value-readout" aria-live="polite">
+        {isUnset ? 'Inherit' : (numericValue >= 0 ? `+${numericValue.toFixed(2)}` : numericValue.toFixed(2))}
+      </span>
+      <button
+        type="button"
+        class:list={['knob-inherit-btn', { 'is-active': isUnset }]}
+        id={`${id}-inherit-btn`}
+        aria-label={`Reset ${spec.label} to inherit preset`}
+        aria-pressed={isUnset ? 'true' : 'false'}
+        disabled={disabled || isUnset}
+        title="Reset manual bias and inherit mood preset profile"
+      >
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <div class="knob-track-container">
+    <span class="knob-edge-label edge-negative" aria-hidden="true">{spec.negativeLabel}</span>
+
+    <div class="slider-wrapper">
+      <input
+        type="range"
+        id={`${id}-range`}
+        class="knob-range-input"
+        min={spec.min}
+        max={spec.max}
+        step={spec.step}
+        value={numericValue}
+        disabled={disabled}
+        aria-label={`${spec.label} bias (${spec.negativeLabel} to ${spec.positiveLabel})`}
+        aria-valuetext={isUnset ? `Inherit preset (${spec.summary})` : `${numericValue.toFixed(2)}`}
+      />
+      <div class="center-notch" aria-hidden="true"></div>
+    </div>
+
+    <span class="knob-edge-label edge-positive" aria-hidden="true">{spec.positiveLabel}</span>
+  </div>
+</div>
+
+<script>
+  function setupKnobSliders() {
+    document.querySelectorAll<HTMLElement>('.knob-slider-field').forEach((container) => {
+      if (container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const slider = container.querySelector<HTMLInputElement>('.knob-range-input');
+      const inheritBtn = container.querySelector<HTMLButtonElement>('.knob-inherit-btn');
+      const readout = container.querySelector<HTMLElement>('.knob-value-readout');
+
+      if (!slider || !inheritBtn || !readout) return;
+
+      function updateReadout(isUnset: boolean, val: number) {
+        if (!slider || !inheritBtn || !readout) return;
+        container.dataset.isUnset = isUnset ? 'true' : 'false';
+        container.classList.toggle('is-unset', isUnset);
+        inheritBtn.disabled = isUnset;
+        inheritBtn.classList.toggle('is-active', isUnset);
+        inheritBtn.setAttribute('aria-pressed', isUnset ? 'true' : 'false');
+
+        if (isUnset) {
+          readout.textContent = 'Inherit';
+          slider.setAttribute('aria-valuetext', 'Inherit preset');
+        } else {
+          const formatted = val >= 0 ? `+${val.toFixed(2)}` : val.toFixed(2);
+          readout.textContent = formatted;
+          slider.setAttribute('aria-valuetext', formatted);
+        }
+      }
+
+      function emitChange(isUnset: boolean, val: number | null) {
+        container.dispatchEvent(
+          new CustomEvent('control-change', {
+            bubbles: true,
+            detail: {
+              path: container.dataset.path,
+              knobId: container.dataset.knobId,
+              value: isUnset ? null : val,
+            },
+          })
+        );
+      }
+
+      // Slider interaction switches from unset -> manual value
+      slider.addEventListener('input', () => {
+        const val = parseFloat(slider.value);
+        updateReadout(false, val);
+        emitChange(false, val);
+      });
+
+      // Keyboard Delete / Backspace resets to unset
+      slider.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          e.preventDefault();
+          updateReadout(true, 0.0);
+          slider.value = '0';
+          emitChange(true, null);
+        }
+      });
+
+      // Inherit button resets knob to explicit unset state
+      inheritBtn.addEventListener('click', () => {
+        updateReadout(true, 0.0);
+        slider.value = '0';
+        slider.focus();
+        emitChange(true, null);
+      });
+    });
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupKnobSliders);
+    } else {
+      setupKnobSliders();
+    }
+  }
+</script>
+
+<style>
+  .knob-slider-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    margin-bottom: 0.875rem;
+    transition: border-color 140ms ease, background 140ms ease;
+  }
+
+  .knob-slider-field:hover:not(.is-disabled) {
+    border-color: var(--docs-border, #30363d);
+  }
+
+  .knob-slider-field.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .knob-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .knob-title-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .knob-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--docs-text, #f0f6fc);
+    cursor: pointer;
+  }
+
+  .knob-summary-badge {
+    color: var(--docs-text-muted, #8b949e);
+    display: inline-flex;
+    align-items: center;
+    cursor: help;
+    border-radius: 50%;
+    padding: 1px;
+  }
+
+  .knob-summary-badge:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+  }
+
+  .knob-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    transform: translateY(4px);
+    padding: 0.4rem 0.65rem;
+    background: var(--docs-surface-inverse, #24292f);
+    color: var(--docs-text-inverse, #ffffff);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    font-weight: 400;
+    white-space: normal;
+    max-width: 260px;
+    width: max-content;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms;
+    z-index: 100;
+  }
+
+  .knob-title-wrap:hover .knob-tooltip,
+  .knob-summary-badge:focus-visible + .knob-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .knob-status-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .knob-value-readout {
+    font-size: 0.75rem;
+    font-family: var(--docs-font-mono, monospace);
+    font-weight: 600;
+    color: var(--docs-accent, #58a6ff);
+    background: color-mix(in srgb, var(--docs-accent, #58a6ff) 12%, transparent);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .knob-slider-field.is-unset .knob-value-readout {
+    color: var(--docs-text-muted, #8b949e);
+    background: color-mix(in srgb, var(--docs-text-muted, #8b949e) 12%, transparent);
+  }
+
+  .knob-inherit-btn {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    background: transparent;
+    color: var(--docs-text-muted, #8b949e);
+    cursor: pointer;
+    transition: all 120ms ease;
+  }
+
+  .knob-inherit-btn:hover:not(:disabled) {
+    color: var(--docs-text, #f0f6fc);
+    background: var(--docs-card-hover, #1f242c);
+    border-color: var(--docs-border, #30363d);
+  }
+
+  .knob-inherit-btn:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline-offset: 1px;
+  }
+
+  .knob-inherit-btn:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .knob-inherit-btn.is-active {
+    color: var(--docs-accent, #3b82f6);
+    border-color: rgba(59, 130, 246, 0.4);
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  .knob-track-container {
+    display: grid;
+    grid-template-columns: 75px 1fr 75px;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .knob-edge-label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--docs-text-muted, #8b949e);
+  }
+
+  .edge-negative {
+    text-align: left;
+  }
+
+  .edge-positive {
+    text-align: right;
+  }
+
+  .slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .knob-range-input {
+    width: 100%;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--docs-surface-recessed, #050505);
+    border-radius: 9999px;
+    outline: none;
+    border: 1px solid var(--docs-border, rgba(255, 255, 255, 0.12));
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+  }
+
+  .knob-range-input:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  .knob-range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--docs-accent, #3b82f6);
+    border: 2px solid var(--docs-bg, #000000);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(59, 130, 246, 0.45);
+    cursor: pointer;
+    transition: transform 120ms ease, background 120ms ease;
+  }
+
+  .knob-range-input::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--docs-accent, #3b82f6);
+    border: 2px solid var(--docs-bg, #000000);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), 0 0 8px rgba(59, 130, 246, 0.45);
+    cursor: pointer;
+    transition: transform 120ms ease, background 120ms ease;
+  }
+
+  .knob-slider-field.is-unset .knob-range-input::-webkit-slider-thumb {
+    background: var(--docs-text-muted, #94a3b8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    opacity: 0.8;
+  }
+
+  .knob-slider-field.is-unset .knob-range-input::-moz-range-thumb {
+    background: var(--docs-text-muted, #94a3b8);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    opacity: 0.8;
+  }
+
+  :global([data-theme="light"]) .knob-range-input {
+    background: #e2e8f0;
+    border: 1px solid #cbd5e1;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+
+  :global([data-theme="light"]) .knob-range-input::-webkit-slider-thumb {
+    background: var(--docs-accent, #2563eb);
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  :global([data-theme="light"]) .knob-range-input::-moz-range-thumb {
+    background: var(--docs-accent, #2563eb);
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  :global([data-theme="light"]) .knob-slider-field.is-unset .knob-range-input::-webkit-slider-thumb {
+    background: #94a3b8;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  :global([data-theme="light"]) .knob-slider-field.is-unset .knob-range-input::-moz-range-thumb {
+    background: #94a3b8;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  .knob-range-input:hover::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+
+  .knob-range-input:hover::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+
+  .center-notch {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 10px;
+    background: var(--docs-border, #30363d);
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .knob-slider-field,
+    .knob-tooltip,
+    .knob-inherit-btn,
+    .knob-range-input::-webkit-slider-thumb,
+    .knob-range-input::-moz-range-thumb {
+      transition: none !important;
+    }
+  }
+</style>
