@@ -57,6 +57,7 @@ Every claim must be scoped to where and how it is enforced. Avoid sweeping absol
 | *natural physical depth* | Pseudoscience | *"dark surfaces step up in lightness instead of using shadows"* |
 | *gently* | Anthropomorphic fluff | Describe the exact algorithmic adjustment |
 | *perceptual lightness parity* | Academic jargon | *"uniform lightness across hues in OKLCH"* |
+| *under five minutes* | Unverifiable promise | State what the step achieves, not how long it takes |
 
 ---
 
@@ -67,6 +68,7 @@ Every claim must be scoped to where and how it is enforced. Avoid sweeping absol
 3. **No table appears in both a guide and the reference; link instead**: Guides link to the reference page for exhaustive lists (presets, knobs, domains, interaction patterns); reference pages serve as the single source of truth.
 4. **Guides use a screenshot or swatch; Mermaid is allowed once, on the Concept page**: Guides illustrate concrete visual outcomes using swatches or screenshots. Flow diagrams and Mermaid visualizations are prohibited on guide pages and restricted to at most one on the Concept page.
 5. **Concept and Reference pages are exempt from Next Step**: Only task-oriented guides conclude with a Next Step link to guide progression.
+6. **No circular Next Step chains**: Each guide's Next Step must point forward in the reading order, not back to a previous page or into a reference or concept page.
 
 ---
 
@@ -75,3 +77,4 @@ Every claim must be scoped to where and how it is enforced. Avoid sweeping absol
 1. **Compilation Guarantee**: Every Kotlin code snippet shown in guides must compile in the `demo-app` test source set. Dead `onClick`s, invented imports, broken APIs, and syntax errors are prohibited. Non-Kotlin snippets (Gradle, bash, YAML) are exempt from compilation checks but must match tested versions.
 2. **Copy-Paste Readiness**: Code snippets must be complete enough for a developer to paste into an Android Studio project and compile without guesswork.
 3. **Canonical Imports**: Use public symbols only (`BasisTheme`, `BasisButton`, `BasisIntent`, `ThemeMode`).
+4. **No Material3 imports**: Do not reference `androidx.compose.material3.Text` or any Material3 symbols; use `BasicText` from `androidx.compose.foundation.text`.
