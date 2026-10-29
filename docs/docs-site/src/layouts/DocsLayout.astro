@@ -15,6 +15,7 @@ interface Props {
 
 const { title, description, headings = [], currentPath } = Astro.props;
 const resolvedPath = currentPath || Astro.url.pathname;
+const hasToc = headings.length > 0;
 
 // Fetch components from collection to build dynamic component navigation groups
 const components = await getCollection('components');
@@ -64,7 +65,7 @@ const navGroups = Array.from(sectionsMap.entries())
   }));
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} hasToc={hasToc}>
   <!-- Accessible Skip to Content Link -->
   <a href="#main-content" class="skip-to-content">Skip to content</a>
 

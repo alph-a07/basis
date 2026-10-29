@@ -5,13 +5,14 @@ import '../styles/docs-tokens.css';
 interface Props {
   title: string;
   description?: string;
+  hasToc?: boolean;
 }
 
-const { title, description = 'Basis — Jetpack Compose design system' } = Astro.props;
+const { title, description = 'Basis — Jetpack Compose design system', hasToc = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-has-toc={hasToc ? 'true' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,6 +46,22 @@ const { title, description = 'Basis — Jetpack Compose design system' } = Astro
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--docs-scrollbar-thumb) transparent;
+  }
+
+  /* When TOC is present on desktop (min-width: 1201px), remove the redundant global window scrollbar */
+  @media (min-width: 1201px) {
+    html[data-has-toc="true"],
+    html[data-has-toc="true"] body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    html[data-has-toc="true"]::-webkit-scrollbar,
+    html[data-has-toc="true"] body::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
   }
 
   ::-webkit-scrollbar {

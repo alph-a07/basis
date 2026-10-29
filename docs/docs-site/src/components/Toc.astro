@@ -41,6 +41,8 @@ const { headings = [] } = Astro.props;
 
     if (!tocLinks.length || !divider || !indicator) return;
 
+    document.documentElement.setAttribute('data-has-toc', 'true');
+
     interface TocPair {
       el: HTMLElement;
       link: HTMLAnchorElement;
