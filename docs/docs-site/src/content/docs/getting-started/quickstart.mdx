@@ -3,165 +3,55 @@ title: Quickstart
 section: Getting Started
 order: 3
 status: published
-description: Learn how to set up your root BasisTheme, use Basis composables, and consume semantic tokens in Jetpack Compose.
+description: Initialize the root Basis theme and render styled, accessible components in your Compose layout.
 ---
+import DocSnippet from '../../../components/DocSnippet.astro';
 
-This guide walks you through building your first screen using Basis. In under five minutes, you will initialize the theme, render interactive components, and access semantic tokens directly from Compose.
+Wrap your app hierarchy with `BasisTheme` to access semantic design tokens and build layouts using foundation modifiers.
 
-## 1. The Root Theme Wrapper
+<div class="visual-preview-card">
+  <div class="preview-header-label">Result Preview • QuickstartApp</div>
+  <div class="preview-pane dark" style="max-width: 360px;">
+    <div class="preview-surface-card" style="border-radius: 8px;">
+      <span style="font-size: 1rem; font-weight: 600;">Welcome to Basis</span>
+    </div>
+    <div style="margin-top: 0.5rem;">
+      <span class="mock-button brand" style="border-radius: 8px;">Get Started</span>
+    </div>
+  </div>
+</div>
 
-Wrap your root composable hierarchy with `BasisTheme`. This composable configures ambient `CompositionLocal` providers for colors, typography, spacing, shapes, and motion:
+## 1. Wrap Your Hierarchy in BasisTheme
 
-```kotlin
-package com.example.app
+Place `BasisTheme` at the root of your Compose hierarchy. This provides ambient token locals for colors, typography, spacing, corner radii, and depth down the composition tree:
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import io.github.alph_a07.basis.components.theme.BasisTheme
-import io.github.alph_a07.basis.theme.core.ThemeMode
+<DocSnippet name="quickstart_app" />
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            // ThemeMode.System automatically tracks Android system dark/light configuration
-            BasisTheme(mode = ThemeMode.System) {
-                HomeScreen()
-            }
-        }
-    }
-}
-```
+## 2. Access Semantic Tokens
 
-## 2. Rendering Basis Components
-
-Basis components automatically inherit active theme tokens and respond to interaction states (hover, press, focus, and disable).
-
-Render a `BasisButton` with primary and secondary prominence:
+Access resolved tokens directly through `BasisTheme`:
 
 ```kotlin
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import io.github.alph_a07.basis.components.actions.BasisButton
-import io.github.alph_a07.basis.components.actions.BasisButtonDefaults
-import io.github.alph_a07.basis.components.divider.BasisDivider
-import io.github.alph_a07.basis.components.theme.BasisTheme
-
-@Composable
-fun HomeScreen() {
-    var counter by remember { mutableStateOf(0) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(BasisTheme.spacing.lg)
-    ) {
-        Text(
-            text = "Welcome to Basis",
-            style = BasisTheme.typography.headlineLarge,
-            color = BasisTheme.colors.onSurface
-        )
-
-        Spacer(modifier = Modifier.height(BasisTheme.spacing.md))
-
-        BasisDivider()
-
-        Spacer(modifier = Modifier.height(BasisTheme.spacing.lg))
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(BasisTheme.spacing.md)
-        ) {
-            BasisButton(
-                onClick = { counter++ },
-                variant = BasisButtonDefaults.variantPrimary()
-            ) {
-                Text("Increment: $counter")
-            }
-
-            BasisButton(
-                onClick = { counter = 0 },
-                variant = BasisButtonDefaults.variantOutline()
-            ) {
-                Text("Reset")
-            }
-        }
-    }
-}
+Modifier.basisSurface(
+    shape = RoundedCornerShape(BasisTheme.radius.level2.toDp()),
+    color = BasisTheme.colors.surface.elevated,
+)
 ```
 
-## 3. Accessing Semantic Design Tokens
+## 3. Apply Foundation Modifiers
 
-Avoid hardcoding values in custom layouts. Access token trees through the static accessor `BasisTheme`:
+Basis foundation modifiers bind component layouts to theme tokens:
 
-- **Colors**: `BasisTheme.colors`
-  - `primary`, `onPrimary`, `primaryContainer`, `onPrimaryContainer`
-  - `surface`, `onSurface`, `surfaceVariant`, `onSurfaceVariant`
-  - `outline`, `outlineVariant`, `focusRing`, `scrim`
-- **Typography**: `BasisTheme.typography`
-  - `displayLarge`, `displayMedium`, `displaySmall`
-  - `headlineLarge`, `headlineMedium`, `headlineSmall`
-  - `titleLarge`, `titleMedium`, `titleSmall`
-  - `bodyLarge`, `bodyMedium`, `bodySmall`
-  - `labelLarge`, `labelMedium`, `labelSmall`
-- **Spacing**: `BasisTheme.spacing`
-  - `none` (0dp), `xxs` (2dp), `xs` (4dp), `sm` (8dp), `md` (16dp), `lg` (24dp), `xl` (32dp), `xxl` (48dp), `xxxl` (64dp)
-- **Shapes & Radii**: `BasisTheme.shapes`
-  - `sharp` (0dp), `extraSmall` (2dp), `small` (4dp), `medium` (8dp), `large` (12dp), `full` (pill)
-- **Depth & Shadows**: `BasisTheme.depth`
-  - `level0` (flat), `level1` (subtle elevation), `level2` (cards), `level3` (modals/menus)
-- **Motion**: `BasisTheme.motion`
-  - Durations: `short1` to `long4`
-  - Easing: `standard`, `decelerate`, `accelerate`, `emphasized`
+- **`Modifier.basisSurface(shape, color)`**: Clips, colors, and applies depth shadows matching theme tokens.
+- **`Modifier.basisMinTouchTarget()`**: Enforces a 48dp minimum accessible touch target bounding box.
+- **`Modifier.basisClickable(onClick)`**: Attaches accessible click semantics and interaction indication.
 
-## 4. Applying Foundation Modifiers
+## Verify the Result
 
-Compose layouts can consume Basis foundation modifiers directly:
+Run your app in the Android emulator or inspect your `@Preview` composable in Android Studio.
 
-```kotlin
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.Modifier
-import io.github.alph_a07.basis.components.foundation.modifier.surface
-import io.github.alph_a07.basis.components.foundation.modifier.focusRing
-import io.github.alph_a07.basis.components.foundation.modifier.touchTarget
+You should see an elevated container displaying "Welcome to Basis" and a primary "Get Started" action button styled with your brand fill, 8dp corner radius, and a 48dp minimum touch target.
 
-@Composable
-fun InteractiveTile(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .touchTarget() // Guarantees 48dp minimum physical target floor
-            .surface(
-                shape = BasisTheme.shapes.medium,
-                color = BasisTheme.colors.surfaceElevated,
-                border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)
-            )
-            .focusRing() // Renders 2px accessible focus ring on keyboard navigation
-    ) {
-        // Child content automatically inherits LocalBasisContentColor
-    }
-}
-```
+## Next Step
 
-## 5. Dynamic Theme Switching
-
-To allow users to switch themes inside your application, maintain state and pass the selected `ThemeMode`:
-
-```kotlin
-@Composable
-fun ThemedApp() {
-    var mode by remember { mutableStateOf(ThemeMode.System) }
-
-    BasisTheme(mode = mode) {
-        ThemeSwitchScreen(
-            currentMode = mode,
-            onModeChanged = { newMode -> mode = newMode }
-        )
-    }
-}
-```
-
-Proceed to [Theme Definition](/docs/getting-started/theme-definition) to customize colors, moods, and domain presets for your brand.
+Customize the color palette to match your company assets in [Set your brand color](/docs/theming/set-brand).

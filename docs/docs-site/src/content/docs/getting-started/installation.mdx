@@ -3,26 +3,26 @@ title: Installation
 section: Getting Started
 order: 2
 status: published
-description: Complete guide for integrating Basis dependencies, repositories, and lint plugins into your Gradle build.
+description: Add Basis dependencies, repositories, and lint checks to your Android project with Gradle.
 ---
+import DocSnippet from '../../../components/DocSnippet.astro';
 
-Integrating Basis into an Android application requires configuring your Gradle repositories, declaring the required dependencies, and optionally configuring the `basis-lint` static analysis rules.
+Add Basis dependencies to your Gradle build scripts to access foundation modifiers, token resolution, and build-time lint enforcement in your Android app.
 
 ## Requirements
 
-Before adding Basis, verify that your project environment satisfies these minimum requirements:
+Ensure your build environment meets the following baseline tool versions:
 
-| Environment | Minimum Version | Recommended |
+| Tool | Minimum Version | Notes |
 | :--- | :--- | :--- |
-| **JDK** | 17 | JDK 21 |
-| **Android Gradle Plugin (AGP)** | 8.5.0 | 8.8.0+ |
-| **Kotlin** | 2.0.0 | 2.1.0+ |
-| **Compose Compiler Plugin** | 2.0.0 | Matching Kotlin version |
-| **Android SDK** | `compileSdk 37`, `minSdk 24` | `targetSdk 36` |
+| **JDK** | 17 | JDK 21 recommended |
+| **Android Gradle Plugin (AGP)** | 8.8.0 | Compatible with Gradle 8.11+ / 9.2+ |
+| **Kotlin** | 2.0.0 | Compatible with Kotlin 2.1+ and Compose Compiler |
+| **Android SDK** | `minSdk 24`, `compileSdk 37` | Target SDK `targetSdk 36` |
 
 ## Repository Setup
 
-Add Maven Central to your `settings.gradle.kts` under `dependencyResolutionManagement`:
+Ensure `mavenCentral()` is declared in your root `settings.gradle.kts`:
 
 ```kotlin
 // settings.gradle.kts
@@ -37,99 +37,30 @@ dependencyResolutionManagement {
 
 ## Adding Dependencies
 
-Basis is divided into two primary artifacts for client applications:
+Basis publishes three artifacts:
 
-- **`basis-components`**: Android Jetpack Compose composables, foundation modifiers, and ambient locals.
-- **`basis-theme`**: Token models, intent definitions, and theme resolution pipeline.
+- **`basis-components`**: Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals.
+- **`basis-theme`**: Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees.
+- **`basis-lint`**: Android Lint checks enforcing typography units (`sp` only for font size, line height, and letter spacing) at build time.
 
-Add the artifacts to your module's `build.gradle.kts`:
+Add the dependencies to your application module's `build.gradle.kts`:
 
-```kotlin
-// app/build.gradle.kts
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-}
+<DocSnippet name="installation_dependencies" />
 
-android {
-    namespace = "com.example.app"
-    compileSdk = 37
+## ProGuard and R8
 
-    defaultConfig {
-        applicationId = "com.example.app"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-    }
+Basis relies on zero reflection. All token structures and modifiers are pure Kotlin classes. Verified with a full-mode R8 release build of `demo-app` without requiring custom `-keep` rules.
 
-    buildFeatures {
-        compose = true
-    }
-}
+## Verify the Installation
 
-dependencies {
-    // Basis Design System
-    val basisVersion = "0.2.0"
-    implementation("io.github.alph-a07:basis-components:$basisVersion")
-    implementation("io.github.alph-a07:basis-theme:$basisVersion")
-
-    // Jetpack Compose Foundation
-    implementation(platform("androidx.compose:compose-bom:2024.12.01"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material3:material3")
-}
-```
-
-## Static Analysis with `basis-lint`
-
-To prevent design system drift and ensure consistent token usage, add `basis-lint` rules to your Detekt configuration:
-
-```kotlin
-// build.gradle.kts
-dependencies {
-    detektPlugins("io.github.alph-a07:basis-lint:0.2.0")
-}
-```
-
-In your `config/detekt/detekt.yml`:
-
-```yaml
-basis:
-  NoHardcodedColors:
-    active: true
-    excludes: ['**/theme/core/**']
-  EnforceTokenUsage:
-    active: true
-  TouchTargetFloors:
-    active: true
-```
-
-## ProGuard & R8 Configuration
-
-Basis is designed to be entirely reflection-free. All token classes and style patches are standard Kotlin data classes. If your application applies full R8 optimization, keep the token structures for serialization or obfuscation safety:
-
-```properties
-# proguard-rules.pro
--keepclassmembers class io.github.alph_a07.basis.theme.tokens.** {
-    <fields>;
-    <methods>;
-}
-
--keepclassmembers class io.github.alph_a07.basis.theme.intent.** {
-    <fields>;
-    <methods>;
-}
-```
-
-## Verification
-
-Once dependencies are synced, verify that your build resolves all artifacts and compiles cleanly:
+Compile the debug variant from your terminal:
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-With dependencies installed, proceed to the [Quickstart](/docs/getting-started/quickstart) guide to configure your root `BasisTheme`.
+You should see `BUILD SUCCESSFUL`. The compiler resolves `BasisTheme` and registers `basis-lint` checks in your build pipeline.
+
+## Next Step
+
+Build your first themed screen in [Quickstart](/docs/getting-started/quickstart).

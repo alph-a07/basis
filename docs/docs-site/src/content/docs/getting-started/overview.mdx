@@ -3,74 +3,63 @@ title: Overview
 section: Getting Started
 order: 1
 status: published
-description: The modern, deterministic Jetpack Compose design system.
+description: Learn how Basis derives Jetpack Compose design tokens and accessible components from high-level intent.
 ---
+import DocSnippet from '../../../components/DocSnippet.astro';
 
-Basis is a modern design system for Jetpack Compose that automates token derivation, dark mode harmony, and WCAG accessibility compliance from high-level brand intent.
+Basis provides a complete token system and accessible Jetpack Compose foundation modifiers derived from a four-part intent. You declare your brand color, mood, and product domain once, and get light and dark themes with verified contrast, 48dp touch targets, and scalable typography.
 
-Instead of handcrafting hundreds of static color hexes and wrestling with broken dark-mode contrast, you declare your brand seed and aesthetic goals. Basis computes a mathematically verified design system with guaranteed contrast, standardized touch targets, and natural tonal depth.
+<div class="visual-preview-card">
+  <div class="preview-split">
+    <div class="preview-pane light">
+      <div class="preview-header-label">Light Theme • Brand #0284C7</div>
+      <div class="preview-surface-card">
+        <strong>Surface Elevated (L = 1.00)</strong>
+        <span>Content body text meeting ≥ 4.5:1 contrast floor</span>
+      </div>
+      <div>
+        <span class="mock-button brand">Primary Action</span>
+      </div>
+    </div>
+    <div class="preview-pane dark">
+      <div class="preview-header-label">Dark Theme • Brand #0284C7</div>
+      <div class="preview-surface-card">
+        <strong>Surface Elevated (L = 0.22)</strong>
+        <span>Content body text meeting ≥ 4.5:1 contrast floor</span>
+      </div>
+      <div>
+        <span class="mock-button brand">Primary Action</span>
+      </div>
+    </div>
+  </div>
+</div>
 
-```mermaid
-flowchart LR
-    A["<b>1. Aesthetic Intent</b><br/>Seed Color • Mood • Domain"] --> B["<b>2. Basis Engine</b><br/>OKLCH Math • Contrast Audit"]
-    B --> C["<b>3. Compose UI</b><br/>BasisTheme • Components"]
-```
+## How Basis Works
 
-## Core Tenets
+Basis structures design tokens around four functional pillars:
 
-Basis is engineered around three non-negotiable guarantees:
+1. **Intent-Driven Derivation**: You provide high-level intent—such as a primary brand color and a mood preset. The resolution engine derives complete color ladders, type scales, spacing steps, and elevation curves.
+2. **Accessible Contrast Floors**: Contrast thresholds (≥ 4.5:1 for body text, ≥ 3:1 for controls) are evaluated during resolution. If an input combination produces insufficient contrast, the resolver adjusts lightness to meet accessibility standards.
+3. **Perceptual Dark Mode**: Rather than relying on drop shadows that disappear on dark backgrounds, dark surfaces step up in lightness (0.12 / 0.16 / 0.22) instead of using shadows.
+4. **Touch Targets**: Foundation modifiers and components apply a 48dp minimum by default to ensure touch accessibility.
 
-1. **System Over Manual Specs**: Define visual intent once. All container fills, interactive state layers (hover, press, focus, disable), and border hairlines derive automatically without manual synchronization.
-2. **Accessible by Construction**: Contrast ratios ($\ge 4.5:1$ for body text, $\ge 3:1$ for controls) are enforced algorithmically during theme resolution. Interactive elements strictly enforce 48dp physical touch target floors.
-3. **Tonal Dark Mode**: Replaces invisible drop shadows with luminous surface lightness steps, creating natural physical depth on OLED and LCD screens alike.
+## Repository Modules and Artifacts
 
-## What's Included
+The Basis repository is organized into four modules, publishing three artifacts:
 
-The system ships in three cohesive layers designed for Android and multiplatform projects:
-
-| Layer | Module | Description |
+| Module | Published Artifact | Role |
 | :--- | :--- | :--- |
-| **Components** | `basis-components` | Accessible composables (`BasisButton`, `BasisDivider`) with built-in state machines. |
-| **Foundation** | `basis-components` | Atomic modifiers (`Modifier.surface()`, `.focusRing()`, `.touchTarget()`) for custom layouts. |
-| **Theming Engine** | `basis-theme` | Pure KMP resolution compiler generating token trees from intent. |
-| **Lint Rules** | `basis-lint` | Detekt rules preventing hardcoded hexes, missing touch targets, and convention drift. |
+| `basis-components` | `io.github.alph_a07:basis-components` | Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals. |
+| `basis-theme` | `io.github.alph_a07:basis-theme` | Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees. |
+| `basis-lint` | `io.github.alph_a07:basis-lint` | Android Lint checks enforcing typography units (`sp` only for font size, line height, and letter spacing) at build time. |
+| `demo-app` | *(Sample application)* | Reference Android application used to verify integrations, component behavior, and compile documentation snippets. |
 
 ## Quick Example
 
-Wrap your Compose hierarchy in `BasisTheme` to access semantic tokens and components:
+Wrap your Compose tree with `BasisTheme` to make tokens available to child composables:
 
-```kotlin
-@Composable
-fun App() {
-    // Automatically synchronizes with Android system light/dark mode
-    BasisTheme(mode = ThemeMode.System) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(BasisTheme.spacing.lg)
-        ) {
-            Text(
-                text = "Workspace",
-                style = BasisTheme.typography.headlineLarge,
-                color = BasisTheme.colors.onSurface
-            )
+<DocSnippet name="quickstart_app" />
 
-            Spacer(modifier = Modifier.height(BasisTheme.spacing.md))
+## Next Step
 
-            BasisButton(
-                onClick = { /* trigger action */ },
-                variant = BasisButtonDefaults.variantPrimary()
-            ) {
-                Text("Deploy Application")
-            }
-        }
-    }
-}
-```
-
-## Documentation Roadmap
-
-- [Installation](/docs/getting-started/installation): Add Basis dependencies and plugins to Gradle.
-- [Quickstart](/docs/getting-started/quickstart): Build your first themed screen in under five minutes.
-- [Theming Architecture](/docs/theming/overview): Explore the intent-to-token compilation model.
-- [Components](/docs/components/button): Inspect production-ready composables and API contracts.
+Add Basis dependencies and Gradle configuration to your project in [Installation](/docs/getting-started/installation).
