@@ -17,10 +17,10 @@
   --docs-text-inverse: var(--d-color-content-inverse);
 
   /* Borders & Dividers */
-  --docs-border: var(--d-color-border-default);
+  --docs-border: color-mix(in srgb, var(--d-color-border-default) 45%, transparent);
   --docs-border-muted: var(--d-color-border-muted);
   --docs-border-strong: var(--d-color-border-strong);
-  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 50%, transparent);
+  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 22%, transparent);
 
   /* Interactive, Focus, and Selection */
   --docs-focus-ring: var(--d-color-focus-ring);
@@ -30,7 +30,7 @@
 
   /* Chrome-specific derived tokens */
   --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
-  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 70%, transparent);
+  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 25%, transparent);
   --docs-toc-active: var(--d-color-focus-ring);
   --docs-toc-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
   --docs-sidebar-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
