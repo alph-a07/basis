@@ -1,0 +1,17 @@
+---
+title: Philosophy
+section: Theming
+order: 2
+status: stub
+description: The core design and mathematical principles underpinning Basis theming.
+---
+
+## Principles
+
+1. **System over Specs**: Colors and metrics derive mathematically from semantic relationships rather than arbitrary values.
+2. **Accessible by Construction**: Contrast ratios are enforced at derivation time, preventing non-compliant themes from compiling.
+3. **Multiplatform Parity**: Theme resolution generates byte-identical tokens on JVM and JS.
+
+## Invariant Enforcement
+
+Theme resolution rejects combinations that violate WCAG contrast minimums or produce out-of-gamut representations.

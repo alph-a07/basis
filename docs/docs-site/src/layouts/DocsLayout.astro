@@ -33,6 +33,35 @@ const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) 
   family,
   components: comps.sort((a, b) => a.name.localeCompare(b.name)),
 }));
+
+// Fetch docs prose stubs from collection to build dynamic navigation groups
+const docsEntries = await getCollection('docs');
+
+const sectionOrder = ['Getting Started', 'Theming', 'Foundation'];
+const sectionsMap = new Map<string, { title: string; href: string; order: number }[]>();
+
+for (const doc of docsEntries) {
+  const section = doc.data.section;
+  if (!sectionsMap.has(section)) {
+    sectionsMap.set(section, []);
+  }
+  sectionsMap.get(section)!.push({
+    title: doc.data.title,
+    href: `/docs/${doc.id}`,
+    order: doc.data.order,
+  });
+}
+
+const navGroups = Array.from(sectionsMap.entries())
+  .sort((a, b) => {
+    const idxA = sectionOrder.indexOf(a[0]);
+    const idxB = sectionOrder.indexOf(b[0]);
+    return (idxA !== -1 ? idxA : 99) - (idxB !== -1 ? idxB : 99);
+  })
+  .map(([title, items]) => ({
+    title,
+    items: items.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title)),
+  }));
 ---
 
 <BaseLayout title={title} description={description}>
@@ -43,7 +72,11 @@ const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) 
     <MobileHeader />
 
     <div class="docs-shell">
-      <Sidebar currentPath={resolvedPath} componentGroups={componentGroups} />
+      <Sidebar
+        currentPath={resolvedPath}
+        componentGroups={componentGroups}
+        navGroups={navGroups}
+      />
 
       <div class="docs-body-wrapper">
         <main id="main-content" class="docs-main" data-pagefind-body>

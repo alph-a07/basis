@@ -1,0 +1,25 @@
+---
+title: Quickstart
+section: Getting Started
+order: 3
+status: stub
+description: Get started with your first Basis theme wrapper and composables.
+---
+
+## Theme Wrapper
+
+Wrap your root application composable with `BasisTheme` to initialize the design system tokens and environment:
+
+```kotlin
+BasisTheme {
+    MainScreen()
+}
+```
+
+## First Component
+
+Render a `BasisButton` or `BasisDivider` to verify token inheritance and theme application.
+
+## Observing Tokens
+
+Components automatically inherit colors, shapes, and motion tokens based on the active theme mode.

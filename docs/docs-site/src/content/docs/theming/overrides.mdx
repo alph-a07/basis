@@ -1,0 +1,17 @@
+---
+title: Overrides
+section: Theming
+order: 7
+status: stub
+description: Token overrides, precedence rules, and patch vocabulary.
+---
+
+## Override Structure
+
+Component and surface overrides allow targeted token customization without breaking system-wide coherence:
+- **Universal Fields**: Surface background, border color, corner radius, and content tint.
+- **Extra Families**: Domain-specific patches (e.g. `SurfaceExtraPatch`, `IconExtraPatch`).
+
+## Precedence Rules
+
+Component-level overrides take precedence over global intent tokens while maintaining contrast safety invariants.

@@ -1,0 +1,18 @@
+---
+title: Intent Model
+section: Theming
+order: 3
+status: stub
+description: High-level aesthetic controls driving design system tokens.
+---
+
+## Intent Parameters
+
+The `BasisIntent` model captures aesthetic decisions across distinct dimensions:
+- **Identity**: Brand primary color, supporting palette, and presence.
+- **Mood**: Presets and continuous aesthetic knobs (-1 to +1).
+- **Domain**: Domain semantics and interaction patterns.
+
+## Compilation
+
+The resolver consumes a `BasisIntent` structure and outputs a fully resolved `ResolvedTheme` containing light and dark token palettes.

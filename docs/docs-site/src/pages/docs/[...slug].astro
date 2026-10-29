@@ -2,12 +2,13 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 import ComponentPage from '../../components/templates/ComponentPage.astro';
 import ModifierPage from '../../components/templates/ModifierPage.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import type { TocItem } from '../../types/navigation';
 
 export async function getStaticPaths() {
   const components = await getCollection('components');
   const sidecars = await getCollection('sidecars');
+  const docsEntries = await getCollection('docs');
   const paths: any[] = [];
 
   for (const comp of components) {
@@ -39,107 +40,12 @@ export async function getStaticPaths() {
     }
   }
 
-  // Static documentation stub pages to ensure all sidebar navigation works
-  const docsStubs = [
-    {
-      slug: 'getting-started/overview',
-      title: 'Overview',
-      section: 'Getting Started',
-      description: 'Introduction to Basis design system for Jetpack Compose.',
-      headings: [
-        { depth: 2, slug: 'introduction', text: 'Introduction' },
-        { depth: 2, slug: 'principles', text: 'Principles' },
-        { depth: 2, slug: 'next-steps', text: 'Next Steps' },
-      ],
-    },
-    {
-      slug: 'getting-started/installation',
-      title: 'Installation',
-      section: 'Getting Started',
-      description: 'Adding Basis dependencies to your Gradle build.',
-      headings: [
-        { depth: 2, slug: 'gradle-setup', text: 'Gradle Setup' },
-        { depth: 2, slug: 'dependencies', text: 'Dependencies' },
-      ],
-    },
-    {
-      slug: 'getting-started/quickstart',
-      title: 'Quickstart',
-      section: 'Getting Started',
-      description: 'Get started with your first Basis composables.',
-      headings: [
-        { depth: 2, slug: 'theme-wrapper', text: 'Theme Wrapper' },
-        { depth: 2, slug: 'first-component', text: 'First Component' },
-      ],
-    },
-    {
-      slug: 'theming/overview',
-      title: 'Theming Overview',
-      section: 'Theming',
-      description: 'Learn how Basis resolves intent into fully deterministic themes.',
-      headings: [
-        { depth: 2, slug: 'theme-pipeline', text: 'Theme Pipeline' },
-        { depth: 2, slug: 'color-derivation', text: 'Color Derivation' },
-      ],
-    },
-    {
-      slug: 'theming/theme-mode',
-      title: 'ThemeMode',
-      section: 'Theming',
-      description: 'Light, Dark, and System theme mode resolution.',
-      headings: [
-        { depth: 2, slug: 'modes', text: 'Supported Modes' },
-        { depth: 2, slug: 'persisting-preference', text: 'Persisting Preference' },
-      ],
-    },
-    {
-      slug: 'theming/intent',
-      title: 'Intent',
-      section: 'Theming',
-      description: 'High-level aesthetic controls driving design system tokens.',
-      headings: [
-        { depth: 2, slug: 'intent-parameters', text: 'Intent Parameters' },
-        { depth: 2, slug: 'overrides', text: 'Token Overrides' },
-      ],
-    },
-    {
-      slug: 'foundation/surface',
-      title: 'Surface',
-      section: 'Foundation',
-      description: 'Foundational container providing tone, elevation, and shape.',
-      headings: [
-        { depth: 2, slug: 'overview', text: 'Overview' },
-        { depth: 2, slug: 'tonal-elevation', text: 'Tonal Elevation' },
-      ],
-    },
-    {
-      slug: 'foundation/focusable',
-      title: 'Focusable',
-      section: 'Foundation',
-      description: 'Accessible focus boundary handling keyboard navigation.',
-      headings: [
-        { depth: 2, slug: 'focus-rings', text: 'Focus Rings' },
-        { depth: 2, slug: 'keyboard-support', text: 'Keyboard Support' },
-      ],
-    },
-    {
-      slug: 'foundation/overlay',
-      title: 'Overlay',
-      section: 'Foundation',
-      description: 'Scaffold and backdrop system for modal layers.',
-      headings: [
-        { depth: 2, slug: 'scrim-tones', text: 'Scrim Tones' },
-        { depth: 2, slug: 'dismissal', text: 'Dismissal Behavior' },
-      ],
-    },
-  ];
-
-  for (const stub of docsStubs) {
+  for (const doc of docsEntries) {
     paths.push({
-      params: { slug: stub.slug },
+      params: { slug: doc.id },
       props: {
-        type: 'stub',
-        stub,
+        type: 'doc',
+        doc,
       },
     });
   }
@@ -152,6 +58,7 @@ const props = Astro.props;
 let pageTitle = '';
 let pageDescription = '';
 let headings: TocItem[] = [];
+let RenderedContent: any = null;
 
 if (props.type === 'component') {
   const component = props.component.data;
@@ -189,10 +96,16 @@ if (props.type === 'component') {
     ...(modifier.accessibility ? [{ depth: 2, slug: 'accessibility', text: 'Accessibility Behavior' }] : []),
     ...(props.sidecar?.data?.guidelines ? [{ depth: 2, slug: 'guidelines', text: 'Usage Guidelines' }] : []),
   ];
-} else {
-  pageTitle = `${props.stub.title} — ${props.stub.section}`;
-  pageDescription = props.stub.description;
-  headings = props.stub.headings;
+} else if (props.type === 'doc') {
+  const rendered = await render(props.doc);
+  RenderedContent = rendered.Content;
+  pageTitle = `${props.doc.data.title} — ${props.doc.data.section}`;
+  pageDescription = props.doc.data.description || `${props.doc.data.title} documentation for Basis.`;
+  headings = rendered.headings.map((h: any) => ({
+    depth: h.depth,
+    slug: h.slug,
+    text: h.text,
+  }));
 }
 ---
 
@@ -209,37 +122,46 @@ if (props.type === 'component') {
       sidecar={props.sidecar}
     />
   ) : (
-    <article class="stub-doc">
-      <header class="stub-header">
-        <span class="section-badge">{props.stub.section}</span>
-        <h1 class="stub-title">{props.stub.title}</h1>
-        <p class="stub-summary">{props.stub.description}</p>
+    <article class="prose-doc">
+      <header class="doc-header">
+        <div class="header-meta">
+          <span class="section-badge">{props.doc.data.section}</span>
+          {props.doc.data.status === 'stub' && (
+            <span class="stub-badge" title="This page is a documentation stub">Stub</span>
+          )}
+        </div>
+        <h1 class="doc-title">{props.doc.data.title}</h1>
+        {props.doc.data.description && (
+          <p class="doc-summary">{props.doc.data.description}</p>
+        )}
       </header>
 
-      <div class="stub-content">
-        {props.stub.headings.map((h: any) => (
-          <section class="stub-section">
-            <h2 id={h.slug}>{h.text}</h2>
-            <p>
-              Documentation for <strong>{h.text}</strong> in the {props.stub.section} section is part of the Basis design system.
-            </p>
-          </section>
-        ))}
+      <div class="doc-body">
+        {RenderedContent && <RenderedContent />}
       </div>
     </article>
   )}
 </DocsLayout>
 
 <style>
-  .stub-doc {
+  .prose-doc {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.75rem;
   }
 
-  .stub-header {
+  .doc-header {
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     padding-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
   .section-badge {
@@ -250,43 +172,94 @@ if (props.type === 'component') {
     color: var(--docs-text-muted, #8b949e);
   }
 
-  .stub-title {
+  .stub-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.125rem 0.45rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--docs-accent) 12%, transparent);
+    color: var(--docs-accent, #58a6ff);
+    border: 1px solid color-mix(in srgb, var(--docs-accent) 25%, transparent);
+  }
+
+  .doc-title {
     font-size: 2.25rem;
     font-weight: 800;
     letter-spacing: -0.02em;
-    margin: 0.25rem 0 0.75rem 0;
+    margin: 0.25rem 0 0.5rem 0;
     color: var(--docs-text, #e6edf3);
   }
 
-  .stub-summary {
+  .doc-summary {
     font-size: 1.125rem;
     line-height: 1.6;
     color: var(--docs-text-muted, #8b949e);
     margin: 0;
   }
 
-  .stub-content {
+  .doc-body {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.25rem;
+    line-height: 1.65;
+    color: var(--docs-text, #c9d1d9);
   }
 
-  h2 {
+  .doc-body :global(h2) {
     font-size: 1.35rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    margin: 1.25rem 0 0.4rem 0;
+    margin: 1.5rem 0 0.5rem 0;
     color: var(--docs-text, #e6edf3);
     scroll-margin-top: 5rem;
   }
 
-  h2:first-child {
+  .doc-body :global(h2:first-child) {
     margin-top: 0;
   }
 
-  p {
-    line-height: 1.65;
-    color: var(--docs-text, #c9d1d9);
+  .doc-body :global(p) {
     margin: 0;
+    line-height: 1.65;
+  }
+
+  .doc-body :global(ul),
+  .doc-body :global(ol) {
+    margin: 0;
+    padding-left: 1.4rem;
+  }
+
+  .doc-body :global(li) {
+    margin-bottom: 0.4rem;
+  }
+
+  .doc-body :global(code) {
+    font-family: var(--docs-font-mono, ui-monospace, monospace);
+    font-size: 0.875em;
+    background: var(--docs-code-bg, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--docs-code-border, rgba(255, 255, 255, 0.1));
+    border-radius: 4px;
+    padding: 0.15em 0.35em;
+    color: var(--docs-accent, #58a6ff);
+  }
+
+  .doc-body :global(pre) {
+    background: var(--docs-code-bg, #161b22);
+    border: 1px solid var(--docs-code-border, #21262d);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: var(--docs-font-mono, ui-monospace, monospace);
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+  }
+
+  .doc-body :global(pre code) {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--docs-text, #e6edf3);
   }
 </style>

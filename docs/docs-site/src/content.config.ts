@@ -87,8 +87,23 @@ const sidecars = defineCollection({
   }),
 });
 
+const docs = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: path.resolve(currentDir, 'content/docs'),
+  }),
+  schema: z.object({
+    title: z.string(),
+    section: z.string(),
+    order: z.number().default(0),
+    status: z.enum(['stub', 'draft', 'published']).default('stub'),
+    description: z.string().optional(),
+  }),
+});
+
 export const collections = {
   components,
   intent,
   sidecars,
+  docs,
 };

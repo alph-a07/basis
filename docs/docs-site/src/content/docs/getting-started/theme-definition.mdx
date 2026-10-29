@@ -1,0 +1,22 @@
+---
+title: Theme Definition
+section: Getting Started
+order: 4
+status: stub
+description: Understanding theme definition and its runtime effect across composables.
+---
+
+## Theme Structure
+
+A theme in Basis is resolved deterministically from high-level `BasisIntent` declarations into concrete token values.
+
+## Runtime Effects
+
+When a theme is applied:
+- Surfaces inherit semantic background and elevation tokens.
+- Interactive controls adapt contrast and focus ring geometry.
+- Typography styles scale according to accessibility settings.
+
+## Overrides & Precedence
+
+Component-level overrides take precedence over global intent tokens while preserving contrast invariants.

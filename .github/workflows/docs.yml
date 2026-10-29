@@ -57,6 +57,9 @@ jobs:
       - name: Run design pass and specification audit
         run: npm run test:design --workspace docs-site
 
+      - name: Run internal link checker and stub audit
+        run: npm run test:links --workspace docs-site
+
       - name: Upload Pagefind and site build artifact
         uses: actions/upload-artifact@v4
         with:

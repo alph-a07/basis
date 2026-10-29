@@ -1,0 +1,19 @@
+---
+title: OKLCH Color
+section: Theming
+order: 5
+status: stub
+description: Perceptually uniform color modeling and derivation in Basis.
+---
+
+## Perceptual Uniformity
+
+Basis calculates colors in the OKLCH color space (`Lightness`, `Chroma`, `Hue`) to guarantee linear perceived brightness steps across diverse hues.
+
+## Contrast Math
+
+Because OKLCH aligns with human visual perception, calculating APCA and WCAG contrast ratios becomes predictable and deterministic.
+
+## Gamut Mapping
+
+Colors exceeding standard sRGB display bounds are mapped using chroma reduction while preserving lightness and hue angle.

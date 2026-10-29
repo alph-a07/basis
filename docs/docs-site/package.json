@@ -15,7 +15,8 @@
     "test:templates": "tsx scripts/test-templates.ts",
     "test:a11y": "tsx scripts/test-a11y-layout.ts",
     "test:design": "tsx scripts/test-design-pass.ts",
-    "test": "tsx scripts/test-loader-validation.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts"
+    "test:links": "tsx scripts/test-link-checker.ts",
+    "test": "tsx scripts/test-loader-validation.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",

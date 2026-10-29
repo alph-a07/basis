@@ -5,11 +5,12 @@ import SearchModal from './SearchModal.astro';
 interface Props {
   currentPath?: string;
   componentGroups?: { family: string; components: { id: string; name: string }[] }[];
+  navGroups?: NavGroup[];
 }
 
-const { currentPath = '', componentGroups = [] } = Astro.props;
+const { currentPath = '', componentGroups = [], navGroups = [] } = Astro.props;
 
-// Static documentation groups
+// Static documentation groups fallback
 const staticGroups: NavGroup[] = [
   {
     title: 'Getting Started',
@@ -45,6 +46,8 @@ function isPathActive(itemHref: string): boolean {
   }
   return false;
 }
+
+const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
 ---
 
 <!-- Mobile Drawer Backdrop -->
@@ -89,7 +92,7 @@ function isPathActive(itemHref: string): boolean {
 
     <!-- Navigation Groups -->
     <nav class="sidebar-nav" aria-label="Sidebar Sections">
-      {staticGroups.map((group) => (
+      {displayGroups.map((group) => (
         <div class="nav-group">
           <h2 class="nav-group-title">{group.title}</h2>
           <ul class="nav-group-list">
