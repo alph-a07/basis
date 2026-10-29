@@ -145,3 +145,120 @@ html[data-theme='dark'] pre.shiki span {
     text-decoration: var(--shiki-light-text-decoration) !important;
   }
 }
+
+/* Universal Code Block Container & Header Styles */
+.code-block-container {
+  border: 1px solid var(--docs-code-border);
+  border-radius: 6px;
+  background: var(--docs-code-bg);
+  overflow: hidden;
+  margin: 0.65rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  background: var(--docs-surface-recessed);
+  border-bottom: 1px solid var(--docs-code-border);
+  user-select: none;
+}
+
+.code-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lang-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--docs-text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.copy-button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--docs-text-muted);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.copy-btn-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.copy-button:hover {
+  color: var(--docs-text);
+  background: var(--docs-card-hover);
+  border-color: var(--docs-border-subtle);
+}
+
+.copy-button:focus-visible {
+  outline: 2px solid var(--docs-focus-ring);
+  outline-offset: 1px;
+}
+
+.check-icon {
+  display: none;
+  color: var(--docs-status-pass-text, #3fb950);
+}
+
+.copy-button.copied {
+  color: var(--docs-status-pass-text, #3fb950);
+  border-color: rgba(46, 160, 67, 0.4);
+  background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.1));
+}
+
+.copy-button.copied .copy-icon {
+  display: none;
+}
+
+.copy-button.copied .check-icon {
+  display: inline-block;
+}
+
+.code-viewport {
+  position: relative;
+  overflow-x: auto;
+}
+
+.code-viewport pre.astro-code,
+.code-viewport pre.shiki {
+  margin: 0 !important;
+  padding: 0.85rem 1rem !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-size: 0.85rem !important;
+  line-height: 1.6 !important;
+  tab-size: 4 !important;
+  overflow-x: auto;
+}
+
+.code-viewport pre.astro-code code,
+.code-viewport pre.shiki code {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
