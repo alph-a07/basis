@@ -10,11 +10,11 @@ Basis calculates all color palettes in the **OKLCH** color space (`Lightness`, `
 
 ```mermaid
 flowchart LR
-    A["Seed Color<br/>(#0284C7)"] --> B["Linear sRGB"]
+    A["Seed Color (#0284C7)"] --> B["Linear sRGB"]
     B --> C["CIE XYZ (D65)"]
-    C --> D["OKLab / OKLCH<br/>(L • C • H)"]
-    D --> E["Gamut Mapping<br/>(Chroma Reduction)"]
-    E --> F["Derived Palette<br/>(Light & Dark Tokens)"]
+    C --> D["OKLab / OKLCH (L • C • H)"]
+    D --> E["Gamut Mapping (Chroma Reduction)"]
+    E --> F["Derived Palette (Light & Dark Tokens)"]
 ```
 
 ## The Flaw in Traditional HSL
@@ -45,7 +45,7 @@ Because OKLCH lightness corresponds directly to human luminance perception, Basi
 ```mermaid
 flowchart TD
     Seed["Brand Seed (OKLCH)"] --> Step["Derive Container & Text Tones"]
-    Step --> Check{"Contrast >= 4.5:1 ?"}
+    Step --> Check{"Contrast passes 4.5:1?"}
     Check -- Yes --> Emit["Emit Tokens to BasisTheme.colors"]
     Check -- No --> Adjust["Auto-adjust Lightness L"]
     Adjust --> Emit

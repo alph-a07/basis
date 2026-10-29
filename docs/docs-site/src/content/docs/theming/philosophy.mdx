@@ -10,13 +10,13 @@ Basis treats theming as a compiled software system rather than a collection of s
 
 ```mermaid
 flowchart TD
-    subgraph Traditional["❌ Traditional Design Systems"]
+    subgraph Traditional["Traditional Design Systems"]
         T1["Figma Styles"] -.->|Manual Sync| T2["XML colors.xml"]
         T2 -.->|Manual Sync| T3["Compose Theme"]
         T3 -.->|Late Audit| T4["Contrast Regressions & Drift"]
     end
 
-    subgraph BasisEngine["✅ The Basis Invariant Pipeline"]
+    subgraph BasisEngine["The Basis Invariant Pipeline"]
         B1["BasisIntent"] --> B2["Deterministic Compiler"]
         B2 --> B3["Validated Tokens & Enforced Floors"]
         B3 --> B4["Zero-Drift Production UI"]

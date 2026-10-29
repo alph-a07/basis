@@ -10,14 +10,14 @@ Basis treats Light and Dark modes as two distinct perceptual environments rather
 
 ```mermaid
 flowchart LR
-    subgraph Light["☀️ Light Mode"]
+    subgraph Light["Light Mode"]
         L1["Canvas (White)"]
         L2["Card + Ambient Shadow"]
         L3["Dialog + Key Shadow"]
         L1 --> L2 --> L3
     end
 
-    subgraph Dark["🌙 Dark Mode (Tonal Elevation)"]
+    subgraph Dark["Dark Mode (Tonal Elevation)"]
         D1["Canvas (L: 0.12)"]
         D2["Card (L: 0.16)"]
         D3["Dialog (L: 0.22)"]

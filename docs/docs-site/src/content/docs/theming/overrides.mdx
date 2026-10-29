@@ -10,11 +10,11 @@ While global intent rules govern 95% of your application, specific screens or pr
 
 ```mermaid
 flowchart TD
-    P1["1. Local Composable Modifiers<br/>(Modifier.padding, Modifier.background)"]
-    P2["2. Component Variant Override<br/>(Custom Button Variant)"]
-    P3["3. Global Component Override<br/>(UniversalStylePatch on all buttons)"]
-    P4["4. Domain & Mood Defaults<br/>(e.g. Productivity spacing)"]
-    P5["5. Base Theme Intent<br/>(Brand seed color)"]
+    P1["1. Local Composable Modifiers (Modifier.padding, Modifier.background)"]
+    P2["2. Component Variant Override (Custom Button Variant)"]
+    P3["3. Global Component Override (UniversalStylePatch on all buttons)"]
+    P4["4. Domain & Mood Defaults (e.g. Productivity spacing)"]
+    P5["5. Base Theme Intent (Brand seed color)"]
 
     P1 -->|Overrides| P2
     P2 -->|Overrides| P3
