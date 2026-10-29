@@ -87,9 +87,6 @@ const controlSpecs = deriveControlSpecs(intentDoc);
   </div>
 </BaseLayout>
 
----
-import { createStudioIntentStore, bindControlEvents, loadDocsRuntime, type ResolveResult } from '../lib/studio-intent';
----
 <script type="module">
   // Live Studio intent store: controls -> debounced resolve -> --b-* preview scope + report.
   // Replaced the previous deferred preview-theme stub (which never loaded docs-runtime).

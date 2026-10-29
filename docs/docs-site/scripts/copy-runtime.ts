@@ -12,6 +12,16 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/** Walks up from the script dir to the repo root (where settings.gradle.kts lives). */
+function findRepoRoot(): string {
+  let dir = __dirname;
+  while (dir !== path.dirname(dir)) {
+    if (fs.existsSync(path.join(dir, 'settings.gradle.kts'))) return dir;
+    dir = path.dirname(dir);
+  }
+  return __dirname;
+}
+
 const RUNTIME_JS_FILES = [
   'kotlin-kotlin-stdlib.js',
   'kotlin_org_jetbrains_kotlin_kotlin_dom_api_compat.js',
@@ -21,16 +31,11 @@ const RUNTIME_JS_FILES = [
   'Basis-docs-runtime.js',
 ] as const;
 
-const possibleRuntimePaths = [
-  path.resolve(__dirname, '../docs-runtime/build/dist/js/productionLibrary'),
-  path.resolve(__dirname, '../../docs/docs-runtime/build/dist/js/productionLibrary'),
-];
+const RUNTIME_LIB_DIR = path.join(findRepoRoot(), 'docs', 'docs-runtime', 'build', 'dist', 'js', 'productionLibrary');
 
 function findRuntimeDir(): string | null {
-  for (const p of possibleRuntimePaths) {
-    if (fs.existsSync(p) && RUNTIME_JS_FILES.every((f) => fs.existsSync(path.join(p, f)))) {
-      return p;
-    }
+  if (fs.existsSync(RUNTIME_LIB_DIR) && RUNTIME_JS_FILES.every((f) => fs.existsSync(path.join(RUNTIME_LIB_DIR, f)))) {
+    return RUNTIME_LIB_DIR;
   }
   return null;
 }
