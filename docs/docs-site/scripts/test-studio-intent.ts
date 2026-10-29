@@ -60,7 +60,7 @@ assert.strictEqual(parsed.identity.deriveColors, false);
 // nulls are stripped (absent !== null for resolver)
 s1.setBrandColor(null);
 const parsed2 = JSON.parse(serializeIntent((s1 as any).intent));
-assert.strictEqual(parsed2.identity.brandColor, undefined, 'Null brandColor must be stripped from JSON');
+assert.strictEqual(parsed2.identity.brandColor, null, 'Null brandColor preserved as explicit unset');
 assert.strictEqual(parsed2.identity.presence, 'Strong');
 console.log('   ✅ ColorSpec Hex discriminator + null stripping match resolver intake.\n');
 

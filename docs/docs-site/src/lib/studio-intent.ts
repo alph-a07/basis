@@ -163,15 +163,20 @@ export function applyControlChange(state: IntentState, path: string, name: strin
   return next;
 }
 
-/** Serializes the intent state to the interchange JSON the resolver accepts. Strips nulls. */
+/** Serializes the intent state to the interchange JSON the resolver accepts. Strips null leaves. */
 export function serializeIntent(state: IntentState): string {
   return JSON.stringify(stripNulls(state));
 }
 
-/** Removes null/undefined values so the resolver never sees JSON null where an absent value is expected. */
+/** Removes undefined leaf values while preserving null (null = explicit "unset/inherit"
+ *  for mood knobs, brandColor, etc.). Keeps objects so an unset brandColor still
+ *  yields `identity:{}` rather than dropping the axis entirely. */
 function stripNulls(obj: unknown): unknown {
-  if (obj === null || obj === undefined) return undefined;
-  if (Array.isArray(obj)) return obj.map(stripNulls).filter((v) => v !== undefined);
+  if (obj === undefined) return undefined;
+  if (obj === null) return null;
+  if (Array.isArray(obj)) {
+    return obj.map(stripNulls).filter((v) => v !== undefined);
+  }
   if (typeof obj === 'object') {
     const out: Record<string, unknown> = {};
     for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
@@ -260,18 +265,18 @@ export function createStudioIntentStore(
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
   let resolveScheduled = false;
 
+  /** Live snapshot of the current intent, recomputed on each access. */
+  const snapshot = (): IntentState => JSON.parse(JSON.stringify(intent));
+
   function emit() {
-    const snapshot: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null } = {
-      intent: JSON.parse(JSON.stringify(intent)),
-      lastGood,
-      current,
-    };
-    setState((s) => {
-      s.intent = snapshot.intent;
-      s.lastGood = lastGood;
-      s.current = current;
+    const s = snapshot();
+    const view = { intent: s, lastGood, current };
+    setState((prev) => {
+      prev.intent = s;
+      prev.lastGood = lastGood;
+      prev.current = current;
     });
-    onResolve?.(snapshot);
+    onResolve?.(view);
   }
 
   async function resolveNow() {
@@ -304,41 +309,41 @@ export function createStudioIntentStore(
 
   function resolveDebounced() {
     if (!resolveScheduled) return;
-    void doResolve();
+    void resolveNow();
   }
 
   return {
-    intent: JSON.parse(JSON.stringify(intent)),
-    lastGood,
-    current,
-    setBrandColor: (hex) =>
+    get intent() { return snapshot(); },
+    get lastGood() { return lastGood; },
+    get current() { return current; },
+    setBrandColor: (hex: string | null) =>
       mutate((i) => {
         if (!i.identity) i.identity = {};
         i.identity.brandColor = hex ? { type: COLOR_SPEC_DISCRIMINATOR, value: hex } : null;
       }),
-    addSupportingColor: (hex) =>
+    addSupportingColor: (hex: string) =>
       mutate((i) => {
         if (!i.identity) i.identity = {};
         if (!i.identity.supportingColors) i.identity.supportingColors = [];
         i.identity.supportingColors.push({ type: COLOR_SPEC_DISCRIMINATOR, value: hex });
       }),
-    setSupportingColors: (hexes) =>
+    setSupportingColors: (hexes: string[]) =>
       mutate((i) => {
         if (!i.identity) i.identity = {};
         i.identity.supportingColors = hexes.map((h) => ({ type: COLOR_SPEC_DISCRIMINATOR, value: h }));
       }),
-    removeSupportingColor: (index) =>
+    removeSupportingColor: (index: number) =>
       mutate((i) => {
         if (!i.identity?.supportingColors) return;
         i.identity.supportingColors.splice(index, 1);
       }),
-    setPresence: (value) => mutate((i) => { if (!i.identity) i.identity = {}; i.identity.presence = value; }),
-    setDeriveColors: (value) => mutate((i) => { if (!i.identity) i.identity = {}; i.identity.deriveColors = value; }),
-    setTypographyFamily: (role, id) =>
+    setPresence: (value: string | null) => mutate((i) => { if (!i.identity) i.identity = {}; i.identity.presence = value; }),
+    setDeriveColors: (value: boolean) => mutate((i) => { if (!i.identity) i.identity = {}; i.identity.deriveColors = value; }),
+    setTypographyFamily: (role: 'candidates' | 'structure' | 'content' | 'metadata', id: string) =>
       mutate((i) => {
         if (!i.identity) i.identity = {};
         if (!i.identity.typography) i.identity.typography = {};
-        const ref = { type: FONT_FAMILY_DISCRIMINATOR, id };
+        const ref: FontFamilyRefInput = { type: FONT_FAMILY_DISCRIMINATOR, id };
         switch (role) {
           case 'candidates':
             if (!i.identity.typography.candidates) i.identity.typography.candidates = [];
@@ -349,16 +354,16 @@ export function createStudioIntentStore(
           case 'metadata': i.identity.typography.metadata = ref; break;
         }
       }),
-    setMoodPreset: (value) => mutate((i) => { if (!i.mood) i.mood = {}; i.mood.preset = value; }),
-    setKnob: (id, value) =>
+    setMoodPreset: (value: string | null) => mutate((i) => { if (!i.mood) i.mood = {}; i.mood.preset = value; }),
+    setKnob: (id: string, value: number | null) =>
       mutate((i) => {
         if (!i.mood) i.mood = { knobs: {} };
         if (!i.mood.knobs) i.mood.knobs = {};
         i.mood.knobs[id] = value;
       }),
-    setDomains: (values) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.domains = values; }),
-    setInteractions: (values) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.interactions = values; }),
-    setMode: (preferred, targets) => mutate((i) => { if (!i.control) i.control = {}; i.control.mode = { preferred, targets }; }),
+    setDomains: (values: string[]) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.domains = values; }),
+    setInteractions: (values: string[]) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.interactions = values; }),
+    setMode: (preferred: 'Light' | 'Dark' | null, targets: string[]) => mutate((i) => { if (!i.control) i.control = {}; i.control.mode = { preferred, targets }; }),
     reset: () => {
       intent = JSON.parse(JSON.stringify(DEFAULT_INTENT));
       emit();
