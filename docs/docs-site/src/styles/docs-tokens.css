@@ -4,11 +4,12 @@
  * Per locked decisions: these tokens never extend or leak into the Basis component token vocabulary.
  */
 
-:root {
+:root,
+[data-theme="light"] {
   /* Surfaces & Backgrounds */
   --docs-bg: var(--d-color-surface-default);
-  --docs-surface: color-mix(in srgb, var(--d-color-surface-elevated) 30%, var(--d-color-surface-default));
-  --docs-surface-recessed: color-mix(in srgb, var(--d-color-surface-recessed) 40%, var(--d-color-surface-default));
+  --docs-surface: var(--d-color-surface-elevated);
+  --docs-surface-recessed: var(--d-color-surface-recessed);
   --docs-surface-inverse: var(--d-color-surface-inverse);
 
   /* Typography & Content */
@@ -16,11 +17,11 @@
   --docs-text-muted: var(--d-color-content-muted);
   --docs-text-inverse: var(--d-color-content-inverse);
 
-  /* Borders & Dividers */
-  --docs-border: color-mix(in srgb, var(--d-color-border-default) 45%, transparent);
+  /* Borders & Dividers - crisp & full in light mode for visual separation */
+  --docs-border: var(--d-color-border-default);
   --docs-border-muted: var(--d-color-border-muted);
   --docs-border-strong: var(--d-color-border-strong);
-  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 22%, transparent);
+  --docs-border-subtle: var(--d-color-border-default);
 
   /* Interactive, Focus, and Selection */
   --docs-focus-ring: var(--d-color-focus-ring);
@@ -30,11 +31,16 @@
 
   /* Chrome-specific derived tokens */
   --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
-  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 25%, transparent);
+  --docs-code-border: var(--d-color-border-default);
   --docs-toc-active: var(--d-color-focus-ring);
   --docs-toc-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
   --docs-sidebar-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
   --docs-card-hover: color-mix(in srgb, var(--d-color-surface-elevated) 92%, var(--d-color-content-default));
+
+  /* Scrollbar tokens */
+  --docs-scrollbar-track: transparent;
+  --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 32%, transparent);
+  --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 60%, transparent);
 
   /* Status Colors */
   --docs-status-pass-bg: var(--d-color-positive-surface);
@@ -48,4 +54,28 @@
   --docs-status-fail-bg: var(--d-color-negative-surface);
   --docs-status-fail-text: var(--d-color-negative-content);
   --docs-status-fail-border: var(--d-color-negative-border);
+}
+
+[data-theme="dark"] {
+  /* Surfaces & Backgrounds - deep tone in dark mode */
+  --docs-bg: var(--d-color-surface-default);
+  --docs-surface: color-mix(in srgb, var(--d-color-surface-elevated) 30%, var(--d-color-surface-default));
+  --docs-surface-recessed: color-mix(in srgb, var(--d-color-surface-recessed) 40%, var(--d-color-surface-default));
+  --docs-surface-inverse: var(--d-color-surface-inverse);
+
+  /* Borders & Dividers - softened for dark mode to eliminate wireframe look */
+  --docs-border: color-mix(in srgb, var(--d-color-border-default) 45%, transparent);
+  --docs-border-muted: var(--d-color-border-muted);
+  --docs-border-strong: var(--d-color-border-strong);
+  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 22%, transparent);
+
+  /* Chrome-specific derived tokens */
+  --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
+  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 25%, transparent);
+  --docs-card-hover: color-mix(in srgb, var(--docs-surface) 88%, var(--d-color-content-default));
+
+  /* Scrollbar tokens */
+  --docs-scrollbar-track: transparent;
+  --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 28%, transparent);
+  --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 55%, transparent);
 }

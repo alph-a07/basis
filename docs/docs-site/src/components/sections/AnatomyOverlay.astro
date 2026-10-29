@@ -332,6 +332,11 @@ const hasAnatomy = parts.length > 0;
     background: color-mix(in srgb, var(--docs-text, #e6edf3) 5%, transparent);
   }
 
+  :global([data-theme="light"]) .part-card {
+    background: var(--docs-surface, #ffffff);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
   .part-badge {
     display: flex;
     align-items: center;

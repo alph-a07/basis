@@ -148,6 +148,11 @@ const matrix = overrides?.matrix || [];
     background: color-mix(in srgb, var(--docs-text, #e6edf3) 6%, transparent);
   }
 
+  :global([data-theme="light"]) .field-chip {
+    background: var(--docs-surface, #ffffff);
+    border: 1px solid var(--docs-border-subtle, #d0d7de);
+  }
+
   .field-bullet {
     color: var(--docs-accent, #58a6ff);
     font-size: 0.65rem;
@@ -209,6 +214,10 @@ const matrix = overrides?.matrix || [];
     box-sizing: border-box;
   }
 
+  :global([data-theme="light"]) .table-responsive {
+    background: var(--docs-surface, #ffffff);
+  }
+
   .matrix-table {
     width: 100%;
     table-layout: fixed;
@@ -237,6 +246,10 @@ const matrix = overrides?.matrix || [];
     font-size: 0.75rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     white-space: nowrap;
+  }
+
+  :global([data-theme="light"]) .matrix-table th {
+    background: var(--docs-surface-recessed, #f6f8fa);
   }
 
   .matrix-table td {

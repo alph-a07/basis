@@ -187,6 +187,10 @@ const { signatures = [], samples = [] } = Astro.props;
     box-sizing: border-box;
   }
 
+  :global([data-theme="light"]) .table-responsive {
+    background: var(--docs-surface, #ffffff);
+  }
+
   .params-table {
     width: 100%;
     table-layout: fixed;
@@ -219,6 +223,10 @@ const { signatures = [], samples = [] } = Astro.props;
     font-size: 0.75rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     white-space: nowrap;
+  }
+
+  :global([data-theme="light"]) .params-table th {
+    background: var(--docs-surface-recessed, #f6f8fa);
   }
 
   .params-table td {

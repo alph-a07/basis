@@ -41,6 +41,37 @@ const { title, description = 'Basis — Jetpack Compose design system' } = Astro
     box-sizing: border-box;
   }
 
+  /* Custom theme-aligned global scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--docs-scrollbar-thumb) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--docs-scrollbar-track);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--docs-scrollbar-thumb);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 0.15s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--docs-scrollbar-thumb-hover);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
   body {
     margin: 0;
     padding: 0;

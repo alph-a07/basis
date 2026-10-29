@@ -158,4 +158,25 @@ const { lifecycle, family, kind = 'component', sourceUrl } = Astro.props;
     outline: 2px solid var(--docs-focus-ring, #58a6ff);
     outline-offset: 2px;
   }
+
+  /* Light mode borders for visual separation */
+  :global([data-theme="light"]) .chip {
+    border: 1px solid var(--docs-border-subtle, #d0d7de);
+  }
+
+  :global([data-theme="light"]) .status-stable {
+    border: 1px solid var(--docs-status-pass-border, rgba(46, 160, 67, 0.4));
+  }
+
+  :global([data-theme="light"]) .status-experimental {
+    border: 1px solid var(--docs-status-warn-border, rgba(210, 153, 34, 0.4));
+  }
+
+  :global([data-theme="light"]) .status-deprecated {
+    border: 1px solid rgba(248, 81, 73, 0.4);
+  }
+
+  :global([data-theme="light"]) .status-discontinued {
+    border: 1px solid rgba(139, 148, 158, 0.4);
+  }
 </style>

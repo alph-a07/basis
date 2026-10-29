@@ -11,6 +11,10 @@ const { headings = [] } = Astro.props;
 {headings.length > 0 && (
   <nav class="docs-toc" aria-label="Table of contents">
     <div class="toc-inner">
+      <div class="toc-divider" aria-hidden="true" title="Scroll progress">
+        <div class="toc-divider-track"></div>
+        <div class="toc-divider-glow" id="toc-scroll-indicator"></div>
+      </div>
       <h2 class="toc-heading">On this page</h2>
       <ul class="toc-list">
         {headings.map((item) => (
@@ -95,8 +99,55 @@ const { headings = [] } = Astro.props;
     onScroll();
   }
 
-  setupTocScrollSpy();
-  document.addEventListener('astro:page-load', setupTocScrollSpy);
+  function setupTocScrollIndicator() {
+    const indicator = document.getElementById('toc-scroll-indicator');
+    const divider = document.querySelector<HTMLElement>('.toc-divider');
+    if (!indicator || !divider) return;
+
+    function updateProgress() {
+      const scrollY = window.scrollY;
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalScroll <= 0) {
+        if (indicator) {
+          indicator.style.height = '0%';
+          indicator.classList.remove('is-active');
+        }
+        return;
+      }
+
+      const progress = Math.min(Math.max(scrollY / totalScroll, 0), 1);
+      if (indicator) {
+        indicator.style.height = `${(progress * 100).toFixed(1)}%`;
+        if (progress > 0.005) {
+          indicator.classList.add('is-active');
+        } else {
+          indicator.classList.remove('is-active');
+        }
+      }
+    }
+
+    divider.addEventListener('click', (e) => {
+      const rect = divider.getBoundingClientRect();
+      const clickRatio = (e.clientY - rect.top) / rect.height;
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      window.scrollTo({
+        top: Math.max(0, Math.min(clickRatio * totalScroll, totalScroll)),
+        behavior: 'smooth',
+      });
+    });
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    updateProgress();
+  }
+
+  function initToc() {
+    setupTocScrollSpy();
+    setupTocScrollIndicator();
+  }
+
+  initToc();
+  document.addEventListener('astro:page-load', initToc);
 </script>
 
 <style>
@@ -111,8 +162,52 @@ const { headings = [] } = Astro.props;
   }
 
   .toc-inner {
-    border-left: 1px solid var(--docs-border-subtle, #21262d);
+    position: relative;
     padding-left: 1rem;
+  }
+
+  .toc-divider {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    cursor: pointer;
+  }
+
+  .toc-divider-track {
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--docs-border-subtle, #21262d);
+  }
+
+  .toc-divider-glow {
+    position: absolute;
+    left: 3.5px;
+    top: 0;
+    width: 2px;
+    height: 0%;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      var(--docs-accent) 0%,
+      var(--docs-focus-ring) 100%
+    );
+    box-shadow: 0 0 8px color-mix(in srgb, var(--docs-accent) 70%, transparent),
+      0 0 14px color-mix(in srgb, var(--docs-focus-ring) 45%, transparent);
+    opacity: 0;
+    transition: height 0.08s ease-out, opacity 0.2s ease;
+  }
+
+  .toc-divider-glow.is-active {
+    opacity: 1;
+  }
+
+  .toc-divider:hover .toc-divider-glow {
+    box-shadow: 0 0 10px var(--docs-accent), 0 0 20px var(--docs-focus-ring);
   }
 
   .toc-heading {

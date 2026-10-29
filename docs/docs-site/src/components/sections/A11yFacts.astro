@@ -158,6 +158,11 @@ const { accessibility, narrative } = Astro.props;
     gap: 0.35rem;
   }
 
+  :global([data-theme="light"]) .fact-card {
+    background: var(--docs-surface, #ffffff);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+
   .fact-label {
     font-size: 0.75rem;
     font-weight: 700;
