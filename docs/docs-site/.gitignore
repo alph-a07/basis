@@ -4,6 +4,7 @@ node_modules/
 src/styles/theme.css
 src/generated/
 public/assets/components/*.png
+public/docs-runtime/
 scripts/capture-screenshots.ts
 scripts/test-screenshot.ts
 
