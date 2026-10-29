@@ -9,6 +9,7 @@ interface Props {
 
 const { currentPath = '', componentGroups = [] } = Astro.props;
 
+// Static documentation groups
 const staticGroups: NavGroup[] = [
   {
     title: 'Getting Started',
@@ -34,18 +35,6 @@ const staticGroups: NavGroup[] = [
       { title: 'Overlay', href: '/docs/foundation/overlay' },
     ],
   },
-];
-
-// Combine static groups with dynamic component groups
-const allGroups: NavGroup[] = [
-  ...staticGroups,
-  ...componentGroups.map((group) => ({
-    title: `Components · ${group.family}`,
-    items: group.components.map((comp) => ({
-      title: comp.name,
-      href: `/docs/components/${comp.id}`,
-    })),
-  })),
 ];
 
 function isPathActive(itemHref: string): boolean {
@@ -100,7 +89,7 @@ function isPathActive(itemHref: string): boolean {
 
     <!-- Navigation Groups -->
     <nav class="sidebar-nav" aria-label="Sidebar Sections">
-      {allGroups.map((group) => (
+      {staticGroups.map((group) => (
         <div class="nav-group">
           <h2 class="nav-group-title">{group.title}</h2>
           <ul class="nav-group-list">
@@ -122,6 +111,36 @@ function isPathActive(itemHref: string): boolean {
           </ul>
         </div>
       ))}
+
+      {componentGroups.length > 0 && (
+        <div class="nav-group components-group">
+          <h2 class="nav-group-title">Components</h2>
+          <div class="component-families">
+            {componentGroups.map((group) => (
+              <div class="nav-subgroup">
+                <h3 class="nav-subgroup-title">{group.family}</h3>
+                <ul class="nav-group-list subgroup-list">
+                  {group.components.map((comp) => {
+                    const href = `/docs/components/${comp.id}`;
+                    const active = isPathActive(href);
+                    return (
+                      <li class="nav-item">
+                        <a
+                          href={href}
+                          class={`nav-link subgroup-link ${active ? 'active' : ''}`}
+                          aria-current={active ? 'page' : undefined}
+                        >
+                          <span>{comp.name}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
 
     <!-- Footer: Version + Theme Toggle + GitHub -->
@@ -365,6 +384,35 @@ function isPathActive(itemHref: string): boolean {
     letter-spacing: 0.05em;
     color: var(--docs-text-muted, #8b949e);
     margin: 0 0 0.5rem 0.5rem;
+  }
+
+  .component-families {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .nav-subgroup {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nav-subgroup-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0 0 0.25rem 0.625rem;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+  }
+
+  .subgroup-list {
+    margin-left: 0.25rem;
+  }
+
+  .subgroup-link {
+    padding-left: 0.875rem;
   }
 
   .nav-group-list {

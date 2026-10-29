@@ -49,6 +49,16 @@ assert(familyChip && familyChip.textContent?.includes('Actions'), 'Family chip m
 const sourceLink = buttonOverviewDoc.querySelector('.source-link');
 assert(sourceLink && sourceLink.getAttribute('href')?.includes('github.com'), 'Source link must be present');
 
+// Sidebar component nesting
+const componentsGroup = buttonOverviewDoc.querySelector('.components-group');
+assert(componentsGroup, 'Single components section must exist in sidebar');
+const componentsSectionTitle = componentsGroup.querySelector('.nav-group-title');
+assert.strictEqual(componentsSectionTitle?.textContent?.trim(), 'Components', 'Section title must be Components');
+const familySubgroups = componentsGroup.querySelectorAll('.nav-subgroup');
+assert(familySubgroups.length >= 2, 'Component families must be nested as subgroups');
+const actionsSubgroup = Array.from(familySubgroups).find(sg => sg.querySelector('.nav-subgroup-title')?.textContent?.trim() === 'Actions');
+assert(actionsSubgroup && actionsSubgroup.querySelector('.subgroup-link')?.textContent?.includes('BasisButton'), 'Actions family must contain BasisButton');
+
 // Tabs navigation
 const tabsNav = buttonOverviewDoc.querySelector('.component-tabs');
 assert(tabsNav, 'Component tabs navigation must render');
