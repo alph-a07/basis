@@ -1,0 +1,165 @@
+---
+/**
+ * Button specimen component for Studio and Landing illustrative previews.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  variant?: 'primary' | 'secondary' | 'tertiary';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  state?: 'default' | 'hover' | 'focus' | 'disabled';
+  type?: 'button' | 'submit' | 'reset';
+  ariaLabel?: string;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  disabled = false,
+  state = 'default',
+  type = 'button',
+  ariaLabel,
+  class: className = '',
+} = Astro.props;
+
+const isDisabled = disabled || state === 'disabled';
+---
+
+<button
+  type={type}
+  disabled={isDisabled}
+  aria-disabled={isDisabled}
+  aria-label={ariaLabel}
+  data-variant={variant}
+  data-size={size}
+  data-state={state}
+  class={`basis-specimen-button ${className}`.trim()}
+>
+  <slot name="leading-icon" />
+  <span class="button-label"><slot>Button</slot></span>
+  <slot name="trailing-icon" />
+</button>
+
+<style>
+  .basis-specimen-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--b-spacing-level2);
+    font-family: var(--b-typography-content-level3-family);
+    font-size: var(--b-typography-content-level3-size);
+    font-weight: var(--b-typography-content-level3-weight);
+    line-height: 1;
+    border-radius: var(--b-radius-level2);
+    cursor: pointer;
+    box-sizing: border-box;
+    text-decoration: none;
+    user-select: none;
+    white-space: nowrap;
+    transition: all var(--b-motion-stateTransition);
+  }
+
+  /* Size variants */
+  .basis-specimen-button[data-size="sm"] {
+    height: var(--b-size-control-level2);
+    padding: 0 var(--b-spacing-level3);
+    font-size: var(--b-typography-content-level2-size);
+    font-weight: var(--b-typography-content-level2-weight);
+  }
+
+  .basis-specimen-button[data-size="md"] {
+    height: var(--b-size-control-level3);
+    padding: 0 var(--b-spacing-level4);
+  }
+
+  .basis-specimen-button[data-size="lg"] {
+    height: var(--b-size-control-level4);
+    padding: 0 var(--b-spacing-level5);
+  }
+
+  /* Primary variant */
+  .basis-specimen-button[data-variant="primary"] {
+    background-color: var(--b-color-brand-primary);
+    color: var(--b-color-content-inverse);
+    border: 1px solid var(--b-color-brand-primary);
+  }
+
+  .basis-specimen-button[data-variant="primary"]:hover:not(:disabled),
+  .basis-specimen-button[data-variant="primary"][data-state="hover"]:not(:disabled) {
+    background-color: var(--b-color-brand-secondary);
+    border-color: var(--b-color-brand-secondary);
+  }
+
+  .basis-specimen-button[data-variant="primary"]:focus-visible,
+  .basis-specimen-button[data-variant="primary"][data-state="focus"] {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  .basis-specimen-button[data-variant="primary"]:disabled,
+  .basis-specimen-button[data-variant="primary"][data-state="disabled"] {
+    background-color: var(--b-color-surface-recessed);
+    color: var(--b-color-content-muted);
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+  }
+
+  /* Secondary variant */
+  .basis-specimen-button[data-variant="secondary"] {
+    background-color: var(--b-color-surface-elevated);
+    color: var(--b-color-content-default);
+    border: 1px solid var(--b-color-border-default);
+  }
+
+  .basis-specimen-button[data-variant="secondary"]:hover:not(:disabled),
+  .basis-specimen-button[data-variant="secondary"][data-state="hover"]:not(:disabled) {
+    background-color: var(--b-color-surface-default);
+    border-color: var(--b-color-border-strong);
+  }
+
+  .basis-specimen-button[data-variant="secondary"]:focus-visible,
+  .basis-specimen-button[data-variant="secondary"][data-state="focus"] {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  .basis-specimen-button[data-variant="secondary"]:disabled,
+  .basis-specimen-button[data-variant="secondary"][data-state="disabled"] {
+    background-color: var(--b-color-surface-recessed);
+    color: var(--b-color-content-muted);
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+  }
+
+  /* Tertiary variant */
+  .basis-specimen-button[data-variant="tertiary"] {
+    background-color: transparent;
+    color: var(--b-color-content-default);
+    border: 1px solid transparent;
+  }
+
+  .basis-specimen-button[data-variant="tertiary"]:hover:not(:disabled),
+  .basis-specimen-button[data-variant="tertiary"][data-state="hover"]:not(:disabled) {
+    background-color: var(--b-color-surface-elevated);
+    border-color: transparent;
+  }
+
+  .basis-specimen-button[data-variant="tertiary"]:focus-visible,
+  .basis-specimen-button[data-variant="tertiary"][data-state="focus"] {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  .basis-specimen-button[data-variant="tertiary"]:disabled,
+  .basis-specimen-button[data-variant="tertiary"][data-state="disabled"] {
+    background-color: transparent;
+    color: var(--b-color-content-muted);
+    border-color: transparent;
+    cursor: not-allowed;
+  }
+
+  .button-label {
+    display: inline-block;
+  }
+</style>

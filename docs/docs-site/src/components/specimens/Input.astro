@@ -1,0 +1,152 @@
+---
+/**
+ * Input specimen component for Studio and Landing illustrative previews.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  id?: string;
+  label?: string;
+  placeholder?: string;
+  value?: string;
+  helperText?: string;
+  error?: string;
+  disabled?: boolean;
+  state?: 'default' | 'hover' | 'focus' | 'disabled' | 'error';
+  class?: string;
+}
+
+const {
+  id = `specimen-input-${Math.random().toString(36).substring(2, 9)}`,
+  label,
+  placeholder = 'Enter text...',
+  value,
+  helperText,
+  error,
+  disabled = false,
+  state = 'default',
+  class: className = '',
+} = Astro.props;
+
+const isDisabled = disabled || state === 'disabled';
+const hasError = Boolean(error) || state === 'error';
+---
+
+<div class={`basis-specimen-input-wrapper ${className}`.trim()} data-state={state} data-error={hasError ? 'true' : 'false'}>
+  {label && (
+    <label for={id} class="specimen-label">
+      {label}
+    </label>
+  )}
+  <div class="input-container">
+    <slot name="leading-icon" />
+    <input
+      id={id}
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      disabled={isDisabled}
+      aria-invalid={hasError}
+      aria-describedby={helperText || error ? `${id}-helper` : undefined}
+      class="specimen-input"
+    />
+    <slot name="trailing-icon" />
+  </div>
+  {(error || helperText) && (
+    <span id={`${id}-helper`} class={`specimen-helper ${hasError ? 'error' : ''}`}>
+      {error || helperText}
+    </span>
+  )}
+</div>
+
+<style>
+  .basis-specimen-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level1);
+    box-sizing: border-box;
+    font-family: var(--b-typography-content-level3-family);
+  }
+
+  .specimen-label {
+    font-size: var(--b-typography-metadata-level1-size);
+    font-weight: var(--b-typography-metadata-level1-weight);
+    color: var(--b-color-content-default);
+    line-height: 1.2;
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level2);
+    height: var(--b-size-control-level3);
+    padding: 0 var(--b-spacing-level3);
+    background-color: var(--b-color-surface-recessed);
+    border: 1px solid var(--b-color-border-default);
+    border-radius: var(--b-radius-level2);
+    transition: all var(--b-motion-stateTransition);
+    box-sizing: border-box;
+  }
+
+  .input-container:hover {
+    border-color: var(--b-color-border-strong);
+  }
+
+  .input-container:focus-within {
+    border-color: var(--b-color-focus-ring);
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  /* Forced state simulation */
+  .basis-specimen-input-wrapper[data-state="hover"] .input-container {
+    border-color: var(--b-color-border-strong);
+  }
+
+  .basis-specimen-input-wrapper[data-state="focus"] .input-container {
+    border-color: var(--b-color-focus-ring);
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  .basis-specimen-input-wrapper[data-state="disabled"] .input-container {
+    background-color: var(--b-color-surface-default);
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+  }
+
+  .basis-specimen-input-wrapper[data-error="true"] .input-container {
+    border-color: var(--b-color-negative-border);
+  }
+
+  .specimen-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--b-color-content-default);
+    font-family: var(--b-typography-content-level3-family);
+    font-size: var(--b-typography-content-level3-size);
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+  }
+
+  .specimen-input::placeholder {
+    color: var(--b-color-content-muted);
+  }
+
+  .specimen-input:disabled {
+    color: var(--b-color-content-muted);
+    cursor: not-allowed;
+  }
+
+  .specimen-helper {
+    font-size: var(--b-typography-metadata-level2-size);
+    color: var(--b-color-content-muted);
+    line-height: 1.2;
+  }
+
+  .specimen-helper.error {
+    color: var(--b-color-negative-content);
+  }
+</style>

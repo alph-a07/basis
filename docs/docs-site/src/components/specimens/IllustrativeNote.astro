@@ -1,0 +1,81 @@
+---
+/**
+ * Illustrative rendering note component for Studio and Landing.
+ * Informs the user that web specimens are illustrative previews driven by
+ * the exact same Basis design tokens (--b-*) resolved by the Basis theme engine.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  title?: string;
+  message?: string;
+  class?: string;
+}
+
+const {
+  title = 'Illustrative Web Rendering',
+  message = 'Specimens are illustrative HTML/CSS previews driven by Basis tokens (--b-*). Native Android applications render these tokens via Basis Jetpack Compose composables.',
+  class: className = '',
+} = Astro.props;
+---
+
+<div role="note" aria-label={title} class={`basis-specimen-illustrative-note ${className}`.trim()}>
+  <div class="note-icon-slot">
+    <svg class="note-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <line x1="12" y1="8" x2="12.01" y2="8" />
+    </svg>
+  </div>
+  <div class="note-text-slot">
+    <strong class="note-title">{title}</strong>
+    <p class="note-message"><slot>{message}</slot></p>
+  </div>
+</div>
+
+<style>
+  .basis-specimen-illustrative-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--b-spacing-level3);
+    padding: var(--b-spacing-level3) var(--b-spacing-level4);
+    background-color: var(--b-color-surface-recessed);
+    border: 1px solid var(--b-color-border-muted);
+    border-radius: var(--b-radius-level2);
+    box-sizing: border-box;
+    font-family: var(--b-typography-metadata-level2-family);
+  }
+
+  .note-icon-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--b-color-icon-muted);
+  }
+
+  .note-icon {
+    width: var(--b-size-icon-level2);
+    height: var(--b-size-icon-level2);
+  }
+
+  .note-text-slot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level1);
+  }
+
+  .note-title {
+    font-size: var(--b-typography-metadata-level1-size);
+    font-weight: var(--b-typography-metadata-level1-weight);
+    color: var(--b-color-content-default);
+    line-height: 1.2;
+  }
+
+  .note-message {
+    font-size: var(--b-typography-metadata-level2-size);
+    color: var(--b-color-content-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+</style>

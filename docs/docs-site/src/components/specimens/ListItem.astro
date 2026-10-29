@@ -1,0 +1,160 @@
+---
+/**
+ * ListItem specimen component for Studio and Landing illustrative previews.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  headline?: string;
+  supportingText?: string;
+  trailingMeta?: string;
+  interactive?: boolean;
+  selected?: boolean;
+  disabled?: boolean;
+  state?: 'default' | 'hover' | 'focus' | 'selected' | 'disabled';
+  class?: string;
+}
+
+const {
+  headline = 'List Item Headline',
+  supportingText,
+  trailingMeta,
+  interactive = false,
+  selected = false,
+  disabled = false,
+  state = 'default',
+  class: className = '',
+} = Astro.props;
+
+const isSelected = selected || state === 'selected';
+const isDisabled = disabled || state === 'disabled';
+---
+
+<div
+  role={interactive ? 'button' : undefined}
+  tabindex={interactive && !isDisabled ? 0 : undefined}
+  aria-selected={isSelected}
+  aria-disabled={isDisabled}
+  data-interactive={interactive ? 'true' : 'false'}
+  data-selected={isSelected ? 'true' : 'false'}
+  data-state={state}
+  class={`basis-specimen-list-item ${className}`.trim()}
+>
+  <div class="leading-slot">
+    <slot name="leading-icon">
+      <svg class="specimen-item-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 14 14" />
+      </svg>
+    </slot>
+  </div>
+  <div class="content-slot">
+    <span class="item-headline">{headline}</span>
+    {supportingText && <span class="item-supporting">{supportingText}</span>}
+  </div>
+  <div class="trailing-slot">
+    {trailingMeta && <span class="item-trailing-meta">{trailingMeta}</span>}
+    <slot name="trailing-icon">
+      <svg class="specimen-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </slot>
+  </div>
+</div>
+
+<style>
+  .basis-specimen-list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level3);
+    padding: var(--b-spacing-level3) var(--b-spacing-level4);
+    background-color: var(--b-color-surface-default);
+    border: 1px solid var(--b-color-border-muted);
+    border-radius: var(--b-radius-level2);
+    box-sizing: border-box;
+    transition: all var(--b-motion-stateTransition);
+    color: var(--b-color-content-default);
+    font-family: var(--b-typography-content-level3-family);
+  }
+
+  .basis-specimen-list-item[data-interactive="true"] {
+    cursor: pointer;
+  }
+
+  .basis-specimen-list-item[data-interactive="true"]:hover,
+  .basis-specimen-list-item[data-state="hover"] {
+    background-color: var(--b-color-surface-elevated);
+    border-color: var(--b-color-border-default);
+  }
+
+  .basis-specimen-list-item[data-interactive="true"]:focus-visible,
+  .basis-specimen-list-item[data-state="focus"] {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  /* Selected state */
+  .basis-specimen-list-item[data-selected="true"] {
+    background-color: var(--b-color-selection-surface);
+    border-color: var(--b-color-selection-border);
+  }
+
+  /* Disabled state */
+  .basis-specimen-list-item[data-state="disabled"],
+  .basis-specimen-list-item[aria-disabled="true"] {
+    opacity: 0.6;
+    color: var(--b-color-content-muted);
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .leading-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--b-color-icon-default);
+  }
+
+  .specimen-item-icon {
+    width: var(--b-size-icon-level3);
+    height: var(--b-size-icon-level3);
+  }
+
+  .content-slot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level1);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .item-headline {
+    font-size: var(--b-typography-content-level3-size);
+    font-weight: var(--b-typography-content-level3-weight);
+    line-height: 1.3;
+    color: var(--b-color-content-default);
+  }
+
+  .item-supporting {
+    font-size: var(--b-typography-metadata-level2-size);
+    color: var(--b-color-content-muted);
+    line-height: 1.3;
+  }
+
+  .trailing-slot {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level2);
+    flex-shrink: 0;
+  }
+
+  .item-trailing-meta {
+    font-size: var(--b-typography-metadata-level1-size);
+    color: var(--b-color-content-muted);
+  }
+
+  .specimen-chevron {
+    color: var(--b-color-icon-muted);
+  }
+</style>

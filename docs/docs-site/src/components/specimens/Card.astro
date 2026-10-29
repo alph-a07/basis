@@ -1,0 +1,100 @@
+---
+/**
+ * Card specimen component for Studio and Landing illustrative previews.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  variant?: 'default' | 'elevated' | 'outlined';
+  interactive?: boolean;
+  state?: 'default' | 'hover' | 'focus' | 'disabled';
+  class?: string;
+}
+
+const {
+  variant = 'default',
+  interactive = false,
+  state = 'default',
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  data-variant={variant}
+  data-interactive={interactive ? 'true' : 'false'}
+  data-state={state}
+  tabindex={interactive ? 0 : undefined}
+  class={`basis-specimen-card ${className}`.trim()}
+>
+  <div class="card-inner">
+    <slot name="header" />
+    <div class="card-content">
+      <slot />
+    </div>
+    <slot name="footer" />
+  </div>
+</div>
+
+<style>
+  .basis-specimen-card {
+    border-radius: var(--b-radius-level3);
+    padding: var(--b-spacing-level5);
+    box-sizing: border-box;
+    transition: all var(--b-motion-stateTransition);
+    color: var(--b-color-content-default);
+    font-family: var(--b-typography-content-level3-family);
+  }
+
+  .card-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level3);
+  }
+
+  .card-content {
+    font-size: var(--b-typography-content-level3-size);
+    line-height: 1.5;
+  }
+
+  /* Default variant */
+  .basis-specimen-card[data-variant="default"] {
+    background-color: var(--b-color-surface-default);
+    border: 1px solid var(--b-color-border-default);
+  }
+
+  /* Elevated variant */
+  .basis-specimen-card[data-variant="elevated"] {
+    background-color: var(--b-color-surface-elevated);
+    border: 1px solid var(--b-color-border-muted);
+    box-shadow: var(--b-depth-level2);
+  }
+
+  /* Outlined variant */
+  .basis-specimen-card[data-variant="outlined"] {
+    background-color: transparent;
+    border: 1px solid var(--b-color-border-strong);
+  }
+
+  /* Interactive states */
+  .basis-specimen-card[data-interactive="true"] {
+    cursor: pointer;
+  }
+
+  .basis-specimen-card[data-interactive="true"]:hover,
+  .basis-specimen-card[data-interactive="true"][data-state="hover"] {
+    border-color: var(--b-color-border-strong);
+    box-shadow: var(--b-depth-level3);
+  }
+
+  .basis-specimen-card[data-interactive="true"]:focus-visible,
+  .basis-specimen-card[data-interactive="true"][data-state="focus"] {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  .basis-specimen-card[data-state="disabled"] {
+    opacity: 0.6;
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+</style>

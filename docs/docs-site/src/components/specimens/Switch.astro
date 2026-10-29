@@ -1,0 +1,134 @@
+---
+/**
+ * Switch specimen component for Studio and Landing illustrative previews.
+ * Styled strictly with Basis token variables (--b-*).
+ */
+interface Props {
+  id?: string;
+  label?: string;
+  checked?: boolean;
+  disabled?: boolean;
+  state?: 'default' | 'hover' | 'focus' | 'checked' | 'disabled';
+  class?: string;
+}
+
+const {
+  id = `specimen-switch-${Math.random().toString(36).substring(2, 9)}`,
+  label,
+  checked = false,
+  disabled = false,
+  state = 'default',
+  class: className = '',
+} = Astro.props;
+
+const isChecked = checked || state === 'checked';
+const isDisabled = disabled || state === 'disabled';
+---
+
+<label for={id} class={`basis-specimen-switch-wrapper ${className}`.trim()} data-state={state}>
+  <div class="switch-control">
+    <input
+      id={id}
+      type="checkbox"
+      role="switch"
+      checked={isChecked}
+      disabled={isDisabled}
+      aria-checked={isChecked}
+      class="switch-input"
+    />
+    <div
+      class="switch-track"
+      data-checked={isChecked ? 'true' : 'false'}
+      data-disabled={isDisabled ? 'true' : 'false'}
+    >
+      <div class="switch-thumb" />
+    </div>
+  </div>
+  {label && <span class="switch-label">{label}</span>}
+</label>
+
+<style>
+  .basis-specimen-switch-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--b-spacing-level3);
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--b-typography-content-level3-family);
+  }
+
+  .switch-control {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .switch-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .switch-track {
+    display: flex;
+    align-items: center;
+    width: var(--b-size-control-level3);
+    height: var(--b-size-control-level2);
+    padding: var(--b-spacing-level1);
+    box-sizing: border-box;
+    border-radius: var(--b-radius-full);
+    background-color: var(--b-color-surface-recessed);
+    border: 1px solid var(--b-color-border-default);
+    transition: all var(--b-motion-stateTransition);
+  }
+
+  .switch-thumb {
+    width: var(--b-size-icon-level2);
+    height: var(--b-size-icon-level2);
+    border-radius: var(--b-radius-full);
+    background-color: var(--b-color-surface-elevated);
+    box-shadow: var(--b-depth-level1);
+    transition: all var(--b-motion-stateTransition);
+    transform: translateX(0);
+  }
+
+  /* Checked state */
+  .switch-track[data-checked="true"] {
+    background-color: var(--b-color-brand-primary);
+    border-color: var(--b-color-brand-primary);
+  }
+
+  .switch-track[data-checked="true"] .switch-thumb {
+    background-color: var(--b-color-content-inverse);
+    transform: translateX(calc(var(--b-size-control-level3) - var(--b-size-icon-level2) - var(--b-spacing-level1) * 2 - 2px));
+  }
+
+  /* Hover state */
+  .basis-specimen-switch-wrapper:hover .switch-track:not([data-disabled="true"]),
+  .basis-specimen-switch-wrapper[data-state="hover"] .switch-track:not([data-disabled="true"]) {
+    border-color: var(--b-color-border-strong);
+  }
+
+  /* Focus state */
+  .switch-input:focus-visible + .switch-track,
+  .basis-specimen-switch-wrapper[data-state="focus"] .switch-track {
+    outline: 2px solid var(--b-color-focus-ring);
+    outline-offset: var(--b-spacing-level1);
+  }
+
+  /* Disabled state */
+  .switch-track[data-disabled="true"],
+  .basis-specimen-switch-wrapper[data-state="disabled"] .switch-track {
+    background-color: var(--b-color-surface-default);
+    border-color: var(--b-color-border-muted);
+    cursor: not-allowed;
+  }
+
+  .switch-label {
+    font-size: var(--b-typography-content-level3-size);
+    color: var(--b-color-content-default);
+  }
+</style>
