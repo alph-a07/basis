@@ -87,30 +87,186 @@ const controlSpecs = deriveControlSpecs(intentDoc);
   </div>
 </BaseLayout>
 
-<script>
-  // Deferred client-side localized intent resolution for studio workspace preview
-  import { applyLocalizedPreviewTheme } from '../runtime/preview-theme';
+---
+import { createStudioIntentStore, bindControlEvents, loadDocsRuntime, type ResolveResult } from '../lib/studio-intent';
+---
+<script type="module">
+  // Live Studio intent store: controls -> debounced resolve -> --b-* preview scope + report.
+  // Replaced the previous deferred preview-theme stub (which never loaded docs-runtime).
+  import { createStudioIntentStore, bindControlEvents, loadDocsRuntime } from '../lib/studio-intent';
 
-  function initStudioPreview() {
-    const previewEl = document.getElementById('studio-preview');
-    if (previewEl) {
-      applyLocalizedPreviewTheme(previewEl, {
-        brandColor: '#58a6ff',
-        presence: 'Strong',
-        moodPreset: 'Vibrant',
-        deriveColors: true,
-      });
+  function applyTokensToScope(el: HTMLElement, result: { ok: boolean; tokens?: { light: Record<string, string>; dark: Record<string, string>; css?: string } }) {
+    if (!result.ok || !result.tokens) return;
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const map = theme === 'dark' ? result.tokens.dark : result.tokens.light;
+    for (const [key, value] of Object.entries(map)) {
+      el.style.setProperty(key, value);
     }
   }
 
-  if (typeof window !== 'undefined') {
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(initStudioPreview);
-    } else {
-      setTimeout(initStudioPreview, 200);
+  function showViolations(result: ResolveResult | null) {
+    let banner = document.getElementById('studio-violation-banner');
+    if (result?.ok) {
+      if (banner) banner.remove();
+      return;
     }
+    const violations = result?.ok === false ? result.violations : [];
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'studio-violation-banner';
+      banner.className = 'violation-banner';
+      banner.setAttribute('role', 'alert');
+      banner.setAttribute('aria-live', 'polite');
+      banner.style.cssText = 'position:sticky;top:56px;z-index:49;display:none;';
+      document.querySelector('.studio-app')?.appendChild(banner);
+    }
+    if (violations.length === 0) {
+      banner.style.display = 'none';
+      return;
+    }
+    banner.style.display = 'block';
+    banner.style.background = 'color-mix(in srgb, var(--docs-accent) 12%, transparent)';
+    banner.innerHTML =
+      '<div style="max-width:1280px;margin:0 auto;padding:0.75rem 1.5rem;color:var(--docs-text);font-size:0.875rem">' +
+      '<strong>Theme warnings:</strong><ul style="margin:.25rem 0 0 1rem;padding:0">' +
+      violations.map((v) => `<li>[${v.path}] ${v.message}</li>`).join('') +
+      '</ul>' +
+      '<button id="banner-dismiss" style="margin-left:auto;background:none;border:none;color:inherit;cursor:pointer">Dismiss</button>' +
+      '</div>';
+    banner.querySelector('#banner-dismiss')?.addEventListener('click', () => { banner.style.display = 'none'; });
+  }
+
+  function initStudio() {
+    const panelEl = document.querySelector('.studio-controls-panel') as HTMLElement | null;
+    const previewEl = document.getElementById('studio-preview');
+    if (!panelEl || !previewEl) return;
+
+    const setState = (fn: (s: { intent: unknown; lastGood: unknown; current: unknown }) => void) => {
+      // no-op: the store calls this on every mutation; we use current/lastGood locally instead
+      void fn;
+    };
+
+    const store = createStudioIntentStore(setState);
+
+    // Bind all control-change events into the store.
+    const unbind = bindControlEvents(panelEl, store);
+
+    // On each debounced resolve, apply tokens to the preview scope and surface violations.
+    // The store calls its setState setter; we read store.current / store.lastGood after each.
+    const originalSetState = setState as any;
+    const observe = (fn: (s: { intent: unknown; lastGood: unknown; current: unknown }) => void) => {
+      fn({ intent: store.intent, lastGood: store.lastGood, current: store.current });
+      applyTokensToScope(previewEl as HTMLElement, store.lastGood ?? store.current ?? null);
+      showViolations(store.current);
+    };
+    // Re-wire: replace setState behaviour by re-observing on mutation via a polling-free approach
+    // The store's resolveDebounced sets current/lastGood; we hook by wrapping scheduleResolve output.
+    let pending = false;
+    const schedule = (store as any);
+    // Simpler: poll-free via a micro-observer by re-calling observe on each control-change that resolves.
+    const handler = () => {
+      observe(() => {});
+    };
+    panelEl.addEventListener('control-change', handler);
+
+    // Top bar button wiring:
+    const resetBtn = document.querySelector('[aria-label="Reset theme settings"]') as HTMLButtonElement | null;
+    const copyBtn = document.querySelector('[aria-label="Copy Kotlin code to clipboard"]') as HTMLButtonElement | null;
+    const shareBtn = document.querySelector('[aria-label="Share current theme configuration"]') as HTMLButtonElement | null;
+
+    resetBtn?.addEventListener('click', () => {
+      store.reset();
+      (previewEl as HTMLElement).style.cssText = '';
+      observe(() => {});
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (!store.current?.ok) return;
+      // Emit a minimal Kotlin source snippet from the active intent.
+      const intent = store.intent;
+      const kotlin = buildKotlinFromIntent(intent);
+      await navigator.clipboard.writeText(kotlin);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = 'Copy Kotlin'; }, 2000);
+    });
+
+    shareBtn?.addEventListener('click', () => {
+      const json = JSON.stringify(store.intent, null, 0);
+      const encoded = btoa(json);
+      const url = `${window.location.origin}${window.location.pathname}#v1.${encoded}`;
+      navigator.clipboard.writeText(url).then(() => {
+        shareBtn.textContent = 'Link copied!';
+        setTimeout(() => { shareBtn.textContent = 'Share'; }, 2000);
+      });
+    });
+
+    // Initial resolve.
+    void loadDocsRuntime().then(() => observe(() => {})).catch(() => { /* last-good fallback */ });
+
+    return () => {
+      unbind();
+      panelEl.removeEventListener('control-change', handler);
+    };
+  }
+
+  function buildKotlinFromIntent(intent: unknown): string {
+    // Minimal Kotlin emission mirroring BasisIntent structure. (P2.8 refines; this is the v1 surface.)
+    const i = intent as any;
+    const lines: string[] = [];
+    lines.push('BasisIntent(');
+    if (i.identity) {
+      lines.push('  identity = IdentityIntent(');
+      if (i.identity.brandColor) lines.push(`    brandColor = ColorSpec.Hex("${i.identity.brandColor.value}"),`);
+      if (i.identity.presence) lines.push(`    presence = BrandPresence.${i.identity.presence},`);
+      lines.push(`    deriveColors = ${i.identity.deriveColors ?? true}`);
+      lines.push('  ),');
+    }
+    if (i.mood && (i.mood.preset || (i.mood.knobs && Object.keys(i.mood.knobs).length))) {
+      lines.push('  mood = MoodIntent(');
+      if (i.mood.preset) lines.push(`    preset = MoodPreset.${i.mood.preset},`);
+      if (i.mood.knobs) {
+        const knobLines = Object.entries(i.mood.knobs)
+          .filter(([, v]) => v !== null && v !== undefined)
+          .map(([k, v]) => `      ${k} = ${v}f,`);
+        if (knobLines.length) {
+          lines.push('    knobs = MoodKnobs(');
+          lines.push(...knobLines);
+          lines.push('    )');
+        }
+      }
+      lines.push('  ),');
+    }
+    if (i.domain) {
+      const doms = i.domain.domains ?? [];
+      const interacts = i.domain.interactions ?? [];
+      lines.push('  domain = DomainIntent(');
+      if (doms.length) lines.push(`    domains = setOf(${doms.map((d: string) => `ProductDomain.${d}`).join(', ')}),`);
+      if (interacts.length) lines.push(`    interactions = setOf(${interacts.map((it: string) => `InteractionPattern.${it}`).join(', ')}),`);
+      lines.push('  ),');
+    }
+    lines.push(')');
+    return lines.join('\n');
+  }
+
+  // Mount on idle to avoid blocking first paint.
+  const scheduleInit = (): void => {
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) window.requestIdleCallback(initStudio);
+      else setTimeout(initStudio, 200);
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleInit);
+  } else {
+    scheduleInit();
   }
 </script>
+
+<style>
+  .violation-banner {
+    border-bottom: 1px solid var(--docs-border);
+  }
+</style>
 
 <style>
   .studio-app {

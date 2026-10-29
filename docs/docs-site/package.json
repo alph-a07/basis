@@ -19,7 +19,8 @@
     "test:controls": "tsx scripts/test-control-generator.ts",
     "check:specimens": "tsx scripts/check-specimen-vars.ts",
     "test:specimens": "tsx scripts/test-specimens.ts",
-    "test": "tsx scripts/test-loader-validation.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts"
+    "test:studio-intent": "tsx scripts/test-studio-intent.ts",
+    "test": "tsx scripts/test-loader-validation.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts && tsx scripts/test-studio-intent.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",

@@ -249,9 +249,10 @@ export function loadDocsRuntime(): Promise<DocsRuntimeApi> {
   return runtimePromise;
 }
 
-/** Build the full store bound to a setter for re-rendering. */
+/** Build the full store bound to a re-render callback. */
 export function createStudioIntentStore(
   setState: (fn: (s: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null }) => void) => void,
+  onResolve?: (store: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null }) => void,
 ): StudioIntentStore {
   let intent: IntentState = JSON.parse(JSON.stringify(DEFAULT_INTENT));
   let lastGood: ResolvedSuccess | null = null;
@@ -259,15 +260,21 @@ export function createStudioIntentStore(
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
   let resolveScheduled = false;
 
-  const emit = () =>
+  function emit() {
+    const snapshot: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null } = {
+      intent: JSON.parse(JSON.stringify(intent)),
+      lastGood,
+      current,
+    };
     setState((s) => {
-      s.intent = JSON.parse(JSON.stringify(intent));
+      s.intent = snapshot.intent;
       s.lastGood = lastGood;
       s.current = current;
     });
+    onResolve?.(snapshot);
+  }
 
-  async function resolveDebounced() {
-    if (!resolveScheduled) return;
+  async function resolveNow() {
     try {
       const api = await loadDocsRuntime();
       const json = serializeIntent(intent);
@@ -275,27 +282,29 @@ export function createStudioIntentStore(
       const result = JSON.parse(raw) as ResolveResult;
       current = result;
       if (result.ok) lastGood = result;
-      emit();
     } catch (e) {
       current = { ok: false, violations: [{ path: 'intent', message: String(e) }] };
-      emit();
     } finally {
       resolveScheduled = false;
+      emit();
     }
-  }
-
-  function scheduleResolve() {
-    resolveScheduled = true;
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      void resolveDebounced();
-    }, 200);
   }
 
   function mutate(patch: (i: IntentState) => void) {
     patch(intent);
     emit();
     scheduleResolve();
+  }
+
+  function scheduleResolve() {
+    resolveScheduled = true;
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => { void resolveNow(); }, 200);
+  }
+
+  function resolveDebounced() {
+    if (!resolveScheduled) return;
+    void doResolve();
   }
 
   return {
