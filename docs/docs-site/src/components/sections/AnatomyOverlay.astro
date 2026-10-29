@@ -94,8 +94,10 @@ const hasAnatomy = parts.length > 0;
           {parts.map((part, index) => {
             const b = bounds[part.id];
             if (!b) return null;
-            const badgeX = b.x + 14;
-            const badgeY = b.y - 12 > 14 ? b.y - 12 : b.y + 14;
+            const isOuter = part.id.toLowerCase() === 'container' || b.width > 250;
+            // Center over icon/atom or place near corner for large container
+            let badgeX = isOuter ? b.x - 2 : b.x + Math.min(14, b.width / 2);
+            let badgeY = b.y - 14 > 14 ? b.y - 14 : b.y + 14;
 
             return (
               <g class="anatomy-marker-group" data-part={part.id}>
@@ -110,7 +112,7 @@ const hasAnatomy = parts.length > 0;
                 />
 
                 <!-- Leader Dot / Line if badge is offset -->
-                {b.y - 12 > 14 && (
+                {b.y - 14 > 14 && (
                   <line
                     x1={badgeX}
                     y1={badgeY + 8}
@@ -191,11 +193,11 @@ const hasAnatomy = parts.length > 0;
     position: relative;
     width: 100%;
     max-width: 100%;
-    background: var(--docs-surface, #161b22);
-    border: 1px solid var(--docs-border-subtle, #21262d);
+    background: var(--docs-surface, #0d0d0d);
+    border: 1px solid var(--docs-border, rgba(255, 255, 255, 0.12));
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   }
 
   .anatomy-visual {
@@ -274,26 +276,26 @@ const hasAnatomy = parts.length > 0;
   }
 
   .anatomy-box {
-    fill: rgba(88, 166, 255, 0.08);
-    stroke: var(--docs-accent, #58a6ff);
+    fill: color-mix(in srgb, var(--docs-accent, #2563eb) 8%, transparent);
+    stroke: var(--docs-accent, #2563eb);
     stroke-width: 1.5;
     stroke-dasharray: 4 4;
     transition: fill 0.15s ease, stroke-width 0.15s ease;
   }
 
   .anatomy-leader {
-    stroke: var(--docs-accent, #58a6ff);
+    stroke: var(--docs-accent, #2563eb);
     stroke-width: 1.5;
   }
 
   .anatomy-badge {
-    fill: var(--docs-accent, #58a6ff);
-    stroke: var(--docs-surface, #161b22);
+    fill: var(--docs-accent, #2563eb);
+    stroke: var(--docs-surface, #0d0d0d);
     stroke-width: 2;
   }
 
   .anatomy-badge-num {
-    fill: var(--docs-text-inverse, #0d0f12);
+    fill: #ffffff;
     font-size: 11px;
     font-weight: 800;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

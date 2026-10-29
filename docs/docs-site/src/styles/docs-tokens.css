@@ -1,104 +1,145 @@
 /*
  * docs-tokens.css - Documentation chrome derived tokens
- * Built exclusively using color-mix() over the resolved --d-* token vocabulary.
- * Per locked decisions: these tokens never extend or leak into the Basis component token vocabulary.
+ *
+ * Designed for:
+ * - Light Mode: Clean, minimal, airy, refined without harsh glare or jarring high-contrast.
+ * - Dark Mode: Metallic clean deep black, brushed titanium surfaces, subtle specular hairlines.
+ *
+ * Built over the resolved --d-* token vocabulary with harmonious color-mix() fallbacks.
  */
 
 :root,
 [data-theme="light"] {
-  /* Surfaces & Backgrounds */
-  --docs-bg: var(--d-color-surface-default);
-  --docs-surface: var(--d-color-surface-elevated);
-  --docs-surface-recessed: var(--d-color-surface-recessed);
-  --docs-surface-inverse: var(--d-color-surface-inverse);
+  /* Surfaces & Backgrounds - Clean, minimal, soft off-white canvas */
+  --docs-bg: #f8fafc;
+  --docs-surface: #ffffff;
+  --docs-surface-recessed: #f1f5f9;
+  --docs-surface-elevated: #ffffff;
+  --docs-surface-inverse: #0f172a;
 
-  /* Typography & Content */
+  /* Typography & Content - Slate 800 for comfortable, non-glaring reading */
   --docs-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --docs-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --docs-reading-width: 72ch;
-  --docs-text: var(--d-color-content-default);
-  --docs-text-muted: var(--d-color-content-muted);
-  --docs-text-inverse: var(--d-color-content-inverse);
+  --docs-text: #1e293b;
+  --docs-text-muted: #64748b;
+  --docs-text-inverse: #f8fafc;
 
-  /* Borders & Dividers - crisp & full in light mode for visual separation */
-  --docs-border: var(--d-color-border-default);
-  --docs-border-muted: var(--d-color-border-muted);
-  --docs-border-strong: var(--d-color-border-strong);
-  --docs-border-subtle: var(--d-color-border-default);
+  /* Borders & Dividers - Delicate, minimal slate hairlines */
+  --docs-border: #e2e8f0;
+  --docs-border-muted: #edf2f7;
+  --docs-border-strong: #cbd5e1;
+  --docs-border-subtle: #f1f5f9;
 
-  /* Interactive, Focus, Selection, and Links */
-  --docs-focus-ring: var(--d-color-focus-ring);
-  --docs-accent: var(--d-color-brand-primary);
-  --docs-link: #0969da;
-  --docs-link-hover: #0550ae;
-  --docs-link-visited: #0969da;
-  --docs-selection-surface: var(--d-color-selection-surface);
-  --docs-selection-content: var(--d-color-selection-content);
+  /* Interactive, Focus, Selection, and Links - Refined royal blue */
+  --docs-focus-ring: #3b82f6;
+  --docs-accent: #2563eb;
+  --docs-link: #2563eb;
+  --docs-link-hover: #1d4ed8;
+  --docs-link-visited: #2563eb;
+  --docs-selection-surface: rgba(37, 99, 235, 0.12);
+  --docs-selection-content: #1e3a8a;
 
   /* Chrome-specific derived tokens */
-  --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
-  --docs-code-border: var(--d-color-border-default);
-  --docs-toc-active: var(--d-color-focus-ring);
-  --docs-toc-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
-  --docs-sidebar-active-bg: color-mix(in srgb, var(--d-color-focus-ring) 12%, transparent);
-  --docs-card-hover: color-mix(in srgb, var(--d-color-surface-elevated) 92%, var(--d-color-content-default));
+  --docs-code-bg: #f8fafc;
+  --docs-code-border: #e2e8f0;
+  --docs-toc-active: #2563eb;
+  --docs-toc-active-bg: rgba(37, 99, 235, 0.08);
+  --docs-sidebar-active-bg: rgba(37, 99, 235, 0.08);
+  --docs-card-hover: #f1f5f9;
 
   /* Scrollbar tokens */
   --docs-scrollbar-track: transparent;
-  --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 32%, transparent);
-  --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 60%, transparent);
+  --docs-scrollbar-thumb: rgba(100, 116, 139, 0.25);
+  --docs-scrollbar-thumb-hover: rgba(100, 116, 139, 0.45);
 
-  /* Table tokens - subtle vertical outlines and clean zebra striping */
-  --docs-table-border-v: color-mix(in srgb, var(--d-color-border-default) 18%, transparent);
-  --docs-table-row-alt: color-mix(in srgb, var(--d-color-surface-recessed) 55%, var(--d-color-surface-elevated));
-  --docs-table-row-hover: color-mix(in srgb, var(--d-color-surface-recessed) 88%, var(--d-color-surface-elevated));
+  /* Table tokens */
+  --docs-table-border-v: rgba(226, 232, 240, 0.8);
+  --docs-table-row-alt: rgba(241, 245, 249, 0.6);
+  --docs-table-row-hover: #f1f5f9;
 
   /* Status Colors */
-  --docs-status-pass-bg: var(--d-color-positive-surface);
-  --docs-status-pass-text: var(--d-color-positive-content);
-  --docs-status-pass-border: var(--d-color-positive-border);
+  --docs-status-pass-bg: rgba(16, 185, 129, 0.1);
+  --docs-status-pass-text: #065f46;
+  --docs-status-pass-border: rgba(16, 185, 129, 0.3);
 
-  --docs-status-warn-bg: var(--d-color-caution-surface);
-  --docs-status-warn-text: var(--d-color-caution-content);
-  --docs-status-warn-border: var(--d-color-caution-border);
+  --docs-status-warn-bg: rgba(245, 158, 11, 0.1);
+  --docs-status-warn-text: #92400e;
+  --docs-status-warn-border: rgba(245, 158, 11, 0.3);
 
-  --docs-status-fail-bg: var(--d-color-negative-surface);
-  --docs-status-fail-text: var(--d-color-negative-content);
-  --docs-status-fail-border: var(--d-color-negative-border);
+  --docs-status-fail-bg: rgba(239, 68, 68, 0.1);
+  --docs-status-fail-text: #991b1b;
+  --docs-status-fail-border: rgba(239, 68, 68, 0.3);
+
+  /* Metallic shadow & elevation hints for light mode */
+  --docs-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --docs-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --docs-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.07);
 }
 
 [data-theme="dark"] {
-  /* Surfaces & Backgrounds - deep tone in dark mode */
-  --docs-bg: var(--d-color-surface-default);
-  --docs-surface: color-mix(in srgb, var(--d-color-surface-elevated) 30%, var(--d-color-surface-default));
-  --docs-surface-recessed: color-mix(in srgb, var(--d-color-surface-recessed) 40%, var(--d-color-surface-default));
-  --docs-surface-inverse: var(--d-color-surface-inverse);
+  /* Surfaces & Backgrounds - Pure metallic blacks & brushed neutral graphite (zero tint) */
+  --docs-bg: #000000;
+  --docs-surface: #0d0d0d;
+  --docs-surface-recessed: #050505;
+  --docs-surface-elevated: #141414;
+  --docs-surface-inverse: #ffffff;
 
-  /* Borders & Dividers - softened for dark mode to eliminate wireframe look */
-  --docs-border: color-mix(in srgb, var(--d-color-border-default) 45%, transparent);
-  --docs-border-muted: var(--d-color-border-muted);
-  --docs-border-strong: var(--d-color-border-strong);
-  --docs-border-subtle: color-mix(in srgb, var(--d-color-border-default) 22%, transparent);
+  /* Typography & Content - Crisp titanium platinum & cool neutral steel */
+  --docs-text: #f5f5f7;
+  --docs-text-muted: #98989f;
+  --docs-text-inverse: #000000;
 
-  /* Interactive, Links - high contrast accessible blues in dark mode (WCAG AA/AAA >= 7:1) */
-  --docs-link: #58a6ff;
-  --docs-link-hover: #79c0ff;
-  --docs-link-visited: #58a6ff;
+  /* Borders & Dividers - Crisp metallic hairlines with subtle specular sheen */
+  --docs-border: rgba(255, 255, 255, 0.12);
+  --docs-border-muted: rgba(255, 255, 255, 0.06);
+  --docs-border-strong: rgba(255, 255, 255, 0.22);
+  --docs-border-subtle: rgba(255, 255, 255, 0.08);
 
-  /* Chrome-specific derived tokens */
-  --docs-code-bg: color-mix(in srgb, var(--d-color-surface-recessed) 80%, var(--d-color-surface-elevated));
-  --docs-code-border: color-mix(in srgb, var(--d-color-border-default) 25%, transparent);
-  --docs-card-hover: color-mix(in srgb, var(--docs-surface) 88%, var(--d-color-content-default));
+  /* Interactive, Links - Luminous Electric Royal Blue */
+  --docs-focus-ring: #2563eb;
+  --docs-accent: #2563eb;
+  --docs-link: #3b82f6;
+  --docs-link-hover: #60a5fa;
+  --docs-link-visited: #3b82f6;
+  --docs-selection-surface: rgba(37, 99, 235, 0.28);
+  --docs-selection-content: #ffffff;
+
+  /* Chrome-specific derived tokens - Pure untinted metallic surfaces */
+  --docs-code-bg: #080808;
+  --docs-code-border: rgba(255, 255, 255, 0.09);
+  --docs-toc-active: #2563eb;
+  --docs-toc-active-bg: rgba(37, 99, 235, 0.12);
+  --docs-sidebar-active-bg: rgba(37, 99, 235, 0.12);
+  --docs-card-hover: #161616;
 
   /* Scrollbar tokens */
   --docs-scrollbar-track: transparent;
-  --docs-scrollbar-thumb: color-mix(in srgb, var(--d-color-content-muted) 28%, transparent);
-  --docs-scrollbar-thumb-hover: color-mix(in srgb, var(--d-color-content-muted) 55%, transparent);
+  --docs-scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --docs-scrollbar-thumb-hover: rgba(255, 255, 255, 0.32);
 
-  /* Table tokens - delicate vertical outlines and soft translucent alternating rows */
-  --docs-table-border-v: color-mix(in srgb, var(--d-color-border-default) 9%, transparent);
-  --docs-table-row-alt: color-mix(in srgb, var(--d-color-content-default) 2.5%, transparent);
-  --docs-table-row-hover: color-mix(in srgb, var(--d-color-content-default) 5.5%, transparent);
+  /* Table tokens - Pure neutral metallic */
+  --docs-table-border-v: rgba(255, 255, 255, 0.06);
+  --docs-table-row-alt: rgba(255, 255, 255, 0.02);
+  --docs-table-row-hover: rgba(255, 255, 255, 0.04);
+
+  /* Status Colors */
+  --docs-status-pass-bg: rgba(16, 185, 129, 0.15);
+  --docs-status-pass-text: #34d399;
+  --docs-status-pass-border: rgba(16, 185, 129, 0.35);
+
+  --docs-status-warn-bg: rgba(245, 158, 11, 0.15);
+  --docs-status-warn-text: #fbbf24;
+  --docs-status-warn-border: rgba(245, 158, 11, 0.35);
+
+  --docs-status-fail-bg: rgba(239, 68, 68, 0.15);
+  --docs-status-fail-text: #f87171;
+  --docs-status-fail-border: rgba(239, 68, 68, 0.35);
+
+  /* Metallic shadow & specular depth */
+  --docs-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --docs-shadow-md: 0 6px 20px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --docs-shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 /* Shiki Dual-Theme Token Harmonization across all codeblocks */
@@ -148,117 +189,127 @@ html[data-theme='dark'] pre.shiki span {
 
 /* Universal Code Block Container & Header Styles */
 .code-block-container {
-  border: 1px solid var(--docs-code-border);
-  border-radius: 6px;
-  background: var(--docs-code-bg);
+  border-radius: 8px;
   overflow: hidden;
-  margin: 0.65rem 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
+  border: 1px solid var(--docs-code-border);
+  background: var(--docs-code-bg);
+  box-shadow: var(--docs-shadow-sm);
+  margin-bottom: 1.25rem;
 }
 
-.code-header {
+.code-block-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.35rem 0.75rem;
-  background: var(--docs-surface-recessed);
+  padding: 0.5rem 0.85rem;
+  background: var(--docs-surface);
   border-bottom: 1px solid var(--docs-code-border);
-  user-select: none;
 }
 
-.code-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.lang-tag {
-  font-size: 0.72rem;
+.code-block-lang {
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--docs-text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-.copy-button {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  color: var(--docs-text-muted);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  transition: all 0.15s ease;
-  font-family: inherit;
-}
-
-.copy-btn-inner {
+.copy-code-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--docs-text-muted);
+  background: transparent;
+  border: 1px solid var(--docs-border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.12s ease;
 }
 
-.copy-button:hover {
+.copy-code-btn:hover {
   color: var(--docs-text);
   background: var(--docs-card-hover);
-  border-color: var(--docs-border-subtle);
+  border-color: var(--docs-accent);
 }
 
-.copy-button:focus-visible {
+.copy-code-btn:focus-visible {
   outline: 2px solid var(--docs-focus-ring);
   outline-offset: 1px;
 }
 
-.check-icon {
-  display: none;
-  color: var(--docs-status-pass-text, #3fb950);
+/* Global Markdown and Prose typography styling */
+.docs-reading-column h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--docs-text);
+  margin: 0 0 0.875rem 0;
+  line-height: 1.25;
 }
 
-.copy-button.copied {
-  color: var(--docs-status-pass-text, #3fb950);
-  border-color: rgba(46, 160, 67, 0.4);
-  background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.1));
+.docs-reading-column h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--docs-text);
+  margin: 2rem 0 0.65rem 0;
+  line-height: 1.3;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--docs-border-subtle);
 }
 
-.copy-button.copied .copy-icon {
-  display: none;
+.docs-reading-column h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--docs-text);
+  margin: 1.5rem 0 0.5rem 0;
+  line-height: 1.35;
 }
 
-.copy-button.copied .check-icon {
-  display: inline-block;
+.docs-reading-column p {
+  color: var(--docs-text);
+  line-height: 1.65;
+  margin: 0 0 1.25rem 0;
+  font-size: 0.9375rem;
 }
 
-.code-viewport {
-  position: relative;
-  overflow-x: auto;
+.docs-reading-column ul,
+.docs-reading-column ol {
+  color: var(--docs-text);
+  line-height: 1.65;
+  padding-left: 1.25rem;
+  margin: 0 0 1.25rem 0;
+  font-size: 0.9375rem;
 }
 
-.code-viewport pre.astro-code,
-.code-viewport pre.shiki {
-  margin: 0 !important;
-  padding: 0.85rem 1rem !important;
-  background-color: transparent !important;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
-  font-size: 0.85rem !important;
-  line-height: 1.6 !important;
-  tab-size: 4 !important;
-  overflow-x: auto;
+.docs-reading-column li {
+  margin-bottom: 0.35rem;
 }
 
-.code-viewport pre.astro-code code,
-.code-viewport pre.shiki code {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  padding: 0 !important;
+.docs-reading-column code:not(pre code) {
+  font-family: var(--docs-font-mono);
+  font-size: 0.85em;
+  background: var(--docs-surface-recessed);
+  color: var(--docs-text);
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  border: 1px solid var(--docs-border-subtle);
+}
+
+.docs-reading-column hr {
+  border: none;
+  border-top: 1px solid var(--docs-border-subtle);
+  margin: 2.5rem 0;
+}
+
+.docs-reading-column blockquote {
+  margin: 1.5rem 0;
+  padding: 0.65rem 1rem;
+  border-left: 3px solid var(--docs-accent);
+  background: var(--docs-surface-recessed);
+  border-radius: 0 6px 6px 0;
+  color: var(--docs-text);
 }

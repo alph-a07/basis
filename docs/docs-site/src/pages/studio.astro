@@ -1,5 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { loadIntentDoc } from '../lib/load-intent';
+import { deriveControlSpecs } from '../lib/control-generator';
+import ChoiceChips from '../components/controls/ChoiceChips.astro';
+import KnobSlider from '../components/controls/KnobSlider.astro';
+import ColorField from '../components/controls/ColorField.astro';
+import ToggleControl from '../components/controls/ToggleControl.astro';
+import ColorListField from '../components/controls/ColorListField.astro';
+
+const intentDoc = loadIntentDoc();
+const controlSpecs = deriveControlSpecs(intentDoc);
 ---
 
 <BaseLayout title="Intent Studio — Basis">
@@ -18,6 +29,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
 
       <div class="topbar-actions">
+        <ThemeToggle />
         <button type="button" class="studio-btn btn-secondary" aria-label="Reset theme settings">
           Reset
         </button>
@@ -34,6 +46,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </header>
 
     <main id="studio-main" class="studio-main">
+      <!-- Control Generator Panel: Controls derived from Intent schema & vocabulary -->
+      <aside class="studio-controls-panel" aria-label="Theme Intent Controls">
+        <div class="controls-section">
+          <h2 class="section-heading">Identity</h2>
+          <ColorField spec={controlSpecs.identity.brandColor} />
+          <ChoiceChips spec={controlSpecs.identity.presence} />
+          <ToggleControl spec={controlSpecs.identity.deriveColors} />
+          <ColorListField spec={controlSpecs.identity.supportingColors} />
+        </div>
+
+        <div class="controls-section">
+          <h2 class="section-heading">Mood Preset</h2>
+          <ChoiceChips spec={controlSpecs.mood.preset} />
+        </div>
+
+        <div class="controls-section">
+          <h2 class="section-heading">Mood Knobs</h2>
+          <p class="section-note">Sparse biases over preset. Unset knobs inherit the preset profile.</p>
+          {controlSpecs.mood.knobs.map((knob) => (
+            <KnobSlider spec={knob} />
+          ))}
+        </div>
+
+        <div class="controls-section">
+          <h2 class="section-heading">Domain & Context</h2>
+          <ChoiceChips spec={controlSpecs.domain.domains} />
+          <ChoiceChips spec={controlSpecs.domain.interactions} />
+        </div>
+      </aside>
+
       <!-- Localized Studio Preview Scope: uses deferred local --b-* intent resolution -->
       <div class="studio-workspace basis-preview-scope" id="studio-preview" data-scope="preview">
         <div class="studio-placeholder">
@@ -83,11 +125,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     justify-content: space-between;
     padding: 0 1.5rem;
     height: 56px;
-    background: var(--docs-bg, #0d0f12);
-    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    background: var(--docs-surface);
+    border-bottom: 1px solid var(--docs-border);
     position: sticky;
     top: 0;
     z-index: 50;
+    box-shadow: var(--docs-shadow-sm);
   }
 
   .topbar-left {
@@ -101,21 +144,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: var(--docs-text, #e6edf3);
+    color: var(--docs-text);
     font-weight: 700;
     font-size: 1.1rem;
   }
 
   .brand-link:focus-visible {
-    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline: 2px solid var(--docs-focus-ring);
     outline-offset: 2px;
     border-radius: 4px;
   }
 
   .studio-badge {
-    background: rgba(88, 166, 255, 0.15);
-    color: var(--docs-accent, #58a6ff);
-    border: 1px solid rgba(88, 166, 255, 0.3);
+    background: var(--docs-sidebar-active-bg);
+    color: var(--docs-accent);
+    border: 1px solid color-mix(in srgb, var(--docs-accent) 30%, transparent);
     font-size: 0.75rem;
     font-weight: 600;
     padding: 0.15rem 0.5rem;
@@ -129,8 +172,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   .studio-btn {
-    padding: 0.4rem 0.85rem;
-    font-size: 0.875rem;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     border-radius: 6px;
     cursor: pointer;
@@ -138,47 +181,133 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     display: inline-flex;
     align-items: center;
     border: 1px solid transparent;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  }
+
+  .studio-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .studio-btn:active {
+    transform: translateY(0);
   }
 
   .studio-btn:focus-visible {
-    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline: 2px solid var(--docs-focus-ring);
     outline-offset: 2px;
   }
 
-  .btn-primary {
-    background: #238636;
+  /* Light mode buttons */
+  :global([data-theme="light"]) .btn-primary {
+    background: var(--docs-accent, #2563eb);
     color: #ffffff;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
   }
 
-  .btn-primary:hover {
-    background: #2ea043;
+  :global([data-theme="light"]) .btn-primary:hover {
+    background: var(--docs-link-hover, #1d4ed8);
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
   }
 
-  .btn-secondary {
-    background: var(--docs-surface, #161b22);
-    color: var(--docs-text, #c9d1d9);
-    border-color: var(--docs-border, #30363d);
+  :global([data-theme="light"]) .btn-secondary {
+    background: #ffffff;
+    color: var(--docs-text, #1e293b);
+    border-color: var(--docs-border, #e2e8f0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   }
 
-  .btn-secondary:hover {
-    background: var(--docs-card-hover, #21262d);
-    color: var(--docs-text, #e6edf3);
+  :global([data-theme="light"]) .btn-secondary:hover {
+    background: var(--docs-surface-recessed, #f1f5f9);
+    border-color: var(--docs-border-strong, #cbd5e1);
+  }
+
+  /* Dark mode buttons - Flat saturated electric royal blue & metallic black */
+  :global([data-theme="dark"]) .btn-primary {
+    background: var(--docs-accent, #2563eb);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: none;
+    border: none;
+  }
+
+  :global([data-theme="dark"]) .btn-primary:hover {
+    background: #1d4ed8;
+    box-shadow: none;
+  }
+
+  :global([data-theme="dark"]) .btn-secondary {
+    background: #141414;
+    color: var(--docs-text, #f5f5f7);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: none;
+  }
+
+  :global([data-theme="dark"]) .btn-secondary:hover {
+    background: #1e1e1e;
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: none;
   }
 
   .btn-docs {
     background: transparent;
-    color: var(--docs-text-muted, #8b949e);
+    color: var(--docs-text-muted);
   }
 
   .btn-docs:hover {
-    color: var(--docs-text, #e6edf3);
+    color: var(--docs-text);
+    background: var(--docs-card-hover);
   }
 
   .studio-main {
     flex: 1;
-    display: flex;
-    padding: 2rem;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    align-items: start;
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .studio-controls-panel {
+    background: var(--docs-surface);
+    border: 1px solid var(--docs-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    box-shadow: var(--docs-shadow-sm);
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    position: sticky;
+    top: 70px;
+  }
+
+  .controls-section {
+    border-bottom: 1px solid var(--docs-border-subtle);
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .controls-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .section-heading {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--docs-text);
+    margin: 0 0 0.875rem 0;
+    letter-spacing: -0.01em;
+  }
+
+  .section-note {
+    font-size: 0.75rem;
+    color: var(--docs-text-muted);
+    margin: -0.5rem 0 0.875rem 0;
+    line-height: 1.4;
   }
 
   .basis-preview-scope {
@@ -189,13 +318,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .studio-workspace {
     flex: 1;
-    background: var(--preview-bg, #161b22);
-    border: 1px solid var(--preview-border, #21262d);
-    border-radius: 8px;
+    background: var(--docs-surface);
+    border: 1px solid var(--docs-border);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 480px;
+    min-height: 600px;
+    box-shadow: var(--docs-shadow-sm);
   }
 
   .studio-placeholder {
@@ -207,12 +337,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .studio-placeholder h1 {
     font-size: 1.75rem;
     margin: 0 0 0.5rem 0;
-    color: var(--preview-text, #e6edf3);
+    color: var(--docs-text);
   }
 
   .studio-placeholder p {
-    color: var(--docs-text-muted, #8b949e);
+    color: var(--docs-text-muted);
     line-height: 1.5;
     margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .studio-main {
+      grid-template-columns: 1fr;
+    }
+
+    .studio-controls-panel {
+      position: static;
+      max-height: none;
+    }
   }
 </style>

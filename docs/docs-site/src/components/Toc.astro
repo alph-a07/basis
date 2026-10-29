@@ -88,51 +88,31 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
     }
 
     function updateProgress() {
+      if (!indicator || !divider) return;
       const scrollY = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
+      // 1. Normal continuous page scroll progress for the TOC progress bar indicator
       if (maxScroll <= 0) {
-        if (indicator) {
-          indicator.style.height = '0px';
-          indicator.classList.remove('is-active');
-        }
-        setActiveLink(items[0].slug);
-        return;
-      }
-
-      if (!divider || !indicator) return;
-      const dividerRect = divider.getBoundingClientRect();
-      const firstOffset = Math.max(0, getElementTop(items[0].el) - 120);
-      const firstLinkRect = items[0].link.getBoundingClientRect();
-      const firstCenter = (firstLinkRect.top - dividerRect.top) + (firstLinkRect.height / 2);
-
-      // Above the first heading
-      if (scrollY < firstOffset) {
-        if (scrollY <= 10) {
-          indicator.style.height = '0px';
-          indicator.classList.remove('is-active');
-        } else {
-          const ratio = firstOffset > 0 ? scrollY / firstOffset : 0;
-          indicator.style.height = `${(ratio * firstCenter).toFixed(1)}px`;
+        indicator.style.height = '0%';
+        indicator.classList.remove('is-active');
+      } else {
+        const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+        indicator.style.height = `${(progress * 100).toFixed(2)}%`;
+        if (progress > 0) {
           indicator.classList.add('is-active');
+        } else {
+          indicator.classList.remove('is-active');
         }
-        setActiveLink(items[0].slug);
-        return;
       }
 
-      // Check if at the bottom of the page
-      const isAtBottom = window.innerHeight + scrollY >= document.documentElement.scrollHeight - 15;
+      // 2. Retain heading section highlighting in the TOC list
+      const isAtBottom = maxScroll > 0 && window.innerHeight + scrollY >= document.documentElement.scrollHeight - 15;
       if (isAtBottom) {
-        const lastIndex = items.length - 1;
-        setActiveLink(items[lastIndex].slug);
-        const lastLinkRect = items[lastIndex].link.getBoundingClientRect();
-        const lastBottom = (lastLinkRect.bottom - dividerRect.top);
-        indicator.style.height = `${lastBottom.toFixed(1)}px`;
-        indicator.classList.add('is-active');
+        setActiveLink(items[items.length - 1].slug);
         return;
       }
 
-      // Find the current active heading index
       let activeIndex = 0;
       for (let i = 0; i < items.length; i++) {
         const offset = getElementTop(items[i].el) - 120;
@@ -144,59 +124,19 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
       }
 
       setActiveLink(items[activeIndex].slug);
-
-      const activeLinkRect = items[activeIndex].link.getBoundingClientRect();
-      const activeCenter = (activeLinkRect.top - dividerRect.top) + (activeLinkRect.height / 2);
-
-      let targetHeight = activeCenter;
-
-      if (activeIndex < items.length - 1) {
-        const currentOffset = getElementTop(items[activeIndex].el) - 120;
-        const nextOffset = getElementTop(items[activeIndex + 1].el) - 120;
-        const nextLinkRect = items[activeIndex + 1].link.getBoundingClientRect();
-        const nextCenter = (nextLinkRect.top - dividerRect.top) + (nextLinkRect.height / 2);
-
-        if (nextOffset > currentOffset) {
-          const segmentProgress = Math.min(Math.max((scrollY - currentOffset) / (nextOffset - currentOffset), 0), 1);
-          targetHeight = activeCenter + segmentProgress * (nextCenter - activeCenter);
-        }
-      } else {
-        const currentOffset = getElementTop(items[activeIndex].el) - 120;
-        const lastBottom = (activeLinkRect.bottom - dividerRect.top);
-        if (maxScroll > currentOffset) {
-          const tailProgress = Math.min(Math.max((scrollY - currentOffset) / (maxScroll - currentOffset), 0), 1);
-          targetHeight = activeCenter + tailProgress * (lastBottom - activeCenter);
-        }
-      }
-
-      indicator.style.height = `${targetHeight.toFixed(1)}px`;
-      indicator.classList.add('is-active');
     }
 
     divider.addEventListener('click', (e) => {
       const rect = divider.getBoundingClientRect();
-      const clickY = e.clientY - rect.top;
-      let closestIndex = 0;
-      let minDiff = Infinity;
-
-      items.forEach((item, idx) => {
-        const linkRect = item.link.getBoundingClientRect();
-        const center = (linkRect.top - rect.top) + (linkRect.height / 2);
-        const diff = Math.abs(clickY - center);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestIndex = idx;
-        }
+      if (rect.height <= 0) return;
+      const clickRatio = Math.min(Math.max((e.clientY - rect.top) / rect.height, 0), 1);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const targetY = clickRatio * maxScroll;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
       });
-
-      if (items[closestIndex]) {
-        const targetY = getElementTop(items[closestIndex].el) - 80;
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        window.scrollTo({
-          top: Math.max(0, targetY),
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        });
-      }
     });
 
     tocLinks.forEach((link) => {
