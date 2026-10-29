@@ -284,6 +284,77 @@
           "version": "0.2.0"
         }
       }
+    },
+    {
+      "id": "divider",
+      "name": "BasisDivider",
+      "family": "Foundation",
+      "kind": "component",
+      "lifecycle": {
+        "status": "stable",
+        "addedIn": "0.1.0"
+      },
+      "summary": "Visual separator line grouping or distinguishing content sections.",
+      "description": "BasisDivider provides subtle horizontal or vertical separation between distinct UI regions.",
+      "package": "io.github.alph_a07.basis.components.foundation",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/fixture-commit/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/BasisDivider.kt",
+      "overview": {
+        "quickStartSample": "BasisDivider()",
+        "anatomy": {
+          "parts": [
+            {
+              "id": "Line",
+              "name": "Line",
+              "description": "The rendered rule boundary separating content.",
+              "optional": false
+            }
+          ]
+        },
+        "variants": [],
+        "states": [],
+        "gallery": []
+      },
+      "api": {
+        "signatures": [
+          {
+            "name": "BasisDivider",
+            "declaration": "@Composable\npublic fun BasisDivider(\n    modifier: Modifier = Modifier\n): Unit",
+            "kdoc": "Visual separator line.",
+            "parameters": [
+              {
+                "name": "modifier",
+                "type": "Modifier",
+                "defaultValue": "Modifier",
+                "optional": true,
+                "description": "Optional modifier for styling."
+              }
+            ]
+          }
+        ],
+        "samples": []
+      },
+      "overrides": {
+        "universalFields": [],
+        "matrix": []
+      },
+      "accessibility": {
+        "role": "None",
+        "touchTarget": {
+          "minWidthDp": 0,
+          "minHeightDp": 1,
+          "enforced": false
+        },
+        "reducedMotion": {
+          "respectsReducedMotion": false
+        },
+        "report": {
+          "status": "pass",
+          "checks": [
+            "accessibility-decorative-semantics"
+          ],
+          "version": "0.2.0"
+        }
+      }
     }
   ]
 }
