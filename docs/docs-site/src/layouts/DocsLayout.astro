@@ -38,7 +38,7 @@ const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) 
 // Fetch docs prose stubs from collection to build dynamic navigation groups
 const docsEntries = await getCollection('docs');
 
-const sectionOrder = ['Getting Started', 'Theming', 'Foundation'];
+const sectionOrder = ['Getting Started', 'Theming', 'Foundation', 'Changelog'];
 const sectionsMap = new Map<string, { title: string; href: string; order: number }[]>();
 
 for (const doc of docsEntries) {

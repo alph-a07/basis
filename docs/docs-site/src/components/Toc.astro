@@ -6,6 +6,9 @@ interface Props {
 }
 
 const { headings = [] } = Astro.props;
+
+// Determine baseline minimum depth to calculate relative indentations
+const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth)) : 2;
 ---
 
 {headings.length > 0 && (
@@ -17,17 +20,23 @@ const { headings = [] } = Astro.props;
       </div>
       <h2 class="toc-heading">On this page</h2>
       <ul class="toc-list">
-        {headings.map((item) => (
-          <li class={`toc-item depth-${item.depth}`}>
-            <a
-              href={`#${item.slug}`}
-              class="toc-link"
-              data-slug={item.slug}
+        {headings.map((item) => {
+          const relDepth = Math.max(0, item.depth - minDepth);
+          return (
+            <li
+              class={`toc-item depth-${item.depth} rel-depth-${relDepth} ${relDepth > 0 ? 'has-indent' : ''}`}
+              style={`--rel-depth: ${relDepth};`}
             >
-              {item.text}
-            </a>
-          </li>
-        ))}
+              <a
+                href={`#${item.slug}`}
+                class="toc-link"
+                data-slug={item.slug}
+              >
+                {item.text}
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   </nav>
@@ -285,11 +294,27 @@ const { headings = [] } = Astro.props;
   }
 
   .toc-item {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
+    padding-left: calc(var(--rel-depth, 0) * 0.85rem);
+    transition: padding-left 0.15s ease;
   }
 
-  .toc-item.depth-3 {
-    padding-left: 0.75rem;
+  .toc-item.rel-depth-0 {
+    margin-top: 0.5rem;
+  }
+
+  .toc-item.rel-depth-0:first-child {
+    margin-top: 0;
+  }
+
+  .toc-item.has-indent .toc-link {
+    font-size: 0.78125rem;
+    line-height: 1.35;
+    opacity: 0.9;
+  }
+
+  .toc-item.has-indent .toc-link.active {
+    opacity: 1;
   }
 
   .toc-link {

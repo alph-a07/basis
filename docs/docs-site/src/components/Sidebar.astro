@@ -1,6 +1,7 @@
 ---
 import type { NavGroup } from '../types/navigation';
 import SearchModal from './SearchModal.astro';
+import versionData from '../generated/version.json';
 
 interface Props {
   currentPath?: string;
@@ -23,9 +24,13 @@ const staticGroups: NavGroup[] = [
   {
     title: 'Theming',
     items: [
-      { title: 'Overview', href: '/docs/theming/overview' },
-      { title: 'ThemeMode', href: '/docs/theming/theme-mode' },
-      { title: 'Intent', href: '/docs/theming/intent' },
+      { title: 'Set your brand color', href: '/docs/theming/set-brand' },
+      { title: 'Choose a mood and domain', href: '/docs/theming/mood-domain' },
+      { title: 'Support dark mode', href: '/docs/theming/dark-mode' },
+      { title: 'Customize components', href: '/docs/theming/customize-components' },
+      { title: 'Check your theme in CI', href: '/docs/theming/check-theme-ci' },
+      { title: 'Intent reference', href: '/docs/theming/intent-reference' },
+      { title: 'How Basis picks colors', href: '/docs/theming/color-science' },
     ],
   },
   {
@@ -34,6 +39,12 @@ const staticGroups: NavGroup[] = [
       { title: 'Surface', href: '/docs/foundation/surface' },
       { title: 'Focusable', href: '/docs/foundation/focusable' },
       { title: 'Overlay', href: '/docs/foundation/overlay' },
+    ],
+  },
+  {
+    title: 'Changelog',
+    items: [
+      { title: 'Changelog', href: '/docs/changelog' },
     ],
   },
 ];
@@ -165,7 +176,7 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
     <!-- Footer: Version + Theme Toggle + GitHub -->
     <div class="sidebar-footer">
       <div class="footer-meta">
-        <span class="version-badge" title="Basis Version">v0.1.0</span>
+        <span class="version-badge" title="Basis Version">{versionData.versionName}</span>
       </div>
       <div class="footer-actions">
         <button
