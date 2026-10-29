@@ -3,6 +3,7 @@ import LifecycleChips from '../sections/LifecycleChips.astro';
 import ApiTable from '../sections/ApiTable.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
+import CodeBlock from '../CodeBlock.astro';
 
 interface Props {
   modifier: any;
@@ -44,9 +45,11 @@ const a11yNarrative = getA11yNarrative(sidecar);
     {modifier.overview?.quickStartSample && (
       <section class="modifier-section">
         <h2 id="quick-start">Quick Start</h2>
-        <div class="code-wrapper">
-          <pre class="code-block"><code>{modifier.overview.quickStartSample}</code></pre>
-        </div>
+        <CodeBlock
+          code={modifier.overview.quickStartSample}
+          lang="kotlin"
+          title="Usage"
+        />
       </section>
     )}
 

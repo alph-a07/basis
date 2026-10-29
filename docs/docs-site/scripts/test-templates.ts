@@ -55,9 +55,16 @@ assert(tabsNav, 'Component tabs navigation must render');
 const activeTabOverview = tabsNav.querySelector('a.active[aria-current="page"]');
 assert(activeTabOverview && activeTabOverview.textContent?.trim() === 'Overview', 'Overview tab must be active');
 
-// Quick Start
-const quickStartBlock = buttonOverviewDoc.querySelector('#quick-start + .quickstart-wrapper code');
-assert(quickStartBlock && quickStartBlock.textContent?.includes('BasisButton('), 'Quick start code block must render');
+// Quick Start CodeBlock & Copy Button
+const quickStartContainer = buttonOverviewDoc.querySelector('[data-code-block]');
+assert(quickStartContainer, 'Quick start code block container must render');
+const quickStartBlock = quickStartContainer.querySelector('.code-viewport pre code');
+assert(quickStartBlock && quickStartBlock.textContent?.includes('BasisButton('), 'Quick start code block must render highlighted code');
+
+const copyButton = quickStartContainer.querySelector('.copy-button');
+assert(copyButton, 'Codeblock copy button must render');
+assert.strictEqual(copyButton.getAttribute('aria-label'), 'Copy code to clipboard');
+assert(copyButton.getAttribute('data-code')?.includes('BasisButton'), 'Copy button must contain encoded code payload');
 
 // Anatomy Overlay
 const anatomyStage = buttonOverviewDoc.querySelector('.anatomy-stage');
@@ -113,8 +120,17 @@ const buttonApiDoc = loadHtml('docs/components/button/api');
 const activeTabApi = buttonApiDoc.querySelector('.component-tabs a.active[aria-current="page"]');
 assert(activeTabApi && activeTabApi.textContent?.trim() === 'API', 'API tab must be active on /api route');
 
-const declarationBlock = buttonApiDoc.querySelector('.signature-container .code-block code');
-assert(declarationBlock && declarationBlock.textContent?.includes('public fun BasisButton('), 'Declaration must render');
+const declarationBlock = buttonApiDoc.querySelector('.signature-container .code-viewport pre code');
+assert(declarationBlock && declarationBlock.textContent?.includes('public fun BasisButton('), 'Declaration must render in highlighted CodeBlock');
+
+const apiCopyButton = buttonApiDoc.querySelector('.signature-container .copy-button');
+assert(apiCopyButton, 'API signature copy button must render');
+
+// Table layout & column widths (fit tables to width)
+const tableResponsive = buttonApiDoc.querySelector('.table-responsive');
+assert(tableResponsive, 'Table responsive container must render');
+const colgroupCols = buttonApiDoc.querySelectorAll('.params-table colgroup col');
+assert.strictEqual(colgroupCols.length, 4, 'Parameters table must define 4 column specifications for width fitting');
 
 const paramRows = buttonApiDoc.querySelectorAll('.params-table tbody tr');
 assert(paramRows.length >= 6, 'Parameters table must render parameter rows');
@@ -138,6 +154,8 @@ assert(extraFamilyCard.textContent?.includes('Interactive'), 'Extra family name 
 
 const matrixRows = buttonOverridesDoc.querySelectorAll('.matrix-table tbody tr');
 assert(matrixRows.length >= 1, 'Matrix override table must render rows');
+const matrixCols = buttonOverridesDoc.querySelectorAll('.matrix-table colgroup col');
+assert.strictEqual(matrixCols.length, 3, 'Matrix table must define 3 column specifications for width fitting');
 
 console.log('✅ Button Overrides tab verified');
 

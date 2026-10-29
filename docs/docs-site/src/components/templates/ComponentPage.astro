@@ -6,6 +6,7 @@ import ApiTable from '../sections/ApiTable.astro';
 import OverridesMatrix from '../sections/OverridesMatrix.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
+import CodeBlock from '../CodeBlock.astro';
 
 interface Props {
   component: any;
@@ -72,9 +73,13 @@ const tabs = [
     {activeTab === 'overview' && (
       <section class="tab-pane" aria-labelledby="tab-overview">
         <h2 id="quick-start">Quick Start</h2>
-        <div class="quickstart-wrapper">
-          <pre class="code-block"><code>{component.overview?.quickStartSample}</code></pre>
-        </div>
+        {component.overview?.quickStartSample && (
+          <CodeBlock
+            code={component.overview.quickStartSample}
+            lang="kotlin"
+            title="Usage"
+          />
+        )}
 
         <h2 id="anatomy">Anatomy</h2>
         <AnatomyOverlay

@@ -1,4 +1,6 @@
 ---
+import CodeBlock from '../CodeBlock.astro';
+
 interface Parameter {
   name: string;
   type: string;
@@ -39,9 +41,11 @@ const { signatures = [], samples = [] } = Astro.props;
       )}
 
       <!-- Declaration Block -->
-      <div class="code-wrapper">
-        <pre class="code-block"><code>{sig.declaration}</code></pre>
-      </div>
+      <CodeBlock
+        code={sig.declaration}
+        lang="kotlin"
+        title="Signature"
+      />
 
       <!-- Parameters Table -->
       <div class="params-block">
@@ -53,6 +57,12 @@ const { signatures = [], samples = [] } = Astro.props;
         {sig.parameters && sig.parameters.length > 0 ? (
           <div class="table-responsive">
             <table class="params-table">
+              <colgroup>
+                <col class="col-name" />
+                <col class="col-type" />
+                <col class="col-default" />
+                <col class="col-desc" />
+              </colgroup>
               <thead>
                 <tr>
                   <th scope="col">Parameter</th>
@@ -103,9 +113,11 @@ const { signatures = [], samples = [] } = Astro.props;
               <h4 class="sample-title">{sample.title}</h4>
               {sample.description && <p class="sample-desc">{sample.description}</p>}
             </div>
-            <div class="code-wrapper">
-              <pre class="code-block"><code>{sample.code}</code></pre>
-            </div>
+            <CodeBlock
+              code={sample.code}
+              lang="kotlin"
+              title={sample.title}
+            />
           </div>
         ))}
       </div>
@@ -169,32 +181,54 @@ const { signatures = [], samples = [] } = Astro.props;
   }
 
   .table-responsive {
+    width: 100%;
     overflow-x: auto;
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 8px;
     background: var(--docs-surface, #161b22);
+    box-sizing: border-box;
   }
 
   .params-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 0.875rem;
     text-align: left;
   }
 
+  .col-name {
+    width: 22%;
+  }
+
+  .col-type {
+    width: 28%;
+  }
+
+  .col-default {
+    width: 20%;
+  }
+
+  .col-desc {
+    width: 30%;
+  }
+
   .params-table th {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 0.875rem;
     background: var(--docs-surface-recessed, #0d0f12);
     color: var(--docs-text-muted, #8b949e);
     font-weight: 600;
+    font-size: 0.8125rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    white-space: nowrap;
   }
 
   .params-table td {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 0.875rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     color: var(--docs-text, #c9d1d9);
     vertical-align: top;
+    font-size: 0.8125rem;
   }
 
   .params-table tr:last-child td {
@@ -205,18 +239,22 @@ const { signatures = [], samples = [] } = Astro.props;
     color: var(--docs-text, #e6edf3);
     font-weight: 600;
     font-size: 0.8125rem;
+    word-break: break-word;
   }
 
   .type-badge {
     color: var(--docs-accent, #58a6ff);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.8125rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 
   .required-badge {
     color: #f85149;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -224,10 +262,15 @@ const { signatures = [], samples = [] } = Astro.props;
   .param-default-cell code {
     font-size: 0.8125rem;
     color: var(--docs-text-muted, #8b949e);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 
   .param-desc-cell {
-    line-height: 1.45;
+    line-height: 1.5;
+    word-break: normal;
+    overflow-wrap: break-word;
   }
 
   .empty-params {

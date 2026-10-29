@@ -63,6 +63,11 @@ const matrix = overrides?.matrix || [];
     {matrix.length > 0 ? (
       <div class="table-responsive">
         <table class="matrix-table">
+          <colgroup>
+            <col class="col-variant" />
+            <col class="col-state" />
+            <col class="col-fields" />
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">Variant</th>
@@ -196,31 +201,49 @@ const matrix = overrides?.matrix || [];
   }
 
   .table-responsive {
+    width: 100%;
     overflow-x: auto;
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 8px;
     background: var(--docs-surface, #161b22);
+    box-sizing: border-box;
   }
 
   .matrix-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 0.875rem;
     text-align: left;
   }
 
+  .col-variant {
+    width: 22%;
+  }
+
+  .col-state {
+    width: 22%;
+  }
+
+  .col-fields {
+    width: 56%;
+  }
+
   .matrix-table th {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 0.875rem;
     background: var(--docs-surface-recessed, #0d0f12);
     color: var(--docs-text-muted, #8b949e);
     font-weight: 600;
+    font-size: 0.8125rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    white-space: nowrap;
   }
 
   .matrix-table td {
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 0.875rem;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     vertical-align: middle;
+    font-size: 0.8125rem;
   }
 
   .matrix-table tr:last-child td {
@@ -231,6 +254,7 @@ const matrix = overrides?.matrix || [];
   .matrix-state-cell code {
     font-size: 0.8125rem;
     color: var(--docs-text, #e6edf3);
+    word-break: break-word;
   }
 
   .supported-chips {
