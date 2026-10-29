@@ -8,7 +8,7 @@ description: The foundational container providing shape, tonal background, eleva
 
 `Surface` is the visual foundation of your application. Every card, dialog, bottom sheet, and list item is built upon a surface that coordinates background fill, corner shape, border hairlines, and content colors.
 
-In Basis, `Surface` is available both as a standalone composable (`BasisSurface`) and as a flexible Jetpack Compose modifier (`Modifier.surface()`).
+In Basis, surface styling is provided via the `Modifier.basisSurface()` modifier.
 
 ## Tonal Elevation and Surface Roles
 
@@ -22,52 +22,69 @@ Rather than using flat white or arbitrary gray backgrounds, Basis organizes surf
 | **`surfaceOverlay`** | Dialogs, menus, modal sheets | Prominent drop shadow | Highest lightness surface step |
 | **`surfaceInverse`** | Snackbars, high-contrast tooltips | High-contrast dark tone | High-contrast light tone |
 
-## Automatic Content Color Coordination
+## Surface Styling with `Modifier.basisSurface()`
 
-One of the most powerful features of `Surface` is automatic text and icon color management through `LocalBasisContentColor`:
-
-- When you place content inside a `Surface`, it automatically sets the ambient `LocalBasisContentColor` to a contrast-compliant foreground color (`onSurface`, `onPrimary`, etc.).
-- Nested text composables and icons read this ambient color automatically, eliminating the need to pass manual color parameters to every `Text` call.
+When building custom layouts where you already have a `Box` or `Row`, apply the `basisSurface` modifier directly to apply corner clipping, background fill, hairline borders, and elevation depth:
 
 ```kotlin
-BasisSurface(
-    color = BasisTheme.colors.surfaceElevated,
-    shape = BasisTheme.shapes.medium
-) {
-    // Both Text composables automatically inherit the correct contrasting color
-    Column(modifier = Modifier.padding(BasisTheme.spacing.md)) {
-        Text(
-            text = "Order Details",
-            style = BasisTheme.typography.titleMedium
-        )
-        Text(
-            text = "Delivered on Thursday",
-            style = BasisTheme.typography.bodySmall,
-            color = BasisTheme.colors.onSurfaceVariant
-        )
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.foundation.modifier.basisSurface
+import io.github.alph_a07.basis.components.theme.BasisTheme
+
+@Composable
+fun OrderCard() {
+    Box(
+        modifier = Modifier
+            .basisSurface(
+                shape = BasisTheme.shapes.medium,
+                color = BasisTheme.colors.surfaceElevated,
+                depth = BasisTheme.depth.level1
+            )
+            .padding(BasisTheme.spacing.md)
+    ) {
+        Column {
+            Text(
+                text = "Order Details",
+                style = BasisTheme.typography.titleMedium,
+                color = BasisTheme.colors.onSurface
+            )
+            Text(
+                text = "Delivered on Thursday",
+                style = BasisTheme.typography.bodySmall,
+                color = BasisTheme.colors.onSurfaceVariant
+            )
+        }
     }
 }
 ```
 
-## Using `Modifier.surface()`
+## Hairline Borders and Accents
 
-When building custom layouts where you already have a `Box` or `Row`, apply the `surface` modifier directly:
+You can pair `basisSurface` with a `BorderStroke` to define subtle element boundaries:
 
 ```kotlin
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.alph_a07.basis.components.foundation.modifier.surface
+import io.github.alph_a07.basis.components.foundation.modifier.basisSurface
 import io.github.alph_a07.basis.components.theme.BasisTheme
 
 @Composable
 fun StatusBadge(label: String) {
     Box(
         modifier = Modifier
-            .surface(
+            .basisSurface(
                 shape = BasisTheme.shapes.small,
                 color = BasisTheme.colors.surfaceVariant,
                 border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)
@@ -79,7 +96,8 @@ fun StatusBadge(label: String) {
     ) {
         Text(
             text = label,
-            style = BasisTheme.typography.labelSmall
+            style = BasisTheme.typography.labelSmall,
+            color = BasisTheme.colors.onSurfaceVariant
         )
     }
 }
@@ -89,6 +107,6 @@ fun StatusBadge(label: String) {
 
 - **Use semantic surfaces for hierarchy**: Reserve `surfaceOverlay` for floating modals and menus, `surfaceElevated` for cards, and `surface` for the root scaffold.
 - **Rely on `outlineVariant` for hairlines**: When adding card borders, use `BasisTheme.colors.outlineVariant` for a subtle, accessible boundary that adapts between light and dark modes.
-- **Pair with `Modifier.touchTarget()` on interactive surfaces**: If the surface is clickable, ensure it satisfies the 48dp touch target requirement.
+- **Pair with `Modifier.basisMinTouchTarget()` on interactive surfaces**: If the surface is clickable, ensure it satisfies the 48dp touch target requirement.
 
 Next, learn how focus indicators work in [Focusable](/docs/foundation/focusable).

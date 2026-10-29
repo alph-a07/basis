@@ -4,10 +4,11 @@
       "staticDistDir": "./docs/docs-site/dist",
       "url": [
         "http://localhost/index.html",
-        "http://localhost/docs/components/button/index.html",
-        "http://localhost/docs/components/button/api/index.html",
-        "http://localhost/docs/components/button/overrides/index.html",
-        "http://localhost/docs/components/button/accessibility/index.html"
+        "http://localhost/docs/getting-started/overview/index.html",
+        "http://localhost/docs/theming/set-brand/index.html",
+        "http://localhost/docs/foundation/surface/index.html",
+        "http://localhost/docs/foundation/focusable/index.html",
+        "http://localhost/studio/index.html"
       ]
     },
     "assert": {

@@ -28,7 +28,11 @@ const validator = new SemanticValidator(schemasDir);
 
 const components = defineCollection({
   loader: async () => {
-    const componentsDoc = loadJsonWithFallback('components.json');
+    const buildPath = path.join(buildModelDir, 'components.json');
+    if (!fs.existsSync(buildPath)) {
+      return [];
+    }
+    const componentsDoc = JSON.parse(fs.readFileSync(buildPath, 'utf-8'));
     const patchVocabDoc = loadJsonWithFallback('patch-vocabulary.json');
 
     const result = validator.validateComponents(componentsDoc, patchVocabDoc);
