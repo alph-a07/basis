@@ -54,6 +54,9 @@ jobs:
       - name: Run layout accessibility audit (axe-core)
         run: npm run test:a11y --workspace docs-site
 
+      - name: Run design pass and specification audit
+        run: npm run test:design --workspace docs-site
+
       - name: Upload Pagefind and site build artifact
         uses: actions/upload-artifact@v4
         with:

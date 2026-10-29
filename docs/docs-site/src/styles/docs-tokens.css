@@ -13,6 +13,9 @@
   --docs-surface-inverse: var(--d-color-surface-inverse);
 
   /* Typography & Content */
+  --docs-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --docs-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --docs-reading-width: 72ch;
   --docs-text: var(--d-color-content-default);
   --docs-text-muted: var(--d-color-content-muted);
   --docs-text-inverse: var(--d-color-content-inverse);

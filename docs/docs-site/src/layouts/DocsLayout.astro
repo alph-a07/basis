@@ -108,7 +108,7 @@ const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) 
 
   .docs-reading-column {
     width: 100%;
-    max-width: 72ch;
+    max-width: var(--docs-reading-width, 72ch);
   }
 
   @media (max-width: 1024px) {
