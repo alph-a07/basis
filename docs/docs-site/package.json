@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run generate:theme && astro dev",
-    "generate:theme": "tsx scripts/generate-theme.ts",
+    "generate:theme": "tsx scripts/generate-theme.ts && tsx scripts/extract-snippets.ts",
     "prebuild": "npm run generate:theme",
     "build": "npm run generate:theme && astro build && pagefind --site dist",
     "preview": "astro preview",

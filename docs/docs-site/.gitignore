@@ -2,3 +2,4 @@ dist/
 .astro/
 node_modules/
 src/styles/theme.css
+src/generated/

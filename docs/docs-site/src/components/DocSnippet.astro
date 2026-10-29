@@ -1,0 +1,20 @@
+---
+import CodeBlock from './CodeBlock.astro';
+import snippets from '../generated/snippets.json';
+
+interface Props {
+  name: string;
+  title?: string;
+  class?: string;
+}
+
+const { name, title, class: className = '' } = Astro.props;
+const code = (snippets as Record<string, string>)[name];
+
+if (!code) {
+  const available = Object.keys(snippets).join(', ');
+  throw new Error(`Snippet "${name}" not found in DocSnippets.kt! Available: ${available}`);
+}
+---
+
+<CodeBlock code={code} lang="kotlin" title={title} class={className} />
