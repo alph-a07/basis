@@ -34,105 +34,163 @@ const { headings = [] } = Astro.props;
 )}
 
 <script>
-  function setupTocScrollSpy() {
+  function setupToc() {
     const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
-    if (!tocLinks.length) return;
+    const divider = document.querySelector<HTMLElement>('.toc-divider');
+    const indicator = document.getElementById('toc-scroll-indicator');
 
-    const headingElements: HTMLElement[] = [];
+    if (!tocLinks.length || !divider || !indicator) return;
+
+    interface TocPair {
+      el: HTMLElement;
+      link: HTMLAnchorElement;
+      slug: string;
+    }
+
+    const items: TocPair[] = [];
     tocLinks.forEach((link) => {
       const slug = link.getAttribute('data-slug');
       if (slug) {
         const el = document.getElementById(slug);
-        if (el) headingElements.push(el);
+        if (el) {
+          items.push({ el, link, slug });
+        }
       }
     });
 
-    if (!headingElements.length) return;
+    if (!items.length) return;
+
+    function getElementTop(el: HTMLElement): number {
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
 
     function setActiveLink(activeSlug: string) {
-      tocLinks.forEach((link) => {
-        if (link.getAttribute('data-slug') === activeSlug) {
-          link.classList.add('active');
-          link.setAttribute('aria-current', 'true');
+      items.forEach((item) => {
+        if (item.slug === activeSlug) {
+          item.link.classList.add('active');
+          item.link.setAttribute('aria-current', 'true');
         } else {
-          link.classList.remove('active');
-          link.removeAttribute('aria-current');
+          item.link.classList.remove('active');
+          item.link.removeAttribute('aria-current');
         }
       });
     }
 
-    // Initialize IntersectionObserver to observe heading visibility
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveLink(entry.target.id);
-            break;
-          }
-        }
-      },
-      {
-        rootMargin: '0px 0px -70% 0px',
-        threshold: 0,
-      }
-    );
-
-    headingElements.forEach((el) => observer.observe(el));
-
-    // Fallback: Check scroll position on scroll
-    function onScroll() {
+    function updateProgress() {
       const scrollY = window.scrollY;
-      let currentSlug = headingElements[0]?.id || '';
-      for (const el of headingElements) {
-        if (el.offsetTop - 120 <= scrollY) {
-          currentSlug = el.id;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+      if (maxScroll <= 0) {
+        if (indicator) {
+          indicator.style.height = '0px';
+          indicator.classList.remove('is-active');
+        }
+        setActiveLink(items[0].slug);
+        return;
+      }
+
+      if (!divider || !indicator) return;
+      const dividerRect = divider.getBoundingClientRect();
+      const firstOffset = Math.max(0, getElementTop(items[0].el) - 120);
+      const firstLinkRect = items[0].link.getBoundingClientRect();
+      const firstCenter = (firstLinkRect.top - dividerRect.top) + (firstLinkRect.height / 2);
+
+      // Above the first heading
+      if (scrollY < firstOffset) {
+        if (scrollY <= 10) {
+          indicator.style.height = '0px';
+          indicator.classList.remove('is-active');
+        } else {
+          const ratio = firstOffset > 0 ? scrollY / firstOffset : 0;
+          indicator.style.height = `${(ratio * firstCenter).toFixed(1)}px`;
+          indicator.classList.add('is-active');
+        }
+        setActiveLink(items[0].slug);
+        return;
+      }
+
+      // Check if at the bottom of the page
+      const isAtBottom = window.innerHeight + scrollY >= document.documentElement.scrollHeight - 15;
+      if (isAtBottom) {
+        const lastIndex = items.length - 1;
+        setActiveLink(items[lastIndex].slug);
+        const lastLinkRect = items[lastIndex].link.getBoundingClientRect();
+        const lastBottom = (lastLinkRect.bottom - dividerRect.top);
+        indicator.style.height = `${lastBottom.toFixed(1)}px`;
+        indicator.classList.add('is-active');
+        return;
+      }
+
+      // Find the current active heading index
+      let activeIndex = 0;
+      for (let i = 0; i < items.length; i++) {
+        const offset = getElementTop(items[i].el) - 120;
+        if (scrollY >= offset) {
+          activeIndex = i;
         } else {
           break;
         }
       }
-      if (currentSlug) {
-        setActiveLink(currentSlug);
-      }
-    }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-  }
+      setActiveLink(items[activeIndex].slug);
 
-  function setupTocScrollIndicator() {
-    const indicator = document.getElementById('toc-scroll-indicator');
-    const divider = document.querySelector<HTMLElement>('.toc-divider');
-    if (!indicator || !divider) return;
+      const activeLinkRect = items[activeIndex].link.getBoundingClientRect();
+      const activeCenter = (activeLinkRect.top - dividerRect.top) + (activeLinkRect.height / 2);
 
-    function updateProgress() {
-      const scrollY = window.scrollY;
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll <= 0) {
-        if (indicator) {
-          indicator.style.height = '0%';
-          indicator.classList.remove('is-active');
+      let targetHeight = activeCenter;
+
+      if (activeIndex < items.length - 1) {
+        const currentOffset = getElementTop(items[activeIndex].el) - 120;
+        const nextOffset = getElementTop(items[activeIndex + 1].el) - 120;
+        const nextLinkRect = items[activeIndex + 1].link.getBoundingClientRect();
+        const nextCenter = (nextLinkRect.top - dividerRect.top) + (nextLinkRect.height / 2);
+
+        if (nextOffset > currentOffset) {
+          const segmentProgress = Math.min(Math.max((scrollY - currentOffset) / (nextOffset - currentOffset), 0), 1);
+          targetHeight = activeCenter + segmentProgress * (nextCenter - activeCenter);
         }
-        return;
-      }
-
-      const progress = Math.min(Math.max(scrollY / totalScroll, 0), 1);
-      if (indicator) {
-        indicator.style.height = `${(progress * 100).toFixed(1)}%`;
-        if (progress > 0.005) {
-          indicator.classList.add('is-active');
-        } else {
-          indicator.classList.remove('is-active');
+      } else {
+        const currentOffset = getElementTop(items[activeIndex].el) - 120;
+        const lastBottom = (activeLinkRect.bottom - dividerRect.top);
+        if (maxScroll > currentOffset) {
+          const tailProgress = Math.min(Math.max((scrollY - currentOffset) / (maxScroll - currentOffset), 0), 1);
+          targetHeight = activeCenter + tailProgress * (lastBottom - activeCenter);
         }
       }
+
+      indicator.style.height = `${targetHeight.toFixed(1)}px`;
+      indicator.classList.add('is-active');
     }
 
     divider.addEventListener('click', (e) => {
       const rect = divider.getBoundingClientRect();
-      const clickRatio = (e.clientY - rect.top) / rect.height;
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      window.scrollTo({
-        top: Math.max(0, Math.min(clickRatio * totalScroll, totalScroll)),
-        behavior: 'smooth',
+      const clickY = e.clientY - rect.top;
+      let closestIndex = 0;
+      let minDiff = Infinity;
+
+      items.forEach((item, idx) => {
+        const linkRect = item.link.getBoundingClientRect();
+        const center = (linkRect.top - rect.top) + (linkRect.height / 2);
+        const diff = Math.abs(clickY - center);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIndex = idx;
+        }
+      });
+
+      if (items[closestIndex]) {
+        const targetY = getElementTop(items[closestIndex].el) - 80;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }
+    });
+
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const slug = link.getAttribute('data-slug');
+        if (slug) {
+          setActiveLink(slug);
+          setTimeout(updateProgress, 50);
+        }
       });
     });
 
@@ -141,13 +199,8 @@ const { headings = [] } = Astro.props;
     updateProgress();
   }
 
-  function initToc() {
-    setupTocScrollSpy();
-    setupTocScrollIndicator();
-  }
-
-  initToc();
-  document.addEventListener('astro:page-load', initToc);
+  setupToc();
+  document.addEventListener('astro:page-load', setupToc);
 </script>
 
 <style>
