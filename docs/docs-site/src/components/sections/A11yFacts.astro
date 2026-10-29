@@ -149,7 +149,7 @@ const { accessibility, narrative } = Astro.props;
   }
 
   .fact-card {
-    background: var(--docs-surface, #161b22);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 6px;
     padding: 0.85rem 1rem;
@@ -240,7 +240,7 @@ const { accessibility, narrative } = Astro.props;
   }
 
   .motion-card {
-    background: var(--docs-surface, #161b22);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 8px;
     padding: 1.25rem;
@@ -254,7 +254,7 @@ const { accessibility, narrative } = Astro.props;
   }
 
   .report-card {
-    background: var(--docs-surface, #161b22);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 8px;
     padding: 1.25rem;

@@ -7,8 +7,8 @@
 :root {
   /* Surfaces & Backgrounds */
   --docs-bg: var(--d-color-surface-default);
-  --docs-surface: var(--d-color-surface-elevated);
-  --docs-surface-recessed: var(--d-color-surface-recessed);
+  --docs-surface: color-mix(in srgb, var(--d-color-surface-elevated) 30%, var(--d-color-surface-default));
+  --docs-surface-recessed: color-mix(in srgb, var(--d-color-surface-recessed) 40%, var(--d-color-surface-default));
   --docs-surface-inverse: var(--d-color-surface-inverse);
 
   /* Typography & Content */

@@ -321,7 +321,7 @@ const hasAnatomy = parts.length > 0;
     align-items: flex-start;
     gap: 0.75rem;
     padding: 0.65rem 0.9rem;
-    background: var(--docs-surface, #161b22);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 6px;
     transition: border-color 0.15s ease, background 0.15s ease;
@@ -329,7 +329,7 @@ const hasAnatomy = parts.length > 0;
 
   .part-card:hover {
     border-color: var(--docs-border, #30363d);
-    background: var(--docs-card-hover, #21262d);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 5%, transparent);
   }
 
   .part-badge {

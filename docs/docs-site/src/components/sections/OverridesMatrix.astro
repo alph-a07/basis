@@ -136,7 +136,7 @@ const matrix = overrides?.matrix || [];
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    background: var(--docs-surface, #161b22);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 3%, transparent);
     border: 1px solid var(--docs-border-subtle, #21262d);
     padding: 0.25rem 0.6rem;
     border-radius: 6px;
@@ -145,7 +145,7 @@ const matrix = overrides?.matrix || [];
 
   .field-chip:hover {
     border-color: var(--docs-border, #30363d);
-    background: var(--docs-card-hover, #21262d);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 6%, transparent);
   }
 
   .field-bullet {
@@ -205,7 +205,7 @@ const matrix = overrides?.matrix || [];
     overflow-x: auto;
     border: 1px solid var(--docs-border-subtle, #21262d);
     border-radius: 8px;
-    background: var(--docs-surface, #161b22);
+    background: transparent;
     box-sizing: border-box;
   }
 
@@ -231,7 +231,7 @@ const matrix = overrides?.matrix || [];
 
   .matrix-table th {
     padding: 0.5rem 0.75rem;
-    background: var(--docs-surface-recessed, #0d0f12);
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 3%, transparent);
     color: var(--docs-text-muted, #8b949e);
     font-weight: 600;
     font-size: 0.75rem;
@@ -241,9 +241,15 @@ const matrix = overrides?.matrix || [];
 
   .matrix-table td {
     padding: 0.55rem 0.75rem;
+    background: transparent;
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     vertical-align: middle;
     font-size: 0.8125rem;
+    transition: background 0.12s ease;
+  }
+
+  .matrix-table tr:hover td {
+    background: color-mix(in srgb, var(--docs-text, #e6edf3) 2.5%, transparent);
   }
 
   .matrix-table tr:last-child td {
