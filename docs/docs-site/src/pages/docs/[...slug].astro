@@ -2,6 +2,7 @@
 import DocsLayout from '../../layouts/DocsLayout.astro';
 import ComponentPage from '../../components/templates/ComponentPage.astro';
 import ModifierPage from '../../components/templates/ModifierPage.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
 import { getCollection, render } from 'astro:content';
 import type { TocItem } from '../../types/navigation';
 
@@ -137,7 +138,7 @@ if (props.type === 'component') {
       </header>
 
       <div class="doc-body">
-        {RenderedContent && <RenderedContent />}
+        {RenderedContent && <RenderedContent components={{ pre: CodeBlock }} />}
       </div>
     </article>
   )}
@@ -299,13 +300,13 @@ if (props.type === 'component') {
   }
 
   .doc-body :global(.preview-pane.dark) {
-    background: #0b0f17;
-    color: #f1f5f9;
-    border-color: #1e293b;
+    background: #0d0d0d;
+    color: #f5f5f7;
+    border-color: rgba(255, 255, 255, 0.12);
   }
 
   .doc-body :global(.preview-pane.dark .preview-header-label) {
-    color: #94a3b8;
+    color: #98989f;
   }
 
   .doc-body :global(.preview-header-label) {
@@ -328,15 +329,15 @@ if (props.type === 'component') {
     border: 1px solid var(--docs-border-subtle);
   }
 
-  /* Explicit mode overrides for dual-mode comparisons */
+  /* Explicit mode overrides for dual-mode comparisons - Zero tint */
   .doc-body :global(.preview-pane.light .preview-surface-card) {
     background: #ffffff;
     border: 1px solid #e2e8f0;
   }
 
   .doc-body :global(.preview-pane.dark .preview-surface-card) {
-    background: #182232;
-    border: 1px solid #233147;
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.14);
   }
 
   .doc-body :global(.swatch-palette-row) {
@@ -360,6 +361,20 @@ if (props.type === 'component') {
     border-radius: 4px;
     width: 100%;
     border: 1px solid var(--docs-border-muted);
+    transition: background 0.15s ease, outline 0.15s ease;
+  }
+
+  :global([data-theme="dark"]) .doc-body :global(.swatch-color-chip.swatch-brand-primary) {
+    background: #38bdf8 !important;
+  }
+
+  :global([data-theme="dark"]) .doc-body :global(.swatch-color-chip.swatch-selection-surface) {
+    background: #0c4a6e !important;
+  }
+
+  :global([data-theme="dark"]) .doc-body :global(.swatch-color-chip.swatch-focus-ring) {
+    background: #38bdf8 !important;
+    outline: 2px solid #7dd3fc !important;
   }
 
   .doc-body :global(.swatch-name) {
@@ -392,14 +407,15 @@ if (props.type === 'component') {
   }
 
   .doc-body :global(.mock-button.brand) {
-    background: #0284c7;
+    background: var(--docs-accent, #2563eb);
     color: #ffffff;
+    box-shadow: none;
   }
 
   .doc-body :global(.mock-button.focus-demo) {
-    background: #0284c7;
+    background: #1d4ed8;
     color: #ffffff;
-    outline: 3px solid #38bdf8;
+    outline: 3px solid var(--docs-focus-ring, #2563eb);
     outline-offset: 2px;
   }
 
@@ -571,28 +587,6 @@ if (props.type === 'component') {
     color: var(--docs-text);
   }
 
-  .doc-body :global(pre:not(.mermaid)) {
-    background: var(--docs-code-bg) !important;
-    border: 1px solid var(--docs-code-border) !important;
-    border-radius: 8px;
-    padding: 0.85rem 1.15rem;
-    overflow-x: auto;
-    font-family: var(--docs-font-mono, ui-monospace, monospace);
-    font-size: 0.875rem;
-    line-height: 1.6;
-    margin: 0.35rem 0;
-    color: var(--docs-text);
-  }
-
-  .doc-body :global(pre:not(.mermaid) code) {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    font-family: inherit !important;
-    font-size: inherit !important;
-    color: inherit;
-  }
-
   .doc-body :global(table) {
     width: 100%;
     table-layout: auto;
@@ -716,105 +710,6 @@ if (props.type === 'component') {
 <script>
   import mermaid from 'mermaid';
 
-  const langMap: Record<string, string> = {
-    kotlin: 'Kotlin',
-    kt: 'Kotlin',
-    groovy: 'Groovy',
-    gradle: 'Gradle',
-    xml: 'XML',
-    json: 'JSON',
-    bash: 'Bash',
-    sh: 'Shell',
-    shell: 'Shell',
-    ts: 'TypeScript',
-    tsx: 'TSX',
-    js: 'JavaScript',
-    jsx: 'JSX',
-    html: 'HTML',
-    css: 'CSS',
-  };
-
-  function setupDocCodeBlocks() {
-    const preBlocks = document.querySelectorAll<HTMLElement>(
-      '.doc-body pre:not(.mermaid):not([data-language="mermaid"])'
-    );
-
-    preBlocks.forEach((preEl) => {
-      if (preEl.parentElement?.classList.contains('code-viewport') || preEl.closest('.code-block-container')) {
-        return;
-      }
-
-      const rawLang = preEl.getAttribute('data-language') || '';
-      const displayLang = langMap[rawLang.toLowerCase()] || (rawLang ? rawLang.toUpperCase() : 'Code');
-      const codeText = preEl.querySelector('code')?.textContent || preEl.textContent || '';
-      const trimmedCode = codeText.trim();
-
-      const container = document.createElement('div');
-      container.className = 'code-block-container';
-      container.setAttribute('data-code-block', '');
-
-      const header = document.createElement('div');
-      header.className = 'code-header';
-
-      const meta = document.createElement('div');
-      meta.className = 'code-meta';
-      const langTag = document.createElement('span');
-      langTag.className = 'lang-tag';
-      langTag.textContent = displayLang;
-      meta.appendChild(langTag);
-      header.appendChild(meta);
-
-      const copyBtn = document.createElement('button');
-      copyBtn.type = 'button';
-      copyBtn.className = 'copy-button';
-      copyBtn.setAttribute('aria-label', 'Copy code to clipboard');
-      copyBtn.setAttribute('title', 'Copy code');
-
-      copyBtn.innerHTML = `
-        <span class="copy-btn-inner">
-          <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          <svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span class="copy-label">Copy</span>
-        </span>
-        <span class="sr-only feedback" aria-live="polite"></span>
-      `;
-
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(trimmedCode);
-          copyBtn.classList.add('copied');
-          const label = copyBtn.querySelector<HTMLElement>('.copy-label');
-          const feedback = copyBtn.querySelector<HTMLElement>('.feedback');
-          if (label) label.textContent = 'Copied!';
-          if (feedback) feedback.textContent = 'Code copied to clipboard';
-
-          setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            if (label) label.textContent = 'Copy';
-            if (feedback) feedback.textContent = '';
-          }, 2000);
-        } catch (err) {
-          console.error('Failed to copy to clipboard:', err);
-        }
-      });
-
-      header.appendChild(copyBtn);
-
-      const viewport = document.createElement('div');
-      viewport.className = 'code-viewport';
-
-      preEl.replaceWith(container);
-      container.appendChild(header);
-      container.appendChild(viewport);
-      viewport.appendChild(preEl);
-    });
-  }
-
   let isRendering = false;
 
   async function renderMermaid() {
@@ -919,7 +814,6 @@ if (props.type === 'component') {
 
   function initPage() {
     renderMermaid();
-    setupDocCodeBlocks();
   }
 
   if (document.readyState === 'loading') {

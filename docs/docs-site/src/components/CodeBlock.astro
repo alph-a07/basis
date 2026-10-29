@@ -2,22 +2,29 @@
 import { Code } from 'astro:components';
 
 interface Props {
-  code: string;
+  code?: string;
   lang?: string;
   title?: string;
   class?: string;
+  style?: string;
+  'data-language'?: string;
+  [key: string]: any;
 }
 
 const {
   code,
-  lang = 'kotlin',
+  lang,
   title,
   class: className = '',
+  style: inlineStyle,
 } = Astro.props;
+
+const rawLang = Astro.props['data-language'] || lang || '';
+const isMermaid = rawLang.toLowerCase() === 'mermaid' || className.includes('mermaid');
 
 const trimmedCode = code ? code.trim() : '';
 
-// Language label map - title of codeblock indicates language
+// Canonical language label mapping
 const langMap: Record<string, string> = {
   kotlin: 'Kotlin',
   kt: 'Kotlin',
@@ -27,6 +34,7 @@ const langMap: Record<string, string> = {
   json: 'JSON',
   bash: 'Bash',
   sh: 'Shell',
+  shell: 'Shell',
   ts: 'TypeScript',
   tsx: 'TSX',
   js: 'JavaScript',
@@ -35,69 +43,86 @@ const langMap: Record<string, string> = {
   css: 'CSS',
 };
 
-const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpperCase() : 'Kotlin');
+const isMdxPre = code === undefined;
+const containerClass = isMdxPre ? 'code-block-container' : `code-block-container ${className}`.trim();
+const preClass = isMdxPre ? (className || 'astro-code') : 'astro-code';
+
+const displayLang = title || (rawLang ? langMap[rawLang.toLowerCase()] || rawLang.toUpperCase() : 'Code');
 ---
 
-<div class={`code-block-container ${className}`} data-code-block>
-  <div class="code-header">
-    <div class="code-meta">
-      <span class="lang-tag">{displayLang}</span>
+{isMermaid ? (
+  <pre class="mermaid" {...Astro.props}><slot /></pre>
+) : (
+  <div class={containerClass} data-code-block>
+    <div class="code-header">
+      <div class="code-meta">
+        <span class="lang-tag">{displayLang}</span>
+      </div>
+      <button
+        type="button"
+        class="copy-button"
+        aria-label="Copy code to clipboard"
+        title="Copy code"
+        data-code={code !== undefined ? encodeURIComponent(trimmedCode) : undefined}
+      >
+        <span class="copy-btn-inner">
+          <svg
+            class="copy-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <svg
+            class="check-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <span class="copy-label">Copy</span>
+        </span>
+        <span class="sr-only feedback" aria-live="polite"></span>
+      </button>
     </div>
-    <button
-      type="button"
-      class="copy-button"
-      aria-label="Copy code to clipboard"
-      title="Copy code"
-      data-code={encodeURIComponent(trimmedCode)}
-    >
-      <span class="copy-btn-inner">
-        <svg
-          class="copy-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        <svg
-          class="check-icon"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span class="copy-label">Copy</span>
-      </span>
-      <span class="sr-only feedback" aria-live="polite"></span>
-    </button>
-  </div>
 
-  <div class="code-viewport">
-    <Code
-      code={trimmedCode}
-      lang={lang as any}
-      themes={{
-        light: 'github-light',
-        dark: 'github-dark',
-      }}
-      defaultColor={false}
-    />
+    <div class="code-viewport">
+      {code !== undefined ? (
+        <Code
+          code={trimmedCode}
+          lang={(lang || 'kotlin') as any}
+          themes={{
+            light: 'github-light',
+            dark: 'github-dark',
+          }}
+          defaultColor={false}
+        />
+      ) : (
+        <pre
+          class={preClass}
+          style={inlineStyle}
+          tabindex="0"
+          data-language={rawLang}
+        ><slot /></pre>
+      )}
+    </div>
   </div>
-</div>
+)}
 
 <script>
   function setupCopyButtons() {
@@ -109,7 +134,7 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
 
       button.addEventListener('click', async () => {
         const encoded = button.getAttribute('data-code');
-        const text = encoded ? decodeURIComponent(encoded) : block.querySelector('code')?.textContent || '';
+        const text = encoded ? decodeURIComponent(encoded) : (block.querySelector('code')?.textContent || '').trim();
 
         try {
           await navigator.clipboard.writeText(text);
@@ -141,7 +166,7 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     border-radius: 6px;
     background: var(--docs-code-bg);
     overflow: hidden;
-    margin: 0;
+    margin: 1rem 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
@@ -235,6 +260,8 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     padding: 0.85rem 1rem !important;
     background-color: transparent !important;
     background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
     font-size: 0.85rem !important;
     line-height: 1.6 !important;
@@ -248,6 +275,7 @@ const displayLang = title || langMap[lang.toLowerCase()] || (lang ? lang.toUpper
     font-size: inherit !important;
     background: transparent !important;
     background-color: transparent !important;
+    border: none !important;
     padding: 0 !important;
   }
 
