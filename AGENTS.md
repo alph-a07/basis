@@ -80,26 +80,33 @@ Don't restate token values; Governance / token docs own them.
 
 ---
 
-## 3. Architecture — module level (volatile deep structure; use graphs)
+## 3. Architecture & Context Navigation (strictly enforced via graphs)
 
-Pointer `Architecture deep-dive` branch: only when restructuring or cross-module dependency debates. Deeper layer/DAG,
-pipeline stage symmetry, and domain breakdown are volatile — do not restate here.
+Pointer `Architecture deep-dive` / `Context navigation` branch: consult graphs before exploring or modifying code.
+Deeper layer/DAG, pipeline stage symmetry, and domain breakdown are volatile — do not guess or restate here.
+
+- **Strict graph navigation rule:** Always gather context through graphs rather than unguided directory walking:
+  - **Knowledge graph (`/understand`):** Primary source of truth for architectural layers, domain flows, and conceptual
+    tours (`.ua/knowledge-graph.json`). Use `/understand-*` skills (`understand-explain`, `understand-domain`,
+    `understand-diff`, `understand-chat`) for architectural questions, layer boundaries, and domain invariants.
+  - **Context graph (`/graphify`):** Primary source of truth for structural relationships, AST call paths, and
+    cross-module dependencies (`graphify-out/graph.json`). Use `/graphify query`, `/graphify path`, and
+    `/graphify explain` to trace symbols, explore connections, and plan changes before touching code.
+  - **Sync requirement:** Keep graphs refreshed (`/understand` and `/graphify --update`) when completing substantial
+    refactors, moving modules, or adding components.
 
 Modules (module-level only; see `build-logic` / `settings.gradle.kts` for exact roles):
 
 - `basis-components`: Android library (`android.library`), Compose compiler, namespace
   `io.github.alph_a07.basis.components`, public API `Basis*` composables.
-- `basis-theme`: Kotlin JVM (`kotlin.jvm`) + KSP (`ksp`), resolution / codegen (`ThemeMode`, `ResolvedTheme`, tokens),
-  conventions `detekt-conventions` / `ktlint-conventions`.
+- `basis-theme`: Kotlin Multiplatform (`kotlin.multiplatform` JVM + JS) + KSP (`ksp`),
+  resolution / codegen (`ThemeMode`, `ResolvedTheme`, tokens), conventions `detekt-conventions` / `ktlint-conventions`.
 - `basis-lint`: Kotlin JVM, detekt rules (`io.github.alph-a07:basis-detekt-rules`); custom ruleset at
   `config/detekt/detekt.yml`.
+- `docs-runtime`: Kotlin Multiplatform (`kotlin.multiplatform`), docs theme resolution and CSS emission.
 - `demo-app`: Android application (`android.application`), Compose compiler, namespace `io.github.alph_a07.basis.demo`;
   SDK `compileSdk = 37`, `minSdk = 24`, `targetSdk = 36`.
 - `build-logic`: convention plugins (`verify-all-conventions`, `detekt-conventions`, `ktlint-conventions`).
-
-For live dependency graphs, domain symmetry, stage decomposition, and token-path structures: leverage `graphify` (
-context graph / import / batch extraction) and `understand-*` skills (knowledge graph, explain, diff, domain-model)
-rather than maintaining static descriptions here. Re-check with `./gradlew verifyAll` after any module move.
 
 ---
 
