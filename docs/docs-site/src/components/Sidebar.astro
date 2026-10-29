@@ -509,11 +509,9 @@ function isPathActive(itemHref: string): boolean {
     gap: 0.1rem;
     margin-top: 0.15rem;
   }
-    gap: 0.1rem;
-  }
 
   .subgroup-link {
-    padding: 0.3rem 0.5rem;
+    padding: 0.25rem 0.45rem;
   }
 
   .nav-group-list {
@@ -530,38 +528,22 @@ function isPathActive(itemHref: string): boolean {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.325rem 0.55rem;
-    border-radius: 6px;
+    padding: 0.275rem 0.5rem;
     color: var(--docs-text-muted, #8b949e);
     text-decoration: none;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.4;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.12s ease, color 0.12s ease;
+    transition: color 0.12s ease;
   }
 
   .nav-link:hover {
-    background: color-mix(in srgb, var(--docs-text-muted, #8b949e) 12%, transparent);
     color: var(--docs-text, #e6edf3);
   }
 
   .nav-link.active {
-    background: color-mix(in srgb, var(--docs-accent, #58a6ff) 12%, transparent);
-    color: var(--docs-text, #e6edf3);
+    color: var(--docs-accent, #58a6ff);
     font-weight: 600;
-  }
-
-  .nav-link.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 18%;
-    bottom: 18%;
-    width: 3px;
-    background: var(--docs-accent, #58a6ff);
-    border-radius: 0 3px 3px 0;
   }
 
   .nav-badge {
