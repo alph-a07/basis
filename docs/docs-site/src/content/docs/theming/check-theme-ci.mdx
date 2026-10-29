@@ -1,0 +1,68 @@
+---
+title: Check your theme in CI
+section: Theming
+order: 5
+status: published
+description: Validate theme intent correctness and contrast compliance in automated unit tests.
+---
+import DocSnippet from '../../../components/DocSnippet.astro';
+
+Run pure Kotlin unit tests on your theme intent during CI to catch invalid hex colors, rejected override paths, and constraint adjustments before they reach a device.
+
+## 1. Run Resolution in Unit Tests
+
+`basis-theme` is a pure Kotlin multiplatform engine. You can resolve and inspect your theme in standard JVM unit tests — no Android emulator or device required:
+
+<DocSnippet name="check_theme_ci" />
+
+## 2. Inspecting the ResolutionReport
+
+`resolve(intent)` returns a `ResolvedThemePair` alongside a diagnostic `ResolutionReport` containing `ReportEntry` items:
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| **`path`** | `String` | Path of the property evaluated, e.g. `identity.brandColor`. |
+| **`stage`** | `String` | Pipeline stage: Intake, Normalization, Derivation, or Enforcement. |
+| **`status`** | `ReportStatus` | Diagnostic outcome of the evaluation. |
+| **`message`** | `String` | Human-readable explanation of any adjustments made. |
+
+### ReportStatus Values
+
+- **`ReportStatus.Honored`**: Input was valid and applied as specified.
+- **`ReportStatus.Modulated`**: Input was applied with adjustment (e.g. candidate resolution).
+- **`ReportStatus.OverriddenByConstraint`**: Input was modified by an accessibility or physical constraint (e.g. contrast lifted to meet ≥ 4.5:1).
+- **`ReportStatus.Rejected`**: Input was invalid (e.g. malformed hex or non-existent path) and discarded in favor of defaults.
+- **`ReportStatus.Absent`**: No input was provided; the pipeline used a library default.
+
+## 3. Enforcement Policies
+
+Choose a CI gating policy based on your stability requirements:
+
+**Strict rejection gating (default):** Assert that `rejected.isEmpty()`. This guarantees invalid hex codes or non-existent token paths fail your build immediately.
+
+**Constraint enforcement gating:** Check `overridden.isEmpty()` to catch inputs where the engine had to lift or clamp values to meet accessibility floors.
+
+```kotlin
+val rejected = result.report.entries.filter { it.status == ReportStatus.Rejected }
+assertTrue(rejected.isEmpty(), "Invalid theme inputs: ${rejected.joinToString { "${it.path}: ${it.message}" }}")
+
+// Optional: surface constraint adjustments as notices rather than failures
+val overridden = result.report.entries.filter { it.status == ReportStatus.OverriddenByConstraint }
+if (overridden.isNotEmpty()) {
+    println("Notice: ${overridden.size} values adjusted by accessibility constraints.")
+}
+```
+
+## Verify the Test
+
+Pass an invalid hex code into your test intent and run:
+
+```bash
+./gradlew test
+```
+
+You should see the test fail with an `IllegalStateException` listing `identity.brandColor` under rejected inputs, confirming the CI gate is active.
+
+## Next Step
+
+Explore the color science behind contrast guarantees in [How Basis picks colors](/docs/theming/color-science).

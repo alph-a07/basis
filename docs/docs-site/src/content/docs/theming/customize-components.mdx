@@ -1,0 +1,101 @@
+---
+title: Customize components
+section: Theming
+order: 4
+status: published
+description: Override token paths per component family, theme-wide.
+---
+import DocSnippet from '../../../components/DocSnippet.astro';
+
+Declare a `ControlIntent` with component style patches to override border radius, padding, colors, and treatments across an entire component family — without breaking theme inheritance.
+
+## 1. Configure Component Overrides
+
+Patches are keyed by `ComponentId` inside `ComponentOverrides.byComponent`:
+
+<DocSnippet name="customize_components" />
+
+## 2. Override Precedence
+
+When resolving styles for a component, Basis evaluates patches in strict order (later stages win):
+
+1. **Mood and Domain Defaults** — base tokens derived from `MoodIntent` and `DomainIntent`.
+2. **`ControlIntent` Component Overrides**, from least to most specific:
+   - **`all`**: Applied to every variant and state.
+   - **`byState`**: Targets a specific interaction state (`StateId`).
+   - **`byVariant`**: Targets a specific variant (`VariantId`).
+   - **`byVariantState`**: Most specific — targets a variant-and-state key (`VariantStateKey`).
+3. **Per-Instance Call-Site Parameters** — modifiers or arguments passed directly at the composable call site.
+
+To style a single component instance rather than an entire family, pass modifiers directly at the call site (e.g. `Modifier.basisSurface(...)`) or wrap the subtree in a localized `BasisTheme`.
+
+Component overrides preserve the 48dp minimum touch target floor (`basisMinTouchTarget`) and automatic content color propagation (`LocalBasisContentColor`) unless explicitly replaced.
+
+## 3. Component Families
+
+Overrides target foundational component IDs in `ComponentId`:
+
+| ComponentId | Role |
+| :--- | :--- |
+| **`ComponentId.Surface`** | Structural container boxes, card backgrounds, and sheets. |
+| **`ComponentId.Interactive`** | Interactive targets including buttons, chips, and tappable surfaces. |
+| **`ComponentId.Text`** | Typography elements, labels, headers, and captions. |
+| **`ComponentId.Icon`** | Glyph assets, vector indicators, and symbols. |
+| **`ComponentId.Divider`** | Horizontal and vertical layout separator hairlines. |
+| **`ComponentId.Spacer`** | Empty layout spacing gutters. |
+
+## 4. Visual Treatments
+
+The `treatment` property in `UniversalStylePatch` sets the component's visual styling family:
+
+| Treatment | Visual Appearance |
+| :--- | :--- |
+| **`Treatment.Fill`** | Solid brand or role fill background. |
+| **`Treatment.Outline`** | Transparent body bounded by a stroke border. |
+| **`Treatment.Soft`** | Low-chroma tinted background with matching text. |
+| **`Treatment.Ghost`** | Borderless, background-free clickable target. |
+| **`Treatment.Inverse`** | Inverted high-contrast surface for toasts and snackbars. |
+
+## 5. Universal Style Properties
+
+Every component patch uses `UniversalStylePatch`. Each field references a semantic token path so changes adapt automatically between light and dark modes:
+
+| Field | Token Path Type | Description |
+| :--- | :--- | :--- |
+| **`prominence`** | `ProminenceTier` | Hierarchy level: `Primary`, `Secondary`, `Tertiary`, or `Danger`. |
+| **`treatment`** | `Treatment` | Visual treatment family applied to the component. |
+| **`surface`** | `ColorTokenPath` | Background color path. |
+| **`content`** | `ColorTokenPath` | Foreground content and text color path. |
+| **`border`** | `ColorTokenPath` | Stroke border outline color path. |
+| **`radius`** | `RadiusTokenPath` | Corner radius ladder level, e.g. `RadiusTokenPath.Level2`. |
+| **`typography`** | `TypographyTokenPath` | Text style role and font scale path. |
+| **`padding`** | `SpacingTokenPath` | Internal content padding spacing token. |
+| **`gap`** | `SpacingTokenPath` | Spacing between interior child slots and icons. |
+| **`depth`** | `DepthTokenPath` | Elevation and shadow intensity. |
+
+## Verify the Result
+
+Apply a radius override to `ComponentId.Interactive` in your `BasisIntent` and inspect a button in your preview:
+
+<div class="visual-preview-card">
+  <div class="preview-split">
+    <div class="preview-pane">
+      <div class="preview-header-label">Default Interactive Radius</div>
+      <div style="padding: 0.5rem 0;">
+        <span class="mock-button brand" style="border-radius: 4px;">Radius Level 1 (4dp)</span>
+      </div>
+    </div>
+    <div class="preview-pane">
+      <div class="preview-header-label">Overridden Interactive Radius</div>
+      <div style="padding: 0.5rem 0;">
+        <span class="mock-button brand" style="border-radius: 16px;">Radius Level 4 (16dp)</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+All interactive targets should adopt the overridden corner radius theme-wide, while their 48dp minimum touch targets and contrast ratios remain intact.
+
+## Next Step
+
+Verify your theme intent and audit contrast ratios in unit tests with [Check your theme in CI](/docs/theming/check-theme-ci).

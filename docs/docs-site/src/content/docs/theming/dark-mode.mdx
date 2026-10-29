@@ -1,0 +1,73 @@
+---
+title: Support dark mode
+section: Theming
+order: 3
+status: published
+description: Render dark and light modes with tonal elevation steps and a user-facing theme setting.
+---
+import DocSnippet from '../../../components/DocSnippet.astro';
+
+Basis follows the system dark setting by default. Pin it or let users choose.
+
+## 1. Primary Mechanism: `useDarkTheme`
+
+The `useDarkTheme` parameter on `BasisTheme` selects which resolved token tree is injected into `LocalBasisTheme`. By default it reads `isSystemInDarkTheme()`, adapting automatically to Android device settings:
+
+<DocSnippet name="support_dark_mode" />
+
+### Resolution Targets vs. Runtime Presentation
+
+- **`ControlIntent.mode`** (`ModeControl`): Configured during intent creation. Defines which mode token trees the resolver generates — by default both `ThemeMode.Light` and `ThemeMode.Dark`.
+- **`useDarkTheme`**: Configured at runtime in Compose. Selects which resolved tree is actively presented to the user.
+
+## 2. Letting Users Choose Theme Mode
+
+Map a user preference enum directly to `useDarkTheme`:
+
+<DocSnippet name="dark_mode_user_setting" />
+
+To pin a specific mode programmatically:
+
+<DocSnippet name="dark_mode_pinned" />
+
+## 3. Surface Lightness Steps
+
+Shadows are hard to see on dark backgrounds, so dark surfaces step up in lightness instead. Basis assigns distinct OKLCH luminance levels per surface role:
+
+| Surface Token | Light Mode (L) | Dark Mode (L) | Role |
+| :--- | :--- | :--- | :--- |
+| **`BasisTheme.colors.surface.recessed`** | `0.94` | `0.12` | Sunken backgrounds, scroll troughs, search fields. |
+| **`BasisTheme.colors.surface.default`** | `0.98` | `0.16` | Main screen canvas, window backgrounds. |
+| **`BasisTheme.colors.surface.elevated`** | `1.00` | `0.22` | Cards, dialogs, bottom sheets. |
+| **`BasisTheme.colors.surface.inverse`** | `0.18` | `0.92` | High-inversion containers, snackbars, toasts. |
+
+<div class="visual-preview-card">
+  <div class="preview-split">
+    <div class="preview-pane light">
+      <div class="preview-header-label">Light Mode Surfaces</div>
+      <div style="background: #f1f5f9; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem;">Recessed (L = 0.94)</div>
+      <div style="background: #f8fafc; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem;">Default (L = 0.98)</div>
+      <div style="background: #ffffff; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem; border: 1px solid #e2e8f0;">Elevated (L = 1.00)</div>
+    </div>
+    <div class="preview-pane dark">
+      <div class="preview-header-label">Dark Mode Surfaces</div>
+      <div style="background: #080c14; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem;">Recessed (L = 0.12)</div>
+      <div style="background: #0f172a; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem;">Default (L = 0.16)</div>
+      <div style="background: #1e293b; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem; border: 1px solid #334155;">Elevated (L = 0.22)</div>
+    </div>
+  </div>
+</div>
+
+## 4. Focus and Selection Contrast
+
+Focus ring contrast of ≥ 3:1 against surface and canvas is checked during resolution. Selection tints use lightness offsets that preserve body text legibility (≥ 4.5:1).
+
+## Verify the Result
+
+Toggle dark mode in your Android emulator (or set `useDarkTheme = true`).
+
+You should see your screen canvas transition to `L = 0.16` and cards to `L = 0.22`, providing distinct visual elevation without drop shadows.
+
+## Next Step
+
+Override token paths on specific components in [Customize components](/docs/theming/customize-components).

@@ -1,0 +1,37 @@
+---
+title: How Basis picks colors
+section: Theming
+order: 7
+status: published
+description: Learn how Basis models color in the OKLCH color space to ensure predictable contrast and readable text across all hues.
+---
+
+Basis models all theme colors in the **OKLCH** color space (Lightness, Chroma, Hue). This ensures uniform perceived brightness across all hues, keeping text legible in both light and dark modes.
+
+## The Flaw in Traditional HSL
+
+In legacy design systems, themes are often calculated using standard HSL. However, the human visual system is significantly more sensitive to green and yellow wavelengths than to blue wavelengths:
+
+| Color | Nominal HSL Value | Perceived Lightness (L in OKLCH) | White Text Contrast |
+| :--- | :--- | :--- | :--- |
+| **Pure Yellow** | `hsl(60, 100%, 50%)` | **0.97** (Nearly White) | 1.1:1 *(Illegible)* |
+| **Pure Blue** | `hsl(240, 100%, 50%)` | **0.45** (Dark Navy) | 8.5:1 *(Legible)* |
+
+Because HSL models both colors as having "50% lightness", automated systems relying on HSL often place unreadable white text on bright yellow buttons.
+
+## Why Yellow Brands Still Get Readable Text
+
+OKLCH models lightness according to human eye physiology:
+
+- **`L` (Lightness)**: Directly reflects human brightness perception. A color at `L = 0.70` appears equally bright whether it is yellow, green, or blue.
+- **`C` (Chroma)**: Color saturation, starting from neutral gray at `0.0`.
+- **`H` (Hue)**: Angular position on the color wheel (0° to 360°).
+
+Basis handles contrast through two mechanisms:
+
+1. **Surface fills with paired content**: When a high-lightness brand color (such as yellow, `L ≈ 0.90+`) is used as a fill, Basis detects that white text fails the contrast floor and pairs the surface with dark content text (`L ≤ 0.20`), satisfying the ≥ 4.5:1 requirement.
+2. **Foreground text and icons**: When brand-colored text or icons sit on standard surface backgrounds, Basis adjusts lightness (raising or lowering `L`) until the contrast floor is satisfied, while keeping the hue unchanged.
+
+## Gamut Mapping and Clipping
+
+Some vivid OKLCH coordinates fall outside standard sRGB display limits. Rather than allowing colors to clip arbitrarily — which causes unpredictable hue shifts — Basis applies gamut mapping that preserves hue angle and lightness while scaling back chroma to fit safely within sRGB boundaries.

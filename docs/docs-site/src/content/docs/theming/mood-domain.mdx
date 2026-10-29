@@ -1,0 +1,55 @@
+---
+title: Choose a mood and domain
+section: Theming
+order: 2
+status: published
+description: Select preset moods and domain archetypes to shape your application's density, contrast, and visual rhythm.
+---
+import DocSnippet from '../../../components/DocSnippet.astro';
+
+Add `MoodIntent` and `DomainIntent` to your `BasisIntent` to control corner radii, spacing density, contrast, and motion — without adjusting individual tokens. See the full preset, knob, and domain tables in the [Intent reference](/docs/theming/intent-reference).
+
+## 1. Configure Mood and Domain
+
+<DocSnippet name="mood_domain_intent" />
+
+## 2. Decision Guide
+
+**Start with a preset.** Choose one of the 7 archetypes on `MoodPreset` — for example `Professional` for information-dense products, `Playful` for rounded consumer apps, or `Neutral` (the default) for a balanced baseline. Full list: [MoodPreset](/docs/theming/intent-reference#moodpreset).
+
+**Touch knobs only to deviate.** Use `MoodKnobs` when you need to fine-tune a single axis away from the preset baseline — for example `density = 0.2f` for dense data tables, or `roundness = -0.3f` for sharper edges. Full list: [MoodKnobs](/docs/theming/intent-reference#moodknobs).
+
+**Select product domains.** `DomainIntent.domains` accepts a `Set<ProductDomain>`. Multiple domains can be combined; they are blended by conservative rules. If omitted, `domains` defaults to `emptySet()` (neutral baseline without industry biases). Full list: [ProductDomain](/docs/theming/intent-reference#productdomain).
+
+## Verify the Result
+
+Switch your preset from `MoodPreset.Professional` to `MoodPreset.Playful` in your `BasisIntent` and rebuild:
+
+<div class="visual-preview-card">
+  <div class="preview-split">
+    <div class="preview-pane">
+      <div class="preview-header-label">Before: MoodPreset.Professional</div>
+      <div class="preview-surface-card" style="border-radius: 4px; padding: 0.65rem;">
+        <span style="font-size: 0.8125rem;">Restrained 4dp radius, compact gutters</span>
+      </div>
+      <div>
+        <span class="mock-button brand" style="border-radius: 4px; min-height: 48px;">Action</span>
+      </div>
+    </div>
+    <div class="preview-pane">
+      <div class="preview-header-label">After: MoodPreset.Playful</div>
+      <div class="preview-surface-card" style="border-radius: 16px; padding: 0.85rem;">
+        <span style="font-size: 0.8125rem;">Rounded 16dp radius, spacious gutters</span>
+      </div>
+      <div>
+        <span class="mock-button brand" style="border-radius: 16px; min-height: 48px;">Action</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+You should see corner radii and spacing expand (for example, `BasisTheme.radius.level2` expanding from 4dp to 12dp) across your components without modifying any layout code.
+
+## Next Step
+
+Adapt your layout tokens to dark backgrounds in [Support dark mode](/docs/theming/dark-mode).

@@ -1,0 +1,82 @@
+---
+title: Set your brand color
+section: Theming
+order: 1
+status: published
+description: Configure your primary brand color to generate accessible foreground, background, selection, and focus tokens across light and dark modes.
+---
+import DocSnippet from '../../../components/DocSnippet.astro';
+
+Pass one `ColorSpec` and get verified `brand`, `selection`, and `focus` tokens across both light and dark themes — no manual palette math required.
+
+<div class="visual-preview-card">
+  <div class="preview-header-label">Token Derivation Swatch • #0284C7 (Sky Blue)</div>
+  <div class="swatch-palette-row">
+    <div class="swatch-card">
+      <div class="swatch-color-chip" style="background: #0284c7;"></div>
+      <span class="swatch-name">colors.brand.primary</span>
+      <span class="swatch-sub">Light #0284C7 • Dark #38BDF8</span>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-color-chip" style="background: #bae6fd;"></div>
+      <span class="swatch-name">colors.selection.surface</span>
+      <span class="swatch-sub">Light #BAE6FD • Dark #0C4A6E</span>
+    </div>
+    <div class="swatch-card">
+      <div class="swatch-color-chip" style="background: #0284c7; outline: 2px solid #38bdf8; outline-offset: 1px;"></div>
+      <span class="swatch-name">colors.focus.ring</span>
+      <span class="swatch-sub">Contrast ≥ 3:1 against surface</span>
+    </div>
+  </div>
+</div>
+
+## 1. Declare IdentityIntent
+
+Pass an `IdentityIntent` to `BasisIntent` specifying your brand color and desired presence:
+
+<DocSnippet name="set_brand_intent" />
+
+## 2. Configure Brand Presence
+
+The `presence` parameter determines how prominently your brand hue tints surfaces and components:
+
+| Presence | Behavior |
+| :--- | :--- |
+| **`BrandPresence.Subtle`** | Brand color reaches selection highlights, focus indicators, and gradient accents only. Surfaces remain neutral. |
+| **`BrandPresence.Balanced`** | *(Default)* Subtle surface treatments with brand fills applied to primary calls to action. |
+| **`BrandPresence.Strong`** | Balanced rules plus elevated surface tint and stronger active borders. |
+| **`BrandPresence.Dominant`** | Balanced rules plus a noticeable brand tint across default surface backgrounds. |
+
+## 3. Omitting Brand Color
+
+When `brandColor` is `null`:
+
+- **`deriveColors = true`** *(default)*: Basis synthesizes a neutral palette informed by your mood and domain signals.
+- **`deriveColors = false`**: Basis produces a fully achromatic theme (`chroma = 0.0`), delivering neutral grays across all token roles.
+
+## 4. Supporting Colors and Color Intake
+
+Specify secondary anchors using `supportingColors` (up to 3 are honored; extras are rejected during normalization).
+
+Colors are supplied using `ColorSpec`:
+
+- **`ColorSpec.Hex(value)`**: Hex string with or without leading `#`, e.g. `"#0284C7"`.
+- **`ColorSpec.Argb(argb)`**: Packed 32-bit integer in `0xAARRGGBB` format.
+- **`ColorSpec.Hsl(h, s, l, a)`**: Hue in degrees (0–360), saturation and lightness in 0–1.
+
+## Verify the Result
+
+Run your app in the emulator or preview. Press Tab or use keyboard navigation to focus an interactive button.
+
+You should see a focus ring using `BasisTheme.colors.focus.ring` anchored to your brand hue, maintaining a ≥ 3:1 contrast ratio against the background surface:
+
+<div class="visual-preview-card" style="margin-top: 1rem;">
+  <div class="preview-header-label">Focus State Preview</div>
+  <div style="padding: 0.5rem 0;">
+    <span class="mock-button focus-demo">Focused Button</span>
+  </div>
+</div>
+
+## Next Step
+
+Tune density, contrast, and layout styling for your application in [Choose a mood and domain](/docs/theming/mood-domain).

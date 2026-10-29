@@ -1,0 +1,194 @@
+---
+title: Intent reference
+section: Theming
+order: 6
+status: published
+description: Reference tables for all BasisIntent sub-intents, identity fields, mood knobs, domains, and controls.
+---
+{/* Generated from docs-model; do not edit. */}
+
+Reference specification for all sub-intents and parameters accepted by `BasisIntent`.
+
+## BasisIntent Sub-Intents
+
+`BasisIntent` is composed of four sub-intents:
+
+| Sub-Intent | Class | Description |
+| :--- | :--- | :--- |
+| **`identity`** | `IdentityIntent` | Brand anchor colors, typeface identity, and brand presence. |
+| **`mood`** | `MoodIntent` | High-level stylistic preset and continuous aesthetic knobs. |
+| **`domain`** | `DomainIntent` | Product domains and practical interaction patterns. |
+| **`control`** | `ControlIntent` | Explicit overrides for tokens, components, mode, fonts, and hard constraints. |
+
+---
+
+## IdentityIntent
+
+Configures brand anchors and color synthesis behavior:
+
+| Field | Type | Default | Contract |
+| :--- | :--- | :--- | :--- |
+| **`brandColor`** | `ColorSpec?` | `null` | Primary brand color. Intake accepts `Hex`, `Argb`, or `Hsl`. |
+| **`presence`** | `BrandPresence?` | `Balanced` | Tint prominence: `Subtle`, `Balanced`, `Strong`, or `Dominant`. |
+| **`supportingColors`** | `List<ColorSpec>` | `emptyList()` | Secondary brand anchors. Maximum 3 honored; extras are rejected. |
+| **`typography`** | `TypographyIdentity?` | `null` | Brand typeface candidates, role pins, or fallback stacks. |
+| **`deriveColors`** | `Boolean` | `true` | When `true`, palette is synthesized from brand, mood, and domain signals. |
+
+When `brandColor` is `null`:
+- If `deriveColors = true` (default), Basis synthesizes a neutral palette informed by your mood and domain signals.
+- If `deriveColors = false`, Basis produces a fully achromatic theme (`chroma = 0.0`), delivering neutral grays across all token roles.
+
+---
+
+## TypographyIdentity
+
+Typeface selection and role assignments configured under `IdentityIntent.typography`:
+
+| Field | Type | Default | Contract |
+| :--- | :--- | :--- | :--- |
+| **`candidates`** | `List<FontFamilyRef>` | `emptyList()` | Ordered candidate font families, evaluated strongest first. |
+| **`structure`** | `FontFamilyRef?` | `null` | Family pinned to the structure (heading) ladder. |
+| **`content`** | `FontFamilyRef?` | `null` | Family pinned to the content (body text) ladder. |
+| **`metadata`** | `FontFamilyRef?` | `null` | Family pinned to the metadata (caption, label) ladder. |
+
+---
+
+## MoodPreset
+
+Base stylistic templates configured on `MoodIntent.preset`:
+
+| Preset | Character |
+| :--- | :--- |
+| **`Neutral`** | Balanced defaults with no stylistic lean. |
+| **`Calm`** | Low energy, soft contrast, and quiet motion curves. |
+| **`Professional`** | Restrained, trustworthy, and information-first styling. |
+| **`Bold`** | High chroma, punchy contrast, and forward typography. |
+| **`Playful`** | Rounded corners, lively spring physics, and playful accents. |
+| **`Minimal`** | Reduced chromatic palette, generous space, and crisp borders. |
+| **`Expressive`** | Display-forward typography with expressive color dynamics. |
+
+---
+
+## MoodKnobs
+
+Continuous scalar adjustments configured on `MoodIntent.knobs`. All knobs accept normalized `Float` values between `-1.0` and `1.0`. Axes are independent; unset axes inherit the preset default:
+
+| Knob | Minimum (-1.0) | Neutral (0.0) | Maximum (+1.0) |
+| :--- | :--- | :--- | :--- |
+| **`warmth`** | Cooler color temperature | Neutral | Warmer color temperature |
+| **`chroma`** | Muted, desaturated | Neutral | Vivid, saturated |
+| **`contrast`** | Softer tonal separation | Neutral | Punchier separation |
+| **`density`** | Airy, spacious gutters | Neutral | Compact, dense layout |
+| **`roundness`** | Sharper, squared corners | Neutral | Circular, pill corners |
+| **`typographyExpressiveness`** | Restrained body type | Neutral | Expressive display type |
+| **`motionEnergy`** | Quiet transitions | Neutral | Lively spring feedback |
+| **`playfulness`** | Serious, formal tone | Neutral | Playful, bouncy feedback |
+
+---
+
+## ProductDomain
+
+Industry domains configured in `DomainIntent.domains`. Multiple domains may be combined; they are blended by conservative rules. If omitted, defaults to `emptySet()` (neutral baseline):
+
+| Domain | Description |
+| :--- | :--- |
+| **`Finance`** | Banking, investing, and monetary management products. |
+| **`Health`** | Wellness, clinical records, and healthcare services. |
+| **`Social`** | Community, messaging, and identity-driven networks. |
+| **`Productivity`** | Work-focused tools, document editors, and task trackers. |
+| **`Commerce`** | Online stores, marketplaces, and purchase checkout flows. |
+| **`Media`** | Video streaming, music players, and news readers. |
+| **`Education`** | Learning platforms, courses, and reference documentation. |
+| **`Travel`** | Booking, trip navigation, and transit tools. |
+| **`Utilities`** | System settings, hardware monitors, and file managers. |
+| **`Other`** | General-purpose applications not covered by named domains. |
+
+---
+
+## InteractionPattern
+
+Operational patterns configured in `DomainIntent.interactions`:
+
+| Pattern | Description |
+| :--- | :--- |
+| **`DataNavigation`** | Dense tables, data grids, and hierarchical record trees. |
+| **`FormsEntry`** | Multi-field entry flows, forms, and validation layouts. |
+| **`ChatMessaging`** | Message timelines, bubbles, and interactive chat inputs. |
+| **`ContentFeed`** | Infinite scrolling feeds with heterogeneous media cards. |
+| **`ContentReading`** | Focused long-form articles, documentation, and book readers. |
+| **`SearchDiscovery`** | Search bars, query suggestions, and faceted filters. |
+| **`MediaBrowse`** | Image galleries, album grids, and video carousels. |
+| **`DashboardMonitoring`** | Real-time status cards, gauges, and metric dashboards. |
+| **`CheckoutCommerce`** | Shopping carts, payment sheets, and order summaries. |
+| **`AuthOnboarding`** | Login screens, sign-up funnels, and first-run walkthroughs. |
+| **`SettingsAdmin`** | Preference lists, toggle controls, and administrative panels. |
+
+---
+
+## ControlIntent
+
+Explicit controls applied during theme resolution:
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`tokens`** | `TokenOverrides?` | `null` | Direct overrides for individual typed token paths. |
+| **`components`** | `ComponentOverrides?` | `null` | Per-component style patches keyed by `ComponentId`. |
+| **`mode`** | `ModeControl?` | `null` | Mode targets to generate during resolution. |
+| **`fonts`** | `FontControl?` | `null` | Per-level font family assignments and weight clamps. |
+| **`constraints`** | `ConstraintsControl?` | `null` | Hard accessibility floors (contrast, touch targets, clamps). |
+
+---
+
+## TokenOverrides
+
+Fine-grained overrides applied directly to token categories:
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`color`** | `ColorTokenOverrides?` | `null` | Color role overrides with mode-scoped OKLCH values. |
+| **`typography`** | `TypographyTokenOverrides?` | `null` | Typography role overrides applied to both modes. |
+| **`spacing`** | `LevelSpacingOverrides?` | `null` | Spacing ladder overrides applied to both modes. |
+| **`radius`** | `RadiusOverrides?` | `null` | Radius ladder overrides applied to both modes. |
+| **`depth`** | `DepthOverrides?` | `null` | Depth ladder overrides with mode-scoped shadow alpha. |
+| **`size`** | `SizeOverrides?` | `null` | Icon, avatar, control, and dot size overrides. |
+| **`motion`** | `MotionOverrides?` | `null` | Motion duration and spring physics overrides. |
+| **`paths`** | `Map<String, OverrideValue>` | `emptyMap()` | Dotted string path overrides, e.g. `"color.surface.default"`. |
+
+---
+
+## ModeControl
+
+Color mode policy for theme resolution:
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`preferred`** | `ThemeMode?` | `null` | Preferred mode hint (`ThemeMode.Light` or `ThemeMode.Dark`). |
+| **`targets`** | `Set<ThemeMode>` | `setOf(Light, Dark)` | Modes delivered in `ResolvedThemePair`. |
+
+---
+
+## FontControl
+
+Deep type ladder controls overriding role-level assignments:
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`levelFamilies`** | `Map<TypographyTokenPath, FontFamilyRef>` | `emptyMap()` | Explicit font family pinned per typography level. |
+| **`weightClamps`** | `Map<TypographyTokenPath, WeightClamp>` | `emptyMap()` | Inclusive min/max font weight bounds per level. |
+| **`features`** | `Map<TypographyTokenPath, FontFeatureSpec>` | `emptyMap()` | OpenType feature tags (e.g. `"tnum"`) per level. |
+
+---
+
+## ConstraintsControl
+
+Hard accessibility floors and dimension bounds:
+
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| **`minContrast`** | `ContrastConstraint?` | `null` | Minimum WCAG contrast ratio (1.0–21.0) for text and controls. |
+| **`minTouchTarget`** | `TouchTargetConstraint?` | `null` | Minimum interactive edge length floor in dp (default 48dp). |
+| **`spacing`** | `MinMaxLevels?` | `null` | Min/max bounds clamped across the spacing ladder. |
+| **`size`** | `MinMaxLevels?` | `null` | Min/max bounds clamped across control sizes. |
+| **`radius`** | `MinMaxLevels?` | `null` | Min/max bounds clamped across corner radii. |
+| **`motion`** | `MotionConstraint?` | `null` | Duration scale multiplier and reduced-motion enforcement. |
+| **`typography`** | `TypographyConstraints?` | `null` | Minimum readable font size and scale floor. |
