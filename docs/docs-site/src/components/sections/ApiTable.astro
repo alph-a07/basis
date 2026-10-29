@@ -1,0 +1,274 @@
+---
+interface Parameter {
+  name: string;
+  type: string;
+  defaultValue?: string;
+  description: string;
+  optional?: boolean;
+}
+
+interface Signature {
+  name: string;
+  declaration: string;
+  parameters: Parameter[];
+  returnType?: string;
+  kdoc?: string;
+}
+
+interface Sample {
+  id: string;
+  title: string;
+  code: string;
+  description?: string;
+}
+
+interface Props {
+  signatures?: Signature[];
+  samples?: Sample[];
+}
+
+const { signatures = [], samples = [] } = Astro.props;
+---
+
+<div class="api-section">
+  <!-- Signatures & Parameters -->
+  {signatures.map((sig, idx) => (
+    <div class="signature-container">
+      {signatures.length > 1 && (
+        <h3 class="signature-title">Overload {idx + 1}: <code>{sig.name}</code></h3>
+      )}
+
+      <!-- Declaration Block -->
+      <div class="code-wrapper">
+        <pre class="code-block"><code>{sig.declaration}</code></pre>
+      </div>
+
+      <!-- Parameters Table -->
+      <div class="params-block">
+        {signatures.length > 1 ? (
+          <h4 class="params-heading">Parameters</h4>
+        ) : (
+          <h3 class="params-heading">Parameters</h3>
+        )}
+        {sig.parameters && sig.parameters.length > 0 ? (
+          <div class="table-responsive">
+            <table class="params-table">
+              <thead>
+                <tr>
+                  <th scope="col">Parameter</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Default</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sig.parameters.map((param) => (
+                  <tr>
+                    <td class="param-name-cell">
+                      <code>{param.name}</code>
+                    </td>
+                    <td class="param-type-cell">
+                      <span class="type-badge">{param.type}</span>
+                    </td>
+                    <td class="param-default-cell">
+                      {param.defaultValue ? (
+                        <code>{param.defaultValue}</code>
+                      ) : (
+                        <span class="required-badge">required</span>
+                      )}
+                    </td>
+                    <td class="param-desc-cell">
+                      {param.description}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p class="empty-params">This function takes no parameters.</p>
+        )}
+      </div>
+    </div>
+  ))}
+
+  <!-- Sample Gallery -->
+  {samples.length > 0 && (
+    <div class="samples-block">
+      <h3 class="section-subtitle">Usage Samples</h3>
+      <div class="samples-list">
+        {samples.map((sample) => (
+          <div class="sample-card">
+            <div class="sample-header">
+              <h4 class="sample-title">{sample.title}</h4>
+              {sample.description && <p class="sample-desc">{sample.description}</p>}
+            </div>
+            <div class="code-wrapper">
+              <pre class="code-block"><code>{sample.code}</code></pre>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .api-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .signature-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .signature-title {
+    font-size: 1.15rem;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+  }
+
+  .signature-title code {
+    color: var(--docs-accent, #58a6ff);
+  }
+
+  .code-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .code-block {
+    background: var(--docs-code-bg, #161b22);
+    border: 1px solid var(--docs-code-border, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+  }
+
+  .params-block {
+    margin-top: 0.5rem;
+  }
+
+  .params-heading,
+  .section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--docs-text, #e6edf3);
+    margin: 0 0 0.875rem 0;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    background: var(--docs-surface, #161b22);
+  }
+
+  .params-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  .params-table th {
+    padding: 0.75rem 1rem;
+    background: var(--docs-surface-recessed, #0d0f12);
+    color: var(--docs-text-muted, #8b949e);
+    font-weight: 600;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+  }
+
+  .params-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    color: var(--docs-text, #c9d1d9);
+    vertical-align: top;
+  }
+
+  .params-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .param-name-cell code {
+    color: var(--docs-text, #e6edf3);
+    font-weight: 600;
+    font-size: 0.8125rem;
+  }
+
+  .type-badge {
+    color: var(--docs-accent, #58a6ff);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+  }
+
+  .required-badge {
+    color: #f85149;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .param-default-cell code {
+    font-size: 0.8125rem;
+    color: var(--docs-text-muted, #8b949e);
+  }
+
+  .param-desc-cell {
+    line-height: 1.45;
+  }
+
+  .empty-params {
+    color: var(--docs-text-muted, #8b949e);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .samples-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sample-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .sample-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .sample-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+  }
+
+  .sample-desc {
+    font-size: 0.875rem;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0;
+    line-height: 1.45;
+  }
+</style>

@@ -1,0 +1,163 @@
+---
+import LifecycleChips from '../sections/LifecycleChips.astro';
+import ApiTable from '../sections/ApiTable.astro';
+import GuidelinesCard from '../sections/GuidelinesCard.astro';
+import A11yFacts from '../sections/A11yFacts.astro';
+
+interface Props {
+  modifier: any;
+  sidecar?: any;
+}
+
+const { modifier, sidecar } = Astro.props;
+
+function getA11yNarrative(sidecarEntry: any): string | undefined {
+  if (!sidecarEntry?.body) return undefined;
+  const match = sidecarEntry.body.match(/##\s+Accessibility\s*\n+([\s\S]*?)(?=\n##|\s*$)/i);
+  return match ? match[1].trim() : undefined;
+}
+
+const a11yNarrative = getA11yNarrative(sidecar);
+---
+
+<article class="modifier-page" data-modifier-id={modifier.id}>
+  <!-- Header -->
+  <header class="modifier-header">
+    <div class="header-meta-row">
+      <LifecycleChips
+        lifecycle={modifier.lifecycle}
+        family={modifier.family}
+        kind="modifier"
+        sourceUrl={modifier.sourceUrl}
+      />
+    </div>
+
+    <h1 class="modifier-title">{modifier.name}</h1>
+    <p class="modifier-summary">{modifier.summary}</p>
+    {modifier.description && modifier.description !== modifier.summary && (
+      <p class="modifier-description">{modifier.description}</p>
+    )}
+  </header>
+
+  <div class="modifier-body">
+    <!-- Quick Start -->
+    {modifier.overview?.quickStartSample && (
+      <section class="modifier-section">
+        <h2 id="quick-start">Quick Start</h2>
+        <div class="code-wrapper">
+          <pre class="code-block"><code>{modifier.overview.quickStartSample}</code></pre>
+        </div>
+      </section>
+    )}
+
+    <!-- Signatures and Parameters -->
+    {modifier.api && (
+      <section class="modifier-section">
+        <h2 id="signatures">API Signatures & Parameters</h2>
+        <ApiTable
+          signatures={modifier.api.signatures}
+          samples={modifier.api.samples}
+        />
+      </section>
+    )}
+
+    <!-- Accessibility -->
+    {modifier.accessibility && (
+      <section class="modifier-section">
+        <h2 id="accessibility">Accessibility Behavior</h2>
+        <A11yFacts
+          accessibility={modifier.accessibility}
+          narrative={a11yNarrative}
+        />
+      </section>
+    )}
+
+    <!-- Guidelines -->
+    {sidecar?.data?.guidelines && (
+      <section class="modifier-section">
+        <h2 id="guidelines">Usage Guidelines</h2>
+        <GuidelinesCard
+          guidelines={sidecar.data.guidelines}
+        />
+      </section>
+    )}
+  </div>
+</article>
+
+<style>
+  .modifier-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .modifier-header {
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    padding-bottom: 1.5rem;
+  }
+
+  .header-meta-row {
+    margin-bottom: 0.75rem;
+  }
+
+  .modifier-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--docs-text, #e6edf3);
+    margin: 0.35rem 0 0.75rem 0;
+  }
+
+  .modifier-summary {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0 0 1rem 0;
+  }
+
+  .modifier-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--docs-text, #c9d1d9);
+    margin: 0;
+  }
+
+  .modifier-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .modifier-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+    scroll-margin-top: 5rem;
+  }
+
+  .code-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .code-block {
+    background: var(--docs-code-bg, #161b22);
+    border: 1px solid var(--docs-code-border, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+  }
+</style>

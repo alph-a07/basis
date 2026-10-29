@@ -1,0 +1,206 @@
+---
+interface GuidelinesData {
+  do?: string[];
+  dont?: string[];
+  notes?: string[];
+}
+
+interface Props {
+  guidelines?: GuidelinesData;
+}
+
+const { guidelines } = Astro.props;
+
+const doList = guidelines?.do || [];
+const dontList = guidelines?.dont || [];
+const notesList = guidelines?.notes || [];
+const hasGuidelines = doList.length > 0 || dontList.length > 0 || notesList.length > 0;
+---
+
+<div class="guidelines-section">
+  {hasGuidelines ? (
+    <div class="guidelines-container">
+      <div class="guidelines-grid">
+        <!-- Do Card -->
+        {doList.length > 0 && (
+          <div class="guideline-card do-card">
+            <div class="card-header">
+              <span class="card-icon do-icon" aria-hidden="true">✓</span>
+              <h3 class="card-title">Do</h3>
+            </div>
+            <ul class="guideline-list">
+              {doList.map((item) => (
+                <li class="guideline-item">{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Don't Card -->
+        {dontList.length > 0 && (
+          <div class="guideline-card dont-card">
+            <div class="card-header">
+              <span class="card-icon dont-icon" aria-hidden="true">✕</span>
+              <h3 class="card-title">Don't</h3>
+            </div>
+            <ul class="guideline-list">
+              {dontList.map((item) => (
+                <li class="guideline-item">{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <!-- Notes Block (if present) -->
+      {notesList.length > 0 && (
+        <div class="notes-card">
+          <h3 class="notes-title">Implementation Notes</h3>
+          <ul class="notes-list">
+            {notesList.map((note) => (
+              <li class="note-item">{note}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  ) : (
+    <div class="guidelines-empty">
+      <p>No specific usage guidelines provided. Follow general Basis design principles.</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .guidelines-section {
+    margin: 1.5rem 0;
+  }
+
+  .guidelines-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .guidelines-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .guideline-card {
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .do-card {
+    background: rgba(46, 160, 67, 0.08);
+    border: 1px solid rgba(46, 160, 67, 0.25);
+  }
+
+  .dont-card {
+    background: rgba(248, 81, 73, 0.08);
+    border: 1px solid rgba(248, 81, 73, 0.25);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.8125rem;
+    font-weight: 800;
+  }
+
+  .do-icon {
+    background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.2));
+    color: var(--docs-status-pass-text, #3fb950);
+  }
+
+  .dont-icon {
+    background: var(--docs-status-fail-bg, rgba(248, 81, 73, 0.2));
+    color: var(--docs-status-fail-text, #f85149);
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .do-card .card-title {
+    color: var(--docs-status-pass-text, #3fb950);
+  }
+
+  .dont-card .card-title {
+    color: var(--docs-status-fail-text, #f85149);
+  }
+
+  .guideline-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    color: var(--docs-text, #c9d1d9);
+  }
+
+  .guideline-item {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .notes-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .notes-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--docs-text, #e6edf3);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .notes-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--docs-text-muted, #8b949e);
+  }
+
+  .note-item {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .guidelines-empty {
+    padding: 1.5rem;
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    color: var(--docs-text-muted, #8b949e);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .guidelines-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

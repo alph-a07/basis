@@ -1,0 +1,247 @@
+---
+import LifecycleChips from '../sections/LifecycleChips.astro';
+import AnatomyOverlay from '../sections/AnatomyOverlay.astro';
+import VariantStateGrid from '../sections/VariantStateGrid.astro';
+import ApiTable from '../sections/ApiTable.astro';
+import OverridesMatrix from '../sections/OverridesMatrix.astro';
+import A11yFacts from '../sections/A11yFacts.astro';
+import GuidelinesCard from '../sections/GuidelinesCard.astro';
+
+interface Props {
+  component: any;
+  sidecar?: any;
+  activeTab: 'overview' | 'api' | 'overrides' | 'accessibility';
+}
+
+const { component, sidecar, activeTab } = Astro.props;
+
+function getA11yNarrative(sidecarEntry: any): string | undefined {
+  if (!sidecarEntry?.body) return undefined;
+  const match = sidecarEntry.body.match(/##\s+Accessibility\s*\n+([\s\S]*?)(?=\n##|\s*$)/i);
+  return match ? match[1].trim() : undefined;
+}
+
+const a11yNarrative = getA11yNarrative(sidecar);
+
+const tabs = [
+  { id: 'overview', label: 'Overview', path: `/docs/components/${component.id}` },
+  { id: 'api', label: 'API', path: `/docs/components/${component.id}/api` },
+  { id: 'overrides', label: 'Overrides', path: `/docs/components/${component.id}/overrides` },
+  { id: 'accessibility', label: 'Accessibility', path: `/docs/components/${component.id}/accessibility` },
+];
+---
+
+<article class="component-page" data-component-id={component.id}>
+  <!-- Component Header -->
+  <header class="component-header">
+    <div class="header-meta-row">
+      <LifecycleChips
+        lifecycle={component.lifecycle}
+        family={component.family}
+        kind={component.kind || 'component'}
+        sourceUrl={component.sourceUrl}
+      />
+    </div>
+
+    <h1 class="component-title">{component.name}</h1>
+    <p class="component-summary">{component.summary}</p>
+    {component.description && component.description !== component.summary && (
+      <p class="component-description">{component.description}</p>
+    )}
+
+    <!-- 4 Route-Per-Tab Navigation -->
+    <nav class="component-tabs" aria-label="Component sections">
+      {tabs.map((tab) => {
+        const isActive = activeTab === tab.id;
+        return (
+          <a
+            href={tab.path}
+            class={`tab-link ${isActive ? 'active' : ''}`}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {tab.label}
+          </a>
+        );
+      })}
+    </nav>
+  </header>
+
+  <!-- Tab Content Body -->
+  <div class="tab-body">
+    <!-- Overview Tab -->
+    {activeTab === 'overview' && (
+      <section class="tab-pane" aria-labelledby="tab-overview">
+        <h2 id="quick-start">Quick Start</h2>
+        <div class="quickstart-wrapper">
+          <pre class="code-block"><code>{component.overview?.quickStartSample}</code></pre>
+        </div>
+
+        <h2 id="anatomy">Anatomy</h2>
+        <AnatomyOverlay
+          anatomy={component.overview?.anatomy}
+          componentName={component.name}
+        />
+
+        <h2 id="variants">Variants & States</h2>
+        <VariantStateGrid
+          variants={component.overview?.variants}
+          states={component.overview?.states}
+          gallery={component.overview?.gallery}
+        />
+
+        <h2 id="guidelines">Usage Guidelines</h2>
+        <GuidelinesCard
+          guidelines={sidecar?.data?.guidelines}
+        />
+      </section>
+    )}
+
+    <!-- API Tab -->
+    {activeTab === 'api' && (
+      <section class="tab-pane" aria-labelledby="tab-api">
+        <h2 id="signatures">Signatures & Parameters</h2>
+        <ApiTable
+          signatures={component.api?.signatures}
+          samples={component.api?.samples}
+        />
+      </section>
+    )}
+
+    <!-- Overrides Tab -->
+    {activeTab === 'overrides' && (
+      <section class="tab-pane" aria-labelledby="tab-overrides">
+        <h2 id="universal-fields">Universal Overrides</h2>
+        <OverridesMatrix
+          overrides={component.overrides}
+        />
+      </section>
+    )}
+
+    <!-- Accessibility Tab -->
+    {activeTab === 'accessibility' && (
+      <section class="tab-pane" aria-labelledby="tab-accessibility">
+        <h2 id="accessibility-facts">Accessibility Facts & Contracts</h2>
+        <A11yFacts
+          accessibility={component.accessibility}
+          narrative={a11yNarrative}
+        />
+      </section>
+    )}
+  </div>
+</article>
+
+<style>
+  .component-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .component-header {
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    padding-bottom: 1.5rem;
+  }
+
+  .header-meta-row {
+    margin-bottom: 0.75rem;
+  }
+
+  .component-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--docs-text, #e6edf3);
+    margin: 0.35rem 0 0.75rem 0;
+  }
+
+  .component-summary {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0 0 1rem 0;
+  }
+
+  .component-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--docs-text, #c9d1d9);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .component-tabs {
+    display: flex;
+    gap: 1.5rem;
+    border-top: 1px solid var(--docs-border-subtle, #161b22);
+    padding-top: 1rem;
+    overflow-x: auto;
+  }
+
+  .tab-link {
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--docs-text-muted, #8b949e);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-link:hover {
+    color: var(--docs-text, #e6edf3);
+  }
+
+  .tab-link.active {
+    color: var(--docs-accent, #58a6ff);
+    border-bottom-color: var(--docs-accent, #58a6ff);
+  }
+
+  .tab-link:focus-visible {
+    outline: 2px solid var(--docs-focus-ring, #58a6ff);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .tab-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .tab-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--docs-text, #e6edf3);
+    margin: 1.5rem 0 0.5rem 0;
+    scroll-margin-top: 5rem;
+  }
+
+  h2:first-child {
+    margin-top: 0;
+  }
+
+  .quickstart-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .code-block {
+    background: var(--docs-code-bg, #161b22);
+    border: 1px solid var(--docs-code-border, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--docs-text, #e6edf3);
+    margin: 0;
+  }
+</style>

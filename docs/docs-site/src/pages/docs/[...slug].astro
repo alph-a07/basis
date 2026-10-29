@@ -1,5 +1,7 @@
 ---
 import DocsLayout from '../../layouts/DocsLayout.astro';
+import ComponentPage from '../../components/templates/ComponentPage.astro';
+import ModifierPage from '../../components/templates/ModifierPage.astro';
 import { getCollection } from 'astro:content';
 import type { TocItem } from '../../types/navigation';
 
@@ -10,19 +12,30 @@ export async function getStaticPaths() {
 
   for (const comp of components) {
     const sidecar = sidecars.find((s) => s.data.id === comp.data.id);
-    const tabs = ['', 'api', 'overrides', 'accessibility'];
 
-    for (const tab of tabs) {
-      const slug = tab ? `components/${comp.data.id}/${tab}` : `components/${comp.data.id}`;
+    if (comp.data.kind === 'modifier') {
       paths.push({
-        params: { slug },
+        params: { slug: `modifiers/${comp.data.id}` },
         props: {
-          type: 'component',
-          component: comp,
+          type: 'modifier',
+          modifier: comp,
           sidecar,
-          activeTab: tab || 'overview',
         },
       });
+    } else {
+      const tabs = ['', 'api', 'overrides', 'accessibility'];
+      for (const tab of tabs) {
+        const slug = tab ? `components/${comp.data.id}/${tab}` : `components/${comp.data.id}`;
+        paths.push({
+          params: { slug },
+          props: {
+            type: 'component',
+            component: comp,
+            sidecar,
+            activeTab: tab || 'overview',
+          },
+        });
+      }
     }
   }
 
@@ -150,30 +163,32 @@ if (props.type === 'component') {
     headings = [
       { depth: 2, slug: 'quick-start', text: 'Quick Start' },
       { depth: 2, slug: 'anatomy', text: 'Anatomy' },
-      { depth: 2, slug: 'variants', text: 'Variants' },
-      { depth: 2, slug: 'states', text: 'States' },
-      { depth: 2, slug: 'guidelines', text: 'Guidelines' },
+      { depth: 2, slug: 'variants', text: 'Variants & States' },
+      { depth: 2, slug: 'guidelines', text: 'Usage Guidelines' },
     ];
   } else if (activeTab === 'api') {
     headings = [
-      { depth: 2, slug: 'signatures', text: 'Signatures' },
-      { depth: 2, slug: 'parameters', text: 'Parameters' },
-      { depth: 2, slug: 'sample-gallery', text: 'Sample Gallery' },
+      { depth: 2, slug: 'signatures', text: 'Signatures & Parameters' },
     ];
   } else if (activeTab === 'overrides') {
     headings = [
-      { depth: 2, slug: 'universal-fields', text: 'Universal Fields' },
-      { depth: 2, slug: 'variant-overrides', text: 'Variant Overrides' },
-      { depth: 2, slug: 'state-overrides', text: 'State Overrides' },
+      { depth: 2, slug: 'universal-fields', text: 'Universal Overrides' },
     ];
   } else if (activeTab === 'accessibility') {
     headings = [
-      { depth: 2, slug: 'accessibility-facts', text: 'Accessibility Facts' },
-      { depth: 2, slug: 'touch-targets', text: 'Touch Targets' },
-      { depth: 2, slug: 'test-report', text: 'Test Report' },
-      { depth: 2, slug: 'keyboard-interaction', text: 'Keyboard Interaction' },
+      { depth: 2, slug: 'accessibility-facts', text: 'Accessibility Facts & Contracts' },
     ];
   }
+} else if (props.type === 'modifier') {
+  const modifier = props.modifier.data;
+  pageTitle = `${modifier.name} — Modifier`;
+  pageDescription = modifier.summary;
+  headings = [
+    ...(modifier.overview?.quickStartSample ? [{ depth: 2, slug: 'quick-start', text: 'Quick Start' }] : []),
+    ...(modifier.api ? [{ depth: 2, slug: 'signatures', text: 'API Signatures & Parameters' }] : []),
+    ...(modifier.accessibility ? [{ depth: 2, slug: 'accessibility', text: 'Accessibility Behavior' }] : []),
+    ...(props.sidecar?.data?.guidelines ? [{ depth: 2, slug: 'guidelines', text: 'Usage Guidelines' }] : []),
+  ];
 } else {
   pageTitle = `${props.stub.title} — ${props.stub.section}`;
   pageDescription = props.stub.description;
@@ -183,223 +198,16 @@ if (props.type === 'component') {
 
 <DocsLayout title={pageTitle} description={pageDescription} headings={headings}>
   {props.type === 'component' ? (
-    <article class="component-doc">
-      <!-- Component Header -->
-      <header class="component-header">
-        <div class="component-meta">
-          <span class="family-badge">{props.component.data.family}</span>
-          <span class={`status-badge status-${props.component.data.lifecycle.status}`}>
-            {props.component.data.lifecycle.status}
-          </span>
-          {props.component.data.lifecycle.introducedIn && (
-            <span class="version-introduced">added in {props.component.data.lifecycle.introducedIn}</span>
-          )}
-        </div>
-
-        <h1 class="component-title">{props.component.data.name}</h1>
-        <p class="component-summary">{props.component.data.summary}</p>
-
-        <!-- 4 Route-per-tab Navigation -->
-        <nav class="component-tabs" aria-label="Component sections">
-          {[
-            { id: 'overview', label: 'Overview', path: `/docs/components/${props.component.data.id}` },
-            { id: 'api', label: 'API', path: `/docs/components/${props.component.data.id}/api` },
-            { id: 'overrides', label: 'Overrides', path: `/docs/components/${props.component.data.id}/overrides` },
-            { id: 'accessibility', label: 'Accessibility', path: `/docs/components/${props.component.data.id}/accessibility` },
-          ].map((tab) => {
-            const isActive = props.activeTab === tab.id;
-            return (
-              <a
-                href={tab.path}
-                class={`tab-link ${isActive ? 'active' : ''}`}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {tab.label}
-              </a>
-            );
-          })}
-        </nav>
-      </header>
-
-      <!-- Tab Content -->
-      <div class="tab-content">
-        {props.activeTab === 'overview' && (
-          <section class="tab-pane">
-            <h2 id="quick-start">Quick Start</h2>
-            <div class="code-block-wrapper">
-              <pre class="code-block"><code>{props.component.data.overview.quickStartSample}</code></pre>
-            </div>
-
-            <h2 id="anatomy">Anatomy</h2>
-            <p>The {props.component.data.name} component is composed of the following structural parts:</p>
-            <ul class="parts-list">
-              {props.component.data.overview.anatomy.parts.map((part: any) => (
-                <li class="part-item">
-                  <div class="part-header">
-                    <strong class="part-name">{part.name}</strong>
-                    <code class="part-id">{part.id}</code>
-                    <span class={`part-presence ${part.presence}`}>{part.presence}</span>
-                  </div>
-                  <p class="part-desc">{part.description}</p>
-                </li>
-              ))}
-            </ul>
-
-            <h2 id="variants">Variants</h2>
-            <p>Supported visual variants and prominence tiers:</p>
-            <div class="variant-chips">
-              {props.component.data.overview.variants.map((variant: string) => (
-                <span class="variant-chip">{variant}</span>
-              ))}
-            </div>
-
-            <h2 id="states">States</h2>
-            <p>Interaction and visual states handled by the component:</p>
-            <div class="state-chips">
-              {props.component.data.overview.states.map((state: string) => (
-                <span class="state-chip">{state}</span>
-              ))}
-            </div>
-
-            <h2 id="guidelines">Guidelines</h2>
-            {props.sidecar?.data?.guidelines ? (
-              <div class="guidelines-grid">
-                <div class="guideline-card do-card">
-                  <h3 class="guideline-title">Do</h3>
-                  <ul>
-                    {props.sidecar.data.guidelines.do.map((rule: string) => (
-                      <li>{rule}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div class="guideline-card dont-card">
-                  <h3 class="guideline-title">Don't</h3>
-                  <ul>
-                    {props.sidecar.data.guidelines.dont.map((rule: string) => (
-                      <li>{rule}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ) : (
-              <p>Follow standard Jetpack Compose action design guidelines.</p>
-            )}
-          </section>
-        )}
-
-        {props.activeTab === 'api' && (
-          <section class="tab-pane">
-            <h2 id="signatures">Signatures</h2>
-            {props.component.data.api.signatures.map((sig: any) => (
-              <div class="signature-block">
-                <pre class="code-block"><code>{sig.declaration}</code></pre>
-              </div>
-            ))}
-
-            <h2 id="parameters">Parameters</h2>
-            <table class="params-table">
-              <thead>
-                <tr>
-                  <th>Parameter</th>
-                  <th>Type</th>
-                  <th>Default</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {props.component.data.api.signatures[0]?.parameters.map((param: any) => (
-                  <tr>
-                    <td><code>{param.name}</code></td>
-                    <td><span class="type-badge">{param.type}</span></td>
-                    <td>{param.defaultValue ? <code>{param.defaultValue}</code> : <span class="required-badge">required</span>}</td>
-                    <td>{param.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <h2 id="sample-gallery">Sample Gallery</h2>
-            <p>Compiled and verified interactive sample gallery demonstrating common use cases.</p>
-            <div class="code-block-wrapper">
-              <pre class="code-block"><code>{props.component.data.overview.quickStartSample}</code></pre>
-            </div>
-          </section>
-        )}
-
-        {props.activeTab === 'overrides' && (
-          <section class="tab-pane">
-            <h2 id="universal-fields">Universal Fields</h2>
-            <p>Fields patchable across any variant and state:</p>
-            <ul class="field-list">
-              {props.component.data.overrides.universalFields.map((field: string) => (
-                <li><code>{field}</code></li>
-              ))}
-            </ul>
-
-            <h2 id="variant-overrides">Variant Overrides</h2>
-            <p>Token overrides scoped to specific visual prominence variants.</p>
-
-            <h2 id="state-overrides">State Overrides</h2>
-            <p>Token overrides applied during hover, press, focus, and disabled states.</p>
-          </section>
-        )}
-
-        {props.activeTab === 'accessibility' && (
-          <section class="tab-pane">
-            <h2 id="accessibility-facts">Accessibility Facts</h2>
-            <div class="fact-card">
-              <div class="fact-row">
-                <span class="fact-label">Accessibility Role:</span>
-                <code class="fact-value">{props.component.data.accessibility.role}</code>
-              </div>
-              <div class="fact-row">
-                <span class="fact-label">Focusable:</span>
-                <span class="fact-value">{props.component.data.accessibility.isFocusable ? 'Yes' : 'No'}</span>
-              </div>
-              <div class="fact-row">
-                <span class="fact-label">Screen Reader Traversal:</span>
-                <span class="fact-value">{props.component.data.accessibility.screenReaderAnnouncement}</span>
-              </div>
-            </div>
-
-            <h2 id="touch-targets">Touch Targets</h2>
-            <p>
-              Basis enforces minimum touch target geometry of{' '}
-              <strong>{props.component.data.accessibility.touchTarget.minWidthDp}dp</strong> width by{' '}
-              <strong>{props.component.data.accessibility.touchTarget.minHeightDp}dp</strong> height.
-            </p>
-
-            <h2 id="test-report">Test Report</h2>
-            {props.component.data.accessibility.report ? (
-              <div class="report-box">
-                <div class="report-header">
-                  <span class={`report-status status-${props.component.data.accessibility.report.status}`}>
-                    {props.component.data.accessibility.report.status.toUpperCase()}
-                  </span>
-                  <span class="report-timestamp">{props.component.data.accessibility.report.timestamp}</span>
-                </div>
-                <ul class="check-list">
-                  {props.component.data.accessibility.report.checks.map((check: string) => (
-                    <li class="check-item">
-                      <span class="check-icon" aria-hidden="true">✓</span>
-                      <span>{check}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p>No automated accessibility report attached.</p>
-            )}
-
-            <h2 id="keyboard-interaction">Keyboard Interaction</h2>
-            <p>
-              Supports activation via <kbd>Enter</kbd> and <kbd>Space</kbd>. Focus indicators adhere to
-              enhanced contrast ratios.
-            </p>
-          </section>
-        )}
-      </div>
-    </article>
+    <ComponentPage
+      component={props.component.data}
+      sidecar={props.sidecar}
+      activeTab={props.activeTab}
+    />
+  ) : props.type === 'modifier' ? (
+    <ModifierPage
+      modifier={props.modifier.data}
+      sidecar={props.sidecar}
+    />
   ) : (
     <article class="stub-doc">
       <header class="stub-header">
@@ -423,27 +231,17 @@ if (props.type === 'component') {
 </DocsLayout>
 
 <style>
-  .component-doc,
   .stub-doc {
     display: flex;
     flex-direction: column;
     gap: 2rem;
   }
 
-  .component-header,
   .stub-header {
     border-bottom: 1px solid var(--docs-border-subtle, #21262d);
     padding-bottom: 1.5rem;
   }
 
-  .component-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .family-badge,
   .section-badge {
     font-size: 0.75rem;
     font-weight: 700;
@@ -452,32 +250,6 @@ if (props.type === 'component') {
     color: var(--docs-text-muted, #8b949e);
   }
 
-  .status-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.15rem 0.5rem;
-    border-radius: 9999px;
-    text-transform: capitalize;
-  }
-
-  .status-stable {
-    background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.15));
-    color: var(--docs-status-pass-text, #3fb950);
-    border: 1px solid var(--docs-status-pass-border, rgba(46, 160, 67, 0.3));
-  }
-
-  .status-experimental {
-    background: var(--docs-status-warn-bg, rgba(210, 153, 34, 0.15));
-    color: var(--docs-status-warn-text, #d29922);
-    border: 1px solid var(--docs-status-warn-border, rgba(210, 153, 34, 0.3));
-  }
-
-  .version-introduced {
-    font-size: 0.8rem;
-    color: var(--docs-text-muted, #6e7681);
-  }
-
-  .component-title,
   .stub-title {
     font-size: 2.25rem;
     font-weight: 800;
@@ -486,330 +258,31 @@ if (props.type === 'component') {
     color: var(--docs-text, #e6edf3);
   }
 
-  .component-summary,
   .stub-summary {
     font-size: 1.125rem;
     line-height: 1.6;
     color: var(--docs-text-muted, #8b949e);
-    margin: 0 0 1.5rem 0;
+    margin: 0;
   }
 
-  .component-tabs {
-    display: flex;
-    gap: 1.5rem;
-    border-top: 1px solid var(--docs-border-subtle, #161b22);
-    padding-top: 1rem;
-    overflow-x: auto;
-  }
-
-  .tab-link {
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--docs-text-muted, #8b949e);
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
-  }
-
-  .tab-link:hover {
-    color: var(--docs-text, #e6edf3);
-  }
-
-  .tab-link.active {
-    color: var(--docs-accent, #58a6ff);
-    border-bottom-color: var(--docs-accent, #58a6ff);
-  }
-
-  .tab-link:focus-visible {
-    outline: 2px solid var(--docs-focus-ring, #58a6ff);
-    outline-offset: 4px;
-    border-radius: 2px;
-  }
-
-  .tab-content {
+  .stub-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   h2 {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.01em;
-    margin: 2rem 0 1rem 0;
+    margin: 1.5rem 0 0.5rem 0;
     color: var(--docs-text, #e6edf3);
     scroll-margin-top: 5rem;
-  }
-
-  h2:first-child {
-    margin-top: 0;
   }
 
   p {
     line-height: 1.65;
     color: var(--docs-text, #c9d1d9);
-    margin: 0 0 1rem 0;
-  }
-
-  .code-block-wrapper,
-  .signature-block {
-    margin: 1rem 0;
-  }
-
-  .code-block {
-    background: var(--docs-code-bg, #161b22);
-    border: 1px solid var(--docs-code-border, #21262d);
-    border-radius: 8px;
-    padding: 1.25rem;
-    overflow-x: auto;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--docs-text, #e6edf3);
-  }
-
-  .parts-list {
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .part-item {
-    background: var(--docs-surface, #161b22);
-    border: 1px solid var(--docs-border-subtle, #21262d);
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-  }
-
-  .part-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.35rem;
-  }
-
-  .part-name {
-    color: var(--docs-text, #e6edf3);
-    font-size: 1rem;
-  }
-
-  .part-id {
-    background: var(--docs-surface-recessed, #21262d);
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    color: var(--docs-text-muted, #8b949e);
-  }
-
-  .part-presence {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-  }
-
-  .part-presence.required {
-    color: #f85149;
-  }
-
-  .part-presence.optional {
-    color: var(--docs-text-muted, #8b949e);
-  }
-
-  .part-desc {
     margin: 0;
-    font-size: 0.9rem;
-    color: var(--docs-text-muted, #8b949e);
-  }
-
-  .variant-chips,
-  .state-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 0.5rem 0 1.5rem 0;
-  }
-
-  .variant-chip,
-  .state-chip {
-    background: var(--docs-surface, #161b22);
-    border: 1px solid var(--docs-border-subtle, #21262d);
-    color: var(--docs-accent, #58a6ff);
-    padding: 0.35rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  .guidelines-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin: 1rem 0;
-  }
-
-  .guideline-card {
-    border-radius: 8px;
-    padding: 1.25rem;
-  }
-
-  .do-card {
-    background: rgba(46, 160, 67, 0.08);
-    border: 1px solid rgba(46, 160, 67, 0.25);
-  }
-
-  .dont-card {
-    background: rgba(248, 81, 73, 0.08);
-    border: 1px solid rgba(248, 81, 73, 0.25);
-  }
-
-  .guideline-title {
-    font-size: 1.1rem;
-    margin: 0 0 0.75rem 0;
-  }
-
-  .do-card .guideline-title {
-    color: #3fb950;
-  }
-
-  .dont-card .guideline-title {
-    color: #f85149;
-  }
-
-  .guideline-card ul {
-    margin: 0;
-    padding-left: 1.25rem;
-    color: var(--docs-text, #c9d1d9);
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-
-  .params-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0 2rem 0;
-    font-size: 0.875rem;
-  }
-
-  .params-table th,
-  .params-table td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
-    text-align: left;
-  }
-
-  .params-table th {
-    color: var(--docs-text-muted, #8b949e);
-    font-weight: 600;
-  }
-
-  .params-table td {
-    color: var(--docs-text, #c9d1d9);
-  }
-
-  .type-badge {
-    color: var(--docs-accent, #58a6ff);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.8rem;
-  }
-
-  .required-badge {
-    color: #f85149;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-
-  .fact-card {
-    background: var(--docs-surface, #161b22);
-    border: 1px solid var(--docs-border-subtle, #21262d);
-    border-radius: 8px;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 1rem 0;
-  }
-
-  .fact-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .fact-label {
-    color: var(--docs-text-muted, #8b949e);
-    font-size: 0.9rem;
-  }
-
-  .fact-value {
-    color: var(--docs-text, #e6edf3);
-    font-weight: 500;
-  }
-
-  .report-box {
-    background: var(--docs-surface, #161b22);
-    border: 1px solid var(--docs-border-subtle, #21262d);
-    border-radius: 8px;
-    padding: 1.25rem;
-    margin: 1rem 0;
-  }
-
-  .report-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
-  }
-
-  .report-status {
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-  }
-
-  .report-status.status-pass {
-    background: rgba(46, 160, 67, 0.2);
-    color: #3fb950;
-  }
-
-  .report-timestamp {
-    font-size: 0.75rem;
-    color: var(--docs-text-muted, #6e7681);
-  }
-
-  .check-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.9rem;
-    color: var(--docs-text, #c9d1d9);
-  }
-
-  .check-icon {
-    color: #3fb950;
-    font-weight: 700;
-  }
-
-  @media (max-width: 768px) {
-    .guidelines-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

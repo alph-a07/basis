@@ -1,0 +1,258 @@
+---
+interface VariantItem {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface StateItem {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+interface GalleryItem {
+  variant: string;
+  state: string;
+  mode: 'light' | 'dark';
+  url: string;
+  width?: number;
+  height?: number;
+}
+
+interface Props {
+  variants?: VariantItem[];
+  states?: StateItem[];
+  gallery?: GalleryItem[];
+}
+
+const { variants = [], states = [], gallery = [] } = Astro.props;
+const hasVariants = variants.length > 0;
+const hasStates = states.length > 0;
+---
+
+<div class="variants-states-section">
+  <!-- Visual Variants -->
+  <div class="variant-block">
+    <h3 class="section-subtitle">Prominence Variants</h3>
+    {hasVariants ? (
+      <div class="variants-grid">
+        {variants.map((v) => (
+          <div class="variant-card">
+            <div class="variant-card-header">
+              <span class="variant-name">{v.name}</span>
+              <code class="variant-id">{v.id}</code>
+            </div>
+            {v.description && <p class="variant-desc">{v.description}</p>}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-hint">No specialized variants defined; uses default component styling.</p>
+    )}
+  </div>
+
+  <!-- Interaction States -->
+  <div class="state-block">
+    <h3 class="section-subtitle">Interaction States</h3>
+    {hasStates ? (
+      <div class="states-grid">
+        {states.map((s) => (
+          <div class="state-card">
+            <div class="state-card-header">
+              <span class="state-name">{s.name}</span>
+              <code class="state-id">{s.id}</code>
+            </div>
+            {s.description && <p class="state-desc">{s.description}</p>}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-hint">Standard interactive states applied (enabled, disabled).</p>
+    )}
+  </div>
+
+  <!-- Specimen Gallery (if provided) -->
+  {gallery.length > 0 && (
+    <div class="gallery-block">
+      <h3 class="section-subtitle">Specimen Gallery</h3>
+      <div class="gallery-grid">
+        {gallery.map((item) => (
+          <div class="gallery-card">
+            <div class="gallery-meta">
+              <span class="gallery-tag">{item.variant} · {item.state}</span>
+              <span class="gallery-mode">{item.mode}</span>
+            </div>
+            <div class={`gallery-preview-wrapper mode-${item.mode}`}>
+              {item.url ? (
+                <img
+                  src={item.url}
+                  alt={`${item.variant} ${item.state} preview (${item.mode} mode)`}
+                  width={item.width || 320}
+                  height={item.height || 112}
+                  class="gallery-img"
+                />
+              ) : (
+                <div class="gallery-placeholder">
+                  <span class="specimen-label">{item.variant} ({item.state})</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .variants-states-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--docs-text, #e6edf3);
+    margin: 0 0 1rem 0;
+  }
+
+  .variants-grid,
+  .states-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .variant-card,
+  .state-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .variant-card:hover,
+  .state-card:hover {
+    border-color: var(--docs-border, #30363d);
+    background: var(--docs-card-hover, #21262d);
+  }
+
+  .variant-card-header,
+  .state-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .variant-name,
+  .state-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--docs-text, #e6edf3);
+  }
+
+  .variant-id,
+  .state-id {
+    font-size: 0.75rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: var(--docs-surface-recessed, #21262d);
+    color: var(--docs-text-muted, #8b949e);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+  }
+
+  .variant-desc,
+  .state-desc {
+    font-size: 0.8125rem;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .gallery-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--docs-surface-recessed, #0d0f12);
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    font-size: 0.75rem;
+  }
+
+  .gallery-tag {
+    color: var(--docs-text, #e6edf3);
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .gallery-mode {
+    color: var(--docs-text-muted, #8b949e);
+    text-transform: uppercase;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.7rem;
+  }
+
+  .gallery-preview-wrapper {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-preview-wrapper.mode-light {
+    background: #f6f8fa;
+    color: #24292f;
+  }
+
+  .gallery-preview-wrapper.mode-dark {
+    background: #0d0f12;
+    color: #e6edf3;
+  }
+
+  .gallery-img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .gallery-placeholder {
+    border: 1px dashed currentColor;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    opacity: 0.75;
+  }
+
+  .specimen-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .empty-hint {
+    color: var(--docs-text-muted, #8b949e);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+</style>

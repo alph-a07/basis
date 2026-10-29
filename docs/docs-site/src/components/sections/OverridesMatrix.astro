@@ -1,0 +1,258 @@
+---
+interface MatrixEntry {
+  variant: string;
+  state: string;
+  supportedFields: string[];
+}
+
+interface OverridesData {
+  universalFields: string[];
+  extraFamily?: string | null;
+  matrix?: MatrixEntry[];
+}
+
+interface Props {
+  overrides?: OverridesData;
+}
+
+const { overrides } = Astro.props;
+
+const universalFields = overrides?.universalFields || [];
+const extraFamily = overrides?.extraFamily;
+const matrix = overrides?.matrix || [];
+---
+
+<div class="overrides-section">
+  <!-- Universal Fields -->
+  <div class="universal-block">
+    <h3 class="section-subtitle">Universal Fields</h3>
+    <p class="section-lead">
+      These design token fields can be patched universally across all variants and states:
+    </p>
+    {universalFields.length > 0 ? (
+      <div class="fields-grid">
+        {universalFields.map((field) => (
+          <div class="field-chip">
+            <span class="field-bullet" aria-hidden="true">◆</span>
+            <code class="field-name">{field}</code>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-hint">No universal token overrides available for this component.</p>
+    )}
+  </div>
+
+  <!-- Extra Family (if applicable) -->
+  {extraFamily && (
+    <div class="extra-family-card">
+      <div class="extra-family-header">
+        <span class="extra-badge">Extra Family</span>
+        <strong class="extra-name">{extraFamily}</strong>
+      </div>
+      <p class="extra-desc">
+        This component binds an additional <code>{extraFamily}</code> token family allowing deep customization
+        of domain-specific interactive behaviors.
+      </p>
+    </div>
+  )}
+
+  <!-- Matrix Overrides -->
+  <div class="matrix-block">
+    <h3 class="section-subtitle">Variant & State Override Matrix</h3>
+    {matrix.length > 0 ? (
+      <div class="table-responsive">
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th scope="col">Variant</th>
+              <th scope="col">State</th>
+              <th scope="col">Supported Patch Fields</th>
+            </tr>
+          </thead>
+          <tbody>
+            {matrix.map((row) => (
+              <tr>
+                <td class="matrix-variant-cell">
+                  <code>{row.variant === '*' ? 'All ( * )' : row.variant}</code>
+                </td>
+                <td class="matrix-state-cell">
+                  <code>{row.state === '*' ? 'All ( * )' : row.state}</code>
+                </td>
+                <td class="matrix-fields-cell">
+                  <div class="supported-chips">
+                    {row.supportedFields.map((f) => (
+                      <span class="supported-chip">{f}</span>
+                    ))}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <div class="empty-matrix">
+        <p>No localized variant-state override matrix defined. Component respects universal fields across all configurations.</p>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .overrides-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--docs-text, #e6edf3);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .section-lead {
+    font-size: 0.95rem;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+  }
+
+  .fields-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .field-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .field-chip:hover {
+    border-color: var(--docs-border, #30363d);
+    background: var(--docs-card-hover, #21262d);
+  }
+
+  .field-bullet {
+    color: var(--docs-accent, #58a6ff);
+    font-size: 0.65rem;
+  }
+
+  .field-name {
+    font-size: 0.8125rem;
+    color: var(--docs-text, #e6edf3);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .extra-family-card {
+    background: rgba(88, 166, 255, 0.06);
+    border: 1px solid rgba(88, 166, 255, 0.2);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .extra-family-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .extra-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: var(--docs-sidebar-active-bg, rgba(88, 166, 255, 0.15));
+    color: var(--docs-accent, #58a6ff);
+  }
+
+  .extra-name {
+    color: var(--docs-text, #e6edf3);
+    font-size: 1rem;
+  }
+
+  .extra-desc {
+    color: var(--docs-text-muted, #8b949e);
+    font-size: 0.875rem;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .extra-desc code {
+    color: var(--docs-accent, #58a6ff);
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    background: var(--docs-surface, #161b22);
+  }
+
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+
+  .matrix-table th {
+    padding: 0.75rem 1rem;
+    background: var(--docs-surface-recessed, #0d0f12);
+    color: var(--docs-text-muted, #8b949e);
+    font-weight: 600;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+  }
+
+  .matrix-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    vertical-align: middle;
+  }
+
+  .matrix-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .matrix-variant-cell code,
+  .matrix-state-cell code {
+    font-size: 0.8125rem;
+    color: var(--docs-text, #e6edf3);
+  }
+
+  .supported-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .supported-chip {
+    font-size: 0.75rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: var(--docs-surface-recessed, #21262d);
+    color: var(--docs-text-muted, #8b949e);
+    padding: 0.125rem 0.45rem;
+    border-radius: 4px;
+    border: 1px solid var(--docs-border-subtle, #30363d);
+  }
+
+  .empty-matrix,
+  .empty-hint {
+    color: var(--docs-text-muted, #8b949e);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+</style>

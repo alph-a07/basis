@@ -1,0 +1,363 @@
+---
+interface TouchTarget {
+  minWidthDp: number;
+  minHeightDp: number;
+  enforced?: boolean;
+}
+
+interface ReducedMotion {
+  respectsReducedMotion: boolean;
+  fallbackDescription?: string;
+}
+
+interface Report {
+  status: 'pass' | 'fail';
+  checks: string[];
+  version?: string;
+  timestamp?: string;
+}
+
+interface AccessibilityData {
+  role: string;
+  isFocusable?: boolean;
+  screenReaderAnnouncement?: string;
+  touchTarget?: TouchTarget;
+  keyboardNavigation?: string[];
+  reducedMotion?: ReducedMotion;
+  announcements?: string[];
+  report?: Report;
+}
+
+interface Props {
+  accessibility?: AccessibilityData;
+  narrative?: string;
+}
+
+const { accessibility, narrative } = Astro.props;
+---
+
+<div class="a11y-section">
+  <!-- Core Accessibility Facts Grid -->
+  <div class="facts-grid">
+    <div class="fact-card">
+      <span class="fact-label">Compose Semantics Role</span>
+      <code class="fact-value role-value">Role.{accessibility?.role || 'Default'}</code>
+    </div>
+
+    <div class="fact-card">
+      <span class="fact-label">Minimum Touch Target</span>
+      <span class="fact-value">
+        <strong>{accessibility?.touchTarget?.minWidthDp || 48}dp</strong> ×{' '}
+        <strong>{accessibility?.touchTarget?.minHeightDp || 48}dp</strong>
+        {accessibility?.touchTarget?.enforced && (
+          <span class="enforced-tag">Enforced</span>
+        )}
+      </span>
+    </div>
+
+    <div class="fact-card">
+      <span class="fact-label">Reduced Motion</span>
+      <span class="fact-value">
+        {accessibility?.reducedMotion?.respectsReducedMotion ? (
+          <span class="motion-badge supported">Supported</span>
+        ) : (
+          <span class="motion-badge none">Default</span>
+        )}
+      </span>
+    </div>
+  </div>
+
+  <!-- Keyboard Navigation -->
+  {accessibility?.keyboardNavigation && accessibility.keyboardNavigation.length > 0 && (
+    <div class="keyboard-block">
+      <h3 class="section-subtitle">Keyboard Interaction</h3>
+      <p class="section-lead">
+        This component responds to the following hardware keyboard navigation triggers:
+      </p>
+      <div class="keyboard-chips">
+        {accessibility.keyboardNavigation.map((key) => (
+          <div class="kbd-chip">
+            <kbd class="kbd-key">{key}</kbd>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- Reduced Motion Description (if provided) -->
+  {accessibility?.reducedMotion?.fallbackDescription && (
+    <div class="motion-card">
+      <h3 class="section-subtitle">Reduced Motion Behavior</h3>
+      <p class="motion-desc">{accessibility.reducedMotion.fallbackDescription}</p>
+    </div>
+  )}
+
+  <!-- Automated Accessibility Test Report -->
+  <div class="report-block">
+    <h3 class="section-subtitle">Automated Test Report</h3>
+    {accessibility?.report ? (
+      <div class="report-card">
+        <div class="report-header">
+          <div class="report-title-row">
+            <span class={`report-status-badge status-${accessibility.report.status}`}>
+              {accessibility.report.status.toUpperCase()}
+            </span>
+            <span class="report-version">Contract v{accessibility.report.version || '0.2.0'}</span>
+          </div>
+          {accessibility.report.timestamp && (
+            <span class="report-timestamp">{accessibility.report.timestamp}</span>
+          )}
+        </div>
+
+        <ul class="check-list">
+          {accessibility.report.checks.map((check) => (
+            <li class="check-item">
+              <span class="check-icon" aria-hidden="true">✓</span>
+              <span class="check-name">{check}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <p class="empty-hint">No automated accessibility report attached for this component.</p>
+    )}
+  </div>
+
+  <!-- Narrative Prose from Sidecar -->
+  {narrative && (
+    <div class="narrative-block">
+      <h3 class="section-subtitle">Accessibility Guidance</h3>
+      <div class="narrative-content">
+        <p>{narrative}</p>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .a11y-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .fact-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fact-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--docs-text-muted, #8b949e);
+  }
+
+  .fact-value {
+    font-size: 1rem;
+    color: var(--docs-text, #e6edf3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .role-value {
+    color: var(--docs-accent, #58a6ff);
+    font-size: 0.95rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .enforced-tag {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--docs-sidebar-active-bg, rgba(88, 166, 255, 0.15));
+    color: var(--docs-accent, #58a6ff);
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+  }
+
+  .motion-badge {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .motion-badge.supported {
+    background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.15));
+    color: var(--docs-status-pass-text, #3fb950);
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--docs-text, #e6edf3);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .section-lead {
+    font-size: 0.95rem;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+  }
+
+  .keyboard-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .kbd-chip {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .kbd-key {
+    background: var(--docs-surface-recessed, #21262d);
+    border: 1px solid var(--docs-border-subtle, #30363d);
+    box-shadow: 0 2px 0 var(--docs-border-subtle, #21262d);
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--docs-text, #e6edf3);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .motion-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .motion-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--docs-text-muted, #8b949e);
+    line-height: 1.5;
+  }
+
+  .report-card {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    padding-bottom: 0.75rem;
+  }
+
+  .report-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .report-status-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .report-status-badge.status-pass {
+    background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.2));
+    color: var(--docs-status-pass-text, #3fb950);
+  }
+
+  .report-status-badge.status-fail {
+    background: var(--docs-status-fail-bg, rgba(248, 81, 73, 0.2));
+    color: var(--docs-status-fail-text, #f85149);
+  }
+
+  .report-version {
+    font-size: 0.8125rem;
+    color: var(--docs-text-muted, #8b949e);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .report-timestamp {
+    font-size: 0.75rem;
+    color: var(--docs-text-muted, #6e7681);
+  }
+
+  .check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--docs-text, #c9d1d9);
+  }
+
+  .check-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--docs-status-pass-bg, rgba(46, 160, 67, 0.2));
+    color: var(--docs-status-pass-text, #3fb950);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .check-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+  }
+
+  .narrative-block {
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #21262d);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .narrative-content p {
+    color: var(--docs-text, #c9d1d9);
+    margin: 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .empty-hint {
+    color: var(--docs-text-muted, #8b949e);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+</style>
