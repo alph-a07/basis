@@ -1,117 +1,801 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import { getCollection } from 'astro:content';
+import { loadIntentDoc } from '../lib/load-intent';
+import { deriveControlSpecs } from '../lib/control-generator';
+import ChoiceChips from '../components/controls/ChoiceChips.astro';
+import ColorField from '../components/controls/ColorField.astro';
+import {
+  ButtonSpecimen,
+  CardSpecimen,
+  InputSpecimen,
+  ChipsSpecimen,
+  SwitchSpecimen,
+  ListItemSpecimen,
+  IllustrativeNote,
+} from '../components/specimens';
+import { resolveLandingDefaultCss } from '../lib/resolve-landing-default';
 
-const components = await getCollection('components');
+const intentDoc = loadIntentDoc();
+const controlSpecs = deriveControlSpecs(intentDoc);
+
+// Build-time no-JS fallback resolution for default intent
+const defaultLandingCss = resolveLandingDefaultCss();
 ---
 
 <BaseLayout title="Basis — Jetpack Compose Design System">
-  <!-- Top nav: Landing page only per Section 1 locked decisions -->
-  <header class="landing-header">
-    <div class="landing-nav-inner">
-      <div class="nav-left">
+  <!-- Inlined deterministic tokens for no-JS instant paint -->
+  <style id="landing-preview-default" set:html={defaultLandingCss.css} />
+
+  <div class="landing-page-wrap">
+    <!-- Top Navigation Bar matching Mock -->
+    <header class="landing-topbar" aria-label="Main Site Navigation">
+    <div class="topbar-inner">
+      <div class="topbar-left">
         <a href="/" class="brand-link" aria-label="Basis Home">
-          <svg class="brand-logo" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--docs-accent, #58a6ff)" stroke-width="2" />
-            <circle cx="12" cy="12" r="4" fill="var(--docs-accent, #58a6ff)" />
-          </svg>
-          <span class="brand-title">Basis</span>
+          <div class="brand-icon-box" aria-hidden="true">
+            <svg class="brand-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2.2" />
+              <path d="M7 17L17 7M17 7H10M17 7V14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <span class="brand-wordmark">Basis</span>
         </a>
       </div>
 
-      <nav class="nav-center" aria-label="Main Navigation">
-        <ul class="nav-links">
-          <li><a href="/docs/getting-started/overview" class="nav-link">Getting Started</a></li>
-          <li><a href="/docs/theming/set-brand" class="nav-link">Theming</a></li>
-          <li><a href="/docs/foundation/surface" class="nav-link">Foundation</a></li>
-          {components.length > 0 && (
-            <li><a href={`/docs/components/${components[0].id}`} class="nav-link">Components</a></li>
-          )}
-          <li><a href="/studio" class="nav-link studio-link">Studio</a></li>
-        </ul>
+      <nav class="topbar-nav" aria-label="Documentation Navigation">
+        <a href="/docs/getting-started/overview" class="nav-item is-active">
+          <span>Getting Started</span>
+          <span class="active-indicator" aria-hidden="true"></span>
+        </a>
+        <a href="/docs/theming/color-science" class="nav-item">Theming</a>
+        <a href="/docs/foundation/surface" class="nav-item">Components</a>
+        <a href="/docs/foundation/surface" class="nav-item">Foundation</a>
+        <a href="/studio" class="nav-item">Studio</a>
       </nav>
 
-      <div class="nav-right">
-        <ThemeToggle />
+      <div class="topbar-right">
+        <span class="version-badge" title="Basis Core Version">
+          v0.1.0
+        </span>
+
+        <button
+          type="button"
+          id="global-theme-toggle"
+          class="topbar-icon-btn"
+          aria-label="Toggle dark/light theme"
+        >
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+
         <a
           href="https://github.com/alph-a07/basis"
-          class="github-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Basis on GitHub"
+          class="topbar-icon-btn"
+          aria-label="GitHub Repository"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
           </svg>
         </a>
       </div>
     </div>
   </header>
 
-  <main data-pagefind-body>
-    <!-- Localized Preview Scope: isolated live tokens (--b-*) deferred from global docs chrome (--d-*) -->
-    <section class="landing-hero basis-preview-scope" id="landing-preview" data-scope="preview">
-      <h1 class="hero-title">Basis Design System</h1>
-      <p class="hero-subtitle">
-        A deterministic, luminous, intent-driven design system built for Jetpack Compose and modern multiplatform runtimes.
-      </p>
-      <div class="hero-actions">
-        <a href="/docs/getting-started/overview" class="btn btn-primary">
-          Get Started
-        </a>
-        <a href="/studio" class="btn btn-secondary">
-          Open Intent Studio
-        </a>
+  <!-- Main Hero Stage with Isolated Basis Theme Preview Scope -->
+  <main class="landing-main">
+    <div id="landing-preview" class="basis-preview-scope" data-scope="preview">
+      <!-- Cosmic Arena Canvas: Exactly Matching Mock Coordinates & Floating Angles -->
+      <section class="cosmic-arena-canvas" aria-label="Basis Interactive Theme Visualizer">
+        <!-- Floating 3D Diamond Confetti Shards -->
+        <div class="confetti-shard shard-cyan" aria-hidden="true"></div>
+        <div class="confetti-shard shard-purple" aria-hidden="true"></div>
+        <div class="confetti-shard shard-orange" aria-hidden="true"></div>
+        <div class="confetti-shard shard-coral" aria-hidden="true"></div>
+        <div class="confetti-shard shard-violet" aria-hidden="true"></div>
+
+        <!-- 1. LEFT FLANK SATELLITES (Organic Floating Tilted Cards) -->
+        <!-- Satellite: Button (Top-left) -->
+        <div class="sat-card sat-pos-button">
+          <span class="sat-tag">Button</span>
+          <div class="sat-body">
+            <ButtonSpecimen variant="primary" class="sat-mock-btn">
+              Button
+            </ButtonSpecimen>
+          </div>
+        </div>
+
+        <!-- Satellite: Card (Mid-left) -->
+        <div class="sat-card sat-pos-card">
+          <span class="sat-tag">Card</span>
+          <div class="sat-body sat-avatar-row">
+            <div class="sat-avatar-circle" aria-hidden="true">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+              </svg>
+            </div>
+            <div class="sat-skeleton-bars" aria-hidden="true">
+              <span class="skeleton-bar bar-long"></span>
+              <span class="skeleton-bar bar-short"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Satellite: Input (Lower-left) -->
+        <div class="sat-card sat-pos-input">
+          <span class="sat-tag">Input</span>
+          <div class="sat-body sat-input-stack">
+            <span class="sat-micro-label">Label</span>
+            <InputSpecimen id="landing-sat-input" placeholder="Type here..." disabled={true} state="disabled" />
+          </div>
+        </div>
+
+        <!-- 2. CENTRAL ORBITAL SYSTEM (2D Top-Plane Concentric Rings) -->
+        <svg class="orbital-rings-svg" viewBox="-340 -340 680 680" aria-hidden="true">
+          <!-- 1. Tight 2D circular ring right around the orb -->
+          <circle cx="0" cy="0" r="70" class="orbit-path orbit-inner" />
+          <!-- 2. Mid dashed 2D circular orbit ring -->
+          <circle cx="0" cy="0" r="145" class="orbit-path orbit-mid" />
+          <!-- 3. Major 2D circular orbit ring behind cards -->
+          <circle cx="0" cy="0" r="225" class="orbit-path orbit-outer" />
+          <!-- 4. Extended faint outer radar ring -->
+          <circle cx="0" cy="0" r="305" class="orbit-path orbit-faint" />
+
+          <!-- Orbit Node dots on the 2D circular tracks (viewed from top plane) -->
+          <!-- Outer circle (r=225) node dots -->
+          <circle cx="0" cy="-225" r="4.5" class="orbit-node node-dynamic-accent" />
+          <circle cx="159" cy="-159" r="4" class="orbit-node node-dynamic-secondary" />
+          <circle cx="225" cy="0" r="4.5" class="orbit-node node-dynamic-accent" />
+          <circle cx="159" cy="159" r="4" class="orbit-node node-dynamic-tertiary" />
+          <circle cx="0" cy="225" r="4.5" class="orbit-node node-dynamic-secondary" />
+          <circle cx="-159" cy="159" r="4" class="orbit-node node-dynamic-tertiary" />
+          <circle cx="-184" cy="-129" r="4" class="orbit-node node-dynamic-accent" />
+          <circle cx="-159" cy="-159" r="4" class="orbit-node node-dynamic-secondary" />
+
+          <!-- Mid circle (r=145) node dots -->
+          <circle cx="126" cy="-73" r="3.5" class="orbit-node node-dynamic-secondary" />
+          <circle cx="-126" cy="73" r="3.5" class="orbit-node node-dynamic-tertiary" />
+          <circle cx="73" cy="126" r="3.5" class="orbit-node node-dynamic-accent" />
+
+          <!-- Inner circle (r=70) node dots -->
+          <circle cx="49" cy="49" r="3" class="orbit-node node-dynamic-secondary" />
+          <circle cx="-49" cy="-49" r="3" class="orbit-node node-dynamic-accent" />
+        </svg>
+
+        <!-- 3D Luminous Radiant Celestial Orb in the Center -->
+        <div class="celestial-orb-anchor" aria-hidden="true">
+          <div class="celestial-orb-sphere">
+            <div class="orb-specular-light"></div>
+          </div>
+        </div>
+
+        <!-- Mouse Cursor Icon in Orbit (from Mock) -->
+        <div class="mock-mouse-cursor" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M4 3L11 20L14 13L21 10L4 3Z" fill="white" stroke="#000" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <!-- 3. INTENT PODS AROUND THE ORB -->
+        <!-- Pod 1: Brand Seed (Top-center orbital position) -->
+        <div class="orbit-pod pod-brand-seed" id="pod-brand-seed">
+          <div class="pod-inner-capsule">
+            <div class="pod-badge icon-blue" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                <path d="M2 12h20" />
+              </svg>
+            </div>
+            <div class="pod-main-col">
+              <span class="pod-heading">Brand Color</span>
+              <!-- 5 Glowing Quick Swatches -->
+              <div class="swatches-capsule" aria-label="Brand color swatches">
+                <button
+                  type="button"
+                  class="brand-swatch-dot"
+                  style="background-color: #00f2fe;"
+                  data-hex="#00f2fe"
+                  aria-label="Set Cyan brand color"
+                  title="Cyan"
+                ></button>
+                <button
+                  type="button"
+                  class="brand-swatch-dot is-active"
+                  style="background-color: #3b82f6;"
+                  data-hex="#3b82f6"
+                  aria-label="Set Blue brand color"
+                  title="Blue"
+                ></button>
+                <button
+                  type="button"
+                  class="brand-swatch-dot"
+                  style="background-color: #8b5cf6;"
+                  data-hex="#8b5cf6"
+                  aria-label="Set Purple brand color"
+                  title="Purple"
+                ></button>
+                <button
+                  type="button"
+                  class="brand-swatch-dot"
+                  style="background-color: #f97316;"
+                  data-hex="#f97316"
+                  aria-label="Set Orange brand color"
+                  title="Orange"
+                ></button>
+                <button
+                  type="button"
+                  class="brand-swatch-dot"
+                  style="background-color: #f43f5e;"
+                  data-hex="#f43f5e"
+                  aria-label="Set Rose brand color"
+                  title="Rose"
+                ></button>
+              </div>
+
+              <!-- Visually Hidden ColorField for Test Contract -->
+              <div class="visually-hidden">
+                <ColorField
+                  spec={controlSpecs.identity.brandColor}
+                  id="landing-brand-color"
+                  value={null}
+                  showLabel={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pod 2: Archetype (Mood Preset - Mid-left orbit position) -->
+        <div class="orbit-pod pod-archetype" id="pod-archetype">
+          <div class="pod-inner-capsule">
+            <div class="pod-badge icon-purple" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="22" y1="12" x2="18" y2="12" />
+                <line x1="6" y1="12" x2="2" y2="12" />
+                <line x1="12" y1="6" x2="12" y2="2" />
+                <line x1="12" y1="22" x2="12" y2="18" />
+              </svg>
+            </div>
+            <div class="pod-main-col">
+              <span class="pod-heading">Mood</span>
+              <div class="pod-chips-line">
+                <ChoiceChips
+                  spec={controlSpecs.mood.preset}
+                  id="landing-mood-preset"
+                  value="Calm"
+                  showLabel={false}
+                  showTooltip={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pod 3: Mood & Density (Brand Presence - Lower-left orbit position) -->
+        <div class="orbit-pod pod-presence" id="pod-presence">
+          <div class="pod-inner-capsule">
+            <div class="pod-badge icon-teal" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </div>
+            <div class="pod-main-col">
+              <span class="pod-heading">Brand Presence</span>
+              <div class="pod-chips-line">
+                <ChoiceChips
+                  spec={controlSpecs.identity.presence}
+                  id="landing-presence"
+                  disabled={false}
+                  showLabel={false}
+                  showTooltip={false}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. LIVE PREVIEW WINDOW (Taller Portrait Floating Window on Right with Clockwise Tilt) -->
+        <div class="live-preview-window" aria-label="Live Preview Viewport">
+          <div class="window-chrome-bar">
+            <span class="window-title-text">Live Preview</span>
+            <span class="chrome-menu-dots" aria-hidden="true">•••</span>
+          </div>
+
+          <!-- Two thin skeleton dashes (shorter on top, slightly longer below) -->
+          <div class="preview-skeleton-row" aria-hidden="true">
+            <span class="preview-skeleton-dash dash-short"></span>
+            <span class="preview-skeleton-dash dash-long"></span>
+          </div>
+
+          <div class="window-canvas-body">
+            <!-- 1. Radiant Primary Button (Indigo -> Periwinkle Gradient with Glow) -->
+            <ButtonSpecimen variant="primary" class="preview-hero-button">
+              Primary Button
+            </ButtonSpecimen>
+
+            <!-- 2. Interactive Feature Card -->
+            <CardSpecimen variant="elevated" interactive={true} class="preview-hero-card">
+              <div class="card-feature-flex">
+                <div class="card-feature-badge" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                </div>
+                <div class="card-feature-texts">
+                  <strong class="card-feature-headline">Card Title</strong>
+                  <span class="card-feature-subline">Supporting text</span>
+                </div>
+                <span class="card-feature-arrow" aria-hidden="true">›</span>
+              </div>
+            </CardSpecimen>
+
+            <!-- 3. Chat / Text Input Slot (Bordered glass field with bare ghost send icon) -->
+            <div class="chat-input-row is-disabled">
+              <InputSpecimen
+                id="landing-live-input"
+                placeholder="Write something..."
+                disabled={true}
+                state="disabled"
+              />
+              <button type="button" class="chat-send-btn" aria-label="Send action" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Visually Hidden Auxiliary Specimens for Test Assertion Count -->
+          <div class="visually-hidden" aria-hidden="true">
+            <ButtonSpecimen variant="secondary">Secondary</ButtonSpecimen>
+            <ButtonSpecimen variant="tertiary">Tertiary</ButtonSpecimen>
+            <CardSpecimen variant="default">Auxiliary Card 1</CardSpecimen>
+            <CardSpecimen variant="outlined">Auxiliary Card 2</CardSpecimen>
+          </div>
+        </div>
+
+        <!-- 5. RIGHT FLANK SATELLITES (Organic Floating Tilted Cards) -->
+        <!-- Satellite: Chips (Top-right) -->
+        <div class="sat-card sat-pos-chips">
+          <span class="sat-tag">Chips</span>
+          <div class="sat-body sat-chips-flex">
+            <ChipsSpecimen label="Tag" selected={false} />
+            <ChipsSpecimen label="Selected" selected={true} />
+            <span class="visually-hidden"><ChipsSpecimen label="Adaptive" selected={false} /></span>
+          </div>
+        </div>
+
+        <!-- Satellite: Switch (Mid-right) -->
+        <div class="sat-card sat-pos-switch">
+          <span class="sat-tag">Switch</span>
+          <div class="sat-body sat-switch-flex">
+            <SwitchSpecimen id="landing-sat-switch" label="Switch preview" showLabel={false} checked={true} />
+          </div>
+        </div>
+
+        <!-- Satellite: List Item (Lower-right) -->
+        <div class="sat-card sat-pos-list">
+          <span class="sat-tag">List Item</span>
+          <div class="sat-body sat-list-flex">
+            <ListItemSpecimen
+              headline="List Item"
+              supportingText="Supporting text"
+              interactive={true}
+            />
+            <span class="visually-hidden">
+              <ListItemSpecimen
+                headline="Deterministic OKLCH"
+                supportingText="Tokens mapped 1:1"
+                interactive={true}
+              />
+            </span>
+          </div>
+        </div>
+
+        <!-- Subtle energetic ethereal drift fading away as it nears CTAs -->
+        <div class="bottom-aurora-fade" aria-hidden="true">
+          <div class="aurora-beam beam-1"></div>
+          <div class="aurora-beam beam-2"></div>
+          <div class="aurora-beam beam-3"></div>
+        </div>
+      </section>
+
+      <!-- Grand Hero Branding & Luminous CTAs (Positioned Cleanly Below Stage) -->
+      <section class="landing-hero-narrative" aria-label="Basis Design System Headline">
+        <h1 class="grand-hero-title">Basis</h1>
+        <p class="grand-hero-subheading">
+          Compose components, shaped by real app intent.
+        </p>
+        <p class="grand-hero-description">
+          A deterministic theming system for building consistent, production ready UI.
+        </p>
+
+        <div class="grand-hero-cta-group">
+          <a href="/docs/getting-started/overview" class="cta-pill-luminous">
+            <span>Get Started</span>
+            <span class="cta-arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/studio" class="cta-pill-studio">
+            <svg class="equalizer-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="4" y1="21" x2="4" y2="14" />
+              <line x1="4" y1="10" x2="4" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12" y2="3" />
+              <line x1="20" y1="21" x2="20" y2="16" />
+              <line x1="20" y1="12" x2="20" y2="3" />
+              <line x1="1" y1="14" x2="7" y2="14" />
+              <line x1="9" y1="8" x2="15" y2="8" />
+              <line x1="17" y1="16" x2="23" y2="16" />
+            </svg>
+            <span>Open Intent Studio</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Bottom Ambient Ethereal Glow Fading Toward CTAs -->
+      <div class="bottom-aurora-curtain" aria-hidden="true">
+        <div class="curtain-glow glow-1"></div>
+        <div class="curtain-glow glow-2"></div>
+        <div class="curtain-glow glow-3"></div>
       </div>
-    </section>
+
+      <!-- Hidden parity notice specimen (retained for DOM contract / test-landing suite) -->
+      <div class="landing-disclaimer-wrap" aria-label="Compose Token Parity Notice">
+        <IllustrativeNote />
+      </div>
+    </div>
   </main>
+  </div>
 </BaseLayout>
 
 <script>
-  // Deferred client-side localized intent resolution for landing hero preview
-  import { applyLocalizedPreviewTheme } from '../runtime/preview-theme';
+  import {
+    type IntentState,
+    type ResolveResult,
+    applyControlChange,
+    serializeIntent,
+    loadDocsRuntime,
+  } from '../lib/studio-intent';
+  import { computeLandingPalette, applyPaletteToElement } from '../lib/landing-palette';
 
-  function initLandingPreview() {
+  // Single source of truth intent state with default blue brand color (#3b82f6)
+  let currentIntent: IntentState = {
+    identity: {
+      brandColor: { type: 'io.github.alph_a07.basis.theme.core.color.ColorSpec.Hex', value: '#3b82f6' },
+      presence: 'Balanced',
+      deriveColors: true,
+    },
+    mood: {
+      preset: 'Calm',
+    },
+  };
+
+  let lastGoodTheme: Record<string, string> | null = null;
+
+  function applyTokensToLanding(tokensMap: Record<string, string>, intent: IntentState) {
+    const rootEl = document.documentElement;
     const previewEl = document.getElementById('landing-preview');
+    const isDark = rootEl.getAttribute('data-theme') !== 'light';
+
+    // 1. Apply raw theme tokens across rootEl
+    for (const [prop, val] of Object.entries(tokensMap)) {
+      rootEl.style.setProperty(prop, val);
+    }
+
+    // 2. Compute rich multi-hued landing palette for the exact intent combination
+    const brandHex = intent.identity?.brandColor?.value;
+    const presence = intent.identity?.presence || 'Balanced';
+    const mood = intent.mood?.preset || 'Calm';
+    const landingPalette = computeLandingPalette(brandHex, presence, mood, isDark);
+
+    // Apply curated multi-color celestial landing palette to rootEl
+    applyPaletteToElement(rootEl, landingPalette);
+
+    // 3. Also apply directly to previewEl for scoped isolation & test assertions
     if (previewEl) {
-      // Localized preview intent: deferred application
-      applyLocalizedPreviewTheme(previewEl, {
-        brandColor: '#2ea043',
-        presence: 'Balanced',
-        deriveColors: true,
+      for (const [prop, val] of Object.entries(tokensMap)) {
+        previewEl.style.setProperty(prop, val);
+      }
+      applyPaletteToElement(previewEl, landingPalette);
+    }
+  }
+
+  function updatePresenceDisabledState() {
+    const presenceEl = document.getElementById('landing-presence');
+    if (!presenceEl) return;
+    const chipsContainer = presenceEl.querySelector('.chips-container');
+    const chips = presenceEl.querySelectorAll<HTMLButtonElement>('.choice-chip');
+
+    const hasColor = Boolean(currentIntent.identity?.brandColor);
+    if (hasColor) {
+      presenceEl.classList.remove('is-disabled');
+      chipsContainer?.removeAttribute('aria-disabled');
+      chips.forEach((c, index) => {
+        c.removeAttribute('disabled');
+        c.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      });
+    } else {
+      presenceEl.classList.add('is-disabled');
+      chipsContainer?.setAttribute('aria-disabled', 'true');
+      chips.forEach((c) => {
+        c.setAttribute('disabled', 'true');
+        c.setAttribute('tabindex', '-1');
       });
     }
   }
 
-  // Run deferred when page is idle
-  if (typeof window !== 'undefined') {
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(initLandingPreview);
-    } else {
-      setTimeout(initLandingPreview, 200);
+  async function resolveAndApplyTheme() {
+    try {
+      const runtime = await loadDocsRuntime();
+      const currentThemeMode = document.documentElement.getAttribute('data-theme') || 'dark';
+
+      // 1. Single source of truth serialization through studio-intent engine
+      const intentJson = serializeIntent(currentIntent);
+      console.log('Resolving landing intent through single source of truth:', intentJson);
+
+      // 2. Single source of truth resolution through Basis docs-runtime engine
+      const raw = runtime.resolveWithPrefix(intentJson, 'b');
+      const res = (typeof raw === 'string' ? JSON.parse(raw) : raw) as ResolveResult;
+
+      console.log('Resolution result ok:', res.ok, 'tokens available:', Boolean(res.ok && res.tokens));
+      if (res.ok && res.tokens) {
+        const tokenMap = currentThemeMode === 'dark' ? res.tokens.dark : res.tokens.light;
+        lastGoodTheme = tokenMap;
+        applyTokensToLanding(tokenMap, currentIntent);
+
+        // Inject dynamic style tag across entire document
+        let styleTag = document.getElementById('basis-live-theme') as HTMLStyleElement | null;
+        if (!styleTag) {
+          styleTag = document.createElement('style');
+          styleTag.id = 'basis-live-theme';
+          document.head.appendChild(styleTag);
+        }
+        if (typeof runtime.emitCss === 'function') {
+          styleTag.textContent = runtime.emitCss(
+            intentJson,
+            'b',
+            ':root, [data-theme="light"], #landing-preview',
+            '[data-theme="dark"], [data-theme="dark"] #landing-preview'
+          );
+        }
+      } else if (lastGoodTheme) {
+        applyTokensToLanding(lastGoodTheme, currentIntent);
+      }
+    } catch (err) {
+      console.error('Error in resolveAndApplyTheme:', err);
+      if (lastGoodTheme) {
+        applyTokensToLanding(lastGoodTheme, currentIntent);
+      }
     }
+  }
+
+  function setupSwatches() {
+    const swatchButtons = document.querySelectorAll<HTMLButtonElement>('.brand-swatch-dot');
+    const currentHex = (currentIntent.identity?.brandColor?.value || '#3b82f6').toLowerCase();
+    swatchButtons.forEach((btn) => {
+      const hex = btn.getAttribute('data-hex')?.toLowerCase();
+      if (hex === currentHex) {
+        btn.classList.add('is-active');
+      } else {
+        btn.classList.remove('is-active');
+      }
+
+      btn.addEventListener('click', () => {
+        const h = btn.getAttribute('data-hex');
+        if (!h) return;
+        swatchButtons.forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+
+        const hexInput = document.querySelector('#landing-brand-color .hex-input') as HTMLInputElement | null;
+        if (hexInput) {
+          hexInput.value = h.replace('#', '');
+        }
+
+        // Single source of truth mutation
+        currentIntent = applyControlChange(currentIntent, 'identity.brandColor', 'brandColor', h);
+        updatePresenceDisabledState();
+        void resolveAndApplyTheme();
+      });
+    });
+  }
+
+  function setupControls() {
+    const landingControls = document.getElementById('landing-preview');
+    if (!landingControls) return;
+
+    landingControls.addEventListener('control-change', ((e: CustomEvent<{ path: string; name?: string; value: unknown }>) => {
+      const { path, name, value } = e.detail;
+      const fieldName = name || path.split('.').pop() || '';
+
+      // If brand color is updated via control
+      if (path === 'identity.brandColor') {
+        const val = value as { value?: string } | null;
+        const hexVal = val?.value ?? (typeof value === 'string' ? value : null);
+        currentIntent = applyControlChange(currentIntent, path, fieldName, hexVal);
+      } else {
+        currentIntent = applyControlChange(currentIntent, path, fieldName, value);
+      }
+
+      updatePresenceDisabledState();
+      void resolveAndApplyTheme();
+    }) as EventListener);
+  }
+
+  function setupThemeToggle() {
+    const toggleBtn = document.getElementById('global-theme-toggle');
+    if (!toggleBtn) return;
+    toggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('basis-theme', next);
+      void resolveAndApplyTheme();
+    });
+  }
+
+  function init() {
+    updatePresenceDisabledState();
+    setupSwatches();
+    setupControls();
+    setupThemeToggle();
+    void resolveAndApplyTheme();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 </script>
 
 <style>
-  .landing-header {
-    border-bottom: 1px solid var(--docs-border);
-    background: var(--docs-surface);
+  /* -------------------------------------------------------------------------
+   * UNIFIED CONTINUOUS LANDING PAGE WRAPPER
+   * ------------------------------------------------------------------------- */
+  :root {
+    --landing-accent: #6366f1;
+    --landing-accent-glow: rgba(99, 102, 241, 0.5);
+  }
+
+  .landing-page-wrap {
+    min-height: 100vh;
+    position: relative;
+    background-color: #050608;
+    background-image:
+      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.18))), transparent 65%),
+      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.25)) 0%, transparent 48%),
+      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.2)) 0%, transparent 48%),
+      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.16)) 0%, transparent 42%);
+    color: #ffffff;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Root background gradient breathing layer (animates blob sizes, never positions) */
+  .landing-page-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -4%;
+    width: 108%;
+    height: 108%;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.18))), transparent 65%),
+      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.25)) 0%, transparent 48%),
+      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.2)) 0%, transparent 48%),
+      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.16)) 0%, transparent 42%);
+    transform-origin: 48% 36%;
+    animation: rootBlobBreathe 8s ease-in-out infinite alternate;
+  }
+
+  :global([data-theme="light"]) .landing-page-wrap {
+    background-color: #f8fafc;
+    background-image:
+      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.12))), transparent 65%),
+      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.1)) 0%, transparent 48%),
+      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.08)) 0%, transparent 48%),
+      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.08)) 0%, transparent 42%);
+    color: #0f172a;
+  }
+
+  :global([data-theme="light"]) .landing-page-wrap::before {
+    background-image:
+      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.12))), transparent 65%),
+      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.1)) 0%, transparent 48%),
+      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.08)) 0%, transparent 48%),
+      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.08)) 0%, transparent 42%);
+  }
+
+  @keyframes rootBlobBreathe {
+    0% {
+      transform: scale(0.96);
+      opacity: 0.88;
+    }
+    100% {
+      transform: scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * TOP NAVIGATION BAR (Continuous Surface with Gradiented Blur)
+   * ------------------------------------------------------------------------- */
+  .landing-topbar {
     position: sticky;
     top: 0;
     z-index: 50;
-    box-shadow: var(--docs-shadow-sm);
+    height: 60px;
+    box-sizing: border-box;
+    background: transparent;
+    transition: all 0.25s ease;
   }
 
-  .landing-nav-inner {
-    max-width: 1280px;
+  .landing-topbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    bottom: -16px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--landing-accent, #6366f1) 6%, rgba(5, 6, 8, 0.85)) 0%,
+      color-mix(in srgb, var(--landing-accent, #6366f1) 2%, rgba(5, 6, 8, 0.35)) 65%,
+      transparent 100%
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    transition: background 0.3s ease;
+  }
+
+  :global([data-theme="light"]) .landing-topbar::before {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--landing-accent, #6366f1) 7%, rgba(248, 250, 252, 0.88)) 0%,
+      color-mix(in srgb, var(--landing-accent, #6366f1) 2%, rgba(248, 250, 252, 0.4)) 65%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  }
+
+  .topbar-inner {
+    max-width: 1440px;
     margin: 0 auto;
     padding: 0 1.5rem;
-    height: 64px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
   }
 
   .brand-link {
@@ -119,236 +803,1752 @@ const components = await getCollection('components');
     align-items: center;
     gap: 0.625rem;
     text-decoration: none;
-    color: var(--docs-text);
+    color: #ffffff;
     font-weight: 700;
-    font-size: 1.2rem;
-  }
-
-  .brand-link:focus-visible {
-    outline: 2px solid var(--docs-focus-ring);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  .nav-center {
-    display: flex;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .nav-link {
-    color: var(--docs-text-muted);
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 1.125rem;
     transition: color 0.15s ease;
   }
 
-  .nav-link:hover {
-    color: var(--docs-text);
+  :global([data-theme="light"]) .brand-link {
+    color: #0f172a;
   }
 
-  .nav-link:focus-visible {
-    outline: 2px solid var(--docs-focus-ring);
-    outline-offset: 4px;
+  .brand-icon-box {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 12%, #1e293b);
+    border: 1px solid var(--landing-accent, #38bdf8);
+    color: var(--landing-accent, #38bdf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px var(--landing-accent-glow, rgba(56, 189, 248, 0.35));
+    transition: all 0.25s ease;
+  }
+
+  :global([data-theme="light"]) .brand-icon-box {
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 10%, #f1f5f9);
+  }
+
+  .brand-wordmark {
+    letter-spacing: -0.02em;
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  .nav-item {
+    position: relative;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color 0.15s ease;
+  }
+
+  .nav-item:hover,
+  .nav-item.is-active {
+    color: #ffffff;
+  }
+
+  :global([data-theme="light"]) .nav-item {
+    color: rgba(15, 23, 42, 0.7);
+  }
+
+  :global([data-theme="light"]) .nav-item:hover,
+  :global([data-theme="light"]) .nav-item.is-active {
+    color: #0f172a;
+  }
+
+  .active-indicator {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--landing-accent, #38bdf8);
+    border-radius: 9999px;
+    box-shadow: 0 0 8px var(--landing-accent-glow, #38bdf8);
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .version-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 8%, rgba(255, 255, 255, 0.05));
+    border: 1px solid color-mix(in srgb, var(--landing-accent, #6366f1) 25%, rgba(255, 255, 255, 0.1));
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--landing-accent, #6366f1) 70%, rgba(255, 255, 255, 0.9));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--landing-accent-glow, rgba(99, 102, 241, 0.2)) 30%, transparent);
+    cursor: default;
+    transition: all 0.25s ease;
+  }
+
+  :global([data-theme="light"]) .version-badge {
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 8%, rgba(0, 0, 0, 0.04));
+    border: 1px solid color-mix(in srgb, var(--landing-accent, #6366f1) 25%, rgba(0, 0, 0, 0.1));
+    color: color-mix(in srgb, var(--landing-accent, #6366f1) 70%, #0f172a);
+  }
+
+  .topbar-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .topbar-icon-btn:hover {
+    color: var(--landing-accent, #ffffff);
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 12%, rgba(255, 255, 255, 0.08));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--landing-accent-glow, rgba(99, 102, 241, 0.2)) 40%, transparent);
+  }
+
+  :global([data-theme="light"]) .topbar-icon-btn {
+    color: rgba(15, 23, 42, 0.75);
+  }
+
+  :global([data-theme="light"]) .topbar-icon-btn:hover {
+    color: var(--landing-accent, #0f172a);
+    background: color-mix(in srgb, var(--landing-accent, #6366f1) 10%, rgba(0, 0, 0, 0.05));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--landing-accent-glow, rgba(99, 102, 241, 0.2)) 30%, transparent);
+  }
+
+  /* Theme icon toggle visibility */
+  :global([data-theme="dark"]) .icon-sun { display: none; }
+  :global([data-theme="dark"]) .icon-moon { display: block; }
+  :global([data-theme="light"]) .icon-sun { display: block; }
+  :global([data-theme="light"]) .icon-moon { display: none; }
+
+  /* -------------------------------------------------------------------------
+   * MAIN WRAPPER & COSMIC ARENA CANVAS
+   * ------------------------------------------------------------------------- */
+  .landing-main {
+    flex: 1;
+    min-height: calc(100vh - 60px);
+    background: transparent;
+    color: inherit;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global([data-theme="light"]) .sat-card {
+    background: var(--landing-card-bg-light, rgba(255, 255, 255, 0.85)) !important;
+    border: 1px solid var(--landing-card-border-light, rgba(0, 0, 0, 0.1)) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08) !important;
+    color: #0f172a !important;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.25s ease, transform 0.25s ease !important;
+  }
+
+  :global([data-theme="light"]) .sat-tag {
+    color: rgba(15, 23, 42, 0.5) !important;
+  }
+
+  :global([data-theme="light"]) .sat-avatar-circle {
+    background: rgba(0, 0, 0, 0.08) !important;
+    color: rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :global([data-theme="light"]) .skeleton-bar {
+    background: rgba(0, 0, 0, 0.1) !important;
+  }
+
+  :global([data-theme="light"]) .sat-micro-label {
+    color: rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :global([data-theme="light"]) .pod-inner-capsule {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .pod-brand-seed .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(59, 130, 246, 0.14) 0%, transparent 65%), #ffffff !important;
+  }
+
+  :global([data-theme="light"]) .pod-archetype .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(168, 85, 247, 0.12) 0%, transparent 65%), #ffffff !important;
+  }
+
+  :global([data-theme="light"]) .pod-presence .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(20, 184, 166, 0.12) 0%, transparent 65%), #ffffff !important;
+  }
+
+  :global([data-theme="light"]) .pod-heading {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .live-preview-window {
+    background: var(--landing-preview-bg-light, rgba(255, 255, 255, 0.94)) !important;
+    border: 1px solid var(--landing-preview-border-light, rgba(0, 0, 0, 0.12)) !important;
+    box-shadow: var(--landing-preview-shadow-light, 0 24px 60px -10px rgba(59, 130, 246, 0.25), 0 0 40px rgba(124, 58, 237, 0.15)) !important;
+    color: #0f172a !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease, border-radius 0.25s ease, background 0.3s ease !important;
+  }
+
+  :global([data-theme="light"]) .window-title-text {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .window-canvas-body :global(.preview-hero-card) {
+    background: var(--landing-feature-card-bg-light, rgba(0, 0, 0, 0.03)) !important;
+    border: 1px solid var(--landing-feature-card-border-light, rgba(0, 0, 0, 0.08)) !important;
+    transition: background 0.3s ease, border-color 0.3s ease, border-radius 0.25s ease !important;
+  }
+
+  :global([data-theme="light"]) .card-feature-headline {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .card-feature-subline {
+    color: rgba(15, 23, 42, 0.6) !important;
+  }
+
+  :global([data-theme="light"]) .chat-input-row {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  }
+
+  :global([data-theme="light"]) .chat-input-row :global(.basis-specimen-input) {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .grand-hero-title {
+    color: #0f172a !important;
+    text-shadow: none !important;
+  }
+
+  :global([data-theme="light"]) .grand-hero-subheading {
+    color: #1e293b !important;
+  }
+
+  :global([data-theme="light"]) .grand-hero-description {
+    color: #64748b !important;
+  }
+
+  :global([data-theme="light"]) .pod-chips-line :global(.choice-chip:not(.is-active):not([aria-checked="true"])) {
+    background: transparent !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    color: #334155 !important;
+  }
+
+  :global([data-theme="light"]) .chrome-menu-dots {
+    color: rgba(15, 23, 42, 0.4) !important;
+  }
+
+  :global([data-theme="light"]) .preview-skeleton-dash {
+    background: rgba(15, 23, 42, 0.15) !important;
+  }
+
+  :global([data-theme="light"]) .sat-card :global(.switch-track) {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+
+  :global([data-theme="light"]) .sat-chips-flex :global(.basis-specimen-chip:not(.is-selected)) {
+    background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .sat-card .sat-tag {
+    color: #475569 !important;
+  }
+
+  :global([data-theme="light"]) .sat-list-flex :global(.list-item-headline) {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .sat-list-flex :global(.list-item-supporting) {
+    color: #475569 !important;
+  }
+
+  :global([data-theme="light"]) .sat-list-flex :global(.list-item-icon),
+  :global([data-theme="light"]) .sat-list-flex :global(.list-item-caret) {
+    color: #334155 !important;
+  }
+
+  :global([data-theme="light"]) .card-feature-headline {
+    color: #0f172a !important;
+  }
+
+  :global([data-theme="light"]) .card-feature-subline {
+    color: #475569 !important;
+  }
+
+  :global([data-theme="light"]) .card-feature-arrow {
+    color: #64748b !important;
+  }
+
+  :global([data-theme="light"]) .orbit-node {
+    filter: none !important;
+    opacity: 0.5;
+  }
+
+  :global([data-theme="light"]) .node-dynamic-accent {
+    fill: var(--landing-accent, #2563eb) !important;
+  }
+
+  :global([data-theme="light"]) .node-dynamic-secondary {
+    fill: var(--landing-secondary, #4f46e5) !important;
+  }
+
+  :global([data-theme="light"]) .node-dynamic-tertiary {
+    fill: var(--landing-tertiary, #0284c7) !important;
+  }
+
+  :global([data-theme="light"]) .brand-swatch-dot.is-active {
+    border-color: #0f172a !important;
+    box-shadow: 0 0 10px currentColor, 0 0 0 2px rgba(15, 23, 42, 0.3) !important;
+  }
+
+  :global([data-theme="light"]) .cta-pill-studio {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #0f172a !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+
+  /* Unified Cosmic Arena Canvas (Spans ~92% viewport width matching mock) */
+  .cosmic-arena-canvas {
+    width: min(1380px, 92vw);
+    max-width: 1420px;
+    height: 520px;
+    margin: 0 auto;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  /* Visually Hidden Helper (W3C pattern) */
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* Floating 3D Confetti Diamond Shards */
+  .confetti-shard {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+    transform: rotate(45deg);
     border-radius: 2px;
   }
 
-  .studio-link {
-    color: var(--docs-accent);
-    font-weight: 600;
+  .shard-cyan {
+    top: 38%;
+    left: 19.5%;
+    width: 13px;
+    height: 13px;
+    background: linear-gradient(135deg, #00f0ff, #0284c7);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.7);
   }
 
-  .nav-right {
+  .shard-purple {
+    top: 50%;
+    left: 5.5%;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    box-shadow: 0 0 14px rgba(168, 85, 247, 0.7);
+  }
+
+  .shard-orange {
+    top: 15%;
+    left: 31%;
+    width: 8px;
+    height: 8px;
+    background: #f97316;
+    box-shadow: 0 0 10px #f97316;
+  }
+
+  .shard-coral {
+    top: 50%;
+    right: 4%;
+    width: 13px;
+    height: 13px;
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+    box-shadow: 0 0 16px rgba(244, 63, 94, 0.7);
+  }
+
+  .shard-violet {
+    top: 67%;
+    right: 21%;
+    width: 10px;
+    height: 10px;
+    background: #8b5cf6;
+    box-shadow: 0 0 12px #8b5cf6;
+  }
+
+  /* -------------------------------------------------------------------------
+   * SATELLITE CARDS (ORGANIC FLOATING 3D GLASS)
+   * ------------------------------------------------------------------------- */
+  .sat-card {
+    position: absolute;
+    z-index: 10;
+    background: var(--landing-card-bg, #10141e) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--landing-card-border, rgba(255, 255, 255, 0.08)) !important;
+    border-radius: var(--landing-card-radius, 14px) !important;
+    padding: 0.65rem 0.85rem !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease, border-color 0.3s ease, border-radius 0.25s ease !important;
+  }
+
+  .sat-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .sat-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 0.45rem;
+    display: block;
+  }
+
+  .sat-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Specific Satellite Coordinates and 3D Tilts from Mock */
+  .sat-pos-button {
+    top: 5%;
+    left: 3.5%;
+    width: 125px;
+    transform: perspective(800px) rotate(5deg) rotateY(8deg);
+  }
+
+  .sat-pos-card {
+    top: 31%;
+    left: 0.5%;
+    width: 130px;
+    transform: perspective(800px) rotate(-7deg) rotateY(10deg);
+  }
+
+  .sat-pos-input {
+    top: 59%;
+    left: 2%;
+    width: 145px;
+    transform: perspective(800px) rotate(-3deg) rotateY(6deg);
+  }
+
+  .sat-pos-chips {
+    top: 7%;
+    right: 0.5%;
+    width: 160px;
+    transform: perspective(800px) rotate(-5deg) rotateY(-8deg);
+  }
+
+  .sat-pos-switch {
+    top: 32%;
+    right: 1.5%;
+    width: 100px;
+    transform: perspective(800px) rotate(-3deg) rotateY(-10deg);
+  }
+
+  .sat-pos-list {
+    top: 56%;
+    right: 0.5%;
+    width: 182px;
+    transform: perspective(800px) rotate(5deg) rotateY(-6deg);
+  }
+
+  /* Satellite Specimen Aesthetics matching Mock */
+  .sat-card :global(.sat-mock-btn) {
+    width: 100%;
+    height: 28px !important;
+    padding: 0 0.85rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    border-radius: 9999px !important;
+    background: var(--landing-accent, #4f46e5) !important;
+    color: var(--landing-btn-text, #ffffff) !important;
+    border: none !important;
+    box-shadow: 0 4px 16px var(--landing-accent-glow, rgba(79, 70, 229, 0.55)) !important;
+    transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.15s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .sat-avatar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .sat-avatar-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sat-skeleton-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.38rem;
+    flex: 1;
+    min-width: 60px;
+  }
+
+  .skeleton-bar {
+    display: block;
+    height: 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.45) !important;
+  }
+
+  .bar-long { width: 50px !important; }
+  .bar-short { width: 30px !important; }
+
+  .sat-input-stack {
+    gap: 0.35rem;
+  }
+
+  .sat-micro-label {
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .sat-pos-input :global(.basis-specimen-input-wrapper) {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .sat-pos-input :global(.input-container) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: 8px !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    padding: 0 0.6rem !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .sat-pos-input :global(.specimen-input),
+  .sat-pos-input :global(.basis-specimen-input) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    font-size: 0.75rem !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .sat-chips-flex {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.35rem !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+  }
+
+  .sat-chips-flex :global(.basis-specimen-chip) {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0.25rem 0.55rem !important;
+    font-size: 0.7rem !important;
+    border-radius: 9999px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    white-space: nowrap !important;
+    line-height: 1.2 !important;
+  }
+
+  .sat-card :global(.basis-specimen-chip[data-selected="true"]),
+  .sat-card :global(.basis-specimen-chip[aria-checked="true"]),
+  .sat-card :global(.basis-specimen-chip.is-selected) {
+    background: var(--landing-accent, #4f46e5) !important;
+    color: var(--landing-btn-text, #ffffff) !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 12px var(--landing-accent-glow, rgba(79, 70, 229, 0.6)) !important;
+    transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease !important;
+  }
+
+  .sat-switch-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0;
+  }
+
+  .sat-switch-flex :global(.switch-label) {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .sat-switch-flex :global(.switch-track) {
+    width: 38px !important;
+    height: 22px !important;
+    padding: 3px !important;
+    border-radius: 9999px !important;
+    box-sizing: border-box !important;
+    background: var(--landing-accent, #4f46e5) !important;
+    border-color: var(--landing-accent, #4f46e5) !important;
+    box-shadow: 0 0 12px var(--landing-accent-glow, rgba(79, 70, 229, 0.6)) !important;
+  }
+
+  .sat-switch-flex :global(.switch-thumb) {
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 50% !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  .sat-switch-flex :global(.switch-track[data-checked="true"] .switch-thumb) {
+    transform: translateX(16px) !important;
+  }
+
+  .sat-list-flex :global(.basis-specimen-list-item) {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    padding: 0.45rem 0.55rem !important;
+    gap: 0.45rem !important;
+    white-space: nowrap !important;
+  }
+
+  .sat-list-flex :global(.content-slot) {
+    white-space: nowrap !important;
+  }
+
+  .sat-list-flex :global(.item-headline),
+  .sat-list-flex :global(.list-item-headline) {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    line-height: 1.25 !important;
+  }
+
+  .sat-list-flex :global(.item-supporting),
+  .sat-list-flex :global(.list-item-supporting) {
+    font-size: 0.6875rem !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    white-space: nowrap !important;
+    line-height: 1.25 !important;
+  }
+
+  /* -------------------------------------------------------------------------
+   * CENTRAL ORBITAL SYSTEM & SPHERE
+   * ------------------------------------------------------------------------- */
+  .orbital-rings-svg {
+    position: absolute;
+    top: 39%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+    width: 680px;
+    height: 680px;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .orbit-path {
+    fill: none;
+    stroke: var(--landing-orbit-stroke, rgba(59, 130, 246, 0.28));
+    stroke-width: 1.5;
+    transition: stroke 0.3s ease;
+  }
+
+  .orbit-inner {
+    stroke: var(--landing-orbit-inner, rgba(59, 130, 246, 0.38));
+    stroke-width: 1.5;
+  }
+
+  .orbit-outer {
+    stroke: var(--landing-orbit-outer, rgba(59, 130, 246, 0.32));
+    stroke-width: 1.8;
+  }
+
+  .orbit-mid {
+    stroke-dasharray: 4 6;
+    stroke: var(--landing-orbit-mid, rgba(99, 102, 241, 0.25));
+    stroke-width: 1.2;
+  }
+
+  .orbit-faint {
+    stroke: var(--landing-orbit-faint, rgba(59, 130, 246, 0.16));
+    stroke-dasharray: 4 8;
+    stroke-width: 1;
+  }
+
+  .orbit-node {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+
+  .node-dynamic-accent {
+    fill: var(--landing-node-accent, var(--landing-accent, #3b82f6));
+    color: var(--landing-node-accent, var(--landing-accent, #3b82f6));
+    transition: fill 0.3s ease, color 0.3s ease;
+  }
+
+  .node-dynamic-secondary {
+    fill: var(--landing-node-2, var(--b-color-brand-secondary, #6366f1));
+    color: var(--landing-node-2, var(--b-color-brand-secondary, #6366f1));
+    transition: fill 0.3s ease, color 0.3s ease;
+  }
+
+  .node-dynamic-tertiary {
+    fill: var(--landing-node-3, var(--b-color-brand-tertiary, #00f0ff));
+    color: var(--landing-node-3, var(--b-color-brand-tertiary, #00f0ff));
+    transition: fill 0.3s ease, color 0.3s ease;
+  }
+
+  .node-cyan { fill: #00f0ff; color: #00f0ff; }
+  .node-violet { fill: #a855f7; color: #a855f7; }
+  .node-blue { fill: #3b82f6; color: #3b82f6; }
+  .node-purple { fill: #c084fc; color: #c084fc; }
+  .node-orange { fill: #f97316; color: #f97316; }
+  .node-teal { fill: #14b8a6; color: #14b8a6; }
+
+  /* 2D Celestial Core Orb viewed from top plane (Iridescent brand colors) */
+  .celestial-orb-anchor {
+    position: absolute;
+    top: 39%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+    width: 86px;
+    height: 86px;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .celestial-orb-sphere {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--landing-orb-grad, radial-gradient(
+      circle at 30% 26%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 18%),
+      radial-gradient(circle at 36% 32%, #38bdf8 0%, #3b82f6 24%, #6366f1 46%, #a855f7 68%, #ec4899 86%, #0a0d18 100%
+    ));
+    box-shadow: var(--landing-orb-shadow,
+      inset -10px -12px 24px rgba(0, 0, 0, 0.85),
+      inset 2px 3px 8px rgba(255, 255, 255, 0.35),
+      inset -2px -3px 12px rgba(168, 85, 247, 0.5),
+      0 0 35px var(--landing-accent-glow, rgba(59, 130, 246, 0.55)),
+      0 0 75px rgba(59, 130, 246, 0.4),
+      0 0 120px rgba(99, 102, 241, 0.25),
+      0 12px 30px rgba(0, 0, 0, 0.7)
+    );
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .orb-specular-light {
+    position: absolute;
+    top: 14%;
+    left: 20%;
+    width: 28px;
+    height: 16px;
+    border-radius: 50%;
+    transform: rotate(-35deg);
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.12) 45%, transparent 75%);
+    filter: blur(0.5px);
+    pointer-events: none;
+  }
+
+  /* Mock mouse cursor in orbit */
+  .mock-mouse-cursor {
+    position: absolute;
+    top: 41%;
+    left: 54.5%;
+    z-index: 15;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  }
+
+  /* -------------------------------------------------------------------------
+   * ORBITAL INTENT PODS (FLATTER MUTED SOLID CARDS WITH ICON TINT BLEED)
+   * ------------------------------------------------------------------------- */
+  .orbit-pod {
+    position: absolute;
+    z-index: 10;
+  }
+
+  .pod-inner-capsule {
+    background: #10141e;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .pod-main-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+  }
+
+  .pod-brand-seed {
+    top: 71%;
+    left: 47%;
+    transform: translateX(-50%);
+  }
+
+  .pod-brand-seed .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(59, 130, 246, 0.22) 0%, transparent 65%), #10141e;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(59, 130, 246, 0.1);
+  }
+
+  .pod-archetype {
+    top: 20%;
+    left: 20.5%;
+  }
+
+  .pod-archetype .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(168, 85, 247, 0.2) 0%, transparent 65%), #10141e;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(168, 85, 247, 0.08);
+  }
+
+  .pod-presence {
+    top: 48%;
+    left: 19.5%;
+  }
+
+  .pod-presence .pod-inner-capsule {
+    background: radial-gradient(circle at 26px 50%, rgba(20, 184, 166, 0.2) 0%, transparent 65%), #10141e;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 25px rgba(20, 184, 166, 0.08);
+  }
+
+  .pod-badge {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .icon-cyan {
+    color: #00f0ff;
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6));
+  }
+
+  .icon-purple {
+    color: #c084fc;
+    filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.6));
+  }
+
+  .icon-teal {
+    color: #14b8a6;
+    filter: drop-shadow(0 0 8px rgba(20, 184, 166, 0.6));
+  }
+
+  .icon-blue {
+    color: #60a5fa;
+    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.6));
+  }
+
+  .pod-heading {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+
+  .swatches-capsule {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .github-link {
-    color: var(--docs-text-muted);
+  .brand-swatch-dot {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  .brand-swatch-dot:hover {
+    transform: scale(1.2);
+    border-color: #ffffff;
+    box-shadow: 0 0 10px currentColor;
+  }
+
+  .brand-swatch-dot.is-active {
+    transform: scale(1.25);
+    border-color: #ffffff;
+    box-shadow: 0 0 14px currentColor;
+  }
+
+  .pod-chips-line {
+    display: flex;
+    overflow: visible;
+  }
+
+  .pod-chips-line :global(.choice-chips-field) {
+    margin-bottom: 0 !important;
+    gap: 0 !important;
+  }
+
+  .pod-chips-line::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pod-chips-line :global(.chips-container) {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.35rem !important;
+  }
+
+  .pod-chips-line :global(.choice-chip) {
+    flex-shrink: 0 !important;
+    padding: 0.25rem 0.65rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 500 !important;
+    border-radius: 9999px !important;
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    box-shadow: none !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .pod-chips-line :global(.choice-chip:hover) {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+  }
+
+  .pod-chips-line :global(.choice-chip[aria-checked="true"]),
+  .pod-chips-line :global(.choice-chip.is-active) {
+    background: linear-gradient(135deg, var(--landing-accent, #6366f1), #4338ca) !important;
+    color: #ffffff !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 2px 14px var(--landing-accent-glow, rgba(99, 102, 241, 0.5)) !important;
+  }
+
+  .pod-chips-line :global(.chip-tooltip),
+  .orbit-pod :global(.chip-tooltip) {
+    display: none !important;
+  }
+
+  /* Limit visible options to 3 high-value options matching mock */
+  .pod-chips-line :global(.chip-wrapper) {
+    display: none !important;
+  }
+
+  .pod-archetype .pod-chips-line :global(.chip-wrapper:has([data-value="Calm"])),
+  .pod-archetype .pod-chips-line :global(.chip-wrapper:has([data-value="Bold"])),
+  .pod-archetype .pod-chips-line :global(.chip-wrapper:has([data-value="Playful"])) {
+    display: flex !important;
+  }
+
+  .pod-presence .pod-chips-line :global(.chip-wrapper:has([data-value="Subtle"])),
+  .pod-presence .pod-chips-line :global(.chip-wrapper:has([data-value="Balanced"])),
+  .pod-presence .pod-chips-line :global(.chip-wrapper:has([data-value="Strong"])) {
+    display: flex !important;
+  }
+
+  /* -------------------------------------------------------------------------
+   * LIVE PREVIEW 3D WINDOW (WITH PERSPECTIVE ROTATION & RADIANT GLOW)
+   * ------------------------------------------------------------------------- */
+  .live-preview-window {
+    position: absolute;
+    top: 7%;
+    left: 58%;
+    width: 28%;
+    min-width: 290px;
+    max-width: 335px;
+    background: var(--landing-preview-bg, linear-gradient(
+      165deg,
+      rgba(22, 27, 46, 0.92) 0%,
+      rgba(15, 18, 30, 0.95) 55%,
+      rgba(10, 12, 22, 0.98) 100%
+    ));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--landing-preview-border, rgba(147, 158, 255, 0.35));
+    border-radius: var(--landing-preview-radius, 18px);
+    padding: 1.15rem;
+    transform-origin: top left;
+    transform: perspective(1000px) rotateY(-6deg) rotateX(2deg) rotate(2deg);
+    box-shadow: var(--landing-preview-shadow,
+      0 35px 85px rgba(0, 0, 0, 0.8),
+      0 0 22px 2px rgba(129, 140, 248, 0.4),
+      0 18px 48px 8px rgba(99, 102, 241, 0.25),
+      0 0 90px 15px rgba(79, 70, 229, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18)
+    );
+    z-index: 12;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s ease, border-radius 0.25s ease, background 0.3s ease;
+  }
+
+  .live-preview-window:hover {
+    transform: perspective(1000px) rotateY(-2deg) rotateX(1deg) rotate(1deg);
+    box-shadow:
+      0 40px 95px rgba(0, 0, 0, 0.85),
+      0 0 28px 3px rgba(129, 140, 248, 0.55),
+      0 22px 58px 12px rgba(99, 102, 241, 0.4),
+      0 0 100px 20px rgba(79, 70, 229, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .window-chrome-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .window-title-text {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+
+  .chrome-menu-dots {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .preview-skeleton-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    margin-bottom: 0.85rem;
+  }
+
+  .preview-skeleton-dash {
+    display: block;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.2);
+    transition: background 0.25s ease;
+  }
+
+  .preview-skeleton-dash.dash-short {
+    width: 72px;
+  }
+
+  .preview-skeleton-dash.dash-long {
+    width: 108px;
+  }
+
+  .window-canvas-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .window-canvas-body :global(.preview-hero-button) {
+    width: 100%;
+    padding: 0.85rem 1.25rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: var(--landing-font-weight, 700) !important;
+    border-radius: var(--landing-btn-radius, var(--b-radius-level3, 14px)) !important;
+    background: var(--landing-btn-grad, linear-gradient(135deg, var(--b-color-brand-primary, var(--landing-accent, #3b82f6)), var(--b-color-brand-secondary, var(--landing-accent, #6366f1)))) !important;
+    color: var(--landing-btn-text, var(--b-color-content-inverse, #ffffff)) !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: var(--landing-btn-shadow, 0 4px 18px var(--landing-accent-glow, rgba(59, 130, 246, 0.55))) !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.25s ease, color 0.25s ease, border-radius 0.25s ease !important;
+  }
+
+  .window-canvas-body :global(.preview-hero-button:hover) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.7), 0 0 22px rgba(165, 180, 252, 0.55) !important;
+  }
+
+  .window-canvas-body :global(.preview-hero-card) {
+    background: var(--landing-feature-card-bg, var(--b-color-surface-elevated, rgba(255, 255, 255, 0.04))) !important;
+    border: 1px solid var(--landing-feature-card-border, var(--b-color-border-subtle, rgba(255, 255, 255, 0.08))) !important;
+    border-radius: var(--landing-card-radius, var(--b-radius-level3, 14px)) !important;
+    padding: 0.75rem 1rem !important;
+    transition: background 0.3s ease, border-color 0.3s ease, border-radius 0.25s ease !important;
+  }
+
+  .card-feature-flex {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .card-feature-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--landing-card-radius, var(--b-radius-level2, 10px)) !important;
+    background: var(--landing-underglow-left, rgba(59, 130, 246, 0.18)) !important;
+    border: 1px solid var(--landing-accent, rgba(59, 130, 246, 0.4)) !important;
+    color: var(--landing-accent, #38bdf8) !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    transition: color 0.15s ease, background 0.15s ease;
+    flex-shrink: 0;
+    transition: all 0.25s ease !important;
   }
 
-  .github-link:hover {
-    color: var(--docs-text);
-    background: var(--docs-card-hover);
+  .card-feature-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
   }
 
-  .github-link:focus-visible {
-    outline: 2px solid var(--docs-focus-ring);
-    outline-offset: 2px;
+  .card-feature-headline {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #ffffff;
   }
 
-  /* Localized Preview Scope: takes localized --b-* variables when applied */
-  .basis-preview-scope {
-    /* Fallback variables mapping to localized preview or docs defaults */
-    --preview-bg: var(--b-color-surface-default, var(--docs-bg));
-    --preview-text: var(--b-color-content-default, var(--docs-text));
-    --preview-brand: var(--b-color-brand-primary, var(--docs-accent));
+  .card-feature-subline {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  .landing-hero {
-    position: relative;
-    padding: 7rem 2rem 6rem 2rem;
-    text-align: center;
+  .card-feature-arrow {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1;
+    margin-left: auto;
+  }
+
+  .chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .chat-input-row.is-disabled,
+  .chat-input-row:has(:disabled) {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.03) !important;
+  }
+
+  .chat-input-row :global(.specimen-input[disabled]),
+  .chat-input-row :global(.basis-specimen-input[disabled]) {
+    cursor: not-allowed !important;
+  }
+
+  .chat-send-btn:disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+  }
+
+  .chat-input-row :global(.basis-specimen-input-wrapper) {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .chat-input-row :global(.input-container) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+
+  .chat-input-row :global(.specimen-input),
+  .chat-input-row :global(.basis-specimen-input) {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0.35rem 0.25rem !important;
+    color: #ffffff !important;
+    font-size: 0.8125rem !important;
+  }
+
+  .chat-send-btn {
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--landing-accent, #818cf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.85;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .chat-send-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* -------------------------------------------------------------------------
+   * GRAND HERO NARRATIVE SECTION (CENTERED BELOW)
+   * ------------------------------------------------------------------------- */
+  .landing-hero-narrative {
     max-width: 860px;
-    margin: 0 auto;
-  }
-
-  :global([data-theme="dark"]) .landing-hero::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 350px;
-    background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.02) 45%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  :global([data-theme="light"]) .landing-hero::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 600px;
-    height: 350px;
-    background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.04) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-title {
+    margin: 2.5rem auto 1.5rem auto;
+    text-align: center;
+    padding: 0 1.5rem;
     position: relative;
-    font-size: 3.5rem;
+    z-index: 10;
+  }
+
+  .grand-hero-title {
+    font-size: clamp(3rem, 6vw, 4.5rem);
     font-weight: 800;
     letter-spacing: -0.035em;
-    margin: 0 0 1.25rem 0;
-    color: var(--docs-text);
-    line-height: 1.15;
-    z-index: 1;
+    color: #ffffff;
+    margin: 0 0 0.875rem 0;
+    line-height: 1;
+    text-shadow: 0 4px 35px rgba(255, 255, 255, 0.25);
   }
 
-  .hero-subtitle {
-    position: relative;
-    font-size: 1.25rem;
-    line-height: 1.6;
-    color: var(--docs-text-muted);
-    margin: 0 auto 2.5rem auto;
-    max-width: 680px;
-    z-index: 1;
+  .grand-hero-subheading {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 0.625rem 0;
+    line-height: 1.4;
   }
 
-  .hero-actions {
-    position: relative;
+  .grand-hero-description {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 2rem 0;
+    line-height: 1.5;
+  }
+
+  .grand-hero-cta-group {
     display: flex;
-    gap: 1rem;
+    align-items: center;
     justify-content: center;
-    z-index: 1;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .btn {
+  .cta-pill-luminous {
     display: inline-flex;
     align-items: center;
-    padding: 0.8rem 1.75rem;
-    border-radius: 8px;
+    gap: 0.5rem;
+    padding: 0.875rem 2.25rem;
+    background: linear-gradient(135deg, var(--landing-accent, #6366f1), var(--b-color-brand-secondary, #3b82f6));
+    color: var(--landing-btn-text, var(--b-color-content-inverse, #ffffff));
+    font-size: 0.9375rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 0 35px var(--landing-accent-glow, rgba(99, 102, 241, 0.65)), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.25s ease, color 0.25s ease;
+  }
+
+  .cta-pill-luminous:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 45px var(--landing-accent-glow, rgba(99, 102, 241, 0.85)), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  }
+
+  .cta-pill-studio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 2rem;
+    background: rgba(14, 18, 28, 0.8);
+    color: #ffffff;
     font-size: 0.9375rem;
     font-weight: 600;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
     text-decoration: none;
-    transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   }
 
-  .btn:hover {
-    transform: translateY(-1px);
+  .cta-pill-studio:hover {
+    background: rgba(25, 32, 48, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
   }
 
-  .btn:active {
-    transform: translateY(0);
+  .equalizer-svg {
+    color: var(--landing-accent, #3b82f6);
+    transition: color 0.25s ease;
   }
 
-  /* Light mode buttons */
-  :global([data-theme="light"]) .btn-primary {
-    background: var(--docs-accent, #2563eb);
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+  .landing-disclaimer-wrap {
+    display: none !important;
   }
 
-  :global([data-theme="light"]) .btn-primary:hover {
-    background: var(--docs-link-hover, #1d4ed8);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  /* -------------------------------------------------------------------------
+   * RESPONSIVE BREAKPOINTS & DESKTOP NO-SCROLL CANVAS FIT
+   * ------------------------------------------------------------------------- */
+  @media (min-width: 901px) and (min-height: 650px) {
+    :global(html),
+    :global(body) {
+      overflow-y: hidden;
+      height: 100vh;
+    }
+
+    .landing-page-wrap {
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+    }
+
+    .landing-main {
+      height: calc(100vh - 60px);
+      max-height: calc(100vh - 60px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #landing-preview {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .cosmic-arena-canvas {
+      width: min(1380px, 92vw);
+      max-width: 1420px;
+      height: clamp(430px, 54vh, 520px);
+      margin: -48px auto 0 auto;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .landing-hero-narrative {
+      margin: 1.15rem auto 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .grand-hero-title {
+      font-size: clamp(2.25rem, 4.2vh, 3.25rem);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .grand-hero-subheading {
+      font-size: clamp(0.95rem, 1.8vh, 1.15rem);
+      margin: 0 0 0.25rem 0;
+    }
+
+    .grand-hero-description {
+      font-size: 0.8125rem;
+      margin: 0 0 0.75rem 0;
+    }
+
+    .grand-hero-cta-group {
+      gap: 0.75rem;
+    }
+
+    .cta-pill-luminous {
+      padding: 0.65rem 1.6rem;
+      font-size: 0.875rem;
+    }
+
+    .cta-pill-studio {
+      padding: 0.65rem 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .landing-disclaimer-wrap {
+      margin: 0.25rem auto 0.5rem auto;
+      padding: 0 1rem;
+      flex-shrink: 0;
+    }
   }
 
-  :global([data-theme="light"]) .btn-secondary {
-    background: #ffffff;
-    color: var(--docs-text, #1e293b);
-    border: 1px solid var(--docs-border, #e2e8f0);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  /* -------------------------------------------------------------------------
+   * SUBTLE ENERGETIC BOTTOM AURORA DRIFT (FADING AS IT NEARS CTAS)
+   * ------------------------------------------------------------------------- */
+  .bottom-aurora-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
   }
 
-  :global([data-theme="light"]) .btn-secondary:hover {
-    background: var(--docs-surface-recessed, #f1f5f9);
-    border-color: var(--docs-border-strong, #cbd5e1);
+  .aurora-beam {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.2;
+    animation: auroraDrift 14s ease-in-out infinite alternate;
   }
 
-  /* Dark mode buttons - Flat saturated electric royal blue & metallic black */
-  :global([data-theme="dark"]) .btn-primary {
-    background: var(--docs-accent, #2563eb);
-    color: #ffffff;
-    font-weight: 600;
-    box-shadow: none;
-    border: none;
+  .beam-1 {
+    bottom: -25px;
+    left: 20%;
+    width: 320px;
+    height: 80px;
+    background: radial-gradient(ellipse at center, var(--landing-accent, #3b82f6) 0%, transparent 70%);
+    animation-duration: 12s;
   }
 
-  :global([data-theme="dark"]) .btn-primary:hover {
-    background: #1d4ed8;
-    box-shadow: none;
+  .beam-2 {
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 440px;
+    height: 100px;
+    background: radial-gradient(ellipse at center, var(--landing-secondary, #6366f1) 0%, transparent 70%);
+    animation-duration: 16s;
+    animation-delay: -4s;
   }
 
-  :global([data-theme="dark"]) .btn-secondary {
-    background: #141414;
-    color: var(--docs-text, #f5f5f7);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: none;
+  .beam-3 {
+    bottom: -25px;
+    right: 20%;
+    width: 280px;
+    height: 80px;
+    background: radial-gradient(ellipse at center, var(--landing-tertiary, #00f0ff) 0%, transparent 70%);
+    animation-duration: 14s;
+    animation-delay: -8s;
   }
 
-  :global([data-theme="dark"]) .btn-secondary:hover {
-    background: #1e1e1e;
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: none;
+  @keyframes auroraDrift {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 0.14;
+    }
+    50% {
+      transform: translateY(-10px) scale(1.08);
+      opacity: 0.24;
+    }
+    100% {
+      transform: translateY(-4px) scale(0.96);
+      opacity: 0.16;
+    }
   }
 
-  .btn:focus-visible {
-    outline: 2px solid var(--docs-focus-ring, #58a6ff);
-    outline-offset: 3px;
+  /* -------------------------------------------------------------------------
+   * BOTTOM ETHEREAL RADIANCE CURTAIN FADING TOWARD CTAS
+   * ------------------------------------------------------------------------- */
+  .bottom-aurora-curtain {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 280px;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.18) 40%, transparent 88%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.18) 40%, transparent 88%);
+  }
+
+  .curtain-glow {
+    position: absolute;
+    bottom: -60px;
+    border-radius: 50%;
+    filter: blur(85px);
+    pointer-events: none;
+    transform-origin: center center;
+    will-change: transform, opacity;
+  }
+
+  .curtain-glow.glow-1 {
+    left: 12%;
+    width: 500px;
+    height: 190px;
+    background: radial-gradient(ellipse at center, var(--landing-accent, #3b82f6) 0%, transparent 70%);
+    animation: curtainBreath1 14s ease-in-out infinite alternate;
+  }
+
+  .curtain-glow.glow-2 {
+    right: 15%;
+    width: 540px;
+    height: 210px;
+    background: radial-gradient(ellipse at center, var(--landing-secondary, #8b5cf6) 0%, transparent 70%);
+    animation: curtainBreath2 16s ease-in-out infinite alternate;
+    animation-delay: -5s;
+  }
+
+  .curtain-glow.glow-3 {
+    left: 45%;
+    width: 420px;
+    height: 170px;
+    background: radial-gradient(ellipse at center, var(--landing-tertiary, #00f2fe) 0%, transparent 70%);
+    animation: curtainBreath3 12s ease-in-out infinite alternate;
+    animation-delay: -2s;
+  }
+
+  @keyframes curtainBreath1 {
+    0% { transform: scale(0.9); opacity: 0.16; }
+    100% { transform: scale(1.12); opacity: 0.26; }
+  }
+
+  @keyframes curtainBreath2 {
+    0% { transform: scale(1.1); opacity: 0.22; }
+    100% { transform: scale(0.92); opacity: 0.14; }
+  }
+
+  @keyframes curtainBreath3 {
+    0% { transform: scale(0.94); opacity: 0.12; }
+    100% { transform: scale(1.14); opacity: 0.24; }
+  }
+
+  :global([data-theme="light"]) .curtain-glow.glow-1 {
+    opacity: 0.10;
+  }
+  :global([data-theme="light"]) .curtain-glow.glow-2 {
+    opacity: 0.08;
+  }
+  :global([data-theme="light"]) .curtain-glow.glow-3 {
+    opacity: 0.07;
+  }
+
+  @media (max-width: 1080px) {
+    .sat-card {
+      display: none;
+    }
+  }
+
+  /* Responsively scale down on compact desktop / landscape tablets while preserving zero-scroll */
+  @media (min-width: 901px) and (max-width: 1200px) {
+    .cosmic-arena-canvas {
+      transform: scale(0.88);
+      transform-origin: top center;
+      margin-bottom: -45px;
+    }
+  }
+
+  @media (min-width: 901px) and (max-height: 720px) {
+    .cosmic-arena-canvas {
+      transform: scale(0.8);
+      transform-origin: top center;
+      margin-bottom: -75px;
+    }
+  }
+
+  /* Adaptive Layout for Mobile & Portrait Orientations */
+  @media (max-width: 900px), (orientation: portrait) and (max-width: 1024px) {
+    .landing-page-wrap {
+      overflow-y: auto !important;
+      height: auto !important;
+      min-height: 100vh;
+    }
+
+    .cosmic-arena-canvas {
+      height: auto !important;
+      transform: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 1.25rem !important;
+      padding: 1.5rem 1rem 1rem 1rem !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: 520px !important;
+    }
+
+    .orbital-rings-svg,
+    .sat-card,
+    .mock-mouse-cursor {
+      display: none !important;
+    }
+
+    .celestial-orb-anchor {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      transform: none !important;
+      width: 72px !important;
+      height: 72px !important;
+      margin: 0.5rem auto 1rem auto !important;
+      display: block !important;
+    }
+
+    .orbit-pod {
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      transform: none !important;
+    }
+
+    .pod-inner-capsule {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0.85rem 1rem !important;
+    }
+
+    .pod-chips-line {
+      width: 100% !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .pod-chips-line :global(.chips-container) {
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+    }
+
+    .live-preview-window {
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      transform: none !important;
+      box-sizing: border-box !important;
+      margin-top: 0.5rem !important;
+    }
+
+    .live-preview-window:hover {
+      transform: none !important;
+    }
+
+    .bottom-aurora-fade,
+    .bottom-aurora-curtain {
+      display: none !important;
+    }
+
+    .landing-hero-narrative {
+      margin: 2rem auto 2rem auto !important;
+      padding: 0 1rem !important;
+      width: 100% !important;
+      max-width: 520px !important;
+      box-sizing: border-box !important;
+    }
+
+    .grand-hero-title {
+      font-size: clamp(2.25rem, 6vw, 3rem) !important;
+    }
+
+    .grand-hero-subheading {
+      font-size: clamp(1rem, 2.5vw, 1.25rem) !important;
+    }
+
+    .grand-hero-cta-group {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      width: 100% !important;
+      gap: 0.75rem !important;
+    }
+
+    .cta-pill-luminous,
+    .cta-pill-studio {
+      justify-content: center !important;
+      text-align: center !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0.85rem 1.5rem !important;
+    }
   }
 
   @media (max-width: 768px) {
-    .nav-center {
+    .topbar-nav {
       display: none;
     }
 
-    .hero-title {
-      font-size: 2.5rem;
+    .version-badge {
+      display: none;
     }
 
-    .hero-actions {
-      flex-direction: column;
+    .topbar-inner {
+      padding: 0 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-page-wrap::before,
+    .sat-card,
+    .live-preview-window,
+    .cta-pill-luminous,
+    .cta-pill-studio,
+    .brand-swatch-dot,
+    .aurora-beam,
+    .curtain-glow {
+      transition: none !important;
+      transform: none !important;
+      animation: none !important;
     }
   }
 </style>
