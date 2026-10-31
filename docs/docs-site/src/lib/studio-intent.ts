@@ -211,10 +211,8 @@ function isBrowser(): boolean {
 }
 
 function getGlobalApi(): DocsRuntimeApi | null {
-  const w = window as { Basis_docs_runtime?: unknown };
-  const ns =
-    (w.Basis_docs_runtime as { io?: { github?: { alph_a07?: { basis?: { docs?: { runtime?: DocsRuntimeApi } } } } } }) ??
-    {};
+  const w = window as Record<string, any>;
+  const ns = w['Basis:docs-runtime'] ?? w['Basis_docs_runtime'] ?? w['Basis-docs-runtime'] ?? {};
   return ns.io?.github?.alph_a07?.basis?.docs?.runtime ?? null;
 }
 
