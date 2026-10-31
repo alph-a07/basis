@@ -102,6 +102,7 @@ export interface StudioIntentStore {
   setDomains: (values: string[]) => void;
   setInteractions: (values: string[]) => void;
   setMode: (preferred: 'Light' | 'Dark' | null, targets: string[]) => void;
+  setFullIntent: (newIntent: IntentState) => void;
   reset: () => void;
 }
 
@@ -256,8 +257,11 @@ export function loadDocsRuntime(): Promise<DocsRuntimeApi> {
 export function createStudioIntentStore(
   setState: (fn: (s: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null }) => void) => void,
   onResolve?: (store: { intent: IntentState; lastGood: ResolvedSuccess | null; current: ResolveResult | null }) => void,
+  initialIntent?: IntentState | null,
 ): StudioIntentStore {
-  let intent: IntentState = JSON.parse(JSON.stringify(DEFAULT_INTENT));
+  let intent: IntentState = initialIntent
+    ? JSON.parse(JSON.stringify(initialIntent))
+    : JSON.parse(JSON.stringify(DEFAULT_INTENT));
   let lastGood: ResolvedSuccess | null = null;
   let current: ResolveResult | null = null;
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -362,6 +366,11 @@ export function createStudioIntentStore(
     setDomains: (values: string[]) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.domains = values; }),
     setInteractions: (values: string[]) => mutate((i) => { if (!i.domain) i.domain = {}; i.domain.interactions = values; }),
     setMode: (preferred: 'Light' | 'Dark' | null, targets: string[]) => mutate((i) => { if (!i.control) i.control = {}; i.control.mode = { preferred, targets }; }),
+    setFullIntent: (newIntent: IntentState) => {
+      intent = JSON.parse(JSON.stringify(newIntent || DEFAULT_INTENT));
+      emit();
+      scheduleResolve();
+    },
     reset: () => {
       intent = JSON.parse(JSON.stringify(DEFAULT_INTENT));
       emit();
@@ -399,6 +408,136 @@ export function bindControlEvents(
   }
   container.addEventListener('control-change', handler);
   return () => container.removeEventListener('control-change', handler);
+}
+
+/**
+ * Generates clean, idiomatic Kotlin code from an IntentState.
+ * Adheres strictly to BasisIntent, IdentityIntent, MoodIntent, and DomainIntent signatures.
+ */
+export function buildKotlinFromIntent(intent: IntentState): string {
+  const i = intent;
+  const lines: string[] = [];
+  lines.push('BasisIntent(');
+
+  if (i?.identity) {
+    lines.push('  identity = IdentityIntent(');
+    const idProps: string[] = [];
+    if (i.identity.brandColor?.value) {
+      idProps.push(`    brandColor = ColorSpec.Hex("${i.identity.brandColor.value}")`);
+    }
+    if (i.identity.supportingColors && i.identity.supportingColors.length > 0) {
+      const colors = i.identity.supportingColors
+        .map((c) => `ColorSpec.Hex("${c.value}")`)
+        .join(', ');
+      idProps.push(`    supportingColors = listOf(${colors})`);
+    }
+    if (i.identity.presence) {
+      idProps.push(`    presence = BrandPresence.${i.identity.presence}`);
+    }
+    if (i.identity.deriveColors !== undefined) {
+      idProps.push(`    deriveColors = ${i.identity.deriveColors}`);
+    }
+    if (i.identity.typography) {
+      const typo = i.identity.typography;
+      const typoProps: string[] = [];
+      if (typo.candidates && typo.candidates.length > 0) {
+        typoProps.push(`      candidates = listOf(${typo.candidates.map((c) => `FontFamilyRef.Catalog("${c.id}")`).join(', ')})`);
+      }
+      if (typo.structure?.id) {
+        typoProps.push(`      structure = FontFamilyRef.Catalog("${typo.structure.id}")`);
+      }
+      if (typo.content?.id) {
+        typoProps.push(`      content = FontFamilyRef.Catalog("${typo.content.id}")`);
+      }
+      if (typo.metadata?.id) {
+        typoProps.push(`      metadata = FontFamilyRef.Catalog("${typo.metadata.id}")`);
+      }
+      if (typoProps.length > 0) {
+        idProps.push(`    typography = TypographyIntent(\n${typoProps.join(',\n')}\n    )`);
+      }
+    }
+    lines.push(idProps.join(',\n'));
+    lines.push('  ),');
+  }
+
+  if (i?.mood && (i.mood.preset || (i.mood.knobs && Object.keys(i.mood.knobs).length > 0))) {
+    lines.push('  mood = MoodIntent(');
+    const moodProps: string[] = [];
+    if (i.mood.preset) {
+      moodProps.push(`    preset = MoodPreset.${i.mood.preset}`);
+    }
+    if (i.mood.knobs) {
+      const activeKnobs = Object.entries(i.mood.knobs)
+        .filter(([, v]) => v !== null && v !== undefined && !Number.isNaN(v));
+      if (activeKnobs.length > 0) {
+        const knobLines = activeKnobs.map(([k, v]) => `      ${k} = ${Number(v).toFixed(2)}f`);
+        moodProps.push(`    knobs = MoodKnobs(\n${knobLines.join(',\n')}\n    )`);
+      }
+    }
+    lines.push(moodProps.join(',\n'));
+    lines.push('  ),');
+  }
+
+  if (i?.domain && ((i.domain.domains && i.domain.domains.length > 0) || (i.domain.interactions && i.domain.interactions.length > 0))) {
+    lines.push('  domain = DomainIntent(');
+    const domProps: string[] = [];
+    if (i.domain.domains && i.domain.domains.length > 0) {
+      domProps.push(`    domains = setOf(${i.domain.domains.map((d) => `ProductDomain.${d}`).join(', ')})`);
+    }
+    if (i.domain.interactions && i.domain.interactions.length > 0) {
+      domProps.push(`    interactions = setOf(${i.domain.interactions.map((it) => `InteractionPattern.${it}`).join(', ')})`);
+    }
+    lines.push(domProps.join(',\n'));
+    lines.push('  ),');
+  }
+
+  lines.push(')');
+  return lines.join('\n');
+}
+
+/**
+ * Encodes an intent state into a versioned URL hash (#v1.<base64url>).
+ */
+export function encodeIntentHash(intent: IntentState): string {
+  try {
+    const json = JSON.stringify(intent);
+    let b64: string;
+    if (typeof btoa !== 'undefined') {
+      b64 = btoa(unescape(encodeURIComponent(json)));
+    } else {
+      b64 = Buffer.from(json, 'utf-8').toString('base64');
+    }
+    const b64url = b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return `#v1.${b64url}`;
+  } catch {
+    return '#v1.';
+  }
+}
+
+/**
+ * Decodes a versioned URL hash (#v1.<base64url>) into an IntentState, or null if invalid.
+ */
+export function decodeIntentHash(hash: string): IntentState | null {
+  if (!hash || !hash.startsWith('#v1.')) return null;
+  const raw = hash.slice(4);
+  if (!raw) return null;
+  try {
+    let b64 = raw.replace(/-/g, '+').replace(/_/g, '/');
+    while (b64.length % 4) b64 += '=';
+    let json: string;
+    if (typeof atob !== 'undefined') {
+      json = decodeURIComponent(escape(atob(b64)));
+    } else {
+      json = Buffer.from(b64, 'base64').toString('utf-8');
+    }
+    const parsed = JSON.parse(json);
+    if (parsed && typeof parsed === 'object') {
+      return parsed as IntentState;
+    }
+  } catch {
+    return null;
+  }
+  return null;
 }
 
 // Dev-only global hook for inspection.

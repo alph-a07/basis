@@ -7,6 +7,9 @@ import {
   applyControlChange,
   serializeIntent,
   createStudioIntentStore,
+  buildKotlinFromIntent,
+  encodeIntentHash,
+  decodeIntentHash,
   type IntentState,
   type ResolvedSuccess,
   type ResolveResult,
@@ -172,4 +175,68 @@ assert.deepStrictEqual(r4.identity?.brandColor, {
 });
 console.log('   ✅ Path-based dispatch handles knobs, presence, brandColor, and null.\n');
 
-console.log('🎉 All P2.5 intent store requirements passed.');
+// ---------------------------------------------------------------------------
+// 8. buildKotlinFromIntent generates valid idiomatic Kotlin code (P2.8)
+// ---------------------------------------------------------------------------
+console.log('8. Verifying buildKotlinFromIntent code generation (P2.8)...');
+const sampleIntent: IntentState = {
+  identity: {
+    brandColor: { type: 'io.github.alph_a07.basis.theme.core.color.ColorSpec.Hex', value: '#3b82f6' },
+    supportingColors: [{ type: 'io.github.alph_a07.basis.theme.core.color.ColorSpec.Hex', value: '#10b981' }],
+    presence: 'Balanced',
+    deriveColors: true,
+  },
+  mood: {
+    preset: 'Calm',
+    knobs: {
+      warmth: 0.25,
+      density: -0.1,
+    },
+  },
+  domain: {
+    domains: ['DeveloperTool', 'Finance'],
+    interactions: ['HighDensity', 'DataGrid'],
+  },
+};
+const kotlin = buildKotlinFromIntent(sampleIntent);
+assert.ok(kotlin.includes('BasisIntent('), 'Kotlin output must start with BasisIntent(');
+assert.ok(kotlin.includes('IdentityIntent('), 'Kotlin output must include IdentityIntent');
+assert.ok(kotlin.includes('ColorSpec.Hex("#3b82f6")'), 'Kotlin output must format brand color');
+assert.ok(kotlin.includes('BrandPresence.Balanced'), 'Kotlin output must format BrandPresence');
+assert.ok(kotlin.includes('MoodPreset.Calm'), 'Kotlin output must format MoodPreset');
+assert.ok(kotlin.includes('ProductDomain.DeveloperTool'), 'Kotlin output must format ProductDomain');
+assert.ok(kotlin.includes('InteractionPattern.HighDensity'), 'Kotlin output must format InteractionPattern');
+console.log('   ✅ buildKotlinFromIntent correctly serializes all intent axes.\n');
+
+// ---------------------------------------------------------------------------
+// 9. encodeIntentHash & decodeIntentHash round-trip (P2.9 URL State)
+// ---------------------------------------------------------------------------
+console.log('9. Verifying URL hash serialization and decoding (P2.9)...');
+const hash = encodeIntentHash(sampleIntent);
+assert.ok(hash.startsWith('#v1.'), 'Hash must be versioned with #v1.');
+assert.ok(!hash.includes('+') && !hash.includes('/'), 'Hash must be URL-safe (base64url)');
+
+const decoded = decodeIntentHash(hash);
+assert.ok(decoded !== null, 'Decoded intent must not be null');
+assert.strictEqual(decoded?.identity?.brandColor?.value, '#3b82f6');
+assert.strictEqual(decoded?.identity?.presence, 'Balanced');
+assert.strictEqual(decoded?.mood?.preset, 'Calm');
+assert.deepStrictEqual(decoded?.domain?.domains, ['DeveloperTool', 'Finance']);
+
+// Malformed / invalid hashes return null without throwing
+assert.strictEqual(decodeIntentHash(''), null);
+assert.strictEqual(decodeIntentHash('#v2.invalid'), null);
+assert.strictEqual(decodeIntentHash('#v1.!!!not-base64'), null);
+console.log('   ✅ encodeIntentHash/decodeIntentHash round-trip verified.\n');
+
+// ---------------------------------------------------------------------------
+// 10. setFullIntent restores complete state
+// ---------------------------------------------------------------------------
+console.log('10. Verifying store.setFullIntent restores full state...');
+const { store: s10 } = captureStore();
+s10.setFullIntent(sampleIntent);
+assert.strictEqual(s10.intent.identity?.brandColor?.value, '#3b82f6');
+assert.strictEqual(s10.intent.mood?.preset, 'Calm');
+console.log('   ✅ setFullIntent restores entire intent tree.\n');
+
+console.log('🎉 All P2.5, P2.8, P2.9 intent store requirements passed.');
