@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
@@ -7,11 +9,18 @@ plugins {
     alias(libs.plugins.android.bcv.bridge)
 }
 
+val basisVersion: String =
+    run {
+        val props = Properties()
+        rootProject.file("gradle/version.properties").inputStream().use { props.load(it) }
+        props.getProperty("basis.version") ?: "0.1.0"
+    }
+
 android {
     namespace = "io.github.alph_a07.basis.components"
     group = "io.github.alph_a07"
 
-    version = "0.1.0"
+    version = basisVersion
 
     compileSdk {
         version = release(37)

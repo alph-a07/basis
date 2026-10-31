@@ -8,7 +8,7 @@ description: Release history, versioning policy, and update notes for Basis.
 
 All notable changes to the Basis design system and its published modules are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Each release is organized into fixed sections: `Added`, `Changed`, `Fixed`.
 
 ## Versioning Policy
 
@@ -33,30 +33,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 Initial public release of the Basis design system for Jetpack Compose.
 
-### Highlights by Module
+### Added
+- **`basis-theme` — Resolution Engine**: Pure Kotlin multiplatform engine converting `BasisIntent` (`IdentityIntent`, `MoodIntent`, `DomainIntent`, `ControlIntent`) into typed token trees for colors, typography, spacing, radius, depth, size, and motion.
+- **`basis-theme` — OKLCH Color Modeling**: Enforces automated WCAG AA contrast floors (≥ 4.5:1 for body text, ≥ 3:1 for interactive controls) with uniform lightness across hues.
+- **`basis-theme` — Tonal Dark Mode**: Derives physical surface luminance steps (recessed: 0.12, default: 0.16, elevated: 0.22) instead of relying on invisible drop shadows.
+- **`basis-theme` — Mood Presets & Knobs**: 7 archetypes on `MoodPreset` (Neutral, Calm, Professional, Bold, Playful, Minimal, Expressive) paired with 8 continuous scalar axes (`MoodKnobs`).
+- **`basis-theme` — Domains & Interaction Patterns**: 10 industry domains (`ProductDomain`) and 11 practical interaction archetypes (`InteractionPattern`).
+- **`basis-theme` — Component Overrides**: Fine-grained style patches via `ControlIntent.components` and `UniversalStylePatch` targeting semantic token paths.
+- **`basis-theme` — Theme Diagnostics**: Emits an auditable `ResolutionReport` with status entries (`Honored`, `Modulated`, `OverriddenByConstraint`, `Rejected`, `Absent`) for automated CI verification.
+- **`basis-components` — `BasisTheme` Composable**: Root ambient provider with automatic system dark mode synchronization via `useDarkTheme`.
+- **`basis-components` — Foundation Modifiers**: Atomic modifiers including `basisSurface()`, `basisMinTouchTarget()`, `basisBorder()`, `basisClickable()`, `basisFocusRing()`, `basisPadding()`, `basisSelectable()`, and `basisToggleable()`.
+- **`basis-components` — Token Conversions**: Direct conversion extensions for Jetpack Compose (`toDp()`, `TextStyle`, `Color`).
+- **`basis-components` — Font Management**: `FontFamilyRegistry`, `AssetFont`, `ResourceFont`, and automated Google Font downloader (`GoogleFontDownloader`).
+- **`basis-components` — Content Color Ambient**: `LocalBasisContentColor` provides automatic foreground content color inheritance across surface layers.
+- **`basis-lint` — Typography Unit Enforcement**: Android Lint detector (`SpOnlyFontSizeDetector`) enforcing scalable text dimension units (`sp` only for font size, line height, and letter spacing) across client layouts.
 
-#### `basis-theme`
-- **Resolution Engine**: Pure Kotlin multiplatform engine converting `BasisIntent` (`IdentityIntent`, `MoodIntent`, `DomainIntent`, `ControlIntent`) into typed token trees for colors, typography, spacing, radius, depth, size, and motion.
-- **OKLCH Color Modeling**: Enforces automated WCAG AA contrast floors (≥ 4.5:1 for body text, ≥ 3:1 for interactive controls) with uniform lightness across hues.
-- **Tonal Dark Mode**: Derives physical surface luminance steps (recessed: 0.12, default: 0.16, elevated: 0.22) instead of relying on invisible drop shadows.
-- **Mood Presets & Knobs**: 7 archetypes on `MoodPreset` (Neutral, Calm, Professional, Bold, Playful, Minimal, Expressive) paired with 8 continuous scalar axes (`MoodKnobs`).
-- **Domains & Interaction Patterns**: 10 industry domains (`ProductDomain`) and 11 practical interaction archetypes (`InteractionPattern`).
-- **Component Overrides**: Fine-grained style patches via `ControlIntent.components` and `UniversalStylePatch` targeting semantic token paths.
-- **Theme Diagnostics**: Emits an auditable `ResolutionReport` with status entries (`Honored`, `Modulated`, `OverriddenByConstraint`, `Rejected`, `Absent`) for automated CI verification.
+### Changed
+- None.
 
-#### `basis-components`
-- **`BasisTheme` Composable**: Root ambient provider with automatic system dark mode synchronization via `useDarkTheme`.
-- **Foundation Modifiers**: Atomic modifiers including `basisSurface()`, `basisMinTouchTarget()`, `basisBorder()`, `basisClickable()`, `basisFocusRing()`, `basisPadding()`, `basisSelectable()`, and `basisToggleable()`.
-- **Token Conversions**: Direct conversion extensions for Jetpack Compose (`toDp()`, `TextStyle`, `Color`).
-- **Font Management**: `FontFamilyRegistry`, `AssetFont`, `ResourceFont`, and automated Google Font downloader (`GoogleFontDownloader`).
-- **Content Color Ambient**: `LocalBasisContentColor` provides automatic foreground content color inheritance across surface layers.
-
-#### `basis-lint`
-- **Typography Unit Enforcement**: Android Lint detector (`SpOnlyFontSizeDetector`) enforcing scalable text dimension units (`sp` only for font size, line height, and letter spacing) across client layouts.
-
-### Migration Notes (0.1.0)
-
-- Initial release. No migration required from prior versions.
+### Fixed
+- None.
 
 ## Next Step
 

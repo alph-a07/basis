@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '../../..');
-const basisComponentsGradle = path.join(repoRoot, 'basis-components/build.gradle.kts');
 const rootChangelogPath = path.join(repoRoot, 'CHANGELOG.md');
 const docsChangelogPath = path.join(__dirname, '../src/content/docs/changelog.mdx');
 const snippetsSource = path.join(
@@ -16,15 +15,16 @@ const outputFile = path.join(outputDir, 'snippets.json');
 const versionFile = path.join(outputDir, 'version.json');
 
 export function extractBasisVersion(): string {
-  if (!fs.existsSync(basisComponentsGradle)) {
-    throw new Error(`basis-components/build.gradle.kts not found at: ${basisComponentsGradle}`);
+  const versionPropertiesFile = path.join(repoRoot, 'gradle', 'version.properties');
+  if (!fs.existsSync(versionPropertiesFile)) {
+    throw new Error(`gradle/version.properties not found at: ${versionPropertiesFile}`);
   }
-  const content = fs.readFileSync(basisComponentsGradle, 'utf-8');
-  const match = content.match(/version\s*=\s*["']([^"']+)["']/);
+  const content = fs.readFileSync(versionPropertiesFile, 'utf-8');
+  const match = content.match(/^basis\.version\s*=\s*(.+)$/m);
   if (!match) {
-    throw new Error(`Could not find 'version = "..."' in ${basisComponentsGradle}`);
+    throw new Error(`Could not find 'basis.version' in ${versionPropertiesFile}`);
   }
-  return match[1];
+  return match[1].trim();
 }
 
 export function syncChangelog(version: string): void {

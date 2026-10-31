@@ -1,11 +1,20 @@
+import java.util.Properties
+
 plugins {
     id("org.jetbrains.kotlin.jvm")
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
 }
 
+val basisVersion: String =
+    run {
+        val props = Properties()
+        rootProject.file("../gradle/version.properties").inputStream().use { props.load(it) }
+        props.getProperty("basis.version") ?: "0.1.0"
+    }
+
 group = "io.github.alph-a07"
-version = "0.1.0"
+version = basisVersion
 
 kotlin {
     jvmToolchain(21)

@@ -1,5 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import java.util.Properties
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
@@ -16,9 +17,16 @@ plugins {
     id("verify-all-conventions")
 }
 
+val basisVersion: String =
+    run {
+        val props = Properties()
+        file("gradle/version.properties").inputStream().use { props.load(it) }
+        props.getProperty("basis.version") ?: "0.1.0"
+    }
+
 @Suppress("basis.VersionCatalogUsage")
 dependencies {
-    detektPlugins("io.github.alph-a07:basis-detekt-rules:0.1.0")
+    detektPlugins("io.github.alph-a07:basis-detekt-rules:$basisVersion")
 }
 
 extensions.configure<DetektExtension> {
