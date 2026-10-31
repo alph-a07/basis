@@ -32,7 +32,7 @@ const isDisabled = disabled || state === 'disabled';
 <div
   role={interactive ? 'button' : undefined}
   tabindex={interactive && !isDisabled ? 0 : undefined}
-  aria-selected={isSelected}
+  aria-pressed={interactive ? isSelected : undefined}
   aria-disabled={isDisabled}
   data-interactive={interactive ? 'true' : 'false'}
   data-selected={isSelected ? 'true' : 'false'}

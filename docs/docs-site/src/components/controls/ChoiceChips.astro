@@ -17,6 +17,7 @@ export interface Props {
   name?: string;
   disabled?: boolean;
   showLabel?: boolean;
+  showTooltip?: boolean;
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   name = spec.id,
   disabled = false,
   showLabel = true,
+  showTooltip = true,
 } = Astro.props;
 
 const isSingle = spec.type === 'single-choice';
@@ -84,22 +86,24 @@ const selectedSet = new Set<string>(
             class:list={['choice-chip', { 'is-active': isChecked }]}
             role={isSingle ? 'radio' : 'checkbox'}
             aria-checked={isChecked ? 'true' : 'false'}
-            aria-describedby={tooltipId}
+            aria-describedby={showTooltip && opt.summary ? tooltipId : undefined}
             tabindex={disabled ? -1 : isFocusable ? 0 : -1}
             disabled={disabled}
             data-value={opt.id}
-            title={opt.summary}
+            title={showTooltip ? opt.summary : undefined}
           >
             <span class="chip-label">{opt.label}</span>
           </button>
 
-          <span
-            id={tooltipId}
-            class="chip-tooltip"
-            role="tooltip"
-          >
-            {opt.summary}
-          </span>
+          {showTooltip && opt.summary && (
+            <span
+              id={tooltipId}
+              class="chip-tooltip"
+              role="tooltip"
+            >
+              {opt.summary}
+            </span>
+          )}
         </div>
       );
     })}

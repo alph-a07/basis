@@ -75,8 +75,8 @@ const isDisabled = disabled || state === 'disabled';
   .switch-track {
     display: flex;
     align-items: center;
-    width: var(--b-size-control-level3);
-    height: var(--b-size-control-level2);
+    width: var(--b-spacing-level7);
+    height: var(--b-spacing-level5);
     padding: var(--b-spacing-level1);
     box-sizing: border-box;
     border-radius: var(--b-radius-full);
@@ -103,7 +103,7 @@ const isDisabled = disabled || state === 'disabled';
 
   .switch-track[data-checked="true"] .switch-thumb {
     background-color: var(--b-color-content-inverse);
-    transform: translateX(calc(var(--b-size-control-level3) - var(--b-size-icon-level2) - var(--b-spacing-level1) * 2 - 2px));
+    transform: translateX(calc(var(--b-spacing-level7) - var(--b-size-icon-level2) - var(--b-spacing-level1) * 2 - 2px));
   }
 
   /* Hover state */
