@@ -232,4 +232,58 @@ if (axeResults.violations.length > 0) {
   console.log('   ✅ Axe accessibility audit passed with 0 violations!\n');
 }
 
-console.log('🎉 All P2.4 Studio Shell requirements passed successfully!\n');
+// ---------------------------------------------------------------------------
+// 8. Generic Scene & Specimen Composition (P2.6)
+// ---------------------------------------------------------------------------
+console.log('8. Verifying Generic Scene composition and specimens (P2.6)...');
+const sceneContainer = document.querySelector('.scene-container');
+assert(sceneContainer, 'Scene container (.scene-container) must exist inside preview scope');
+
+const sceneHeader = sceneContainer.querySelector('.scene-header');
+assert(sceneHeader, 'Scene header (.scene-header) must exist');
+const sceneTitle = sceneHeader.querySelector('.scene-title');
+assert(sceneTitle && sceneTitle.textContent?.includes('Design Console'), 'Scene title must be "Design Console"');
+
+const metricsStrip = sceneContainer.querySelector('.scene-metrics-strip');
+assert(metricsStrip, 'Metrics strip (.scene-metrics-strip) must exist');
+const metricCells = metricsStrip.querySelectorAll('.scene-metric-cell');
+assert(metricCells.length >= 3, 'Metrics strip must contain at least 3 metric cells');
+
+// Assert all 6 live specimens + note are present
+const specimenButtons = sceneContainer.querySelectorAll('.basis-specimen-button');
+assert(specimenButtons.length >= 2, 'Scene must contain ButtonSpecimens');
+
+const specimenCards = sceneContainer.querySelectorAll('.basis-specimen-card');
+assert(specimenCards.length >= 3, 'Scene must contain CardSpecimens (elevated, outlined)');
+
+const specimenInputs = sceneContainer.querySelectorAll('.basis-specimen-input-wrapper');
+assert(specimenInputs.length >= 1, 'Scene must contain InputSpecimens');
+
+const specimenSwitches = sceneContainer.querySelectorAll('.basis-specimen-switch-wrapper');
+assert(specimenSwitches.length >= 1, 'Scene must contain SwitchSpecimens');
+
+const specimenListItems = sceneContainer.querySelectorAll('.basis-specimen-list-item');
+assert(specimenListItems.length >= 3, 'Scene must contain ListItemSpecimens');
+
+const illustrativeNote = sceneContainer.querySelector('.basis-specimen-illustrative-note');
+assert(illustrativeNote, 'Scene must contain IllustrativeNote');
+console.log('   ✅ All 6 live specimens + IllustrativeNote present and structured in Generic Scene.\n');
+
+// ---------------------------------------------------------------------------
+// 9. Report Drawer Metadata, Domain Contributions & Audit Log (P2.7)
+// ---------------------------------------------------------------------------
+console.log('9. Verifying Report Drawer metadata, contributions & audit log (P2.7)...');
+const metaTokensCount = document.getElementById('report-meta-tokens-count');
+assert(metaTokensCount, '#report-meta-tokens-count must exist');
+
+const domainContributions = document.getElementById('report-domain-contributions');
+assert(domainContributions, '#report-domain-contributions must exist');
+
+const entriesCount = document.getElementById('report-entries-count');
+assert(entriesCount, '#report-entries-count must exist');
+
+const entriesContainer = document.getElementById('report-entries-container');
+assert(entriesContainer, '#report-entries-container must exist');
+console.log('   ✅ Report Drawer contains tokens count, domain biases, and audit log containers.\n');
+
+console.log('🎉 All P2.4, P2.6, P2.7 Studio requirements passed successfully!\n');

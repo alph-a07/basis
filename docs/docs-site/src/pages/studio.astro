@@ -9,12 +9,26 @@ import KnobSlider from '../components/controls/KnobSlider.astro';
 import ColorField from '../components/controls/ColorField.astro';
 import ToggleControl from '../components/controls/ToggleControl.astro';
 import ColorListField from '../components/controls/ColorListField.astro';
+import {
+  ButtonSpecimen,
+  CardSpecimen,
+  InputSpecimen,
+  ChipsSpecimen,
+  SwitchSpecimen,
+  ListItemSpecimen,
+  IllustrativeNote,
+} from '../components/specimens';
+import { resolveStudioDefaultCss } from '../lib/resolve-studio-default';
 
 const intentDoc = loadIntentDoc();
 const controlSpecs = deriveControlSpecs(intentDoc);
+const defaultStudioCss = resolveStudioDefaultCss('#studio-preview');
 ---
 
 <BaseLayout title="Intent Studio — Basis">
+  <!-- Inlined deterministic tokens for instant SSR paint without JS -->
+  <style id="studio-preview-default" set:html={defaultStudioCss.css} />
+
   <div class="studio-app" data-pagefind-body>
     <!-- Top bar: Full-bleed route without sidebar per locked decisions -->
     <header class="studio-topbar" aria-label="Studio top navigation">
@@ -152,13 +166,148 @@ const controlSpecs = deriveControlSpecs(intentDoc);
         </div>
       </aside>
 
-      <!-- Scene Viewport: Housing the live preview workspace -->
+      <!-- Scene Viewport: Housing the live preview workspace (P2.6 Generic Scene) -->
       <section id="studio-viewport" class="studio-viewport" aria-label="Scene Preview Viewport">
         <!-- Localized Studio Preview Scope: uses deferred local --b-* intent resolution -->
         <div class="studio-workspace basis-preview-scope" id="studio-preview" data-scope="preview">
-          <div class="studio-placeholder">
-            <h1>Intent Studio Shell</h1>
-            <p>Full-bleed workspace for live intent exploration and real-time Kotlin token export.</p>
+          <div class="scene-container">
+            <!-- Scene Header Bar -->
+            <header class="scene-header">
+              <div class="scene-header-title-box">
+                <div class="scene-logo-badge" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" />
+                    <path d="M7 17L17 7M17 7H10M17 7V14" />
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="scene-title">Design Console</h2>
+                  <p class="scene-subtitle">Live specimen composition reacting dynamically to resolved Basis design tokens.</p>
+                </div>
+              </div>
+
+              <div class="scene-header-actions">
+                <ChipsSpecimen label="Real-time Sync" selected={true} />
+                <ChipsSpecimen label="WCAG AA" />
+                <SwitchSpecimen label="Auto-Resolve" checked={true} id="studio-scene-sync" />
+              </div>
+            </header>
+
+            <!-- Specimen Layout Grid (2 Columns) -->
+            <div class="scene-grid">
+              <!-- Left Column: Metrics & Form Controls -->
+              <div class="scene-column">
+                <!-- Elevated Metric Card -->
+                <CardSpecimen variant="elevated" class="scene-card">
+                  <div slot="header" class="card-header-flex">
+                    <div>
+                      <span class="card-kicker">Performance Targets</span>
+                      <h3 class="card-title-text">Luminance & Contrast Verification</h3>
+                    </div>
+                    <ButtonSpecimen variant="secondary" size="sm">Export Report</ButtonSpecimen>
+                  </div>
+
+                  <div class="scene-metrics-strip">
+                    <div class="scene-metric-cell">
+                      <span class="scene-metric-number">19.5<small class="scene-unit">ms</small></span>
+                      <span class="scene-metric-caption">Resolution Latency</span>
+                    </div>
+                    <div class="scene-metric-divider" aria-hidden="true"></div>
+                    <div class="scene-metric-cell">
+                      <span class="scene-metric-number">4.5<small class="scene-unit">:1</small></span>
+                      <span class="scene-metric-caption">WCAG AA Floor</span>
+                    </div>
+                    <div class="scene-metric-divider" aria-hidden="true"></div>
+                    <div class="scene-metric-cell">
+                      <span class="scene-metric-number">157</span>
+                      <span class="scene-metric-caption">Resolved Tokens</span>
+                    </div>
+                  </div>
+
+                  <div slot="footer" class="card-footer-flex">
+                    <ChipsSpecimen label="OKLCH Color" selected={true} />
+                    <ChipsSpecimen label="Tonal Dark Mode" selected={true} />
+                    <ChipsSpecimen label="Deterministic" selected={true} />
+                  </div>
+                </CardSpecimen>
+
+                <!-- Outlined Input Form Card -->
+                <CardSpecimen variant="outlined" class="scene-card">
+                  <div slot="header" class="card-header-flex">
+                    <div>
+                      <span class="card-kicker">Interactive Input Form</span>
+                      <h3 class="card-title-text">Data & Search Specifications</h3>
+                    </div>
+                  </div>
+
+                  <div class="scene-form-group">
+                    <InputSpecimen
+                      id="scene-input-org"
+                      label="Organization Identifier"
+                      value="Basis Jetpack Compose Core"
+                      helperText="Resolves against Basis single source of truth."
+                    />
+                    <InputSpecimen
+                      id="scene-input-search"
+                      label="Catalog Search Query"
+                      placeholder="e.g. basisSurface, primaryButton..."
+                    />
+                    <div class="scene-buttons-row">
+                      <ButtonSpecimen variant="primary" size="md">Save Changes</ButtonSpecimen>
+                      <ButtonSpecimen variant="secondary" size="md">Discard</ButtonSpecimen>
+                      <ButtonSpecimen variant="secondary" size="md" disabled={true}>Read-only</ButtonSpecimen>
+                    </div>
+                  </div>
+                </CardSpecimen>
+              </div>
+
+              <!-- Right Column: Navigation & List Items -->
+              <div class="scene-column">
+                <!-- Default Surface List Items Card -->
+                <CardSpecimen variant="default" class="scene-card">
+                  <div slot="header" class="card-header-flex">
+                    <div>
+                      <span class="card-kicker">Pipeline Stages</span>
+                      <h3 class="card-title-text">Active Theme Pipeline</h3>
+                    </div>
+                    <span class="scene-badge-pill">4 Active</span>
+                  </div>
+
+                  <div class="scene-list-stack">
+                    <ListItemSpecimen
+                      headline="Identity & Brand Presence"
+                      supportingText="OKLCH uniform chroma derivation"
+                      trailingMeta="Resolved"
+                      interactive={true}
+                      selected={true}
+                    />
+                    <ListItemSpecimen
+                      headline="Mood Presets & Sparse Knobs"
+                      supportingText="Deterministic bias over archetypes"
+                      trailingMeta="Honored"
+                      interactive={true}
+                    />
+                    <ListItemSpecimen
+                      headline="Domain & Interaction Intent"
+                      supportingText="Functional density & typographic scale"
+                      trailingMeta="Active"
+                      interactive={true}
+                    />
+                    <ListItemSpecimen
+                      headline="Legacy Exemption Pipeline"
+                      supportingText="Deprecated fallback profile"
+                      trailingMeta="Unset"
+                      disabled={true}
+                      interactive={true}
+                    />
+                  </div>
+
+                  <div slot="footer" class="scene-footer-note">
+                    <IllustrativeNote />
+                  </div>
+                </CardSpecimen>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -171,7 +320,14 @@ const controlSpecs = deriveControlSpecs(intentDoc);
 
 <script type="module">
   // Live Studio intent store: controls -> debounced resolve -> --b-* preview scope + report.
-  import { createStudioIntentStore, bindControlEvents, loadDocsRuntime } from '../lib/studio-intent';
+  import {
+    createStudioIntentStore,
+    bindControlEvents,
+    loadDocsRuntime,
+    buildKotlinFromIntent,
+    encodeIntentHash,
+    decodeIntentHash,
+  } from '../lib/studio-intent';
 
   function applyTokensToScope(el, result) {
     if (!result?.ok || !result.tokens) return;
@@ -182,15 +338,162 @@ const controlSpecs = deriveControlSpecs(intentDoc);
     }
   }
 
+  function syncControlsFromIntent(panelEl, intent) {
+    if (!panelEl || !intent) return;
+
+    // 1. Brand Color
+    const brandColorField = panelEl.querySelector('#color-brandColor');
+    if (brandColorField) {
+      const hex = intent.identity?.brandColor?.value || '';
+      const textInput = brandColorField.querySelector('.hex-text-input');
+      const nativeInput = brandColorField.querySelector('.native-color-input');
+      const swatch = brandColorField.querySelector('.color-swatch-preview');
+      const clearBtn = brandColorField.querySelector('.color-clear-btn');
+      if (textInput) textInput.value = hex ? hex.replace('#', '') : '';
+      if (nativeInput) nativeInput.value = hex || '#58a6ff';
+      if (swatch) swatch.style.backgroundColor = hex || '#58a6ff';
+      if (clearBtn) clearBtn.disabled = !hex;
+      if (hex) brandColorField.classList.remove('is-empty');
+      else brandColorField.classList.add('is-empty');
+    }
+
+    // 2. Presence
+    const presenceField = panelEl.querySelector('[data-field-id="presence"]');
+    if (presenceField) {
+      const presenceVal = intent.identity?.presence || null;
+      const chips = presenceField.querySelectorAll('.choice-chip');
+      chips.forEach((chip) => {
+        const match = chip.dataset.value === presenceVal;
+        chip.setAttribute('aria-checked', match ? 'true' : 'false');
+        if (match) chip.classList.add('is-active');
+        else chip.classList.remove('is-active');
+      });
+    }
+
+    // 3. Derive Colors
+    const deriveField = panelEl.querySelector('[data-field-id="deriveColors"]');
+    if (deriveField) {
+      const deriveVal = intent.identity?.deriveColors !== false; // default true
+      const switchBtn = deriveField.querySelector('.toggle-switch');
+      if (switchBtn) {
+        switchBtn.setAttribute('aria-checked', deriveVal ? 'true' : 'false');
+        if (deriveVal) switchBtn.classList.add('is-checked');
+        else switchBtn.classList.remove('is-checked');
+      }
+    }
+
+    // 4. Mood Preset
+    const presetField = panelEl.querySelector('[data-field-id="preset"]');
+    if (presetField) {
+      const presetVal = intent.mood?.preset || null;
+      const chips = presetField.querySelectorAll('.choice-chip');
+      chips.forEach((chip) => {
+        const match = chip.dataset.value === presetVal;
+        chip.setAttribute('aria-checked', match ? 'true' : 'false');
+        if (match) chip.classList.add('is-active');
+        else chip.classList.remove('is-active');
+      });
+    }
+
+    // 5. Mood Knobs
+    const knobs = intent.mood?.knobs || {};
+    const knobFields = panelEl.querySelectorAll('.knob-slider-field');
+    knobFields.forEach((knobField) => {
+      const knobId = knobField.dataset.knobId;
+      if (!knobId) return;
+      const val = knobs[knobId];
+      const isUnset = val === null || val === undefined;
+      const num = isUnset ? 0.0 : Number(val);
+      const rangeInput = knobField.querySelector('.knob-range-input');
+      const readout = knobField.querySelector('.knob-value-readout');
+      const inheritBtn = knobField.querySelector('.knob-inherit-btn');
+
+      knobField.setAttribute('data-is-unset', isUnset ? 'true' : 'false');
+      if (isUnset) knobField.classList.add('is-unset');
+      else knobField.classList.remove('is-unset');
+
+      if (rangeInput) rangeInput.value = String(num);
+      if (readout) {
+        readout.textContent = isUnset ? 'Inherit' : (num >= 0 ? `+${num.toFixed(2)}` : num.toFixed(2));
+      }
+      if (inheritBtn) {
+        inheritBtn.disabled = isUnset;
+        inheritBtn.setAttribute('aria-pressed', isUnset ? 'true' : 'false');
+        if (isUnset) inheritBtn.classList.add('is-active');
+        else inheritBtn.classList.remove('is-active');
+      }
+    });
+
+    // 6. Domains & Interactions
+    const domainsField = panelEl.querySelector('[data-field-id="domains"]');
+    if (domainsField) {
+      const doms = new Set(intent.domain?.domains || []);
+      const chips = domainsField.querySelectorAll('.choice-chip');
+      chips.forEach((chip) => {
+        const match = doms.has(chip.dataset.value);
+        chip.setAttribute('aria-checked', match ? 'true' : 'false');
+        if (match) chip.classList.add('is-active');
+        else chip.classList.remove('is-active');
+      });
+    }
+
+    const interactionsField = panelEl.querySelector('[data-field-id="interactions"]');
+    if (interactionsField) {
+      const interacts = new Set(intent.domain?.interactions || []);
+      const chips = interactionsField.querySelectorAll('.choice-chip');
+      chips.forEach((chip) => {
+        const match = interacts.has(chip.dataset.value);
+        chip.setAttribute('aria-checked', match ? 'true' : 'false');
+        if (match) chip.classList.add('is-active');
+        else chip.classList.remove('is-active');
+      });
+    }
+  }
+
   function updateReportDrawer(result, store) {
     const statusBadge = document.getElementById('report-status-badge');
     const violationsCount = document.getElementById('report-violations-count');
     const violationsContainer = document.getElementById('report-violations-container');
+    const tokensVal = document.getElementById('report-meta-tokens-count');
     const modesVal = document.getElementById('report-meta-modes');
     const presetVal = document.getElementById('report-meta-preset');
+    const domainContributions = document.getElementById('report-domain-contributions');
+    const entriesCount = document.getElementById('report-entries-count');
+    const entriesContainer = document.getElementById('report-entries-container');
 
-    if (presetVal && store?.intent?.mood?.preset) {
-      presetVal.textContent = store.intent.mood.preset;
+    if (presetVal) {
+      presetVal.textContent = store?.intent?.mood?.preset || 'None (Default)';
+    }
+
+    // Render domain & interaction biases
+    if (domainContributions) {
+      const domains = store?.intent?.domain?.domains || [];
+      const interactions = store?.intent?.domain?.interactions || [];
+      if (domains.length === 0 && interactions.length === 0) {
+        domainContributions.innerHTML = `<p class="contributions-empty">No active domains or interaction patterns selected.</p>`;
+      } else {
+        const domCards = domains.map(
+          (d) => `
+          <div class="contribution-card">
+            <div class="contribution-card-header">
+              <span class="contribution-name">${d}</span>
+              <span class="contribution-kind">Domain</span>
+            </div>
+          </div>
+        `
+        );
+        const intCards = interactions.map(
+          (it) => `
+          <div class="contribution-card">
+            <div class="contribution-card-header">
+              <span class="contribution-name">${it}</span>
+              <span class="contribution-kind">Interaction</span>
+            </div>
+          </div>
+        `
+        );
+        domainContributions.innerHTML = [...domCards, ...intCards].join('');
+      }
     }
 
     if (!result) return;
@@ -212,14 +515,40 @@ const controlSpecs = deriveControlSpecs(intentDoc);
           </div>
         `;
       }
+      if (tokensVal && result.tokens?.light) {
+        tokensVal.textContent = String(Object.keys(result.tokens.light).length);
+      }
       if (modesVal && result.report?.modes) {
-        modesVal.textContent = result.report.modes.join(', ');
+        modesVal.textContent = Array.isArray(result.report.modes) ? result.report.modes.join(', ') : 'Light, Dark';
+      }
+
+      // Populate audit entries
+      const entries = result.report?.entries || [];
+      if (entriesCount) entriesCount.textContent = String(entries.length);
+      if (entriesContainer) {
+        if (entries.length === 0) {
+          entriesContainer.innerHTML = `<p class="contributions-empty">No audit entries emitted for this resolution.</p>`;
+        } else {
+          entriesContainer.innerHTML = entries
+            .map(
+              (entry) => `
+            <div class="audit-entry">
+              <div class="audit-entry-header">
+                <span class="audit-path">${entry.path}</span>
+                <span class="audit-status status-${entry.status}">${entry.status}</span>
+              </div>
+              <div class="audit-msg">${entry.message}</div>
+            </div>
+          `
+            )
+            .join('');
+        }
       }
     } else {
       const count = result.violations?.length || 0;
       if (statusBadge) {
         statusBadge.className = 'report-status-badge status-violations';
-        statusBadge.textContent = `${count} Warning${count > 1 ? 's' : ''}`;
+        statusBadge.textContent = `${count} Violation${count > 1 ? 's' : ''}`;
       }
       if (violationsCount) violationsCount.textContent = String(count);
       if (violationsContainer) {
@@ -318,9 +647,6 @@ const controlSpecs = deriveControlSpecs(intentDoc);
 
     // Keyboard Shortcuts: Alt+C, Alt+R, Escape
     window.addEventListener('keydown', (e) => {
-      const activeTag = (document.activeElement?.tagName || '').toLowerCase();
-      const isInput = activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
-
       if (e.key === 'Escape') {
         if (reportDrawerEl?.getAttribute('data-open') === 'true') {
           setReportOpen(false);
@@ -351,9 +677,20 @@ const controlSpecs = deriveControlSpecs(intentDoc);
       }
     });
 
+    // Initial state from URL hash if present
+    let initialIntent = null;
+    if (window.location.hash) {
+      initialIntent = decodeIntentHash(window.location.hash);
+    }
+
     // Create studio intent store
     const setState = () => {};
-    const store = createStudioIntentStore(setState);
+    const store = createStudioIntentStore(setState, undefined, initialIntent);
+
+    // If loaded from valid hash, synchronize DOM controls
+    if (initialIntent) {
+      syncControlsFromIntent(panelEl, initialIntent);
+    }
 
     // Bind controls
     const unbind = bindControlEvents(panelEl, store);
@@ -361,11 +698,22 @@ const controlSpecs = deriveControlSpecs(intentDoc);
     const observe = () => {
       applyTokensToScope(previewEl, store.lastGood ?? store.current ?? null);
       updateReportDrawer(store.current, store);
+      // Persist URL state via hash
+      const hash = encodeIntentHash(store.intent);
+      if (window.location.hash !== hash) {
+        history.replaceState(null, '', hash);
+      }
     };
 
     panelEl.addEventListener('control-change', () => {
       observe();
     });
+
+    // Watch for theme mode changes (Light/Dark) to refresh preview scope
+    const themeObserver = new MutationObserver(() => {
+      applyTokensToScope(previewEl, store.lastGood ?? store.current ?? null);
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     // Top bar actions
     const resetBtn = document.getElementById('studio-reset-btn');
@@ -375,26 +723,37 @@ const controlSpecs = deriveControlSpecs(intentDoc);
     resetBtn?.addEventListener('click', () => {
       store.reset();
       previewEl.style.cssText = '';
+      history.replaceState(null, '', window.location.pathname);
+      syncControlsFromIntent(panelEl, store.intent);
       observe();
     });
 
     copyBtn?.addEventListener('click', async () => {
-      if (!store.current?.ok) return;
       const intent = store.intent;
       const kotlin = buildKotlinFromIntent(intent);
-      await navigator.clipboard.writeText(kotlin);
-      copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy Kotlin'; }, 2000);
+      try {
+        await navigator.clipboard.writeText(kotlin);
+        copyBtn.textContent = 'Copied!';
+      } catch {
+        copyBtn.textContent = 'Copied!';
+      }
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy Kotlin';
+      }, 2000);
     });
 
-    shareBtn?.addEventListener('click', () => {
-      const json = JSON.stringify(store.intent, null, 0);
-      const encoded = btoa(json);
-      const url = `${window.location.origin}${window.location.pathname}#v1.${encoded}`;
-      navigator.clipboard.writeText(url).then(() => {
+    shareBtn?.addEventListener('click', async () => {
+      const hash = encodeIntentHash(store.intent);
+      const url = `${window.location.origin}${window.location.pathname}${hash}`;
+      try {
+        await navigator.clipboard.writeText(url);
         shareBtn.textContent = 'Link copied!';
-        setTimeout(() => { shareBtn.textContent = 'Share'; }, 2000);
-      });
+      } catch {
+        shareBtn.textContent = 'Link copied!';
+      }
+      setTimeout(() => {
+        shareBtn.textContent = 'Share';
+      }, 2000);
     });
 
     copyReportJsonBtn?.addEventListener('click', async () => {
@@ -413,49 +772,16 @@ const controlSpecs = deriveControlSpecs(intentDoc);
     });
 
     // Initial resolve
-    void loadDocsRuntime().then(() => observe()).catch(() => { /* last-good fallback */ });
+    void loadDocsRuntime()
+      .then(() => observe())
+      .catch(() => {
+        /* last-good fallback */
+      });
 
     return () => {
       unbind();
+      themeObserver.disconnect();
     };
-  }
-
-  function buildKotlinFromIntent(intent) {
-    const i = intent;
-    const lines = [];
-    lines.push('BasisIntent(');
-    if (i?.identity) {
-      lines.push('  identity = IdentityIntent(');
-      if (i.identity.brandColor) lines.push(`    brandColor = ColorSpec.Hex("${i.identity.brandColor.value}"),`);
-      if (i.identity.presence) lines.push(`    presence = BrandPresence.${i.identity.presence},`);
-      lines.push(`    deriveColors = ${i.identity.deriveColors ?? true}`);
-      lines.push('  ),');
-    }
-    if (i?.mood && (i.mood.preset || (i.mood.knobs && Object.keys(i.mood.knobs).length))) {
-      lines.push('  mood = MoodIntent(');
-      if (i.mood.preset) lines.push(`    preset = MoodPreset.${i.mood.preset},`);
-      if (i.mood.knobs) {
-        const knobLines = Object.entries(i.mood.knobs)
-          .filter(([, v]) => v !== null && v !== undefined)
-          .map(([k, v]) => `      ${k} = ${v}f,`);
-        if (knobLines.length) {
-          lines.push('    knobs = MoodKnobs(');
-          lines.push(...knobLines);
-          lines.push('    )');
-        }
-      }
-      lines.push('  ),');
-    }
-    if (i?.domain) {
-      const doms = i.domain.domains ?? [];
-      const interacts = i.domain.interactions ?? [];
-      lines.push('  domain = DomainIntent(');
-      if (doms.length) lines.push(`    domains = setOf(${doms.map((d) => `ProductDomain.${d}`).join(', ')}),`);
-      if (interacts.length) lines.push(`    interactions = setOf(${interacts.map((it) => `InteractionPattern.${it}`).join(', ')}),`);
-      lines.push('  ),');
-    }
-    lines.push(')');
-    return lines.join('\n');
   }
 
   const scheduleInit = () => {
@@ -700,32 +1026,191 @@ const controlSpecs = deriveControlSpecs(intentDoc);
 
   .studio-workspace {
     flex: 1;
-    background: var(--docs-surface);
-    border: 1px solid var(--docs-border);
-    border-radius: 10px;
+    background: var(--b-color-surface-recessed, var(--docs-surface));
+    border: 1px solid var(--b-color-border-subtle, var(--docs-border));
+    border-radius: var(--b-radius-level3, 12px);
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    box-shadow: var(--docs-shadow-sm);
+    overflow: hidden;
+  }
+
+  .scene-container {
+    padding: var(--b-spacing-level5, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level5, 1.5rem);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .scene-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--b-spacing-level4, 1rem);
+    flex-wrap: wrap;
+    padding-bottom: var(--b-spacing-level4, 1rem);
+    border-bottom: 1px solid var(--b-color-border-subtle, var(--docs-border-subtle));
+  }
+
+  .scene-header-title-box {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level3, 0.75rem);
+  }
+
+  .scene-logo-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--b-radius-level2, 8px);
+    background: color-mix(in srgb, var(--b-color-brand-primary, #3b82f6) 12%, transparent);
+    color: var(--b-color-brand-primary, #3b82f6);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 600px;
-    box-shadow: var(--docs-shadow-sm);
   }
 
-  .studio-placeholder {
-    text-align: center;
-    max-width: 500px;
-    padding: 2rem;
-  }
-
-  .studio-placeholder h1 {
-    font-size: 1.75rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--docs-text);
-  }
-
-  .studio-placeholder p {
-    color: var(--docs-text-muted);
-    line-height: 1.5;
+  .scene-title {
+    font-size: var(--b-typography-heading-level2-size, 1.25rem);
+    font-weight: var(--b-typography-heading-level2-weight, 700);
+    font-family: var(--b-typography-heading-level2-family, inherit);
+    color: var(--b-color-content-default, var(--docs-text));
     margin: 0;
+    line-height: 1.2;
+  }
+
+  .scene-subtitle {
+    font-size: var(--b-typography-metadata-level2-size, 0.75rem);
+    font-family: var(--b-typography-metadata-level2-family, inherit);
+    color: var(--b-color-content-muted, var(--docs-text-muted));
+    margin: 0.25rem 0 0 0;
+  }
+
+  .scene-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level3, 0.75rem);
+    flex-wrap: wrap;
+  }
+
+  .scene-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--b-spacing-level5, 1.5rem);
+  }
+
+  @media (max-width: 1200px) {
+    .scene-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .scene-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level5, 1.5rem);
+  }
+
+  .card-header-flex,
+  .card-footer-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--b-spacing-level3, 0.75rem);
+    flex-wrap: wrap;
+  }
+
+  .card-kicker {
+    font-size: var(--b-typography-metadata-level1-size, 0.6875rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--b-color-brand-primary, #3b82f6);
+  }
+
+  .card-title-text {
+    font-size: var(--b-typography-heading-level3-size, 1rem);
+    font-weight: var(--b-typography-heading-level3-weight, 600);
+    font-family: var(--b-typography-heading-level3-family, inherit);
+    color: var(--b-color-content-default, var(--docs-text));
+    margin: 0.15rem 0 0 0;
+  }
+
+  .scene-metrics-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: var(--b-spacing-level4, 1rem) 0;
+  }
+
+  .scene-metric-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--b-spacing-level1, 0.25rem);
+    text-align: center;
+  }
+
+  .scene-metric-number {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--b-color-content-default, var(--docs-text));
+    line-height: 1;
+  }
+
+  .scene-unit {
+    font-size: 0.875rem;
+    color: var(--b-color-content-muted, var(--docs-text-muted));
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  .scene-metric-caption {
+    font-size: var(--b-typography-metadata-level2-size, 0.75rem);
+    color: var(--b-color-content-muted, var(--docs-text-muted));
+  }
+
+  .scene-metric-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--b-color-border-subtle, var(--docs-border-subtle));
+  }
+
+  .scene-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level4, 1rem);
+  }
+
+  .scene-buttons-row {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacing-level3, 0.75rem);
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .scene-badge-pill {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--b-radius-full, 9999px);
+    background: color-mix(in srgb, var(--b-color-brand-primary, #3b82f6) 12%, transparent);
+    color: var(--b-color-brand-primary, #3b82f6);
+  }
+
+  .scene-list-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacing-level2, 0.5rem);
+  }
+
+  .scene-footer-note {
+    width: 100%;
+    margin-top: var(--b-spacing-level2, 0.5rem);
   }
 
   /* Backdrop for bottom sheet */
@@ -854,6 +1339,10 @@ const controlSpecs = deriveControlSpecs(intentDoc);
       padding: 0 0.75rem;
     }
 
+    .studio-badge {
+      display: none;
+    }
+
     .topbar-actions {
       gap: 0.25rem;
     }
@@ -864,6 +1353,12 @@ const controlSpecs = deriveControlSpecs(intentDoc);
 
     .studio-btn {
       padding: 0.35rem 0.55rem;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .btn-docs {
+      display: none;
     }
   }
 
