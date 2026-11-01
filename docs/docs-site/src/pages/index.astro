@@ -1179,32 +1179,63 @@ const defaultLandingCss = resolveLandingDefaultCss();
     background: rgba(15, 23, 42, 0.15) !important;
   }
 
-  :global([data-theme="light"]) .sat-card :global(.switch-track) {
-    background-color: rgba(0, 0, 0, 0.08) !important;
-    border-color: rgba(0, 0, 0, 0.12) !important;
+  /* Switch, Chips, and List Item Specimen overrides in Light Mode */
+  :global([data-theme="light"]) .sat-card :global(.switch-track[data-checked="true"]) {
+    background-color: var(--landing-accent, #2563eb) !important;
+    border-color: var(--landing-accent, #2563eb) !important;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--landing-accent, #2563eb) 45%, transparent) !important;
   }
 
-  :global([data-theme="light"]) .sat-chips-flex :global(.basis-specimen-chip:not(.is-selected)) {
-    background: rgba(0, 0, 0, 0.04) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    color: #0f172a !important;
+  :global([data-theme="light"]) .sat-card :global(.switch-track[data-checked="true"] .switch-thumb) {
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  :global([data-theme="light"]) .sat-card :global(.switch-track:not([data-checked="true"])) {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.16) !important;
+    box-shadow: none !important;
+  }
+
+  :global([data-theme="light"]) .sat-card :global(.basis-specimen-chip[data-selected="true"]),
+  :global([data-theme="light"]) .sat-card :global(.basis-specimen-chip[aria-checked="true"]),
+  :global([data-theme="light"]) .sat-card :global(.basis-specimen-chip.is-selected) {
+    background: var(--landing-accent, #2563eb) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--landing-accent, #2563eb) 45%, transparent) !important;
+  }
+
+  :global([data-theme="light"]) .sat-chips-flex :global(.basis-specimen-chip:not([data-selected="true"]):not([aria-checked="true"])) {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+    color: #1e293b !important;
   }
 
   :global([data-theme="light"]) .sat-card .sat-tag {
     color: #475569 !important;
   }
 
+  :global([data-theme="light"]) .sat-list-flex :global(.basis-specimen-list-item) {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+
+  :global([data-theme="light"]) .sat-list-flex :global(.item-headline),
   :global([data-theme="light"]) .sat-list-flex :global(.list-item-headline) {
     color: #0f172a !important;
   }
 
+  :global([data-theme="light"]) .sat-list-flex :global(.item-supporting),
   :global([data-theme="light"]) .sat-list-flex :global(.list-item-supporting) {
-    color: #475569 !important;
+    color: #64748b !important;
   }
 
+  :global([data-theme="light"]) .sat-list-flex :global(.specimen-item-icon),
   :global([data-theme="light"]) .sat-list-flex :global(.list-item-icon),
+  :global([data-theme="light"]) .sat-list-flex :global(.specimen-chevron),
   :global([data-theme="light"]) .sat-list-flex :global(.list-item-caret) {
-    color: #334155 !important;
+    color: #475569 !important;
   }
 
   :global([data-theme="light"]) .card-feature-headline {
@@ -1219,9 +1250,33 @@ const defaultLandingCss = resolveLandingDefaultCss();
     color: #64748b !important;
   }
 
+  :global([data-theme="light"]) .orbit-path {
+    stroke: color-mix(in srgb, var(--landing-accent, #2563eb) 35%, rgba(99, 102, 241, 0.35)) !important;
+  }
+
+  :global([data-theme="light"]) .orbit-inner {
+    stroke: color-mix(in srgb, var(--landing-accent, #2563eb) 52%, rgba(79, 70, 229, 0.5)) !important;
+    stroke-width: 1.8px !important;
+  }
+
+  :global([data-theme="light"]) .orbit-outer {
+    stroke: color-mix(in srgb, var(--landing-secondary, #4f46e5) 48%, rgba(99, 102, 241, 0.42)) !important;
+    stroke-width: 2px !important;
+  }
+
+  :global([data-theme="light"]) .orbit-mid {
+    stroke: color-mix(in srgb, var(--landing-accent, #2563eb) 42%, rgba(147, 51, 234, 0.38)) !important;
+    stroke-width: 1.6px !important;
+  }
+
+  :global([data-theme="light"]) .orbit-faint {
+    stroke: color-mix(in srgb, var(--landing-accent, #2563eb) 30%, rgba(99, 102, 241, 0.28)) !important;
+    stroke-width: 1.4px !important;
+  }
+
   :global([data-theme="light"]) .orbit-node {
     filter: none !important;
-    opacity: 0.5;
+    opacity: 0.75;
   }
 
   :global([data-theme="light"]) .node-dynamic-accent {
@@ -2453,11 +2508,11 @@ const defaultLandingCss = resolveLandingDefaultCss();
   /* Light mode adjustments */
   :global([data-theme="light"]) .flank-grid-lines {
     background-image: 
-      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px);
+      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 45%, transparent) 1.2px, transparent 1.2px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 45%, transparent) 1.2px, transparent 1.2px);
   }
   :global([data-theme="light"]) .flank-ambient-glow {
-    opacity: 0.2;
+    opacity: 0.35;
   }
 
   @media (max-width: 1080px) {
