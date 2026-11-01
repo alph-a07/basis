@@ -410,13 +410,6 @@ const defaultLandingCss = resolveLandingDefaultCss();
             </span>
           </div>
         </div>
-
-        <!-- Subtle energetic ethereal drift fading away as it nears CTAs -->
-        <div class="bottom-aurora-fade" aria-hidden="true">
-          <div class="aurora-beam beam-1"></div>
-          <div class="aurora-beam beam-2"></div>
-          <div class="aurora-beam beam-3"></div>
-        </div>
       </section>
 
       <!-- Grand Hero Branding & Luminous CTAs (Positioned Cleanly Below Stage) -->
@@ -451,11 +444,28 @@ const defaultLandingCss = resolveLandingDefaultCss();
         </div>
       </section>
 
-      <!-- Bottom Ambient Ethereal Glow Fading Toward CTAs -->
-      <div class="bottom-aurora-curtain" aria-hidden="true">
-        <div class="curtain-glow glow-1"></div>
-        <div class="curtain-glow glow-2"></div>
-        <div class="curtain-glow glow-3"></div>
+      <!-- Bottom Geometric Animated Stage: Perspective floor and rising flank grids (fading at CTAs) -->
+      <div class="bottom-geometry-stage" aria-hidden="true">
+        <!-- Left Flank Rising Grid: climbs high beyond CTAs along left flank -->
+        <div class="flank-grid flank-grid-left">
+          <div class="flank-grid-lines"></div>
+          <div class="flank-ambient-glow"></div>
+        </div>
+
+        <!-- Right Flank Rising Grid: climbs high beyond CTAs along right flank -->
+        <div class="flank-grid flank-grid-right">
+          <div class="flank-grid-lines"></div>
+          <div class="flank-ambient-glow"></div>
+        </div>
+
+        <!-- Center Floor Perspective Grid: terminates early below the CTAs to avoid content overlap -->
+        <div class="center-floor-wrap">
+          <div class="center-perspective-plane">
+            <div class="center-grid-mesh"></div>
+            <div class="center-glow-sweep"></div>
+          </div>
+          <div class="center-horizon-line"></div>
+        </div>
       </div>
 
       <!-- Hidden parity notice specimen (retained for DOM contract / test-landing suite) -->
@@ -2241,149 +2251,185 @@ const defaultLandingCss = resolveLandingDefaultCss();
   }
 
   /* -------------------------------------------------------------------------
-   * SUBTLE ENERGETIC BOTTOM AURORA DRIFT (FADING AS IT NEARS CTAS)
+   * BOTTOM GEOMETRIC ANIMATED STAGE (PERSPECTIVE FLOOR & RISING FLANK GRIDS)
+   * Flanks climb high beyond CTAs on the sides; center finishes early at CTAs.
    * ------------------------------------------------------------------------- */
-  .bottom-aurora-fade {
+  .bottom-geometry-stage {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 160px;
-    pointer-events: none;
+    height: 100%;
+    max-height: 100vh;
     overflow: hidden;
-    z-index: 2;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%);
-  }
-
-  .aurora-beam {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(40px);
-    opacity: 0.2;
-    animation: auroraDrift 14s ease-in-out infinite alternate;
-  }
-
-  .beam-1 {
-    bottom: -25px;
-    left: 20%;
-    width: 320px;
-    height: 80px;
-    background: radial-gradient(ellipse at center, var(--landing-accent, #3b82f6) 0%, transparent 70%);
-    animation-duration: 12s;
-  }
-
-  .beam-2 {
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 440px;
-    height: 100px;
-    background: radial-gradient(ellipse at center, var(--landing-secondary, #6366f1) 0%, transparent 70%);
-    animation-duration: 16s;
-    animation-delay: -4s;
-  }
-
-  .beam-3 {
-    bottom: -25px;
-    right: 20%;
-    width: 280px;
-    height: 80px;
-    background: radial-gradient(ellipse at center, var(--landing-tertiary, #00f0ff) 0%, transparent 70%);
-    animation-duration: 14s;
-    animation-delay: -8s;
-  }
-
-  @keyframes auroraDrift {
-    0% {
-      transform: translateY(0) scale(1);
-      opacity: 0.14;
-    }
-    50% {
-      transform: translateY(-10px) scale(1.08);
-      opacity: 0.24;
-    }
-    100% {
-      transform: translateY(-4px) scale(0.96);
-      opacity: 0.16;
-    }
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* -------------------------------------------------------------------------
-   * BOTTOM ETHEREAL RADIANCE CURTAIN FADING TOWARD CTAS
+   * FLANK RISING GRIDS (Climb well beyond CTAs on left and right)
    * ------------------------------------------------------------------------- */
-  .bottom-aurora-curtain {
+  .flank-grid {
     position: absolute;
     bottom: 0;
+    width: clamp(260px, 34vw, 500px);
+    height: clamp(380px, 54vh, 540px);
+    pointer-events: none;
+  }
+
+  .flank-grid-left {
     left: 0;
-    width: 100%;
-    height: 280px;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.18) 40%, transparent 88%);
-    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.18) 40%, transparent 88%);
+    mask-image: 
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 55%, transparent 95%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    -webkit-mask-image: 
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 55%, transparent 95%),
+      linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
   }
 
-  .curtain-glow {
+  .flank-grid-right {
+    right: 0;
+    mask-image: 
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 55%, transparent 95%),
+      linear-gradient(to left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    -webkit-mask-image: 
+      linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 55%, transparent 95%),
+      linear-gradient(to left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+
+  .flank-grid-lines {
     position: absolute;
-    bottom: -60px;
-    border-radius: 50%;
-    filter: blur(85px);
-    pointer-events: none;
-    transform-origin: center center;
-    will-change: transform, opacity;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #3b82f6) 35%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #3b82f6) 35%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    animation: flankGridScroll 18s linear infinite;
   }
 
-  .curtain-glow.glow-1 {
-    left: 12%;
-    width: 500px;
-    height: 190px;
-    background: radial-gradient(ellipse at center, var(--landing-accent, #3b82f6) 0%, transparent 70%);
-    animation: curtainBreath1 14s ease-in-out infinite alternate;
+  .flank-grid-left .flank-grid-lines {
+    transform: perspective(600px) rotateY(18deg) rotateX(12deg);
+    transform-origin: 0% 100%;
   }
 
-  .curtain-glow.glow-2 {
-    right: 15%;
-    width: 540px;
-    height: 210px;
-    background: radial-gradient(ellipse at center, var(--landing-secondary, #8b5cf6) 0%, transparent 70%);
-    animation: curtainBreath2 16s ease-in-out infinite alternate;
-    animation-delay: -5s;
+  .flank-grid-right .flank-grid-lines {
+    transform: perspective(600px) rotateY(-18deg) rotateX(12deg);
+    transform-origin: 100% 100%;
   }
 
-  .curtain-glow.glow-3 {
-    left: 45%;
-    width: 420px;
-    height: 170px;
-    background: radial-gradient(ellipse at center, var(--landing-tertiary, #00f2fe) 0%, transparent 70%);
-    animation: curtainBreath3 12s ease-in-out infinite alternate;
-    animation-delay: -2s;
+  .flank-ambient-glow {
+    position: absolute;
+    bottom: 0;
+    inset: 0;
+    filter: blur(40px);
+    opacity: 0.5;
   }
 
-  @keyframes curtainBreath1 {
-    0% { transform: scale(0.9); opacity: 0.16; }
-    100% { transform: scale(1.12); opacity: 0.26; }
+  .flank-grid-left .flank-ambient-glow {
+    background: radial-gradient(ellipse at 15% 60%, 
+      color-mix(in srgb, var(--landing-tertiary, #00f0ff) 35%, transparent) 0%, 
+      transparent 70%
+    );
   }
 
-  @keyframes curtainBreath2 {
-    0% { transform: scale(1.1); opacity: 0.22; }
-    100% { transform: scale(0.92); opacity: 0.14; }
+  .flank-grid-right .flank-ambient-glow {
+    background: radial-gradient(ellipse at 85% 60%, 
+      color-mix(in srgb, var(--landing-secondary, #8b5cf6) 35%, transparent) 0%, 
+      transparent 70%
+    );
   }
 
-  @keyframes curtainBreath3 {
-    0% { transform: scale(0.94); opacity: 0.12; }
-    100% { transform: scale(1.14); opacity: 0.24; }
+  @keyframes flankGridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 44px; }
   }
 
-  :global([data-theme="light"]) .curtain-glow.glow-1 {
-    opacity: 0.10;
+  /* -------------------------------------------------------------------------
+   * CENTER PERSPECTIVE FLOOR (Terminates early as it reaches CTAs)
+   * ------------------------------------------------------------------------- */
+  .center-floor-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1000px, 92vw);
+    height: 220px;
+    overflow: hidden;
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 45%, transparent 92%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 45%, transparent 92%);
   }
-  :global([data-theme="light"]) .curtain-glow.glow-2 {
-    opacity: 0.08;
+
+  .center-perspective-plane {
+    position: absolute;
+    bottom: -40px;
+    left: -30%;
+    width: 160%;
+    height: 380px;
+    transform-origin: 50% 100%;
+    transform: perspective(350px) rotateX(68deg);
   }
-  :global([data-theme="light"]) .curtain-glow.glow-3 {
-    opacity: 0.07;
+
+  .center-grid-mesh {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #3b82f6) 38%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #3b82f6) 38%, transparent) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: centerFloorScroll 12s linear infinite;
+  }
+
+  .center-glow-sweep {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 90%, 
+      color-mix(in srgb, var(--landing-accent, #3b82f6) 45%, transparent) 0%, 
+      color-mix(in srgb, var(--landing-secondary, #6366f1) 22%, transparent) 40%, 
+      transparent 70%
+    );
+  }
+
+  .center-horizon-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(600px, 80vw);
+    height: 2px;
+    background: linear-gradient(to right, 
+      transparent, 
+      color-mix(in srgb, var(--landing-accent, #3b82f6) 80%, transparent) 50%, 
+      transparent
+    );
+    box-shadow: 0 0 20px var(--landing-accent, #3b82f6);
+    opacity: 0.7;
+  }
+
+  @keyframes centerFloorScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 48px; }
+  }
+
+  /* Light mode adjustments */
+  :global([data-theme="light"]) .flank-grid-lines {
+    background-image: 
+      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px);
+  }
+  :global([data-theme="light"]) .center-grid-mesh {
+    background-image: 
+      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 22%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 22%, transparent) 1px, transparent 1px);
+  }
+  :global([data-theme="light"]) .flank-ambient-glow {
+    opacity: 0.2;
+  }
+  :global([data-theme="light"]) .center-horizon-line {
+    opacity: 0.4;
   }
 
   @media (max-width: 1080px) {
@@ -2485,9 +2531,13 @@ const defaultLandingCss = resolveLandingDefaultCss();
       transform: none !important;
     }
 
-    .bottom-aurora-fade,
-    .bottom-aurora-curtain {
+    .flank-grid {
       display: none !important;
+    }
+
+    .center-floor-wrap {
+      width: 100% !important;
+      height: 160px !important;
     }
 
     .landing-hero-narrative {
@@ -2544,8 +2594,9 @@ const defaultLandingCss = resolveLandingDefaultCss();
     .cta-pill-luminous,
     .cta-pill-studio,
     .brand-swatch-dot,
-    .aurora-beam,
-    .curtain-glow {
+    .flank-grid-lines,
+    .center-grid-mesh,
+    .center-horizon-line {
       transition: none !important;
       transform: none !important;
       animation: none !important;
