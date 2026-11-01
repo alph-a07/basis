@@ -27,6 +27,15 @@ const defaultLandingCss = resolveLandingDefaultCss();
   <style id="landing-preview-default" set:html={defaultLandingCss.css} />
 
   <div class="landing-page-wrap">
+    <!-- Ambient Organic Animated Blobs (banding-free aurora backdrop reactive to intent controls) -->
+    <div class="landing-ambient-stage" aria-hidden="true">
+      <div class="ambient-blob blob-center"></div>
+      <div class="ambient-blob blob-left"></div>
+      <div class="ambient-blob blob-right"></div>
+      <div class="ambient-blob blob-top"></div>
+      <div class="ambient-blur-backdrop"></div>
+    </div>
+
     <!-- Top Navigation Bar matching Mock -->
     <header class="landing-topbar" aria-label="Main Site Navigation">
     <div class="topbar-inner">
@@ -444,7 +453,7 @@ const defaultLandingCss = resolveLandingDefaultCss();
         </div>
       </section>
 
-      <!-- Bottom Geometric Animated Stage: Perspective floor and rising flank grids (fading at CTAs) -->
+      <!-- Bottom Geometric Animated Stage: Rising flank perspective grids on the sides -->
       <div class="bottom-geometry-stage" aria-hidden="true">
         <!-- Left Flank Rising Grid: climbs high beyond CTAs along left flank -->
         <div class="flank-grid flank-grid-left">
@@ -456,15 +465,6 @@ const defaultLandingCss = resolveLandingDefaultCss();
         <div class="flank-grid flank-grid-right">
           <div class="flank-grid-lines"></div>
           <div class="flank-ambient-glow"></div>
-        </div>
-
-        <!-- Center Floor Perspective Grid: terminates early below the CTAs to avoid content overlap -->
-        <div class="center-floor-wrap">
-          <div class="center-perspective-plane">
-            <div class="center-grid-mesh"></div>
-            <div class="center-glow-sweep"></div>
-          </div>
-          <div class="center-horizon-line"></div>
         </div>
       </div>
 
@@ -690,11 +690,6 @@ const defaultLandingCss = resolveLandingDefaultCss();
     min-height: 100vh;
     position: relative;
     background-color: #050608;
-    background-image:
-      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.18))), transparent 65%),
-      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.25)) 0%, transparent 48%),
-      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.2)) 0%, transparent 48%),
-      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.16)) 0%, transparent 42%);
     color: #ffffff;
     overflow-x: hidden;
     display: flex;
@@ -702,50 +697,157 @@ const defaultLandingCss = resolveLandingDefaultCss();
     transition: background-color 0.3s ease;
   }
 
-  /* Root background gradient breathing layer (animates blob sizes, never positions) */
-  .landing-page-wrap::before {
-    content: '';
-    position: absolute;
-    inset: -4%;
-    width: 108%;
-    height: 108%;
-    pointer-events: none;
-    z-index: 0;
-    background-image:
-      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.18))), transparent 65%),
-      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.25)) 0%, transparent 48%),
-      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.2)) 0%, transparent 48%),
-      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.16)) 0%, transparent 42%);
-    transform-origin: 48% 36%;
-    animation: rootBlobBreathe 8s ease-in-out infinite alternate;
-  }
-
   :global([data-theme="light"]) .landing-page-wrap {
     background-color: #f8fafc;
-    background-image:
-      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.12))), transparent 65%),
-      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.1)) 0%, transparent 48%),
-      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.08)) 0%, transparent 48%),
-      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.08)) 0%, transparent 42%);
     color: #0f172a;
   }
 
-  :global([data-theme="light"]) .landing-page-wrap::before {
-    background-image:
-      radial-gradient(ellipse 85% 35% at 50% 0%, var(--landing-underglow-top, var(--landing-accent-glow, rgba(59, 130, 246, 0.12))), transparent 65%),
-      radial-gradient(circle at 48% 36%, var(--landing-underglow-center, rgba(59, 130, 246, 0.1)) 0%, transparent 48%),
-      radial-gradient(circle at 72% 38%, var(--landing-underglow-right, rgba(99, 102, 241, 0.08)) 0%, transparent 48%),
-      radial-gradient(circle at 22% 44%, var(--landing-underglow-left, rgba(59, 130, 246, 0.08)) 0%, transparent 42%);
+  /* -------------------------------------------------------------------------
+   * AMBIENT ORGANIC ANIMATED BLOBS (BANDING-FREE AURORA BACKDROP)
+   * Drops CSS radial-gradients to eliminate banding; animates organic blurred shapes.
+   * ------------------------------------------------------------------------- */
+  .landing-ambient-stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    contain: paint;
   }
 
-  @keyframes rootBlobBreathe {
+  .ambient-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(85px);
+    -webkit-filter: blur(85px);
+    will-change: transform, border-radius;
+    pointer-events: none;
+    transform-origin: center center;
+    transition: background-color 0.4s ease, opacity 0.4s ease;
+  }
+
+  /* Center Blob: deep cosmic hue behind orb and orbit tracks */
+  .blob-center {
+    top: 28%;
+    left: 48%;
+    width: clamp(480px, 46vw, 700px);
+    height: clamp(440px, 42vw, 640px);
+    transform: translate(-50%, -50%);
+    background-color: var(--landing-underglow-center, rgba(124, 58, 237, 0.35));
+    opacity: 0.9;
+    animation: blobMorphCenter 14s ease-in-out infinite alternate;
+  }
+
+  /* Left Flank Blob: harmonic teal/violet behind left satellite specimens */
+  .blob-left {
+    top: 38%;
+    left: 10%;
+    width: clamp(420px, 38vw, 580px);
+    height: clamp(420px, 38vw, 580px);
+    transform: translate(-30%, -30%);
+    background-color: var(--landing-underglow-left, rgba(20, 184, 166, 0.3));
+    opacity: 0.85;
+    animation: blobMorphLeft 18s ease-in-out infinite alternate;
+  }
+
+  /* Right Flank Blob: vibrant azure/magenta behind Live Preview specimen */
+  .blob-right {
+    top: 34%;
+    right: 5%;
+    width: clamp(450px, 42vw, 640px);
+    height: clamp(420px, 38vw, 600px);
+    transform: translate(20%, -20%);
+    background-color: var(--landing-underglow-right, rgba(59, 130, 246, 0.32));
+    opacity: 0.85;
+    animation: blobMorphRight 16s ease-in-out infinite alternate;
+  }
+
+  /* Top Horizon Blob: subtle celestial underglow across top navigation */
+  .blob-top {
+    top: -8%;
+    left: 50%;
+    width: clamp(600px, 65vw, 950px);
+    height: clamp(220px, 22vw, 340px);
+    transform: translateX(-50%);
+    background-color: var(--landing-underglow-top, rgba(99, 102, 241, 0.28));
+    opacity: 0.8;
+    animation: blobMorphTop 20s ease-in-out infinite alternate;
+  }
+
+  /* Top diffusion blur backdrop layer: melts colors into an ultra-smooth silk finish */
+  .ambient-blur-backdrop {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    pointer-events: none;
+  }
+
+  :global([data-theme="light"]) .landing-ambient-stage {
+    opacity: 0.55;
+  }
+
+  @keyframes blobMorphCenter {
     0% {
-      transform: scale(0.96);
-      opacity: 0.88;
+      border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(0.96);
+    }
+    33% {
+      border-radius: 70% 30% 46% 54% / 30% 29% 71% 70%;
+      transform: translate(-48%, -52%) rotate(40deg) scale(1.05);
+    }
+    66% {
+      border-radius: 55% 45% 30% 70% / 60% 40% 60% 40%;
+      transform: translate(-52%, -48%) rotate(85deg) scale(0.98);
     }
     100% {
-      transform: scale(1.04);
-      opacity: 1;
+      border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+      transform: translate(-50%, -50%) rotate(0deg) scale(0.96);
+    }
+  }
+
+  @keyframes blobMorphLeft {
+    0% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      transform: translate(-30%, -30%) rotate(0deg) scale(1);
+    }
+    50% {
+      border-radius: 35% 65% 60% 40% / 45% 55% 45% 55%;
+      transform: translate(-25%, -35%) rotate(-45deg) scale(1.08);
+    }
+    100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      transform: translate(-30%, -30%) rotate(0deg) scale(1);
+    }
+  }
+
+  @keyframes blobMorphRight {
+    0% {
+      border-radius: 50% 50% 34% 66% / 56% 68% 32% 44%;
+      transform: translate(20%, -20%) rotate(0deg) scale(0.98);
+    }
+    50% {
+      border-radius: 68% 32% 64% 36% / 40% 36% 64% 60%;
+      transform: translate(25%, -15%) rotate(55deg) scale(1.06);
+    }
+    100% {
+      border-radius: 50% 50% 34% 66% / 56% 68% 32% 44%;
+      transform: translate(20%, -20%) rotate(0deg) scale(0.98);
+    }
+  }
+
+  @keyframes blobMorphTop {
+    0% {
+      border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      border-radius: 60% 40% 40% 60% / 40% 60% 30% 70%;
+      transform: translateX(-50%) scale(1.06);
+    }
+    100% {
+      border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+      transform: translateX(-50%) scale(1);
     }
   }
 
@@ -2348,88 +2450,14 @@ const defaultLandingCss = resolveLandingDefaultCss();
     100% { background-position: 0 44px; }
   }
 
-  /* -------------------------------------------------------------------------
-   * CENTER PERSPECTIVE FLOOR (Terminates early as it reaches CTAs)
-   * ------------------------------------------------------------------------- */
-  .center-floor-wrap {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(1000px, 92vw);
-    height: 220px;
-    overflow: hidden;
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 45%, transparent 92%);
-    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 45%, transparent 92%);
-  }
-
-  .center-perspective-plane {
-    position: absolute;
-    bottom: -40px;
-    left: -30%;
-    width: 160%;
-    height: 380px;
-    transform-origin: 50% 100%;
-    transform: perspective(350px) rotateX(68deg);
-  }
-
-  .center-grid-mesh {
-    position: absolute;
-    inset: 0;
-    background-image: 
-      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #3b82f6) 38%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #3b82f6) 38%, transparent) 1px, transparent 1px);
-    background-size: 48px 48px;
-    animation: centerFloorScroll 12s linear infinite;
-  }
-
-  .center-glow-sweep {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 90%, 
-      color-mix(in srgb, var(--landing-accent, #3b82f6) 45%, transparent) 0%, 
-      color-mix(in srgb, var(--landing-secondary, #6366f1) 22%, transparent) 40%, 
-      transparent 70%
-    );
-  }
-
-  .center-horizon-line {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(600px, 80vw);
-    height: 2px;
-    background: linear-gradient(to right, 
-      transparent, 
-      color-mix(in srgb, var(--landing-accent, #3b82f6) 80%, transparent) 50%, 
-      transparent
-    );
-    box-shadow: 0 0 20px var(--landing-accent, #3b82f6);
-    opacity: 0.7;
-  }
-
-  @keyframes centerFloorScroll {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 48px; }
-  }
-
   /* Light mode adjustments */
   :global([data-theme="light"]) .flank-grid-lines {
     background-image: 
       linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px),
       linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 20%, transparent) 1px, transparent 1px);
   }
-  :global([data-theme="light"]) .center-grid-mesh {
-    background-image: 
-      linear-gradient(to right, color-mix(in srgb, var(--landing-accent, #2563eb) 22%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--landing-accent, #2563eb) 22%, transparent) 1px, transparent 1px);
-  }
   :global([data-theme="light"]) .flank-ambient-glow {
     opacity: 0.2;
-  }
-  :global([data-theme="light"]) .center-horizon-line {
-    opacity: 0.4;
   }
 
   @media (max-width: 1080px) {
@@ -2535,11 +2563,6 @@ const defaultLandingCss = resolveLandingDefaultCss();
       display: none !important;
     }
 
-    .center-floor-wrap {
-      width: 100% !important;
-      height: 160px !important;
-    }
-
     .landing-hero-narrative {
       margin: 2rem auto 2rem auto !important;
       padding: 0 1rem !important;
@@ -2588,15 +2611,13 @@ const defaultLandingCss = resolveLandingDefaultCss();
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .landing-page-wrap::before,
+    .ambient-blob,
     .sat-card,
     .live-preview-window,
     .cta-pill-luminous,
     .cta-pill-studio,
     .brand-swatch-dot,
-    .flank-grid-lines,
-    .center-grid-mesh,
-    .center-horizon-line {
+    .flank-grid-lines {
       transition: none !important;
       transform: none !important;
       animation: none !important;
