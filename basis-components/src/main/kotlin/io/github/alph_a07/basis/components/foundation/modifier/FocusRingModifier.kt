@@ -31,7 +31,7 @@ public fun Modifier.basisFocusRing(
     shape: Shape,
     color: Color = Color.Unspecified,
     width: Dp = 2.dp,
-): Modifier = this then FocusRingElement(color, width, shape)
+): Modifier = basisModifier() then FocusRingElement(color, width, shape)
 
 /**
  * Conditionally draws a high-contrast focus ring when [visible] is true and the element receives input focus.
@@ -47,7 +47,7 @@ public fun Modifier.basisFocusRing(
     shape: Shape,
     color: Color = Color.Unspecified,
     width: Dp = 2.dp,
-): Modifier = if (visible) basisFocusRing(shape = shape, color = color, width = width) else this
+): Modifier = if (visible) basisFocusRing(shape = shape, color = color, width = width) else basisModifier()
 
 private data class FocusRingElement(
     val color: Color,

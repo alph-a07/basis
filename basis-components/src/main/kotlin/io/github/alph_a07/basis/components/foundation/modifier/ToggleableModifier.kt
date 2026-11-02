@@ -37,6 +37,7 @@ public fun Modifier.basisToggleable(
         )
 
     return this
+        .basisModifier()
         .then(toggleableModifier)
         .basisMinTouchTarget()
 }

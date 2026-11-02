@@ -15,4 +15,4 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
  */
 public fun Modifier.basisClearAndSetSemantics(
     properties: SemanticsPropertyReceiver.() -> Unit,
-): Modifier = clearAndSetSemantics(properties = properties)
+): Modifier = basisModifier().clearAndSetSemantics(properties = properties)

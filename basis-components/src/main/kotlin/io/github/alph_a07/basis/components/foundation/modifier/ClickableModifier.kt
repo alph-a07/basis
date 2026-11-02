@@ -57,6 +57,7 @@ public fun Modifier.basisClickable(
         }
 
     return this
+        .basisModifier()
         .then(clickableModifier)
         .basisMinTouchTarget()
 }

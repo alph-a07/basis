@@ -19,4 +19,4 @@ public fun Modifier.basisBorder(
     width: Dp,
     color: Color,
     shape: Shape,
-): Modifier = border(BorderStroke(width, color), shape)
+): Modifier = basisModifier().border(BorderStroke(width, color), shape)

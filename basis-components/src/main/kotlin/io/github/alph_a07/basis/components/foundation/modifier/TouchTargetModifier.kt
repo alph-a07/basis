@@ -30,7 +30,7 @@ import kotlin.math.max
  * @return Configured [Modifier].
  */
 public fun Modifier.basisMinTouchTarget(min: Dp = Dp.Unspecified): Modifier =
-    this then TouchTargetElement(min)
+    basisModifier() then TouchTargetElement(min)
 
 private data class TouchTargetElement(
     val min: Dp,

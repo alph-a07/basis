@@ -14,4 +14,4 @@ import androidx.compose.ui.semantics.semantics
 public fun Modifier.basisSemantics(
     mergeDescendants: Boolean = false,
     properties: SemanticsPropertyReceiver.() -> Unit,
-): Modifier = semantics(mergeDescendants = mergeDescendants, properties = properties)
+): Modifier = basisModifier().semantics(mergeDescendants = mergeDescendants, properties = properties)

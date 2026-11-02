@@ -37,6 +37,7 @@ public fun Modifier.basisSelectable(
         )
 
     return this
+        .basisModifier()
         .then(selectableModifier)
         .basisMinTouchTarget()
 }

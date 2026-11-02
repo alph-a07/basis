@@ -27,7 +27,7 @@ public fun Modifier.basisSurface(
     border: BorderStroke? = null,
     depth: DepthSpec? = null,
 ): Modifier {
-    var modifier: Modifier = this
+    var modifier: Modifier = basisModifier()
 
     if (depth != null && depth.elevation.value > 0f) {
         modifier =

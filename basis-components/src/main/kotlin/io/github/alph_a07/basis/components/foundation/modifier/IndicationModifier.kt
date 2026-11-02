@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 public fun Modifier.basisIndication(
     interactionSource: InteractionSource,
     shape: Shape? = null,
-): Modifier = indication(interactionSource, createBasisIndication(shape = shape))
+): Modifier = basisModifier().indication(interactionSource, createBasisIndication(shape = shape))
 
 internal fun createBasisIndication(
     color: Color = Color.Unspecified,
