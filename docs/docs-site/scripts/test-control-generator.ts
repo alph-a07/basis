@@ -12,7 +12,7 @@ import type { IntentDocument } from '@basis/docs-model';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
 
-console.log('Testing P2.1 Control Generator, Specs & UI Components...');
+console.log('Testing Control Generator, Specs & UI Components...');
 
 // ---------------------------------------------------------------------------
 // 1. Derivation from generated intent.json
@@ -77,4 +77,4 @@ assert.strictEqual(lastOpt.label, 'Live Streaming');
 assert.strictEqual(lastOpt.summary, twelfthInteraction.summary);
 console.log('   ✅ Adding a 12th interaction dynamically derives 12 chips with no site code change.');
 
-console.log('\n🎉 P2.1 Control Generator specifications passed successfully!\n');
+console.log('\n🎉 Control Generator specifications passed successfully!\n');

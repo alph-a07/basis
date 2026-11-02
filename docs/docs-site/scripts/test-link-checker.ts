@@ -7,7 +7,7 @@ import { execSync } from 'node:child_process';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
 
-console.log('Running P1.7 Internal Link Checker and Stub Summary...\n');
+console.log('Running Internal Link Checker and Stub Summary...\n');
 
 if (!fs.existsSync(distDir)) {
   console.log(`Dist directory not found at ${distDir}. Building site first...`);
@@ -203,5 +203,5 @@ if (brokenLinks.length > 0) {
   process.exit(1);
 } else {
   console.log(`✅ All internal links across all ${htmlFiles.length} pages verified successfully! Zero broken links.`);
-  console.log('🎉 P1.7 Prose stubs and link checking passed successfully!');
+  console.log('🎉 Prose stubs and link checking passed successfully!');
 }

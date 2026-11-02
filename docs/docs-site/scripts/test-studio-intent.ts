@@ -40,7 +40,7 @@ function captureStore() {
   };
 }
 
-console.log('Testing P2.5 Intent Store (mutations, serialization, debounced resolve)...\n');
+console.log('Testing Intent Store (mutations, serialization, debounced resolve)...\n');
 
 // ---------------------------------------------------------------------------
 // 1. ColorSpec interchange shape (single source: docs-runtime)
@@ -176,9 +176,9 @@ assert.deepStrictEqual(r4.identity?.brandColor, {
 console.log('   ✅ Path-based dispatch handles knobs, presence, brandColor, and null.\n');
 
 // ---------------------------------------------------------------------------
-// 8. buildKotlinFromIntent generates valid idiomatic Kotlin code (P2.8)
+// 8. buildKotlinFromIntent generates valid idiomatic Kotlin code
 // ---------------------------------------------------------------------------
-console.log('8. Verifying buildKotlinFromIntent code generation (P2.8)...');
+console.log('8. Verifying buildKotlinFromIntent code generation...');
 const sampleIntent: IntentState = {
   identity: {
     brandColor: { type: 'io.github.alph_a07.basis.theme.core.color.ColorSpec.Hex', value: '#3b82f6' },
@@ -209,9 +209,9 @@ assert.ok(kotlin.includes('InteractionPattern.HighDensity'), 'Kotlin output must
 console.log('   ✅ buildKotlinFromIntent correctly serializes all intent axes.\n');
 
 // ---------------------------------------------------------------------------
-// 9. encodeIntentHash & decodeIntentHash round-trip (P2.9 URL State)
+// 9. encodeIntentHash & decodeIntentHash round-trip (URL State)
 // ---------------------------------------------------------------------------
-console.log('9. Verifying URL hash serialization and decoding (P2.9)...');
+console.log('9. Verifying URL hash serialization and decoding...');
 const hash = encodeIntentHash(sampleIntent);
 assert.ok(hash.startsWith('#v1.'), 'Hash must be versioned with #v1.');
 assert.ok(!hash.includes('+') && !hash.includes('/'), 'Hash must be URL-safe (base64url)');
@@ -239,4 +239,4 @@ assert.strictEqual(s10.intent.identity?.brandColor?.value, '#3b82f6');
 assert.strictEqual(s10.intent.mood?.preset, 'Calm');
 console.log('   ✅ setFullIntent restores entire intent tree.\n');
 
-console.log('🎉 All P2.5, P2.8, P2.9 intent store requirements passed.');
+console.log('🎉 All intent store requirements passed.');

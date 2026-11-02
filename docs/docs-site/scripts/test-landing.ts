@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 const distDir = path.resolve(__dirname, '../dist');
 const indexPath = path.join(distDir, 'index.html');
 
-console.log('Testing P2.3 Landing Page specifications...');
+console.log('Testing Landing Page specifications...');
 
 assert(fs.existsSync(indexPath), `Generated index.html must exist at ${indexPath}. Run npm run build first.`);
 const html = fs.readFileSync(indexPath, 'utf-8');
@@ -260,4 +260,4 @@ if (axeResults.violations.length > 0) {
 }
 console.log('   ✅ Axe accessibility audit passed with 0 violations!');
 
-console.log('\n🎉 All P2.3 Landing Page specifications passed successfully!');
+console.log('\n🎉 All Landing Page specifications passed successfully!');

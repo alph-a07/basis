@@ -1,7 +1,7 @@
 /**
  * studio-intent.ts - Single source of truth for the Intent Studio local intent.
  *
- * Drives the control panel (P2.5). Mutations come from `control-change` CustomEvents
+ * Drives the control panel. Mutations come from `control-change` CustomEvents
  * (detail: {path, name, value}) emitted by the control components. Every mutation
  * serializes to the exact kotlinx.serialization interchange shape the real resolver
  * accepts (verified against docs-runtime):

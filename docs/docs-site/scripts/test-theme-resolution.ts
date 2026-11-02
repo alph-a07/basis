@@ -7,7 +7,7 @@ import { docsIntent } from '../src/config/docs-intent.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
-console.log('Testing P1.4 Chrome theming resolution and contracts...');
+console.log('Testing Chrome theming resolution and contracts...');
 
 // 1. Locate docs-runtime artifact
 const runtimePath = path.resolve(__dirname, '../../docs-runtime/build/dist/js/productionLibrary/Basis-docs-runtime.js');
@@ -97,4 +97,4 @@ if (fs.existsSync(distIndexPath)) {
   console.log('✅ Blocking head theme script verified in built HTML');
 }
 
-console.log('\n🎉 P1.4 Theme contract checks passed successfully!');
+console.log('\n🎉 Theme contract checks passed successfully!');

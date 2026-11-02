@@ -6,7 +6,7 @@ import { checkSpecimenTokens, getValidResolverTokens } from './check-specimen-va
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-console.log('Testing P2.2 Specimens contracts and token enforcement...');
+console.log('Testing Specimens contracts and token enforcement...');
 
 // 1. Verify resolver tokens load properly
 const validTokens = getValidResolverTokens();
@@ -94,4 +94,4 @@ assert.ok(noteContent.includes('role="note"'), 'IllustrativeNote must have role=
 assert.ok(noteContent.includes('--b-'), 'IllustrativeNote must be styled with --b-* tokens');
 console.log('✅ IllustrativeNote verified');
 
-console.log('\n🎉 P2.2 Specimens verification complete and passing!');
+console.log('\n🎉 Specimens verification complete and passing!');

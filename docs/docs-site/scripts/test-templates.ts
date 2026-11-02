@@ -8,7 +8,7 @@ import { execSync } from 'node:child_process';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
 
-console.log('Testing P1.5 Component & Section Templates...');
+console.log('Testing Component & Section Templates...');
 
 if (!fs.existsSync(distDir)) {
   console.log(`Dist directory not found at ${distDir}. Building site first...`);
@@ -264,21 +264,7 @@ assert(dividerRole && dividerRole.textContent?.includes('Role.None'), 'Divider R
 console.log('✅ Divider Accessibility empty states verified');
 } else {
   console.log('ℹ️ Clean separation: Non-developed components omitted from docs site as expected.');
-  console.log('Verifying Foundation and Guide templates...');
-
-  const surfaceDoc = loadHtml('docs/foundation/surface');
-  const surfaceTitle = surfaceDoc.querySelector('h1');
-  assert(surfaceTitle && surfaceTitle.textContent?.includes('Surface'), 'Surface page title must render');
-  const surfaceCode = surfaceDoc.querySelector('.code-viewport pre code');
-  assert(surfaceCode && surfaceCode.textContent?.includes('basisSurface'), 'Surface code block must reference basisSurface');
-  console.log('✅ Foundation Surface template verified');
-
-  const focusableDoc = loadHtml('docs/foundation/focusable');
-  const focusableTitle = focusableDoc.querySelector('h1');
-  assert(focusableTitle && focusableTitle.textContent?.includes('Focusable'), 'Focusable page title must render');
-  const focusableCode = focusableDoc.querySelector('.code-viewport pre code');
-  assert(focusableCode && focusableCode.textContent?.includes('basisFocusRing'), 'Focusable code block must reference basisFocusRing');
-  console.log('✅ Foundation Focusable template verified');
+  console.log('Verifying Guide templates...');
 
   const overviewDoc = loadHtml('docs/getting-started/overview');
   const overviewTitle = overviewDoc.querySelector('h1');
@@ -291,4 +277,111 @@ console.log('✅ Divider Accessibility empty states verified');
   console.log('✅ Theming template verified');
 }
 
-console.log('\n🎉 All P1.5 Template and Section Component tests passed successfully!');
+// -------------------------------------------------------------
+// 3. Foundation Modifiers Tests
+// -------------------------------------------------------------
+
+console.log('Testing Foundation Modifiers across route-per-tab pages & sidebar...');
+
+const expectedModifiers = [
+  { id: 'basis-border', name: 'basisBorder' },
+  { id: 'basis-clear-and-set-semantics', name: 'basisClearAndSetSemantics' },
+  { id: 'basis-clickable', name: 'basisClickable' },
+  { id: 'basis-focus-ring', name: 'basisFocusRing' },
+  { id: 'basis-indication', name: 'basisIndication' },
+  { id: 'basis-min-touch-target', name: 'basisMinTouchTarget' },
+  { id: 'basis-padding', name: 'basisPadding' },
+  { id: 'basis-selectable', name: 'basisSelectable' },
+  { id: 'basis-semantics', name: 'basisSemantics' },
+  { id: 'basis-surface', name: 'basisSurface' },
+  { id: 'basis-toggleable', name: 'basisToggleable' },
+];
+
+// Check all 11 modifiers in the sidebar under Foundation -> Modifiers
+const sampleDoc = loadHtml('docs/modifiers/basis-border');
+const foundationGroup = Array.from(sampleDoc.querySelectorAll('.nav-group')).find((g) => {
+  return g.querySelector('.nav-group-title')?.textContent?.trim().toLowerCase() === 'foundation';
+});
+assert(foundationGroup, 'Sidebar must contain FOUNDATION section');
+
+const modifiersSubgroup = foundationGroup.querySelector('.nav-subgroup[data-family="modifiers"]');
+assert(modifiersSubgroup, 'FOUNDATION section must contain Modifiers subgroup');
+
+const subgroupLabel = modifiersSubgroup.querySelector('.nav-subgroup-label');
+assert.strictEqual(subgroupLabel?.textContent?.trim(), 'Modifiers', 'Subgroup label must be Modifiers');
+
+const directItems = Array.from(foundationGroup.querySelectorAll(':scope > .nav-group-list > .nav-item'));
+assert.strictEqual(directItems.length, 0, 'Foundation section must have 0 direct prose items (no duplicate surface/focusable)');
+
+const modifierLinks = Array.from(modifiersSubgroup.querySelectorAll('a.nav-link'));
+assert.strictEqual(modifierLinks.length, expectedModifiers.length, `Modifiers subgroup must contain all ${expectedModifiers.length} modifiers`);
+
+for (const mod of expectedModifiers) {
+  const link = modifierLinks.find((l) => l.getAttribute('href') === `/docs/modifiers/${mod.id}`);
+  assert(link, `Sidebar must contain link to /docs/modifiers/${mod.id}`);
+  assert(link.textContent?.includes(mod.name), `Link text must contain ${mod.name}`);
+}
+
+// Ensure modifiers are NOT placed under Components group
+const componentsGroup = sampleDoc.querySelector('.components-group');
+if (componentsGroup) {
+  const componentLinks = Array.from(componentsGroup.querySelectorAll('a.nav-link'));
+  for (const mod of expectedModifiers) {
+    const hasMod = componentLinks.some((l) => l.getAttribute('href')?.includes(mod.id));
+    assert(!hasMod, `Modifier ${mod.id} must not be present in Components group`);
+  }
+}
+console.log('✅ Sidebar FOUNDATION -> Modifiers placement verified');
+
+// Verify route-per-tab (Overview and API) for modifiers
+for (const mod of expectedModifiers) {
+  // 1. Overview Tab
+  const overviewDoc = loadHtml(`docs/modifiers/${mod.id}`);
+  const titleEl = overviewDoc.querySelector('.modifier-title');
+  assert(titleEl && titleEl.textContent?.includes(mod.name), `${mod.name} title must render on overview page`);
+
+  const tabsNav = overviewDoc.querySelector('.modifier-tabs');
+  assert(tabsNav, `${mod.name} tabs navigation must render`);
+
+  const activeTabOverview = tabsNav.querySelector('a.tab-link.active[aria-current="page"]');
+  assert(activeTabOverview && activeTabOverview.textContent?.trim() === 'Overview', `${mod.name} Overview tab must be active`);
+
+  const apiTabLink = tabsNav.querySelector(`a.tab-link[href="/docs/modifiers/${mod.id}/api"]`);
+  assert(apiTabLink, `${mod.name} must have link to API tab`);
+
+  // Quick Start
+  const quickStart = overviewDoc.querySelector('.modifier-section pre code');
+  assert(quickStart && quickStart.textContent?.includes(mod.name), `${mod.name} quick start code block must reference ${mod.name}`);
+
+  // Accessibility section
+  const a11yHeading = overviewDoc.querySelector('#accessibility');
+  assert(a11yHeading, `${mod.name} must render Accessibility section`);
+
+  // Guidelines section
+  const guidelinesHeading = overviewDoc.querySelector('#guidelines');
+  assert(guidelinesHeading, `${mod.name} must render Usage Guidelines from sidecar`);
+
+  // 2. API Tab
+  const apiDoc = loadHtml(`docs/modifiers/${mod.id}/api`);
+  const apiTitle = apiDoc.querySelector('.modifier-title');
+  assert(apiTitle && apiTitle.textContent?.includes(mod.name), `${mod.name} title must render on API page`);
+
+  const apiTabsNav = apiDoc.querySelector('.modifier-tabs');
+  assert(apiTabsNav, `${mod.name} API tabs navigation must render`);
+
+  const activeTabApi = apiTabsNav.querySelector('a.tab-link.active[aria-current="page"]');
+  assert(activeTabApi && activeTabApi.textContent?.trim() === 'API', `${mod.name} API tab must be active on /api route`);
+
+  const signaturesHeading = apiDoc.querySelector('#signatures');
+  assert(signaturesHeading, `${mod.name} must render Signatures & Parameters heading`);
+
+  const sigBlock = apiDoc.querySelector('.signature-container pre code');
+  assert(sigBlock && sigBlock.textContent?.includes(`Modifier.${mod.name}`), `${mod.name} signature block must declare Modifier.${mod.name}`);
+
+  const paramsTable = apiDoc.querySelector('.params-table');
+  assert(paramsTable, `${mod.name} must render parameters table`);
+}
+
+console.log(`✅ All ${expectedModifiers.length} modifiers verified across Overview and API tabs`);
+
+console.log('\n🎉 All Template and Section Component tests passed successfully!');

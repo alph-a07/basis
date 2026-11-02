@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const siteDir = path.resolve(__dirname, '..');
 const repoRoot = path.resolve(siteDir, '../..');
 
-console.log('Testing P1.6 Design Pass specifications...');
+console.log('Testing Design Pass specifications...');
 
 // 1. Reading column width verification (about 70ch / 72ch)
 console.log('1. Verifying reading column constraint...');
@@ -93,4 +93,4 @@ assert(
 );
 console.log('   ✅ Lighthouse CI thresholds verified (accessibility >= 0.95, performance >= 0.90)');
 
-console.log('\n🎉 All P1.6 Design Pass specifications passed successfully!');
+console.log('\n🎉 All Design Pass specifications passed successfully!');
