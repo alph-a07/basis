@@ -93,10 +93,9 @@ function generate() {
   const tokens = Object.keys(tokenIndex).sort();
   console.log(`Parsed ${tokens.length} tokens with consumers from ${cssPath}`);
 
-  const content = `/**
- * tokenIndex.ts - Auto-generated token to consumer mapping.
- * Generated at build time by scripts/generate-token-index.ts. DO NOT EDIT DIRECTLY.
- */
+  const content = `// AUTO-GENERATED FILE. DO NOT MODIFY DIRECTLY.
+// This file is generated and must not be edited manually.
+// Neither this file nor the use cases it serves should be written manually.
 
 export interface TokenConsumer {
   selector: string;

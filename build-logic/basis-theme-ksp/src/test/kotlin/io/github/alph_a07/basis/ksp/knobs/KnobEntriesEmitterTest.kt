@@ -24,7 +24,8 @@ internal class KnobEntriesEmitterTest {
     @Test
     fun emitsInternalExtensionInReceiverPackage() {
         val source = KnobEntriesEmitter.emit(moodModel)
-        assertTrue(source.startsWith("package io.github.alph_a07.basis.theme.intent\n"))
+        assertTrue(source.startsWith("// AUTO-GENERATED FILE. DO NOT MODIFY DIRECTLY."))
+        assertTrue(source.contains("package io.github.alph_a07.basis.theme.intent\n"))
         assertTrue(source.contains("internal fun MoodKnobs.knobEntries(): Map<String, Float> = buildMap {"))
     }
 

@@ -38,7 +38,8 @@ internal class FamilyEmitterTest {
     @Test
     fun emitsPackageImportsAndEnumHeader() {
         val source = FamilyEmitter.emit(motionModel)
-        assertTrue(source.startsWith("package io.github.alph_a07.basis.theme.tokens.core\n"))
+        assertTrue(source.startsWith("// AUTO-GENERATED FILE. DO NOT MODIFY DIRECTLY."))
+        assertTrue(source.contains("package io.github.alph_a07.basis.theme.tokens.core\n"))
         assertTrue(source.contains("import io.github.alph_a07.basis.theme.motion.MotionSpec\n"))
         assertTrue(source.contains("import io.github.alph_a07.basis.theme.motion.MotionTokens\n"))
         assertTrue(
