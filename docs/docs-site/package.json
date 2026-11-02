@@ -12,6 +12,7 @@
     "build": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro build && pagefind --site dist && tsx scripts/generate-sitemap.ts",
     "preview": "astro preview",
     "check": "npm run generate:theme && npm run generate:token-index && astro check",
+    "generate:fonts-catalog": "tsx scripts/generate-fonts-catalog.ts",
     "test:loader": "tsx scripts/test-loader-validation.ts",
     "test:theme": "tsx scripts/test-theme-resolution.ts",
     "test:templates": "tsx scripts/test-templates.ts",
