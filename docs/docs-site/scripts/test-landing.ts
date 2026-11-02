@@ -6,6 +6,7 @@ import assert from 'node:assert';
 import axe from 'axe-core';
 import { createRequire } from 'node:module';
 import { loadIntentDoc } from '../src/lib/load-intent';
+import type { ChoiceDoc } from '@basis/docs-model';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -65,7 +66,7 @@ assert(moodPresetControl.getAttribute('data-path') === 'mood.preset', 'Mood Pres
 const presenceOptionsInHtml = Array.from(presenceControl.querySelectorAll('.choice-chip')).map((el) =>
   el.getAttribute('data-value')
 );
-const realPresenceIds = (intentDoc.identity?.presence ?? []).map((p) => p.id);
+const realPresenceIds = (intentDoc.identity?.presence ?? []).map((p: ChoiceDoc) => p.id);
 assert.deepStrictEqual(
   presenceOptionsInHtml,
   realPresenceIds,
@@ -75,7 +76,7 @@ assert.deepStrictEqual(
 const presetOptionsInHtml = Array.from(moodPresetControl.querySelectorAll('.choice-chip')).map((el) =>
   el.getAttribute('data-value')
 );
-const realPresetIds = (intentDoc.mood?.presets ?? []).map((p) => p.id);
+const realPresetIds = (intentDoc.mood?.presets ?? []).map((p: ChoiceDoc) => p.id);
 assert.deepStrictEqual(
   presetOptionsInHtml,
   realPresetIds,

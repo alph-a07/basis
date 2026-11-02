@@ -15,7 +15,7 @@
  * Plus Font selection.
  */
 
-import type { IntentDocument, FieldDoc } from '@basis/docs-model';
+import type { IntentDocument, FieldDoc, ChoiceDoc, KnobDoc } from '@basis/docs-model';
 import { studioUiConfig, type StudioUiConfig } from '../config/studio-ui';
 import type {
   ChoiceOption,
@@ -72,7 +72,7 @@ export function deriveControlSpecs(
   };
 
   // 3. Single Choice: Brand Presence
-  const presenceOptions: ChoiceOption[] = (intent.identity?.presence ?? []).map((p) => ({
+  const presenceOptions: ChoiceOption[] = (intent.identity?.presence ?? []).map((p: ChoiceDoc) => ({
     id: p.id,
     label: p.label,
     summary: p.summary,
@@ -113,7 +113,7 @@ export function deriveControlSpecs(
   };
 
   // 6. Single Choice: Mood Preset
-  const presetOptions: ChoiceOption[] = (intent.mood?.presets ?? []).map((p) => ({
+  const presetOptions: ChoiceOption[] = (intent.mood?.presets ?? []).map((p: ChoiceDoc) => ({
     id: p.id,
     label: p.label,
     summary: p.summary,
@@ -131,7 +131,7 @@ export function deriveControlSpecs(
   };
 
   // 7. Tri-state Knobs: Mood Knobs
-  const knobSpecs: KnobControlSpec[] = (intent.mood?.knobs ?? []).map((k) => {
+  const knobSpecs: KnobControlSpec[] = (intent.mood?.knobs ?? []).map((k: KnobDoc) => {
     const step = config.knobSteps[k.id] ?? config.defaultKnobStep ?? 0.05;
     return {
       type: 'knob',
@@ -162,7 +162,7 @@ export function deriveControlSpecs(
   }
 
   // 8. Multi Choice: Product Domains
-  const domainOptions: ChoiceOption[] = (intent.domain?.domains ?? []).map((d) => ({
+  const domainOptions: ChoiceOption[] = (intent.domain?.domains ?? []).map((d: ChoiceDoc) => ({
     id: d.id,
     label: d.label,
     summary: d.summary,
@@ -179,7 +179,7 @@ export function deriveControlSpecs(
   };
 
   // 9. Multi Choice: Interaction Patterns
-  const interactionOptions: ChoiceOption[] = (intent.domain?.interactions ?? []).map((i) => ({
+  const interactionOptions: ChoiceOption[] = (intent.domain?.interactions ?? []).map((i: ChoiceDoc) => ({
     id: i.id,
     label: i.label,
     summary: i.summary,
