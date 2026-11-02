@@ -43,3 +43,18 @@ val generatePatchVocabularyTask =
             rootProject.file("docs/docs-model/fixtures/patch-vocabulary.fixture.json").absolutePath,
         )
     }
+
+val generateComponentsJsonTask =
+    tasks.register<JavaExec>("generateComponentsJson") {
+        group = "documentation"
+        description = "Generates components.json from basis-components Kotlin sources, KDoc, and annotations."
+        classpath = sourceSets["main"].runtimeClasspath
+        mainClass.set("io.github.alph_a07.basis.docs.extract.GenerateComponentsJsonKt")
+        args(
+            rootProject.file(
+                "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier",
+            ).absolutePath,
+            rootProject.file("build/docs-model/components.json").absolutePath,
+            rootProject.file("docs/docs-model/fixtures/components.fixture.json").absolutePath,
+        )
+    }
