@@ -853,3 +853,5 @@ basis:
     excludes: [ '**/theme/resolution/**' ]
   VersionCatalogUsage:
     active: true
+  LifecycleConsistency:
+    active: true

@@ -22,6 +22,7 @@ class BasisRuleSetProvider : RuleSetProvider {
                 BlankLineBeforeReturn(config),
                 BlankLineBeforeLastStatement(config),
                 VersionCatalogUsage(config),
+                LifecycleConsistency(config),
             ),
         )
 
