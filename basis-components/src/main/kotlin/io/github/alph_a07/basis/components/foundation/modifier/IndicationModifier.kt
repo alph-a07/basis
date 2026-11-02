@@ -28,6 +28,7 @@ import androidx.compose.ui.node.currentValueOf
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 import io.github.alph_a07.basis.components.theme.locals.LocalBasisContentColor
 import kotlin.math.hypot
 import kotlin.time.Duration.Companion.milliseconds
@@ -42,6 +43,22 @@ import kotlinx.coroutines.launch
  * @param shape Optional [Shape] to clip the indication outline to.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-indication",
+    role = "None",
+    minTouchTargetDp = 0,
+    touchTargetEnforced = false,
+    respectsReducedMotion = true,
+    sampleCode =
+        "val interactionSource = remember { MutableInteractionSource() }\n\n" +
+            "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisIndication(interactionSource, shape = RoundedCornerShape(8.dp))\n" +
+            "        .clickable(interactionSource = interactionSource, indication = null) { /* action */ }\n" +
+            ") {\n" +
+            "    Text(\"Custom Indication Box\")\n" +
+            "}",
+)
 public fun Modifier.basisIndication(
     interactionSource: InteractionSource,
     shape: Shape? = null,

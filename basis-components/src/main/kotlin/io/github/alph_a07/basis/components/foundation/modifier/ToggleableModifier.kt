@@ -5,6 +5,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 
 /**
  * Configures the element to be toggleable with Basis indication, semantics, and minimum touch target.
@@ -17,6 +18,26 @@ import androidx.compose.ui.semantics.Role
  * @param onValueChange Callback invoked with the new state when toggled.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-toggleable",
+    role = "Checkbox",
+    minTouchTargetDp = 48,
+    touchTargetEnforced = true,
+    respectsReducedMotion = true,
+    sampleCode =
+        "Row(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisToggleable(\n" +
+            "            value = isChecked,\n" +
+            "            role = Role.Checkbox,\n" +
+            "            onValueChange = { isChecked = it }\n" +
+            "        )\n" +
+            "        .padding(BasisTheme.spacing.sm)\n" +
+            ") {\n" +
+            "    Checkbox(checked = isChecked, onCheckedChange = null)\n" +
+            "    Text(\"Enable Push Notifications\")\n" +
+            "}",
+)
 public fun Modifier.basisToggleable(
     value: Boolean,
     enabled: Boolean = true,

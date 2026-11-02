@@ -1,3 +1,16 @@
+public abstract interface annotation class io/github/alph_a07/basis/components/annotation/BasisModifierDoc : java/lang/annotation/Annotation {
+	public abstract fun id ()Ljava/lang/String;
+	public abstract fun minTouchTargetDp ()I
+	public abstract fun respectsReducedMotion ()Z
+	public abstract fun role ()Ljava/lang/String;
+	public abstract fun sampleCode ()Ljava/lang/String;
+	public abstract fun touchTargetEnforced ()Z
+}
+
+public final class io/github/alph_a07/basis/components/foundation/modifier/BaseModifierKt {
+	public static final fun basisModifier (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+}
+
 public final class io/github/alph_a07/basis/components/foundation/modifier/BorderModifierKt {
 	public static final fun basisBorder-xT4_qwU (Landroidx/compose/ui/Modifier;FJLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
 }

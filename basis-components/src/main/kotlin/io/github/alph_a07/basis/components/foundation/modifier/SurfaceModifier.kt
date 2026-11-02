@@ -8,6 +8,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 import io.github.alph_a07.basis.components.theme.conversion.toElevationDp
 import io.github.alph_a07.basis.components.theme.conversion.toShadowColor
 import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
@@ -21,6 +22,26 @@ import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
  * @param depth Optional [DepthSpec] defining elevation and shadow intensity.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-surface",
+    role = "None",
+    minTouchTargetDp = 0,
+    touchTargetEnforced = false,
+    respectsReducedMotion = false,
+    sampleCode =
+        "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisSurface(\n" +
+            "            shape = BasisTheme.shapes.medium,\n" +
+            "            color = BasisTheme.colors.surfaceElevated,\n" +
+            "            depth = BasisTheme.depth.level1,\n" +
+            "            border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)\n" +
+            "        )\n" +
+            "        .padding(BasisTheme.spacing.md)\n" +
+            ") {\n" +
+            "    Text(\"Elevated Surface Container\")\n" +
+            "}",
+)
 public fun Modifier.basisSurface(
     shape: Shape,
     color: Color,

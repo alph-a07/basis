@@ -17,6 +17,7 @@ import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
 
 /**
@@ -27,6 +28,21 @@ import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
  * @param width Stroke width of the ring in [Dp], defaults to 2.dp.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-focus-ring",
+    role = "None",
+    minTouchTargetDp = 0,
+    touchTargetEnforced = false,
+    respectsReducedMotion = true,
+    sampleCode =
+        "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisFocusRing(shape = BasisTheme.shapes.small)\n" +
+            "        .clickable { /* action */ }\n" +
+            ") {\n" +
+            "    Text(\"Focusable Target\")\n" +
+            "}",
+)
 public fun Modifier.basisFocusRing(
     shape: Shape,
     color: Color = Color.Unspecified,

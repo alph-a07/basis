@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 
 /**
  * Configures the element to be clickable with Basis indication, accessibility semantics, and minimum touch target.
@@ -21,6 +22,27 @@ import androidx.compose.ui.semantics.Role
  * @param onClick Callback invoked when the element is clicked.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-clickable",
+    role = "Button",
+    minTouchTargetDp = 48,
+    touchTargetEnforced = true,
+    respectsReducedMotion = true,
+    sampleCode =
+        "val interactionSource = remember { MutableInteractionSource() }\n\n" +
+            "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisClickable(\n" +
+            "            interactionSource = interactionSource,\n" +
+            "            shape = BasisTheme.shapes.medium,\n" +
+            "            onClick = { /* handle action */ }\n" +
+            "        )\n" +
+            "        .basisFocusRing(shape = BasisTheme.shapes.medium)\n" +
+            "        .padding(BasisTheme.spacing.md)\n" +
+            ") {\n" +
+            "    Text(\"Interactive Tile\")\n" +
+            "}",
+)
 @OptIn(ExperimentalFoundationApi::class)
 public fun Modifier.basisClickable(
     enabled: Boolean = true,

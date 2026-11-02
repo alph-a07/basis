@@ -5,6 +5,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 
 /**
  * Configures the element to be selectable with Basis indication, accessibility semantics, and minimum touch target.
@@ -17,6 +18,26 @@ import androidx.compose.ui.semantics.Role
  * @param onClick Callback invoked when the element is clicked.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-selectable",
+    role = "RadioButton",
+    minTouchTargetDp = 48,
+    touchTargetEnforced = true,
+    respectsReducedMotion = true,
+    sampleCode =
+        "Row(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisSelectable(\n" +
+            "            selected = isSelected,\n" +
+            "            role = Role.RadioButton,\n" +
+            "            onClick = { onSelect() }\n" +
+            "        )\n" +
+            "        .padding(BasisTheme.spacing.sm)\n" +
+            ") {\n" +
+            "    RadioButton(selected = isSelected, onClick = null)\n" +
+            "    Text(\"Option Label\")\n" +
+            "}",
+)
 public fun Modifier.basisSelectable(
     selected: Boolean,
     enabled: Boolean = true,

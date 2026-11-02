@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.conversion.toDp
 import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
@@ -29,6 +30,22 @@ import kotlin.math.max
  * @param min Minimum touch target dimension in [Dp], defaults to [Dp.Unspecified] to follow theme constraints.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-min-touch-target",
+    role = "None",
+    minTouchTargetDp = 48,
+    touchTargetEnforced = true,
+    respectsReducedMotion = false,
+    sampleCode =
+        "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .size(24.dp)\n" +
+            "        .basisMinTouchTarget()\n" +
+            "        .clickable { /* action */ }\n" +
+            ") {\n" +
+            "    Icon(Icons.Default.Close, contentDescription = \"Close\")\n" +
+            "}",
+)
 public fun Modifier.basisMinTouchTarget(min: Dp = Dp.Unspecified): Modifier =
     basisModifier() then TouchTargetElement(min)
 

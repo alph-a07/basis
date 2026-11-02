@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
+import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 
 /**
  * Applies a border stroke with a specified [color], [width], and [shape].
@@ -15,6 +16,25 @@ import androidx.compose.ui.unit.Dp
  * @param shape Corner [Shape] conforming to the element.
  * @return Configured [Modifier].
  */
+@BasisModifierDoc(
+    id = "basis-border",
+    role = "None",
+    minTouchTargetDp = 0,
+    touchTargetEnforced = false,
+    respectsReducedMotion = false,
+    sampleCode =
+        "Box(\n" +
+            "    modifier = Modifier\n" +
+            "        .basisBorder(\n" +
+            "            width = 1.dp,\n" +
+            "            color = BasisTheme.colors.outlineVariant,\n" +
+            "            shape = BasisTheme.shapes.small\n" +
+            "        )\n" +
+            "        .padding(BasisTheme.spacing.sm)\n" +
+            ") {\n" +
+            "    Text(\"Bordered Box\")\n" +
+            "}",
+)
 public fun Modifier.basisBorder(
     width: Dp,
     color: Color,
