@@ -1,0 +1,18 @@
+---
+id: basis-padding
+guidelines:
+  do:
+    - Use `BasisTheme.spacing` tokens (`spacing.sm`, `spacing.md`) to maintain layout rhythm.
+    - Use the uniform `basisPadding(all = ...)` overload for square card and tile containers.
+  dont:
+    - Do not substitute arbitrary hardcoded Dp values in place of standard spacing tokens.
+    - Do not apply excessive padding that causes content clipping on small viewport displays.
+  notes:
+    - Token spacing values scale harmoniously across density buckets and screen form factors.
+---
+
+## Accessibility
+
+`basisPadding` applies spacing using typed Basis token values. Consistent spacing ensures
+legible typography line breaks, clear visual hierarchy, and sufficient separation between
+interactive components to prevent accidental adjacent activation.

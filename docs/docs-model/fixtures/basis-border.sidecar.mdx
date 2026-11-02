@@ -1,0 +1,18 @@
+---
+id: basis-border
+guidelines:
+  do:
+    - Pair with `BasisTheme.colors.outlineVariant` for subtle container boundaries.
+    - Match the element corner shape to prevent visual anti-aliasing artifacts.
+  dont:
+    - Do not use high-contrast primary borders for non-interactive content separators.
+    - Do not apply thick border strokes that reduce the effective content layout area.
+  notes:
+    - Hairline 1dp borders adapt automatically across light and dark mode surface steps.
+---
+
+## Accessibility
+
+`basisBorder` renders decorative strokes conforming to the element's corner shape.
+When used on interactive elements, ensure the adjacent container fill and border achieve
+sufficient contrast against the surrounding background.

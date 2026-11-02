@@ -1,0 +1,18 @@
+---
+id: basis-clickable
+guidelines:
+  do:
+    - Share a single `MutableInteractionSource` with `Modifier.basisFocusRing()`.
+    - Explicitly set `role = Role.Button` or the appropriate semantic role.
+  dont:
+    - Do not nest `basisClickable` inside an outer clickable container.
+    - Do not suppress indication unless providing an accessible visual state layer.
+  notes:
+    - Automatically enforces a 48dp physical touch target boundary via `basisMinTouchTarget()`.
+---
+
+## Accessibility
+
+`basisClickable` ensures interactive compliance by enforcing a minimum 48dp touch target
+hitbox without modifying the element's layout placement. It handles `Space` and `Enter` key
+activation for hardware keyboard navigation and exposes Compose click semantics to TalkBack.

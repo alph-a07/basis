@@ -1,0 +1,18 @@
+---
+id: basis-semantics
+guidelines:
+  do:
+    - Use `mergeDescendants = true` when grouping an icon and label into a single clickable row.
+    - Set explicit `role` values (`Role.Button`, `Role.Switch`, `Role.Tab`) to guide TalkBack.
+  dont:
+    - Do not assign conflicting semantics (such as `Role.Button` on a text field container).
+    - Do not duplicate content descriptions that are already exposed by child text nodes.
+  notes:
+    - Enables comprehensive accessibility announcements and clean UI test tag targeting.
+---
+
+## Accessibility
+
+`basisSemantics` directly manipulates the accessibility node tree. It allows developers to
+define custom action labels, announce dynamic state descriptions (e.g. "Step 2 of 5"), and
+merge complex layout subtrees into clean, accessible TalkBack navigation units.

@@ -1,0 +1,18 @@
+---
+id: basis-surface
+guidelines:
+  do:
+    - Use semantic surface tokens (`surface`, `surfaceElevated`, `surfaceSunken`) rather than raw colors.
+    - Pair with `BasisTheme.depth` tokens (`depth.level1`, `depth.level2`) for elevation styling.
+  dont:
+    - Do not stack excessive elevation levels that distort dark mode luminance layers.
+    - Do not apply clipping without ensuring child focus rings have sufficient rendering clearance.
+  notes:
+    - In dark mode, elevation is rendered using tonal luminance steps rather than invisible drop shadows.
+---
+
+## Accessibility
+
+`basisSurface` provides the visual container canvas for controls and views. Its color
+token derivation enforces WCAG AA minimum contrast ratios against foreground content colors
+provided by `LocalBasisContentColor`.

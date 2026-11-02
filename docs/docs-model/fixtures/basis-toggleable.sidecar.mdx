@@ -1,0 +1,18 @@
+---
+id: basis-toggleable
+guidelines:
+  do:
+    - Assign `role = Role.Checkbox` or `Role.Switch` depending on the interaction archetype.
+    - Provide adjacent descriptive label text explaining the setting or feature being toggled.
+  dont:
+    - Do not use ambiguous state descriptions like "active" when boolean checked states apply.
+    - Do not use `basisToggleable` for multi-option radio groups; use `basisSelectable` instead.
+  notes:
+    - Guarantees an accessible 48dp minimum touch target floor for switches and checkboxes.
+---
+
+## Accessibility
+
+`basisToggleable` exposes boolean checked state semantics to assistive technologies.
+Screen readers announce the current state ("checked" or "not checked") alongside the control's
+label. Key navigation with `Space` automatically toggles the underlying state.

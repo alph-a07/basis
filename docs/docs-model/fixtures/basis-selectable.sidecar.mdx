@@ -1,0 +1,18 @@
+---
+id: basis-selectable
+guidelines:
+  do:
+    - Group mutually exclusive selectable items in a semantic list with `Role.RadioButton` or `Role.Tab`.
+    - Provide an accessible label via adjacent text or semantics for screen readers.
+  dont:
+    - Do not use `basisSelectable` for independent multi-select toggles; use `basisToggleable` instead.
+    - Do not trigger side-effects directly in selection callbacks without updating state.
+  notes:
+    - Automatically enforces a 48dp minimum touch target floor for accessible finger taps.
+---
+
+## Accessibility
+
+`basisSelectable` announces selection status changes to screen readers (e.g. "checked", "selected").
+It exposes keyboard activation via the `Space` and `Enter` keys, and enforces a 48dp physical
+boundary to prevent missed taps during single-choice list navigation.

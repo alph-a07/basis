@@ -1,0 +1,18 @@
+---
+id: basis-clear-and-set-semantics
+guidelines:
+  do:
+    - Use when multiple child composables should be announced as a single spoken entity.
+    - Provide concise, informative `contentDescription` strings for screen readers.
+  dont:
+    - Do not use on complex interactive containers that include multiple distinct tap targets.
+    - Do not clear semantics without providing a replacement accessible description.
+  notes:
+    - Eliminates repetitive TalkBack focus stops on compound items like ratings or badges.
+---
+
+## Accessibility
+
+`basisClearAndSetSemantics` wipes the accessibility subtree of the target layout node
+and exposes only the explicitly assigned properties. This prevents TalkBack from reading
+redundant internal sub-nodes such as decorative star icons or supplementary indicator pips.

@@ -1,0 +1,18 @@
+---
+id: basis-focus-ring
+guidelines:
+  do:
+    - Pass the corner shape matching the underlying composable container.
+    - Rely on `Color.Unspecified` to inherit the guaranteed 3.0:1 contrast focus color.
+  dont:
+    - Do not hide or suppress focus rings on keyboard-focusable elements.
+    - Do not position elements with less than 2dp margins if focus rings might be clipped.
+  notes:
+    - Automatically conforms to `focus-visible` conventions, appearing only on keyboard navigation.
+---
+
+## Accessibility
+
+`basisFocusRing` satisfies WCAG 2.4.7 (Focus Visible) and WCAG 2.4.11 (Focus Appearance) by
+drawing a 2dp stroke with a 2dp outward offset, guaranteeing a minimum 3.0:1 contrast ratio
+against both light and dark adjacent surfaces.

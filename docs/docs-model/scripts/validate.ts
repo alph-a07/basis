@@ -55,17 +55,18 @@ async function main() {
     }
   }
 
-  // 4. Sidecar MDX fixture
-  const sidecarPath = path.join(fixturesDir, 'button.sidecar.mdx');
-  if (fs.existsSync(sidecarPath)) {
+  // 4. Sidecar MDX fixtures
+  const sidecarFiles = fs.readdirSync(fixturesDir).filter((f) => f.endsWith('.sidecar.mdx'));
+  for (const file of sidecarFiles) {
+    const sidecarPath = path.join(fixturesDir, file);
     const sidecarContent = fs.readFileSync(sidecarPath, 'utf-8');
-    const result = validator.validateSidecarMdx(sidecarContent, 'button.sidecar.mdx');
+    const result = validator.validateSidecarMdx(sidecarContent, file);
     if (!result.ok) {
       console.error(`❌ Validation failed for ${sidecarPath}:`);
       result.errors.forEach((e) => console.error(`   ${e}`));
       totalErrors += result.errors.length;
     } else {
-      console.log(`✅ button.sidecar.mdx passed`);
+      console.log(`✅ ${file} passed`);
     }
   }
 

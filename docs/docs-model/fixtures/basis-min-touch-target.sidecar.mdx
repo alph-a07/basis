@@ -1,0 +1,18 @@
+---
+id: basis-min-touch-target
+guidelines:
+  do:
+    - Apply to small action buttons, icon triggers, and compact chips (e.g. 24dp or 32dp visual size).
+    - Allow ambient theme `ConstraintsControl.minTouchTarget` to govern the default 48dp floor.
+  dont:
+    - Do not hardcode dimensions smaller than 48dp unless targeting specialized embedded devices.
+    - Do not position adjacent small targets so closely that their 48dp hitboxes overlap.
+  notes:
+    - Expands the interactive hit area without increasing visible padding or altering layout flow.
+---
+
+## Accessibility
+
+`basisMinTouchTarget` fulfills WCAG 2.5.5 (Target Size) and Android Accessibility Scanner
+requirements by expanding the hit test target of any component to at least 48dp × 48dp.
+The layout bounds and visual drawing remain untouched, preventing clipping or unwanted gaps.
