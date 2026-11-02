@@ -7,4 +7,6 @@ public/assets/components/*.png
 public/docs-runtime/
 scripts/capture-screenshots.ts
 scripts/test-screenshot.ts
+src/studio/fonts/fonts-catalog.json
+src/studio/scene/tokenIndex.ts
 

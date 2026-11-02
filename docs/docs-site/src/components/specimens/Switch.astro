@@ -10,6 +10,7 @@ interface Props {
   disabled?: boolean;
   state?: 'default' | 'hover' | 'focus' | 'checked' | 'disabled';
   class?: string;
+  'aria-label'?: string;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   disabled = false,
   state = 'default',
   class: className = '',
+  'aria-label': ariaLabel,
 } = Astro.props;
 
 const isChecked = checked || state === 'checked';
@@ -34,6 +36,7 @@ const isDisabled = disabled || state === 'disabled';
       checked={isChecked}
       disabled={isDisabled}
       aria-checked={isChecked}
+      aria-label={ariaLabel || label || 'Toggle switch'}
       class="switch-input"
     />
     <div
