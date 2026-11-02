@@ -397,7 +397,7 @@ const defaultLandingCss = resolveLandingDefaultCss();
         <div class="sat-card sat-pos-switch">
           <span class="sat-tag">Switch</span>
           <div class="sat-body sat-switch-flex">
-            <SwitchSpecimen id="landing-sat-switch" label="Switch preview" showLabel={false} checked={true} />
+            <SwitchSpecimen id="landing-sat-switch" checked={true} />
           </div>
         </div>
 
@@ -512,7 +512,7 @@ const defaultLandingCss = resolveLandingDefaultCss();
     }
 
     // 2. Compute rich multi-hued landing palette for the exact intent combination
-    const brandHex = intent.identity?.brandColor?.value;
+    const brandHex = intent.identity?.brandColor?.value ?? null;
     const presence = intent.identity?.presence || 'Balanced';
     const mood = intent.mood?.preset || 'Calm';
     const landingPalette = computeLandingPalette(brandHex, presence, mood, isDark);
