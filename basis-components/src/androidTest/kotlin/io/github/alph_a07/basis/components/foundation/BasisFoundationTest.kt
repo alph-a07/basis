@@ -9,16 +9,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHeightIsEqualTo
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertWidthIsEqualTo
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.isOn
+import androidx.compose.ui.test.isSelectable
+import androidx.compose.ui.test.isSelected
+import androidx.compose.ui.test.isToggleable
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.foundation.modifier.basisClearAndSetSemantics
 import io.github.alph_a07.basis.components.foundation.modifier.basisClickable
 import io.github.alph_a07.basis.components.foundation.modifier.basisFocusRing
 import io.github.alph_a07.basis.components.foundation.modifier.basisIndication
 import io.github.alph_a07.basis.components.foundation.modifier.basisMinTouchTarget
+import io.github.alph_a07.basis.components.foundation.modifier.basisModifier
 import io.github.alph_a07.basis.components.foundation.modifier.basisSelectable
 import io.github.alph_a07.basis.components.foundation.modifier.basisToggleable
 import io.github.alph_a07.basis.components.theme.BasisTheme
@@ -280,5 +293,132 @@ class BasisFoundationTest {
         }
 
         composeRule.onNodeWithTag("dark-focus-box").assertExists()
+    }
+
+    @Test
+    fun basisClickable_talkBackSemantics_exposesRoleAndClickLabel() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("accessible-button")
+                            .basisClickable(
+                                role = Role.Button,
+                                onClickLabel = "Perform action",
+                                onClick = {},
+                            ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("accessible-button")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+            .assert(hasClickAction())
+    }
+
+    @Test
+    fun basisClickable_disabledState_exposesDisabledSemantics() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("disabled-clickable")
+                            .basisClickable(
+                                enabled = false,
+                                role = Role.Button,
+                                onClick = {},
+                            ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("disabled-clickable")
+            .assertIsNotEnabled()
+    }
+
+    @Test
+    fun basisToggleable_talkBackSemantics_exposesRoleAndToggleState() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("accessible-toggle")
+                            .basisToggleable(
+                                value = true,
+                                role = Role.Checkbox,
+                                onValueChange = {},
+                            ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("accessible-toggle")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox))
+            .assert(isToggleable())
+            .assert(isOn())
+    }
+
+    @Test
+    fun basisSelectable_talkBackSemantics_exposesRoleAndSelectionState() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("accessible-select")
+                            .basisSelectable(
+                                selected = true,
+                                role = Role.RadioButton,
+                                onClick = {},
+                            ),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("accessible-select")
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.RadioButton))
+            .assert(isSelectable())
+            .assert(isSelected())
+    }
+
+    @Test
+    fun basisClearAndSetSemantics_talkBackBarrier_setsContentDescription() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("semantic-barrier")
+                            .basisClearAndSetSemantics {
+                                contentDescription = "Summary container"
+                            },
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("semantic-barrier")
+            .assert(hasContentDescription("Summary container"))
+    }
+
+    @Test
+    fun basisModifier_appliesSuccessfully() {
+        composeRule.setContent {
+            BasisTheme(intent = BasisIntent(), useDarkTheme = false) {
+                Box(
+                    modifier =
+                        Modifier
+                            .testTag("base-modifier-box")
+                            .basisModifier()
+                            .size(24.dp),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("base-modifier-box")
+            .assertWidthIsEqualTo(24.dp)
+            .assertHeightIsEqualTo(24.dp)
     }
 }
