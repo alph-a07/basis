@@ -2,7 +2,7 @@
   "schemaVersion": "0.2.0",
   "provenance": "generated",
   "source": {
-    "commit": "afb2205ef17a1c0b5f39ecd9c2f2b851990aade1"
+    "commit": "b988f9f8424f5636728484f6287e8d374b3b9b15"
   },
   "identity": {
     "presence": [
@@ -309,6 +309,152 @@
         "label": "Constraints",
         "summary": "Non-negotiable floors applied after all overrides."
       }
-    ]
+    ],
+    "mode": {
+      "preferred": [
+        {
+          "id": "Light",
+          "label": "Light",
+          "summary": "Leans toward light theme mode."
+        },
+        {
+          "id": "Dark",
+          "label": "Dark",
+          "summary": "Leans toward dark theme mode."
+        }
+      ],
+      "targets": [
+        {
+          "id": "Light",
+          "label": "Light",
+          "summary": "Delivers light theme mode in the resolved pair."
+        },
+        {
+          "id": "Dark",
+          "label": "Dark",
+          "summary": "Delivers dark theme mode in the resolved pair."
+        }
+      ],
+      "fields": [
+        {
+          "id": "preferred",
+          "label": "Preferred",
+          "summary": "Mode the host application leans toward; a pairing hint."
+        },
+        {
+          "id": "targets",
+          "label": "Targets",
+          "summary": "Set of theme modes to deliver in the resolved theme."
+        }
+      ]
+    },
+    "fonts": {
+      "fields": [
+        {
+          "id": "levelFamilies",
+          "label": "Level Families",
+          "summary": "Font family control per TypographyTokenPath."
+        },
+        {
+          "id": "weightClamps",
+          "label": "Weight Clamps",
+          "summary": "Weight bounds per TypographyTokenPath."
+        },
+        {
+          "id": "features",
+          "label": "Features",
+          "summary": "OpenType feature sets per TypographyTokenPath."
+        }
+      ]
+    },
+    "constraints": {
+      "fields": [
+        {
+          "id": "minContrast",
+          "label": "Min Contrast",
+          "summary": "Minimum contrast ratio between content and surface."
+        },
+        {
+          "id": "minTouchTarget",
+          "label": "Min Touch Target",
+          "summary": "Minimum interactive edge length."
+        },
+        {
+          "id": "spacing",
+          "label": "Spacing",
+          "summary": "Min/max clamps on the spacing ladder, in dp."
+        },
+        {
+          "id": "size",
+          "label": "Size",
+          "summary": "Min/max clamps on the control-size ladder, in dp."
+        },
+        {
+          "id": "radius",
+          "label": "Radius",
+          "summary": "Min/max clamps on the radius ladder, in dp."
+        },
+        {
+          "id": "motion",
+          "label": "Motion",
+          "summary": "Reduced-motion preference and duration bias."
+        },
+        {
+          "id": "typography",
+          "label": "Typography",
+          "summary": "Minimum readable size and font-scale floor."
+        }
+      ]
+    },
+    "tokens": {
+      "fields": [
+        {
+          "id": "paths",
+          "label": "Paths",
+          "summary": "Sparse typed token overrides."
+        }
+      ]
+    },
+    "components": {
+      "fields": [
+        {
+          "id": "byComponent",
+          "label": "By Component",
+          "summary": "Per-component style patches keyed by id."
+        }
+      ],
+      "components": [
+        {
+          "id": "Surface",
+          "label": "Surface",
+          "summary": "Structural surface container."
+        },
+        {
+          "id": "Interactive",
+          "label": "Interactive",
+          "summary": "Foundational interactive container."
+        },
+        {
+          "id": "Text",
+          "label": "Text",
+          "summary": "Typography component."
+        },
+        {
+          "id": "Icon",
+          "label": "Icon",
+          "summary": "Icon component."
+        },
+        {
+          "id": "Divider",
+          "label": "Divider",
+          "summary": "Visual horizontal or vertical separator."
+        },
+        {
+          "id": "Spacer",
+          "label": "Spacer",
+          "summary": "Empty layout spacing component."
+        }
+      ]
+    }
   }
 }

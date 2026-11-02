@@ -28,6 +28,18 @@ class DocsRuntimeTest {
         assertNotNull(darkSurface)
         assertTrue(darkSurface.startsWith("oklch("))
 
+        assertTrue(response.tokens.kinds.isNotEmpty())
+        assertEquals("color", response.tokens.kinds["--b-color-surface-default"])
+        assertEquals("dimension", response.tokens.kinds["--b-spacing-level4"])
+        assertEquals("radius", response.tokens.kinds["--b-radius-level2"])
+        assertEquals("shadow", response.tokens.kinds["--b-depth-level2"])
+        assertEquals("duration", response.tokens.kinds["--b-motion-feedback"])
+        assertEquals("typography", response.tokens.kinds["--b-typography-structure-level1"])
+        assertEquals("font-family", response.tokens.kinds["--b-typography-structure-level1-family"])
+
+        assertTrue(response.tokens.groups.isNotEmpty())
+        assertEquals("color", response.tokens.groups["--b-color-surface-default"])
+
         assertTrue(response.report.modes.isNotEmpty())
     }
 

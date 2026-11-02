@@ -122,6 +122,84 @@
           "items": {
             "$ref": "#/definitions/FieldDoc"
           }
+        },
+        "mode": {
+          "type": "object",
+          "properties": {
+            "preferred": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ChoiceDoc"
+              }
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ChoiceDoc"
+              }
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldDoc"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldDoc"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldDoc"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "tokens": {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldDoc"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldDoc"
+              }
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ChoiceDoc"
+              }
+            }
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": false

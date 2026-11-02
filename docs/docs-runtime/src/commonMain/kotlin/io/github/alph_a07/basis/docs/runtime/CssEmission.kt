@@ -62,6 +62,90 @@ public fun extractTokenMap(theme: ResolvedTheme, prefix: String = ""): Map<Strin
     return map
 }
 
+/**
+ * Extracts metadata maps for token kinds and groups keyed by CSS variable names.
+ *
+ * @param prefix Custom property prefix, e.g. `"b"`.
+ * @return Pair of kinds map and groups map.
+ */
+public fun extractTokenMetadata(prefix: String = ""): Pair<Map<String, String>, Map<String, String>> {
+    val kinds = LinkedHashMap<String, String>()
+    val groups = LinkedHashMap<String, String>()
+
+    for (tokenPath in ColorTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "color"
+
+        groups[cssVar] = "color"
+    }
+
+    for (tokenPath in SpacingTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "dimension"
+
+        groups[cssVar] = "spacing"
+    }
+
+    for (tokenPath in RadiusTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "radius"
+
+        groups[cssVar] = "radius"
+    }
+
+    for (tokenPath in DepthTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "shadow"
+
+        groups[cssVar] = "depth"
+    }
+
+    for (tokenPath in MotionTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "duration"
+
+        groups[cssVar] = "motion"
+    }
+
+    for (tokenPath in IconSizeTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "dimension"
+
+        groups[cssVar] = "size.icon"
+    }
+
+    for (tokenPath in ControlSizeTokenPath.entries) {
+        val cssVar = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[cssVar] = "dimension"
+
+        groups[cssVar] = "size.control"
+    }
+
+    for (tokenPath in TypographyTokenPath.entries) {
+        val varName = tokenPathToCssVar(tokenPath.path, prefix)
+        kinds[varName] = "typography"
+        groups[varName] = "typography"
+
+        kinds["$varName-size"] = "dimension"
+        groups["$varName-size"] = "typography"
+
+        kinds["$varName-weight"] = "weight"
+        groups["$varName-weight"] = "typography"
+
+        kinds["$varName-line-height"] = "multiplier"
+        groups["$varName-line-height"] = "typography"
+
+        kinds["$varName-letter-spacing"] = "dimension"
+        groups["$varName-letter-spacing"] = "typography"
+
+        kinds["$varName-family"] = "font-family"
+
+        groups["$varName-family"] = "typography"
+    }
+
+    return Pair(kinds, groups)
+}
+
 private fun putTypographyProperties(
     map: MutableMap<String, String>,
     path: String,

@@ -158,8 +158,68 @@ public class IntentExtractor(
                 FieldDoc(id = fieldId, label = KDocParser.formatLabel(fieldId), summary = summary)
             }
 
-        return ControlDoc(fields = fields)
+        return ControlDoc(
+            fields = fields,
+            mode = buildModeControlDoc(),
+            fonts = buildFontControlDoc(),
+            constraints = buildConstraintsControlDoc(),
+            tokens = TokenControlDoc(listOf(FieldDoc("paths", "Paths", "Sparse typed token overrides."))),
+            components = buildComponentControlDoc(),
+        )
     }
+
+    private fun buildModeControlDoc(): ModeControlDoc = ModeControlDoc(
+        preferred =
+            listOf(
+                ChoiceDoc("Light", "Light", "Leans toward light theme mode."),
+                ChoiceDoc("Dark", "Dark", "Leans toward dark theme mode."),
+            ),
+        targets =
+            listOf(
+                ChoiceDoc("Light", "Light", "Delivers light theme mode in the resolved pair."),
+                ChoiceDoc("Dark", "Dark", "Delivers dark theme mode in the resolved pair."),
+            ),
+        fields =
+            listOf(
+                FieldDoc("preferred", "Preferred", "Mode the host application leans toward; a pairing hint."),
+                FieldDoc("targets", "Targets", "Set of theme modes to deliver in the resolved theme."),
+            ),
+    )
+
+    private fun buildFontControlDoc(): FontControlDoc = FontControlDoc(
+        fields =
+            listOf(
+                FieldDoc("levelFamilies", "Level Families", "Font family control per TypographyTokenPath."),
+                FieldDoc("weightClamps", "Weight Clamps", "Weight bounds per TypographyTokenPath."),
+                FieldDoc("features", "Features", "OpenType feature sets per TypographyTokenPath."),
+            ),
+    )
+
+    private fun buildConstraintsControlDoc(): ConstraintsControlDoc = ConstraintsControlDoc(
+        fields =
+            listOf(
+                FieldDoc("minContrast", "Min Contrast", "Minimum contrast ratio between content and surface."),
+                FieldDoc("minTouchTarget", "Min Touch Target", "Minimum interactive edge length."),
+                FieldDoc("spacing", "Spacing", "Min/max clamps on the spacing ladder, in dp."),
+                FieldDoc("size", "Size", "Min/max clamps on the control-size ladder, in dp."),
+                FieldDoc("radius", "Radius", "Min/max clamps on the radius ladder, in dp."),
+                FieldDoc("motion", "Motion", "Reduced-motion preference and duration bias."),
+                FieldDoc("typography", "Typography", "Minimum readable size and font-scale floor."),
+            ),
+    )
+
+    private fun buildComponentControlDoc(): ComponentControlDoc = ComponentControlDoc(
+        fields = listOf(FieldDoc("byComponent", "By Component", "Per-component style patches keyed by id.")),
+        components =
+            listOf(
+                ChoiceDoc("Surface", "Surface", "Structural surface container."),
+                ChoiceDoc("Interactive", "Interactive", "Foundational interactive container."),
+                ChoiceDoc("Text", "Text", "Typography component."),
+                ChoiceDoc("Icon", "Icon", "Icon component."),
+                ChoiceDoc("Divider", "Divider", "Visual horizontal or vertical separator."),
+                ChoiceDoc("Spacer", "Spacer", "Empty layout spacing component."),
+            ),
+    )
 }
 
 private const val BRAND_PRESENCE_COUNT = 4

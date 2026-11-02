@@ -43,6 +43,7 @@ public fun resolveWithPrefix(intentJson: String, prefix: String): String = try {
     val pair = basisResolve(intent)
     val lightTokens = pair.light?.let { extractTokenMap(it, prefix) } ?: emptyMap()
     val darkTokens = pair.dark?.let { extractTokenMap(it, prefix) } ?: emptyMap()
+    val (kinds, groups) = extractTokenMetadata(prefix)
     val css = emitPairCss(pair, prefix)
 
     val tokens =
@@ -50,6 +51,8 @@ public fun resolveWithPrefix(intentJson: String, prefix: String): String = try {
             css = css,
             light = lightTokens,
             dark = darkTokens,
+            kinds = kinds,
+            groups = groups,
         )
     val success =
         ResolvedSuccess(
