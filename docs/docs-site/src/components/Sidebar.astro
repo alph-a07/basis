@@ -7,10 +7,11 @@ import versionData from '../generated/version.json';
 interface Props {
   currentPath?: string;
   componentGroups?: { family: string; components: { id: string; name: string }[] }[];
+  modifierGroups?: { id: string; name: string }[];
   navGroups?: NavGroup[];
 }
 
-const { currentPath = '', componentGroups = [], navGroups = [] } = Astro.props;
+const { currentPath = '', componentGroups = [], modifierGroups = [], navGroups = [] } = Astro.props;
 
 // Static documentation groups fallback
 const staticGroups: NavGroup[] = [
@@ -36,10 +37,7 @@ const staticGroups: NavGroup[] = [
   },
   {
     title: 'Foundation',
-    items: [
-      { title: 'Surface', href: '/docs/foundation/surface' },
-      { title: 'Focusable', href: '/docs/foundation/focusable' },
-    ],
+    items: [],
   },
   {
     title: 'Changelog',
@@ -54,6 +52,10 @@ function isPathActive(itemHref: string): boolean {
   if (itemHref.startsWith('/docs/components/')) {
     const compBase = itemHref;
     return currentPath === compBase || currentPath.startsWith(`${compBase}/`);
+  }
+  if (itemHref.startsWith('/docs/modifiers/')) {
+    const modBase = itemHref;
+    return currentPath === modBase || currentPath.startsWith(`${modBase}/`);
   }
   return false;
 }
@@ -103,28 +105,74 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
 
     <!-- Navigation Groups -->
     <nav class="sidebar-nav" aria-label="Sidebar Sections">
-      {displayGroups.map((group) => (
-        <div class="nav-group">
-          <h2 class="nav-group-title">{group.title}</h2>
-          <ul class="nav-group-list">
-            {group.items.map((item) => {
-              const active = isPathActive(item.href);
-              return (
-                <li class="nav-item">
-                  <a
-                    href={item.href}
-                    class={`nav-link ${active ? 'active' : ''}`}
-                    aria-current={active ? 'page' : undefined}
-                  >
-                    <span>{item.title}</span>
-                    {item.badge && <span class="nav-badge">{item.badge}</span>}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+      {displayGroups.map((group) => {
+        const isFoundation = group.title.toLowerCase() === 'foundation';
+        return (
+          <div class="nav-group">
+            <h2 class="nav-group-title">{group.title}</h2>
+            {group.items.length > 0 && (
+              <ul class="nav-group-list">
+                {group.items.map((item) => {
+                  const active = isPathActive(item.href);
+                  return (
+                    <li class="nav-item">
+                      <a
+                        href={item.href}
+                        class={`nav-link ${active ? 'active' : ''}`}
+                        aria-current={active ? 'page' : undefined}
+                      >
+                        <span>{item.title}</span>
+                        {item.badge && <span class="nav-badge">{item.badge}</span>}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {isFoundation && modifierGroups.length > 0 && (
+              <div class="foundation-subgroups">
+                <details class="nav-subgroup" data-family="modifiers" open>
+                  <summary class="nav-subgroup-title">
+                    <span class="nav-subgroup-label">Modifiers</span>
+                    <svg
+                      class="nav-subgroup-chevron"
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </summary>
+                  <ul class="nav-group-list subgroup-list">
+                    {modifierGroups.map((mod) => {
+                      const href = `/docs/modifiers/${mod.id}`;
+                      const active = isPathActive(href);
+                      return (
+                        <li class="nav-item">
+                          <a
+                            href={href}
+                            class={`nav-link subgroup-link ${active ? 'active' : ''}`}
+                            aria-current={active ? 'page' : undefined}
+                          >
+                            <span>{mod.name}</span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </details>
+              </div>
+            )}
+          </div>
+        );
+      })}
 
       {componentGroups.length > 0 && (
         <div class="nav-group components-group">
@@ -418,7 +466,8 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
     margin: 0 0 0.35rem 0;
   }
 
-  .component-families {
+  .component-families,
+  .foundation-subgroups {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;

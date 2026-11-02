@@ -16,14 +16,19 @@ export async function getStaticPaths() {
     const sidecar = sidecars.find((s) => s.data.id === comp.data.id);
 
     if (comp.data.kind === 'modifier') {
-      paths.push({
-        params: { slug: `modifiers/${comp.data.id}` },
-        props: {
-          type: 'modifier',
-          modifier: comp,
-          sidecar,
-        },
-      });
+      const modifierTabs = ['', 'api'];
+      for (const tab of modifierTabs) {
+        const slug = tab ? `modifiers/${comp.data.id}/${tab}` : `modifiers/${comp.data.id}`;
+        paths.push({
+          params: { slug },
+          props: {
+            type: 'modifier',
+            modifier: comp,
+            sidecar,
+            activeTab: tab || 'overview',
+          },
+        });
+      }
     } else {
       const tabs = ['', 'api', 'overrides', 'accessibility'];
       for (const tab of tabs) {
@@ -89,14 +94,21 @@ if (props.type === 'component') {
   }
 } else if (props.type === 'modifier') {
   const modifier = props.modifier.data;
-  pageTitle = `${modifier.name} — Modifier`;
+  const activeTab = props.activeTab;
+  pageTitle = `${modifier.name} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
   pageDescription = modifier.summary;
-  headings = [
-    ...(modifier.overview?.quickStartSample ? [{ depth: 2, slug: 'quick-start', text: 'Quick Start' }] : []),
-    ...(modifier.api ? [{ depth: 2, slug: 'signatures', text: 'API Signatures & Parameters' }] : []),
-    ...(modifier.accessibility ? [{ depth: 2, slug: 'accessibility', text: 'Accessibility Behavior' }] : []),
-    ...(props.sidecar?.data?.guidelines ? [{ depth: 2, slug: 'guidelines', text: 'Usage Guidelines' }] : []),
-  ];
+
+  if (activeTab === 'overview') {
+    headings = [
+      ...(modifier.overview?.quickStartSample ? [{ depth: 2, slug: 'quick-start', text: 'Quick Start' }] : []),
+      ...(modifier.accessibility ? [{ depth: 2, slug: 'accessibility', text: 'Accessibility Behavior' }] : []),
+      ...(props.sidecar?.data?.guidelines ? [{ depth: 2, slug: 'guidelines', text: 'Usage Guidelines' }] : []),
+    ];
+  } else if (activeTab === 'api') {
+    headings = [
+      { depth: 2, slug: 'signatures', text: 'Signatures & Parameters' },
+    ];
+  }
 } else if (props.type === 'doc') {
   const rendered = await render(props.doc);
   RenderedContent = rendered.Content;
@@ -121,6 +133,7 @@ if (props.type === 'component') {
     <ModifierPage
       modifier={props.modifier.data}
       sidecar={props.sidecar}
+      activeTab={props.activeTab}
     />
   ) : (
     <article class={`prose-doc ${props.doc.data.section ? `${props.doc.data.section.toLowerCase().replace(/\s+/g, '-')}-page` : ''}`}>

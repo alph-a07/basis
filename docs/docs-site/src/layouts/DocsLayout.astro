@@ -20,20 +20,28 @@ const hasToc = headings.length > 0;
 // Fetch components from collection to build dynamic component navigation groups
 const components = await getCollection('components');
 
-// Group components by family
+// Group components by family and extract modifiers
 const familiesMap = new Map<string, { id: string; name: string }[]>();
+const modifiersList: { id: string; name: string }[] = [];
+
 for (const comp of components) {
-  const family = comp.data.family || 'Other';
-  if (!familiesMap.has(family)) {
-    familiesMap.set(family, []);
+  if (comp.data.kind === 'modifier') {
+    modifiersList.push({ id: comp.data.id, name: comp.data.name });
+  } else {
+    const family = comp.data.family || 'Other';
+    if (!familiesMap.has(family)) {
+      familiesMap.set(family, []);
+    }
+    familiesMap.get(family)!.push({ id: comp.data.id, name: comp.data.name });
   }
-  familiesMap.get(family)!.push({ id: comp.data.id, name: comp.data.name });
 }
 
 const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) => ({
   family,
   components: comps.sort((a, b) => a.name.localeCompare(b.name)),
 }));
+
+const modifierGroups = modifiersList.sort((a, b) => a.name.localeCompare(b.name));
 
 // Fetch docs prose stubs from collection to build dynamic navigation groups
 const docsEntries = await getCollection('docs');
@@ -51,6 +59,10 @@ for (const doc of docsEntries) {
     href: `/docs/${doc.id}`,
     order: doc.data.order,
   });
+}
+
+if (!sectionsMap.has('Foundation')) {
+  sectionsMap.set('Foundation', []);
 }
 
 const navGroups = Array.from(sectionsMap.entries())
@@ -76,6 +88,7 @@ const navGroups = Array.from(sectionsMap.entries())
       <Sidebar
         currentPath={resolvedPath}
         componentGroups={componentGroups}
+        modifierGroups={modifierGroups}
         navGroups={navGroups}
       />
 

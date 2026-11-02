@@ -6,8 +6,8 @@
         "http://localhost/index.html",
         "http://localhost/docs/getting-started/overview/index.html",
         "http://localhost/docs/theming/set-brand/index.html",
-        "http://localhost/docs/foundation/surface/index.html",
-        "http://localhost/docs/foundation/focusable/index.html",
+        "http://localhost/docs/modifiers/basis-surface/index.html",
+        "http://localhost/docs/modifiers/basis-focus-ring/index.html",
         "http://localhost/studio/index.html"
       ]
     },

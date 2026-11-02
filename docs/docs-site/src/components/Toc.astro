@@ -87,7 +87,12 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
       });
     }
 
+  let ticking = false;
     function updateProgress() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
       if (!indicator || !divider) return;
       const scrollY = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -98,7 +103,7 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
         indicator.classList.remove('is-active');
       } else {
         const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-        indicator.style.height = `${(progress * 100).toFixed(2)}%`;
+        indicator.style.height = `${(progress * 100)}%`;
         if (progress > 0) {
           indicator.classList.add('is-active');
         } else {
@@ -124,6 +129,7 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
       }
 
       setActiveLink(items[activeIndex].slug);
+      });
     }
 
     divider.addEventListener('click', (e) => {
@@ -207,7 +213,7 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
     box-shadow: 0 0 8px color-mix(in srgb, var(--docs-accent) 70%, transparent),
       0 0 14px color-mix(in srgb, var(--docs-focus-ring) 45%, transparent);
     opacity: 0;
-    transition: height 0.08s ease-out, opacity 0.2s ease;
+    transition: height 0.15s ease-out, opacity 0.2s ease;
   }
 
   .toc-divider-glow.is-active {
@@ -263,7 +269,11 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
     color: var(--docs-text-muted, #8b949e);
     text-decoration: none;
     line-height: 1.4;
+    font-weight: 500;
     transition: color 0.12s ease;
+  }
+  .toc-link.active {
+    color: var(--docs-toc-active, #58a6ff);
   }
 
   .toc-link:hover {
@@ -272,11 +282,6 @@ const minDepth = headings.length > 0 ? Math.min(...headings.map((h) => h.depth))
 
   .toc-link:visited {
     color: var(--docs-text-muted, #8b949e);
-  }
-
-  .toc-link.active {
-    color: var(--docs-toc-active, #58a6ff);
-    font-weight: 600;
   }
 
   .toc-link.active:visited {

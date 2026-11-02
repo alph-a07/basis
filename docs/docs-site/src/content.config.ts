@@ -28,11 +28,7 @@ const validator = new SemanticValidator(schemasDir);
 
 const components = defineCollection({
   loader: async () => {
-    const buildPath = path.join(buildModelDir, 'components.json');
-    if (!fs.existsSync(buildPath)) {
-      return [];
-    }
-    const componentsDoc = JSON.parse(fs.readFileSync(buildPath, 'utf-8'));
+    const componentsDoc = loadJsonWithFallback('components.json');
     const patchVocabDoc = loadJsonWithFallback('patch-vocabulary.json');
 
     const result = validator.validateComponents(componentsDoc, patchVocabDoc);
@@ -42,7 +38,12 @@ const components = defineCollection({
       );
     }
 
-    return componentsDoc.components.map((comp: any) => ({
+    const isBuild = fs.existsSync(path.join(buildModelDir, 'components.json'));
+    const items = isBuild
+      ? componentsDoc.components
+      : componentsDoc.components.filter((comp: any) => comp.kind === 'modifier');
+
+    return items.map((comp: any) => ({
       id: comp.id,
       ...comp,
     }));

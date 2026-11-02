@@ -8,9 +8,10 @@ import CodeBlock from '../CodeBlock.astro';
 interface Props {
   modifier: any;
   sidecar?: any;
+  activeTab: 'overview' | 'api';
 }
 
-const { modifier, sidecar } = Astro.props;
+const { modifier, sidecar, activeTab } = Astro.props;
 
 function getA11yNarrative(sidecarEntry: any): string | undefined {
   if (!sidecarEntry?.body) return undefined;
@@ -19,6 +20,11 @@ function getA11yNarrative(sidecarEntry: any): string | undefined {
 }
 
 const a11yNarrative = getA11yNarrative(sidecar);
+
+const tabs = [
+  { id: 'overview', label: 'Overview', path: `/docs/modifiers/${modifier.id}` },
+  { id: 'api', label: 'API', path: `/docs/modifiers/${modifier.id}/api` },
+];
 ---
 
 <article class="modifier-page" data-modifier-id={modifier.id}>
@@ -38,48 +44,70 @@ const a11yNarrative = getA11yNarrative(sidecar);
     {modifier.description && modifier.description !== modifier.summary && (
       <p class="modifier-description">{modifier.description}</p>
     )}
+
+    <!-- Route-Per-Tab Navigation -->
+    <nav class="modifier-tabs" aria-label="Modifier sections">
+      {tabs.map((tab) => {
+        const isActive = activeTab === tab.id;
+        return (
+          <a
+            href={tab.path}
+            class={`tab-link ${isActive ? 'active' : ''}`}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {tab.label}
+          </a>
+        );
+      })}
+    </nav>
   </header>
 
-  <div class="modifier-body">
-    <!-- Quick Start -->
-    {modifier.overview?.quickStartSample && (
-      <section class="modifier-section">
-        <h2 id="quick-start">Quick Start</h2>
-        <CodeBlock
-          code={modifier.overview.quickStartSample}
-          lang="kotlin"
-        />
+  <!-- Tab Content Body -->
+  <div class="tab-body">
+    <!-- Overview Tab -->
+    {activeTab === 'overview' && (
+      <section class="tab-pane" aria-labelledby="tab-overview">
+        <!-- Quick Start -->
+        {modifier.overview?.quickStartSample && (
+          <div class="modifier-section">
+            <h2 id="quick-start">Quick Start</h2>
+            <CodeBlock
+              code={modifier.overview.quickStartSample}
+              lang="kotlin"
+            />
+          </div>
+        )}
+
+        <!-- Accessibility -->
+        {modifier.accessibility && (
+          <div class="modifier-section">
+            <h2 id="accessibility">Accessibility Behavior</h2>
+            <A11yFacts
+              accessibility={modifier.accessibility}
+              narrative={a11yNarrative}
+            />
+          </div>
+        )}
+
+        <!-- Guidelines -->
+        {sidecar?.data?.guidelines && (
+          <div class="modifier-section">
+            <h2 id="guidelines">Usage Guidelines</h2>
+            <GuidelinesCard
+              guidelines={sidecar.data.guidelines}
+            />
+          </div>
+        )}
       </section>
     )}
 
-    <!-- Signatures and Parameters -->
-    {modifier.api && (
-      <section class="modifier-section">
-        <h2 id="signatures">API Signatures & Parameters</h2>
+    <!-- API Tab -->
+    {activeTab === 'api' && (
+      <section class="tab-pane" aria-labelledby="tab-api">
+        <h2 id="signatures">Signatures & Parameters</h2>
         <ApiTable
-          signatures={modifier.api.signatures}
-          samples={modifier.api.samples}
-        />
-      </section>
-    )}
-
-    <!-- Accessibility -->
-    {modifier.accessibility && (
-      <section class="modifier-section">
-        <h2 id="accessibility">Accessibility Behavior</h2>
-        <A11yFacts
-          accessibility={modifier.accessibility}
-          narrative={a11yNarrative}
-        />
-      </section>
-    )}
-
-    <!-- Guidelines -->
-    {sidecar?.data?.guidelines && (
-      <section class="modifier-section">
-        <h2 id="guidelines">Usage Guidelines</h2>
-        <GuidelinesCard
-          guidelines={sidecar.data.guidelines}
+          signatures={modifier.api?.signatures}
+          samples={modifier.api?.samples}
         />
       </section>
     )}
@@ -94,8 +122,7 @@ const a11yNarrative = getA11yNarrative(sidecar);
   }
 
   .modifier-header {
-    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
-    padding-bottom: 0.85rem;
+    padding-bottom: 0;
   }
 
   .header-meta-row {
@@ -122,19 +149,53 @@ const a11yNarrative = getA11yNarrative(sidecar);
     font-size: 0.925rem;
     line-height: 1.55;
     color: var(--docs-text, #c9d1d9);
-    margin: 0;
+    margin: 0 0 0.65rem 0;
   }
 
-  .modifier-body {
+  .modifier-tabs {
+    display: flex;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--docs-border-subtle, #21262d);
+    padding-top: 0.35rem;
+    overflow-x: auto;
+  }
+
+  .tab-link {
+    text-decoration: none;
+    font-size: 0.925rem;
+    font-weight: 600;
+    color: var(--docs-text-muted, #8b949e);
+    padding: 0.45rem 0.25rem 0.55rem;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-link:hover {
+    color: var(--docs-text, #e6edf3);
+  }
+
+  .tab-link.active {
+    color: var(--docs-accent, #58a6ff);
+    border-bottom-color: var(--docs-accent, #58a6ff);
+  }
+
+  .tab-body {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+  }
+
+  .tab-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .modifier-section {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.75rem;
   }
 
   h2 {
@@ -145,23 +206,5 @@ const a11yNarrative = getA11yNarrative(sidecar);
     color: var(--docs-text, #e6edf3);
     margin: 0;
     scroll-margin-top: 5rem;
-  }
-
-  .code-wrapper {
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .code-block {
-    background: var(--docs-code-bg, #161b22);
-    border: 1px solid var(--docs-code-border, #21262d);
-    border-radius: 8px;
-    padding: 1.25rem;
-    overflow-x: auto;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 0.875rem;
-    line-height: 1.55;
-    color: var(--docs-text, #e6edf3);
-    margin: 0;
   }
 </style>
