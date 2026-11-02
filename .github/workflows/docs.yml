@@ -47,7 +47,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build docs-runtime JS artifacts
-        run: ./gradlew :docs-runtime:compileKotlinJs
+        run: ./gradlew :docs-runtime:jsBrowserProductionLibraryDistribution
 
       - name: Validate docs model and schemas
         run: npm test --workspace @basis/docs-model
