@@ -34,6 +34,19 @@ val tests =
         description = "Runs all unit tests and Android instrumentation tests on the first available connected device."
     }
 
+val releaseApiDump =
+    tasks.register("releaseApiDump") {
+        group = "verification"
+        description = "Dumps public API signatures to committed .api baseline files across modules."
+    }
+
+val releaseApiCheck =
+    tasks.register("releaseApiCheck") {
+        group = "verification"
+        description = "Validates public API signatures against committed .api baseline files across modules."
+        mustRunAfter(releaseApiDump)
+    }
+
 interface ReporterParams : BuildServiceParameters {
     val rootDirPath: Property<String>
 }
@@ -279,10 +292,23 @@ gradle.projectsEvaluated {
             tests.configure { dependsOn(module.tasks.named(check)) }
         }
 
+        if (module != project && "releaseApiDump" in module.tasks.names) {
+            releaseApiDump.configure { dependsOn(module.tasks.named("releaseApiDump")) }
+        }
+        if (module != project && "releaseApiCheck" in module.tasks.names) {
+            releaseApiCheck.configure { dependsOn(module.tasks.named("releaseApiCheck")) }
+        }
+
         val testTask = module.tasks.findByName("test")
         val androidTestTask = module.tasks.findByName("connectedDebugAndroidTest")
         if (testTask != null && androidTestTask != null) {
             androidTestTask.mustRunAfter(testTask)
+        }
+
+        val dumpTask = module.tasks.findByName("releaseApiDump")
+        val checkTask = module.tasks.findByName("releaseApiCheck")
+        if (dumpTask != null && checkTask != null) {
+            checkTask.mustRunAfter(dumpTask)
         }
     }
 
