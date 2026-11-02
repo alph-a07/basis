@@ -17,6 +17,12 @@ const { title, description = 'Basis — Jetpack Compose design system', hasToc =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} | Basis`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | Basis`} />
+    <meta name="twitter:description" content={description} />
     <title>{title} | Basis</title>
 
     <!-- Synchronous blocking theme script in head to prevent FOUC / theme flash -->

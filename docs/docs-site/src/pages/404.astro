@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Page Not Found" description="The page you requested could not be found.">
+  <main class="error-page-container">
+    <div class="error-card">
+      <div class="error-badge">404</div>
+      <h1 class="error-title">Page not found</h1>
+      <p class="error-text">
+        The documentation page you requested does not exist or has been moved.
+      </p>
+      <div class="error-actions">
+        <a href="/" class="btn-primary">Return Home</a>
+        <a href="/docs/getting-started/overview" class="btn-secondary">Explore Documentation</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .error-page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--docs-bg, #0d1117);
+  }
+
+  .error-card {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 2.5rem 2rem;
+    background: var(--docs-surface, #161b22);
+    border: 1px solid var(--docs-border-subtle, #30363d);
+    border-radius: 12px;
+  }
+
+  .error-badge {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-family: var(--docs-font-mono, monospace);
+    color: var(--docs-accent, #58a6ff);
+    background: color-mix(in srgb, var(--docs-accent, #58a6ff) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--docs-accent, #58a6ff) 28%, transparent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+  }
+
+  .error-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--docs-text, #f0f6fc);
+    margin: 0;
+  }
+
+  .error-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--docs-text-muted, #8b949e);
+    margin: 0;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--docs-accent, #238636);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-secondary {
+    background: var(--docs-card, #21262d);
+    color: var(--docs-text, #f0f6fc);
+    border: 1px solid var(--docs-border-subtle, #30363d);
+  }
+
+  .btn-secondary:hover {
+    background: var(--docs-card-hover, #30363d);
+  }
+</style>
