@@ -56,7 +56,7 @@ jobs:
         run: npm run generate:types --workspace @basis/docs-model
 
       - name: Generate fonts catalog
-        run: npx tsx scripts/generate-fonts-catalog.ts --workspace docs-site
+        run: npm run generate:fonts-catalog --workspace docs-site
 
       - name: Typecheck Astro docs site
         run: npm run check --workspace docs-site
