@@ -2,336 +2,113 @@
   "schemaVersion": "0.2.0",
   "provenance": "fixture",
   "source": {
-    "commit": "db8476120fc7ff7573808cffaeaac59eb9aaac62"
+    "commit": "af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203"
   },
   "components": [
     {
-      "id": "button",
-      "name": "BasisButton",
-      "family": "Actions",
-      "kind": "component",
-      "lifecycle": {
-        "status": "stable",
-        "addedIn": "0.1.0"
-      },
-      "summary": "Primary interactive trigger executing actions on click or tap.",
-      "description": "BasisButton represents an action the user can take. It supports visual hierarchy through variants, interactive feedback states, icons, and accessible touch target compliance.",
-      "package": "io.github.alph_a07.basis.components.actions",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/fixture-commit/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/actions/BasisButton.kt",
-      "overview": {
-        "quickStartSample": "BasisButton(\n    onClick = { /* trigger action */ },\n    variant = BasisButtonDefaults.variantPrimary(),\n) {\n    Text(\"Get Started\")\n}",
-        "anatomy": {
-          "parts": [
-            {
-              "id": "Container",
-              "name": "Container",
-              "description": "Root interactive container providing background fill, border, elevation, and shape.",
-              "optional": false
-            },
-            {
-              "id": "Label",
-              "name": "Label",
-              "description": "Text content describing the action.",
-              "optional": false
-            },
-            {
-              "id": "LeadingIcon",
-              "name": "Leading Icon",
-              "description": "Optional decorative or identifying icon positioned before the label.",
-              "optional": true
-            },
-            {
-              "id": "TrailingIcon",
-              "name": "Trailing Icon",
-              "description": "Optional accessory icon or disclosure indicator positioned after the label.",
-              "optional": true
-            }
-          ],
-          "screenshot": {
-            "lightUrl": "/assets/components/button-anatomy-light.png",
-            "darkUrl": "/assets/components/button-anatomy-dark.png",
-            "width": 640,
-            "height": 360
-          },
-          "bounds": {
-            "Container": {
-              "x": 120,
-              "y": 80,
-              "width": 400,
-              "height": 48
-            },
-            "Label": {
-              "x": 168,
-              "y": 94,
-              "width": 120,
-              "height": 20
-            },
-            "LeadingIcon": {
-              "x": 136,
-              "y": 92,
-              "width": 24,
-              "height": 24
-            },
-            "TrailingIcon": {
-              "x": 480,
-              "y": 92,
-              "width": 24,
-              "height": 24
-            }
-          }
-        },
-        "variants": [
-          {
-            "id": "primary",
-            "name": "Primary",
-            "description": "High-emphasis action for the primary task in a view."
-          },
-          {
-            "id": "secondary",
-            "name": "Secondary",
-            "description": "Medium-emphasis action for secondary or alternative workflows."
-          },
-          {
-            "id": "outline",
-            "name": "Outline",
-            "description": "Bordered action with transparent background for balanced hierarchy."
-          },
-          {
-            "id": "ghost",
-            "name": "Ghost",
-            "description": "Subtle low-emphasis action with no container fill or border until interaction."
-          }
-        ],
-        "states": [
-          {
-            "id": "enabled",
-            "name": "Enabled",
-            "description": "Default interactive idle state ready for user input."
-          },
-          {
-            "id": "hovered",
-            "name": "Hovered",
-            "description": "Pointer hover indicating interactive affordance."
-          },
-          {
-            "id": "pressed",
-            "name": "Pressed",
-            "description": "Active pointer engagement with immediate visual feedback."
-          },
-          {
-            "id": "focused",
-            "name": "Focused",
-            "description": "Keyboard or programmatic navigation focus with distinct focus ring."
-          },
-          {
-            "id": "disabled",
-            "name": "Disabled",
-            "description": "Non-interactive state with muted contrast indicating unavailable action."
-          }
-        ],
-        "gallery": [
-          {
-            "variant": "primary",
-            "state": "enabled",
-            "mode": "light",
-            "url": "/assets/components/button-primary-enabled-light.png",
-            "width": 320,
-            "height": 112
-          },
-          {
-            "variant": "primary",
-            "state": "enabled",
-            "mode": "dark",
-            "url": "/assets/components/button-primary-enabled-dark.png",
-            "width": 320,
-            "height": 112
-          }
-        ]
-      },
-      "api": {
-        "signatures": [
-          {
-            "name": "BasisButton",
-            "declaration": "@Composable\npublic fun BasisButton(\n    onClick: () -> Unit,\n    modifier: Modifier = Modifier,\n    variant: BasisButtonVariant = BasisButtonDefaults.variantPrimary(),\n    enabled: Boolean = true,\n    leadingIcon: (@Composable () -> Unit)? = null,\n    trailingIcon: (@Composable () -> Unit)? = null,\n    content: @Composable RowScope.() -> Unit\n): Unit",
-            "parameters": [
-              {
-                "name": "onClick",
-                "type": "() -> Unit",
-                "description": "Callback executed when user activates the button.",
-                "optional": false
-              },
-              {
-                "name": "modifier",
-                "type": "Modifier",
-                "defaultValue": "Modifier",
-                "description": "Modifier applied to the outer button container.",
-                "optional": true
-              },
-              {
-                "name": "variant",
-                "type": "BasisButtonVariant",
-                "defaultValue": "BasisButtonDefaults.variantPrimary()",
-                "description": "Visual weight and styling configuration variant.",
-                "optional": true
-              },
-              {
-                "name": "enabled",
-                "type": "Boolean",
-                "defaultValue": "true",
-                "description": "Whether the button responds to user interaction.",
-                "optional": true
-              },
-              {
-                "name": "leadingIcon",
-                "type": "(@Composable () -> Unit)?",
-                "defaultValue": "null",
-                "description": "Optional icon composable rendered before the label.",
-                "optional": true
-              },
-              {
-                "name": "trailingIcon",
-                "type": "(@Composable () -> Unit)?",
-                "defaultValue": "null",
-                "description": "Optional icon composable rendered after the label.",
-                "optional": true
-              },
-              {
-                "name": "content",
-                "type": "@Composable RowScope.() -> Unit",
-                "description": "Slot for button content, typically a text label.",
-                "optional": false
-              }
-            ],
-            "returnType": "Unit",
-            "kdoc": "/**\n * Primary interactive button component executing an action on click or tap.\n *\n * @param onClick Callback executed when user activates the button.\n * @param modifier Modifier applied to the outer button container.\n * @param variant Visual weight and styling configuration variant.\n * @param enabled Whether the button responds to user interaction.\n * @param leadingIcon Optional icon composable rendered before the label.\n * @param trailingIcon Optional icon composable rendered after the label.\n * @param content Slot for button content, typically a text label.\n */"
-          }
-        ],
-        "samples": [
-          {
-            "id": "button-primary-basic",
-            "title": "Primary Button",
-            "code": "BasisButton(\n    onClick = { handleAction() },\n    variant = BasisButtonDefaults.variantPrimary()\n) {\n    Text(\"Save Changes\")\n}",
-            "description": "Standard high-emphasis primary button for main task completion."
-          },
-          {
-            "id": "button-with-icons",
-            "title": "Button with Icons",
-            "code": "BasisButton(\n    onClick = { downloadItem() },\n    variant = BasisButtonDefaults.variantSecondary(),\n    leadingIcon = { BasisIcon(Icons.Default.Download) }\n) {\n    Text(\"Download Asset\")\n}",
-            "description": "Secondary button pairing icon and text for enhanced scannability."
-          }
-        ]
-      },
-      "overrides": {
-        "universalFields": [
-          "surface",
-          "content",
-          "border",
-          "radius",
-          "typography",
-          "padding",
-          "gap",
-          "depth",
-          "prominence",
-          "treatment"
-        ],
-        "extraFamily": "Interactive",
-        "matrix": [
-          {
-            "variant": "*",
-            "state": "*",
-            "supportedFields": [
-              "surface",
-              "content",
-              "border",
-              "radius",
-              "padding"
-            ]
-          },
-          {
-            "variant": "outline",
-            "state": "enabled",
-            "supportedFields": [
-              "border",
-              "content"
-            ]
-          }
-        ]
-      },
-      "accessibility": {
-        "role": "Button",
-        "touchTarget": {
-          "minWidthDp": 48,
-          "minHeightDp": 48,
-          "enforced": true
-        },
-        "announcements": [],
-        "reducedMotion": {
-          "respectsReducedMotion": true,
-          "fallbackDescription": "Instantaneous color transition with zero duration scale animation."
-        },
-        "keyboardNavigation": [
-          "Enter",
-          "Space",
-          "Tab"
-        ],
-        "report": {
-          "status": "pass",
-          "checks": [
-            "ATF-TouchTarget-48dp",
-            "Compose-Role-Button",
-            "ColorContrast-AA"
-          ],
-          "version": "0.2.0"
-        }
-      }
-    },
-    {
-      "id": "divider",
-      "name": "BasisDivider",
+      "id": "indication",
+      "name": "BasisIndication",
       "family": "Foundation",
       "kind": "component",
       "lifecycle": {
         "status": "stable",
         "addedIn": "0.1.0"
       },
-      "summary": "Visual separator line grouping or distinguishing content sections.",
-      "description": "BasisDivider provides subtle horizontal or vertical separation between distinct UI regions.",
+      "summary": "/**  * Creates visual indication feedback (press, hover, and focus) derived from the active BasisTheme.",
+      "description": "/**  * Creates visual indication feedback (press, hover, and focus) derived from the active [BasisTheme].  *  * Implements [IndicationNodeFactory] to integrate with Compose Foundation's indication system.  * Highlights dynamically adapt to [BasisTheme] colors, [LocalBasisContentColor], and optional  * [Treatment] styling, ensuring high contrast across light and dark modes.  *  * @property color Explicit highlight color override. When [Color.Unspecified], resolves dynamically from the theme.  * @property shape Optional clipping or boundary [Shape]; null defaults to rectangular bounds.  * @property treatment Optional [Treatment] describing container styling for contrast-adaptive highlights.  * @property bounded Whether indication drawing is constrained to layout bounds. Defaults to true.  */",
       "package": "io.github.alph_a07.basis.components.foundation",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/fixture-commit/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/BasisDivider.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/BasisIndication.kt",
       "overview": {
-        "quickStartSample": "BasisDivider()",
+        "quickStartSample": "val indication = rememberBasisIndication()\nBox(\n    modifier = Modifier",
         "anatomy": {
-          "parts": [
-            {
-              "id": "Line",
-              "name": "Line",
-              "description": "The rendered rule boundary separating content.",
-              "optional": false
-            }
-          ]
+          "parts": []
         },
         "variants": [],
-        "states": [],
-        "gallery": []
+        "states": []
       },
       "api": {
         "signatures": [
           {
-            "name": "BasisDivider",
-            "declaration": "@Composable\npublic fun BasisDivider(\n    modifier: Modifier = Modifier\n): Unit",
-            "kdoc": "Visual separator line.",
+            "name": "rememberBasisIndication",
+            "declaration": "@Composable\npublic fun rememberBasisIndication(\n    color: Color = Color.Unspecified,\n    shape: Shape? = null,\n    treatment: Treatment? = null,\n    bounded: Boolean = true\n): BasisIndication",
             "parameters": [
               {
-                "name": "modifier",
-                "type": "Modifier",
-                "defaultValue": "Modifier",
-                "optional": true,
-                "description": "Optional modifier for styling."
+                "name": "color",
+                "type": "Color",
+                "defaultValue": "Color.Unspecified",
+                "description": "Explicit highlight color override. When [Color.Unspecified], resolves dynamically from the theme.",
+                "optional": true
+              },
+              {
+                "name": "shape",
+                "type": "Shape?",
+                "defaultValue": "null",
+                "description": "Optional clipping or boundary [Shape]; null defaults to rectangular bounds.",
+                "optional": true
+              },
+              {
+                "name": "treatment",
+                "type": "Treatment?",
+                "defaultValue": "null",
+                "description": "Optional [Treatment] describing container styling for contrast-adaptive highlights.",
+                "optional": true
+              },
+              {
+                "name": "bounded",
+                "type": "Boolean",
+                "defaultValue": "true",
+                "description": "Whether indication drawing is constrained to layout bounds. Defaults to true.",
+                "optional": true
               }
-            ]
+            ],
+            "returnType": "BasisIndication",
+            "kdoc": "/**\n * Creates and remembers a [BasisIndication] instance configured with [color], [shape], [treatment], and [bounded].\n *\n * @param color Explicit highlight color override. When [Color.Unspecified], resolves dynamically from the theme.\n * @param shape Optional clipping or boundary [Shape]; null defaults to rectangular bounds.\n * @param treatment Optional [Treatment] describing container styling for contrast-adaptive highlights.\n * @param bounded Whether indication drawing is constrained to layout bounds. Defaults to true.\n * @return Remembered [BasisIndication] instance.\n */"
+          },
+          {
+            "name": "BasisIndication",
+            "declaration": "public class BasisIndication(\n    val public val color: Color = Color.Unspecified,\n    val public val shape: Shape? = null,\n    val public val treatment: Treatment? = null,\n    val public val bounded: Boolean = true\n)",
+            "parameters": [
+              {
+                "name": "public val color",
+                "type": "Color",
+                "defaultValue": "Color.Unspecified",
+                "description": "public val color parameter.",
+                "optional": true
+              },
+              {
+                "name": "public val shape",
+                "type": "Shape?",
+                "defaultValue": "null",
+                "description": "public val shape parameter.",
+                "optional": true
+              },
+              {
+                "name": "public val treatment",
+                "type": "Treatment?",
+                "defaultValue": "null",
+                "description": "public val treatment parameter.",
+                "optional": true
+              },
+              {
+                "name": "public val bounded",
+                "type": "Boolean",
+                "defaultValue": "true",
+                "description": "public val bounded parameter.",
+                "optional": true
+              }
+            ],
+            "returnType": "BasisIndication",
+            "kdoc": "/**\n * Creates visual indication feedback (press, hover, and focus) derived from the active [BasisTheme].\n *\n * Implements [IndicationNodeFactory] to integrate with Compose Foundation's indication system.\n * Highlights dynamically adapt to [BasisTheme] colors, [LocalBasisContentColor], and optional\n * [Treatment] styling, ensuring high contrast across light and dark modes.\n *\n * @property color Explicit highlight color override. When [Color.Unspecified], resolves dynamically from the theme.\n * @property shape Optional clipping or boundary [Shape]; null defaults to rectangular bounds.\n * @property treatment Optional [Treatment] describing container styling for contrast-adaptive highlights.\n * @property bounded Whether indication drawing is constrained to layout bounds. Defaults to true.\n */"
           }
         ],
-        "samples": []
+        "samples": [
+          {
+            "id": "indication-sample",
+            "title": "Standard Usage",
+            "code": "val indication = rememberBasisIndication()\nBox(\n    modifier = Modifier",
+            "description": "Idiomatic Compose usage for BasisIndication."
+          }
+        ]
       },
       "overrides": {
         "universalFields": [],
@@ -341,16 +118,19 @@
         "role": "None",
         "touchTarget": {
           "minWidthDp": 0,
-          "minHeightDp": 1,
+          "minHeightDp": 0,
           "enforced": false
         },
         "reducedMotion": {
-          "respectsReducedMotion": false
+          "respectsReducedMotion": true,
+          "fallbackDescription": "State layer animations adapt gracefully to system reduced motion settings."
         },
+        "keyboardNavigation": [],
         "report": {
           "status": "pass",
           "checks": [
-            "accessibility-decorative-semantics"
+            "Contrast-Compliance",
+            "Semantic-Role"
           ],
           "version": "0.2.0"
         }
@@ -368,7 +148,7 @@
       "summary": "Applies a border stroke with a specified color, width, and shape.",
       "description": "Applies a border stroke with a specified [color], [width], and [shape].",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/BorderModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/BorderModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier\n        .basisBorder(\n            width = 1.dp,\n            color = BasisTheme.colors.outlineVariant,\n            shape = BasisTheme.shapes.small\n        )\n        .padding(BasisTheme.spacing.sm)\n) {\n    Text(\"Bordered Box\")\n}",
         "anatomy": {
@@ -451,7 +231,7 @@
       "summary": "Clears all descendant semantics and assigns new semantic properties to this layout node.",
       "description": "Clears all descendant semantics and assigns new semantic properties to this layout node.  Useful for TalkBack when custom controls contain internal sub-nodes (such as decorative icons or composite labels) that should be exposed to accessibility services as a single coherent entity.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ClearAndSetSemanticsModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ClearAndSetSemanticsModifier.kt",
       "overview": {
         "quickStartSample": "Row(\n    modifier = Modifier.basisClearAndSetSemantics {\n        contentDescription = \"Rating: 4.5 out of 5 stars\"\n    }\n) {\n    Icon(Icons.Default.Star, contentDescription = null)\n    Text(\"4.5\")\n}",
         "anatomy": {
@@ -522,7 +302,7 @@
       "summary": "Configures the element to be clickable with Basis indication, accessibility semantics, and minimum touch target.",
       "description": "Configures the element to be clickable with Basis indication, accessibility semantics, and minimum touch target.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ClickableModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ClickableModifier.kt",
       "overview": {
         "quickStartSample": "val interactionSource = remember { MutableInteractionSource() }\n\nBox(\n    modifier = Modifier\n        .basisClickable(\n            interactionSource = interactionSource,\n            shape = BasisTheme.shapes.medium,\n            onClick = { /* handle action */ }\n        )\n        .basisFocusRing(shape = BasisTheme.shapes.medium)\n        .padding(BasisTheme.spacing.md)\n) {\n    Text(\"Interactive Tile\")\n}",
         "anatomy": {
@@ -684,7 +464,7 @@
       "summary": "Draws a high-contrast focus ring when the element receives input focus.",
       "description": "Draws a high-contrast focus ring when the element receives input focus.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/FocusRingModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/FocusRingModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier\n        .basisFocusRing(shape = BasisTheme.shapes.small)\n        .clickable { /* action */ }\n) {\n    Text(\"Focusable Target\")\n}",
         "anatomy": {
@@ -808,7 +588,7 @@
       "summary": "Draws visual indication (press and hover feedback) conforming to shape using the content color.",
       "description": "Draws visual indication (press and hover feedback) conforming to [shape] using the content color.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/IndicationModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/IndicationModifier.kt",
       "overview": {
         "quickStartSample": "val interactionSource = remember { MutableInteractionSource() }\n\nBox(\n    modifier = Modifier\n        .basisIndication(interactionSource, shape = RoundedCornerShape(8.dp))\n        .clickable(interactionSource = interactionSource, indication = null) { /* action */ }\n) {\n    Text(\"Custom Indication Box\")\n}",
         "anatomy": {
@@ -839,6 +619,48 @@
             ],
             "returnType": "Modifier",
             "kdoc": "/**\n * Draws visual indication (press and hover feedback) conforming to [shape] using the content color.\n *\n * @param interactionSource [InteractionSource] emitting interactions to draw indications for.\n * @param shape Optional [Shape] to clip the indication outline to.\n * @return Configured [Modifier].\n */"
+          },
+          {
+            "name": "basisIndication",
+            "declaration": "public fun Modifier.basisIndication(\n    interactionSource: InteractionSource,\n    shape: Shape? = null,\n    color: Color = Color.Unspecified,\n    treatment: Treatment? = null,\n    bounded: Boolean = true\n): Modifier",
+            "parameters": [
+              {
+                "name": "interactionSource",
+                "type": "InteractionSource",
+                "description": "[InteractionSource] emitting interactions to draw indications for.",
+                "optional": false
+              },
+              {
+                "name": "shape",
+                "type": "Shape?",
+                "defaultValue": "null",
+                "description": "Optional [Shape] to clip the indication outline to.",
+                "optional": true
+              },
+              {
+                "name": "color",
+                "type": "Color",
+                "defaultValue": "Color.Unspecified",
+                "description": "Explicit indication highlight [Color]. Defaults to [Color.Unspecified].",
+                "optional": true
+              },
+              {
+                "name": "treatment",
+                "type": "Treatment?",
+                "defaultValue": "null",
+                "description": "Optional [Treatment] describing container styling for contrast-adaptive highlights.",
+                "optional": true
+              },
+              {
+                "name": "bounded",
+                "type": "Boolean",
+                "defaultValue": "true",
+                "description": "Whether indication drawing is constrained to layout bounds. Defaults to true.",
+                "optional": true
+              }
+            ],
+            "returnType": "Modifier",
+            "kdoc": "/**\n * Draws visual indication (press, hover, and focus feedback) conforming to [shape] using theme-resolved colors.\n *\n * @param interactionSource [InteractionSource] emitting interactions to draw indications for.\n * @param shape Optional [Shape] to clip the indication outline to.\n * @param color Explicit indication highlight [Color]. Defaults to [Color.Unspecified].\n * @param treatment Optional [Treatment] describing container styling for contrast-adaptive highlights.\n * @param bounded Whether indication drawing is constrained to layout bounds. Defaults to true.\n * @return Configured [Modifier].\n */"
           }
         ],
         "samples": [
@@ -887,7 +709,7 @@
       "summary": "Applies horizontal and vertical padding using Basis token dimensions.",
       "description": "Applies horizontal and vertical padding using Basis token dimensions.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/PaddingModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/PaddingModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier\n        .basisPadding(\n            horizontal = BasisTheme.spacing.md,\n            vertical = BasisTheme.spacing.sm\n        )\n) {\n    Text(\"Token Spaced Content\")\n}",
         "anatomy": {
@@ -980,7 +802,7 @@
       "summary": "Configures the element to be selectable with Basis indication, accessibility semantics, and minimum touch target.",
       "description": "Configures the element to be selectable with Basis indication, accessibility semantics, and minimum touch target.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SelectableModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SelectableModifier.kt",
       "overview": {
         "quickStartSample": "Row(\n    modifier = Modifier\n        .basisSelectable(\n            selected = isSelected,\n            role = Role.RadioButton,\n            onClick = { onSelect() }\n        )\n        .padding(BasisTheme.spacing.sm)\n) {\n    RadioButton(selected = isSelected, onClick = null)\n    Text(\"Option Label\")\n}",
         "anatomy": {
@@ -1090,7 +912,7 @@
       "summary": "Attaches accessibility and testing semantics to the layout node.",
       "description": "Attaches accessibility and testing semantics to the layout node.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SemanticsModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SemanticsModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier.basisSemantics {\n        role = Role.Tab\n        stateDescription = \"Selected tab 1 of 3\"\n    }\n) {\n    Text(\"Overview\")\n}",
         "anatomy": {
@@ -1168,7 +990,7 @@
       "summary": "Applies surface styling including optional depth shadow, background color, shape clipping, and border.",
       "description": "Applies surface styling including optional depth shadow, background color, shape clipping, and border.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SurfaceModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/SurfaceModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier\n        .basisSurface(\n            shape = BasisTheme.shapes.medium,\n            color = BasisTheme.colors.surfaceElevated,\n            depth = BasisTheme.depth.level1,\n            border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)\n        )\n        .padding(BasisTheme.spacing.md)\n) {\n    Text(\"Elevated Surface Container\")\n}",
         "anatomy": {
@@ -1259,7 +1081,7 @@
       "summary": "Configures the element to be toggleable with Basis indication, semantics, and minimum touch target.",
       "description": "Configures the element to be toggleable with Basis indication, semantics, and minimum touch target.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ToggleableModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/ToggleableModifier.kt",
       "overview": {
         "quickStartSample": "Row(\n    modifier = Modifier\n        .basisToggleable(\n            value = isChecked,\n            role = Role.Checkbox,\n            onValueChange = { isChecked = it }\n        )\n        .padding(BasisTheme.spacing.sm)\n) {\n    Checkbox(checked = isChecked, onCheckedChange = null)\n    Text(\"Enable Push Notifications\")\n}",
         "anatomy": {
@@ -1368,7 +1190,7 @@
       "summary": "Enforces a minimum accessible touch target size on the modified element without altering visual size.",
       "description": "Enforces a minimum accessible touch target size on the modified element without altering visual size.  When [min] is unspecified ([Dp.Unspecified]), the minimum target dimension is driven by [ConstraintsControl.minTouchTarget] from the ambient theme via [BasisTheme.minTouchTarget], falling back to `48.dp` if no constraint was configured.",
       "package": "io.github.alph_a07.basis.components.foundation.modifier",
-      "sourceUrl": "https://github.com/alph-a07/basis/blob/db8476120fc7ff7573808cffaeaac59eb9aaac62/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/TouchTargetModifier.kt",
+      "sourceUrl": "https://github.com/alph-a07/basis/blob/af3b3a2c7a7a0c03ab1861cf3c81fcbf29a8a203/basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier/TouchTargetModifier.kt",
       "overview": {
         "quickStartSample": "Box(\n    modifier = Modifier\n        .size(24.dp)\n        .basisMinTouchTarget()\n        .clickable { /* action */ }\n) {\n    Icon(Icons.Default.Close, contentDescription = \"Close\")\n}",
         "anatomy": {

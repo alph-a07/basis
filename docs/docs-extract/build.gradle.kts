@@ -52,7 +52,7 @@ val generateComponentsJsonTask =
         mainClass.set("io.github.alph_a07.basis.docs.extract.GenerateComponentsJsonKt")
         args(
             rootProject.file(
-                "basis-components/src/main/kotlin/io/github/alph_a07/basis/components/foundation/modifier",
+                "basis-components/src/main/kotlin/io/github/alph_a07/basis/components",
             ).absolutePath,
             rootProject.file("build/docs-model/components.json").absolutePath,
             rootProject.file("docs/docs-model/fixtures/components.fixture.json").absolutePath,
