@@ -4,7 +4,8 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://basis.alph-a07.github.io',
+  site: 'https://alph-a07.github.io/basis',
+  base: '/basis/',
   integrations: [react(), mdx()],
   output: 'static',
   markdown: {
