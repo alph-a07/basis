@@ -3,9 +3,11 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 
 // https://astro.build/config
+const isProd = import.meta.env.PROD;
+
 export default defineConfig({
-  site: 'https://alph-a07.github.io/basis',
-  base: '/basis/',
+  site: isProd ? 'https://alph-a07.github.io/basis' : undefined,
+  base: isProd ? '/basis/' : '/',
   integrations: [react(), mdx()],
   output: 'static',
   markdown: {

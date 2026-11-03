@@ -9,7 +9,7 @@
     "generate:token-index": "tsx scripts/generate-token-index.ts",
     "copy-runtime": "tsx scripts/copy-runtime.ts",
     "prebuild": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime",
-    "build": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro build && pagefind --site dist && tsx scripts/generate-sitemap.ts",
+    "build": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro build && pagefind --site dist && NODE_ENV=production tsx scripts/generate-sitemap.ts",
     "preview": "astro preview",
     "check": "npm run generate:theme && npm run generate:token-index && astro check",
     "generate:fonts-catalog": "tsx scripts/generate-fonts-catalog.ts",

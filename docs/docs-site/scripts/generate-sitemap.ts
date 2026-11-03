@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
-const siteUrl = 'https://basis.alph-a07.github.io';
+const isProd = process.env.NODE_ENV === 'production';
+const siteUrl = isProd ? 'https://alph-a07.github.io/basis' : '';
 
 export function generateSitemap(): void {
   if (!fs.existsSync(distDir)) {
