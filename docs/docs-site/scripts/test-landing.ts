@@ -217,7 +217,8 @@ const cssLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
 
 let bundledCss = '';
 for (const href of cssLinks) {
-  const cleanPath = href.startsWith('/') ? href.slice(1) : href;
+  const normalized = href.replace(/^\/basis\//, '/');
+  const cleanPath = normalized.startsWith('/') ? normalized.slice(1) : normalized;
   const fullPath = path.join(distDir, cleanPath);
   if (fs.existsSync(fullPath)) {
     bundledCss += fs.readFileSync(fullPath, 'utf-8');

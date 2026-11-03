@@ -6,16 +6,17 @@ import '../styles/studio.css';
 import '../styles/studio-scene.css';
 
 const intentDoc = loadIntentDoc();
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Basis Studio — Real-time Theme Playground">
   <!-- Pre-load docs-runtime UMD dependency chain for instant client-side resolution -->
-  <script is:inline src="/docs-runtime/kotlin-kotlin-stdlib.js"></script>
-  <script is:inline src="/docs-runtime/kotlin_org_jetbrains_kotlin_kotlin_dom_api_compat.js"></script>
-  <script is:inline src="/docs-runtime/kotlinx-serialization-kotlinx-serialization-core.js"></script>
-  <script is:inline src="/docs-runtime/kotlinx-serialization-kotlinx-serialization-json.js"></script>
-  <script is:inline src="/docs-runtime/Basis-basis-theme.js"></script>
-  <script is:inline src="/docs-runtime/Basis-docs-runtime.js"></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/kotlin-kotlin-stdlib.js`}></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/kotlin_org_jetbrains_kotlin_kotlin_dom_api_compat.js`}></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/kotlinx-serialization-kotlinx-serialization-core.js`}></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/kotlinx-serialization-kotlinx-serialization-json.js`}></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/Basis-basis-theme.js`}></script>
+  <script is:inline src={`${baseUrl}/docs-runtime/Basis-docs-runtime.js`}></script>
 
   <div class="studio-app" data-pagefind-body>
     <StudioApp client:only="react" initialIntentDoc={intentDoc} />

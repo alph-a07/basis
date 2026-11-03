@@ -205,7 +205,8 @@ const RUNTIME_JS_FILES = [
   'Basis-docs-runtime.js',
 ] as const;
 
-const RUNTIME_BASE = '/docs-runtime/';
+const BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL ? import.meta.env.BASE_URL : '/').replace(/\/$/, '');
+const RUNTIME_BASE = `${BASE_URL}/docs-runtime/`;
 
 function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof document !== 'undefined';

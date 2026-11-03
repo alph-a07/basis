@@ -102,9 +102,10 @@ export async function loadDocsRuntime(): Promise<DocsRuntimeApi> {
       return existing;
     }
 
+    const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL ? import.meta.env.BASE_URL : '/').replace(/\/$/, '');
     // 2. Load the 6 UMD artifacts in strict dependency order via script tags
     for (const file of RUNTIME_JS_FILES) {
-      const src = `/docs-runtime/${file}`;
+      const src = `${baseUrl}/docs-runtime/${file}`;
       if (!document.querySelector(`script[src="${src}"]`)) {
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement('script');
