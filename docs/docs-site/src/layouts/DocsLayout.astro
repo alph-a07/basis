@@ -5,6 +5,7 @@ import MobileHeader from '../components/MobileHeader.astro';
 import Toc from '../components/Toc.astro';
 import type { TocItem } from '../types/navigation';
 import { getCollection } from 'astro:content';
+import { getSemanticTitle } from '../lib/semantic-title';
 
 interface Props {
   title: string;
@@ -21,27 +22,34 @@ const hasToc = headings.length > 0;
 const components = await getCollection('components');
 
 // Group components by family and extract modifiers
-const familiesMap = new Map<string, { id: string; name: string }[]>();
-const modifiersList: { id: string; name: string }[] = [];
+const foundationComponents: { id: string; name: string; title: string }[] = [];
+const t1FamiliesMap = new Map<string, { id: string; name: string; title: string }[]>();
+const modifiersList: { id: string; name: string; title: string }[] = [];
 
 for (const comp of components) {
+  const semanticTitle = getSemanticTitle(comp.data);
   if (comp.data.kind === 'modifier') {
-    modifiersList.push({ id: comp.data.id, name: comp.data.name });
+    modifiersList.push({ id: comp.data.id, name: comp.data.name, title: semanticTitle });
   } else {
     const family = comp.data.family || 'Other';
-    if (!familiesMap.has(family)) {
-      familiesMap.set(family, []);
+    if (family.toLowerCase() === 'foundation') {
+      foundationComponents.push({ id: comp.data.id, name: comp.data.name, title: semanticTitle });
+    } else {
+      if (!t1FamiliesMap.has(family)) {
+        t1FamiliesMap.set(family, []);
+      }
+      t1FamiliesMap.get(family)!.push({ id: comp.data.id, name: comp.data.name, title: semanticTitle });
     }
-    familiesMap.get(family)!.push({ id: comp.data.id, name: comp.data.name });
   }
 }
 
-const componentGroups = Array.from(familiesMap.entries()).map(([family, comps]) => ({
+const componentGroups = Array.from(t1FamiliesMap.entries()).map(([family, comps]) => ({
   family,
-  components: comps.sort((a, b) => a.name.localeCompare(b.name)),
+  components: comps.sort((a, b) => a.title.localeCompare(b.title)),
 }));
 
-const modifierGroups = modifiersList.sort((a, b) => a.name.localeCompare(b.name));
+const modifierGroups = modifiersList.sort((a, b) => a.title.localeCompare(b.title));
+const sortedFoundationComponents = foundationComponents.sort((a, b) => a.title.localeCompare(b.title));
 
 // Fetch docs prose stubs from collection to build dynamic navigation groups
 const docsEntries = await getCollection('docs');
@@ -88,6 +96,7 @@ const navGroups = Array.from(sectionsMap.entries())
       <Sidebar
         currentPath={resolvedPath}
         componentGroups={componentGroups}
+        foundationComponents={sortedFoundationComponents}
         modifierGroups={modifierGroups}
         navGroups={navGroups}
       />

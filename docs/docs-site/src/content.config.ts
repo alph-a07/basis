@@ -38,10 +38,7 @@ const components = defineCollection({
       );
     }
 
-    const isBuild = fs.existsSync(path.join(buildModelDir, 'components.json'));
-    const items = isBuild
-      ? componentsDoc.components
-      : componentsDoc.components.filter((comp: any) => comp.kind === 'modifier');
+    const items = componentsDoc.components;
 
     return items.map((comp: any) => ({
       id: comp.id,

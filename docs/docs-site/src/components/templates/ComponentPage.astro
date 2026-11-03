@@ -7,6 +7,7 @@ import OverridesMatrix from '../sections/OverridesMatrix.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
 import CodeBlock from '../CodeBlock.astro';
+import { getSemanticTitle } from '../../lib/semantic-title';
 
 interface Props {
   component: any;
@@ -23,6 +24,7 @@ function getA11yNarrative(sidecarEntry: any): string | undefined {
 }
 
 const a11yNarrative = getA11yNarrative(sidecar);
+const title = getSemanticTitle(component);
 
 const tabs = [
   { id: 'overview', label: 'Overview', path: `/docs/components/${component.id}` },
@@ -44,7 +46,7 @@ const tabs = [
       />
     </div>
 
-    <h1 class="component-title">{component.name}</h1>
+    <h1 class="component-title">{title}</h1>
     <p class="component-summary">{component.summary}</p>
     {component.description && component.description !== component.summary && (
       <p class="component-description">{component.description}</p>

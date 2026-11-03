@@ -6,12 +6,19 @@ import versionData from '../generated/version.json';
 
 interface Props {
   currentPath?: string;
-  componentGroups?: { family: string; components: { id: string; name: string }[] }[];
-  modifierGroups?: { id: string; name: string }[];
+  componentGroups?: { family: string; components: { id: string; name: string; title?: string }[] }[];
+  foundationComponents?: { id: string; name: string; title?: string }[];
+  modifierGroups?: { id: string; name: string; title?: string }[];
   navGroups?: NavGroup[];
 }
 
-const { currentPath = '', componentGroups = [], modifierGroups = [], navGroups = [] } = Astro.props;
+const {
+  currentPath = '',
+  componentGroups = [],
+  foundationComponents = [],
+  modifierGroups = [],
+  navGroups = [],
+} = Astro.props;
 
 // Static documentation groups fallback
 const staticGroups: NavGroup[] = [
@@ -130,44 +137,85 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
               </ul>
             )}
 
-            {isFoundation && modifierGroups.length > 0 && (
+            {isFoundation && (
               <div class="foundation-subgroups">
-                <details class="nav-subgroup" data-family="modifiers" open>
-                  <summary class="nav-subgroup-title">
-                    <span class="nav-subgroup-label">Modifiers</span>
-                    <svg
-                      class="nav-subgroup-chevron"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                  </summary>
-                  <ul class="nav-group-list subgroup-list">
-                    {modifierGroups.map((mod) => {
-                      const href = `/docs/modifiers/${mod.id}`;
-                      const active = isPathActive(href);
-                      return (
-                        <li class="nav-item">
-                          <a
-                            href={href}
-                            class={`nav-link subgroup-link ${active ? 'active' : ''}`}
-                            aria-current={active ? 'page' : undefined}
-                          >
-                            <span>{mod.name}</span>
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </details>
+                {foundationComponents.length > 0 && (
+                  <details class="nav-subgroup" data-family="components" open>
+                    <summary class="nav-subgroup-title">
+                      <span class="nav-subgroup-label">Components</span>
+                      <svg
+                        class="nav-subgroup-chevron"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </summary>
+                    <ul class="nav-group-list subgroup-list">
+                      {foundationComponents.map((comp) => {
+                        const href = `/docs/components/${comp.id}`;
+                        const active = isPathActive(href);
+                        return (
+                          <li class="nav-item">
+                            <a
+                              href={href}
+                              class={`nav-link subgroup-link ${active ? 'active' : ''}`}
+                              aria-current={active ? 'page' : undefined}
+                            >
+                              <span>{comp.title || comp.name}</span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </details>
+                )}
+
+                {modifierGroups.length > 0 && (
+                  <details class="nav-subgroup" data-family="modifiers" open>
+                    <summary class="nav-subgroup-title">
+                      <span class="nav-subgroup-label">Modifiers</span>
+                      <svg
+                        class="nav-subgroup-chevron"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </summary>
+                    <ul class="nav-group-list subgroup-list">
+                      {modifierGroups.map((mod) => {
+                        const href = `/docs/modifiers/${mod.id}`;
+                        const active = isPathActive(href);
+                        return (
+                          <li class="nav-item">
+                            <a
+                              href={href}
+                              class={`nav-link subgroup-link ${active ? 'active' : ''}`}
+                              aria-current={active ? 'page' : undefined}
+                            >
+                              <span>{mod.title || mod.name}</span>
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </details>
+                )}
               </div>
             )}
           </div>
@@ -208,7 +256,7 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
                           class={`nav-link subgroup-link ${active ? 'active' : ''}`}
                           aria-current={active ? 'page' : undefined}
                         >
-                          <span>{comp.name}</span>
+                          <span>{comp.title || comp.name}</span>
                         </a>
                       </li>
                     );

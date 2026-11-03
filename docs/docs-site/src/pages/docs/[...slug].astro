@@ -5,6 +5,7 @@ import ModifierPage from '../../components/templates/ModifierPage.astro';
 import CodeBlock from '../../components/CodeBlock.astro';
 import { getCollection, render } from 'astro:content';
 import type { TocItem } from '../../types/navigation';
+import { getSemanticTitle } from '../../lib/semantic-title';
 
 export async function getStaticPaths() {
   const components = await getCollection('components');
@@ -69,7 +70,8 @@ let RenderedContent: any = null;
 if (props.type === 'component') {
   const component = props.component.data;
   const activeTab = props.activeTab;
-  pageTitle = `${component.name} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
+  const semanticTitle = getSemanticTitle(component);
+  pageTitle = `${semanticTitle} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
   pageDescription = component.summary;
 
   if (activeTab === 'overview') {
@@ -95,7 +97,8 @@ if (props.type === 'component') {
 } else if (props.type === 'modifier') {
   const modifier = props.modifier.data;
   const activeTab = props.activeTab;
-  pageTitle = `${modifier.name} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
+  const semanticTitle = getSemanticTitle(modifier);
+  pageTitle = `${semanticTitle} — ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}`;
   pageDescription = modifier.summary;
 
   if (activeTab === 'overview') {

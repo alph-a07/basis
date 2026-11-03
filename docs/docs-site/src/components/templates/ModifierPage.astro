@@ -4,6 +4,7 @@ import ApiTable from '../sections/ApiTable.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
 import CodeBlock from '../CodeBlock.astro';
+import { getSemanticTitle } from '../../lib/semantic-title';
 
 interface Props {
   modifier: any;
@@ -20,6 +21,7 @@ function getA11yNarrative(sidecarEntry: any): string | undefined {
 }
 
 const a11yNarrative = getA11yNarrative(sidecar);
+const title = getSemanticTitle(modifier);
 
 const tabs = [
   { id: 'overview', label: 'Overview', path: `/docs/modifiers/${modifier.id}` },
@@ -39,7 +41,7 @@ const tabs = [
       />
     </div>
 
-    <h1 class="modifier-title">{modifier.name}</h1>
+    <h1 class="modifier-title">{title}</h1>
     <p class="modifier-summary">{modifier.summary}</p>
     {modifier.description && modifier.description !== modifier.summary && (
       <p class="modifier-description">{modifier.description}</p>
