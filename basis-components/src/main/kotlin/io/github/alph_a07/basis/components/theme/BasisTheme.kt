@@ -1,5 +1,6 @@
 package io.github.alph_a07.basis.components.theme
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -7,6 +8,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.alph_a07.basis.components.foundation.BasisIndication
 import io.github.alph_a07.basis.components.theme.BasisTheme.colors
 import io.github.alph_a07.basis.components.theme.BasisTheme.current
 import io.github.alph_a07.basis.components.theme.BasisTheme.typography
@@ -74,7 +76,11 @@ public fun BasisTheme(
 ) {
     val ambient = buildAmbient(theme, fontRegistry, report, constraints, componentOverrides)
 
-    CompositionLocalProvider(LocalBasisTheme provides ambient, content = content)
+    CompositionLocalProvider(
+        LocalBasisTheme provides ambient,
+        LocalIndication provides remember { BasisIndication() },
+        content = content,
+    )
 }
 
 /**

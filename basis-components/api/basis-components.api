@@ -1,3 +1,12 @@
+public abstract interface annotation class io/github/alph_a07/basis/components/annotation/BasisComponentDoc : java/lang/annotation/Annotation {
+	public abstract fun family ()Ljava/lang/String;
+	public abstract fun id ()Ljava/lang/String;
+	public abstract fun minTouchTargetDp ()I
+	public abstract fun quickStartSample ()Ljava/lang/String;
+	public abstract fun respectsReducedMotion ()Z
+	public abstract fun role ()Ljava/lang/String;
+}
+
 public abstract interface annotation class io/github/alph_a07/basis/components/annotation/BasisModifierDoc : java/lang/annotation/Annotation {
 	public abstract fun id ()Ljava/lang/String;
 	public abstract fun minTouchTargetDp ()I
@@ -5,6 +14,54 @@ public abstract interface annotation class io/github/alph_a07/basis/components/a
 	public abstract fun role ()Ljava/lang/String;
 	public abstract fun sampleCode ()Ljava/lang/String;
 	public abstract fun touchTargetEnforced ()Z
+}
+
+public final class io/github/alph_a07/basis/components/foundation/BasisIndication : androidx/compose/foundation/IndicationNodeFactory {
+	public static final field $stable I
+	public fun <init> ()V
+	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
+	public final fun component3 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
+	public final fun component4 ()Z
+	public final fun copy-Iv8Zu3U (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Z)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
+	public static synthetic fun copy-Iv8Zu3U$default (Lio/github/alph_a07/basis/components/foundation/BasisIndication;JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILjava/lang/Object;)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
+	public fun create (Landroidx/compose/foundation/interaction/InteractionSource;)Landroidx/compose/ui/node/DelegatableNode;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBounded ()Z
+	public final fun getColor-0d7_KjU ()J
+	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
+	public final fun getTreatment ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
+	public fun hashCode ()I
+	public fun rememberUpdatedInstance (Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/runtime/Composer;I)Landroidx/compose/foundation/IndicationInstance;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/alph_a07/basis/components/foundation/BasisIndicationDefaults {
+	public static final field $stable I
+	public static final field CANCEL_FADE_MS I
+	public static final field FADE_OUT_MS I
+	public static final field FILL_CROSS_FADE_MS I
+	public static final field FOCUSED_ALPHA F
+	public static final field FOCUS_IN_MS I
+	public static final field FOCUS_OUT_MS I
+	public static final field HOVERED_ALPHA F
+	public static final field HOVER_IN_MS I
+	public static final field HOVER_OUT_MS I
+	public static final field INSTANCE Lio/github/alph_a07/basis/components/foundation/BasisIndicationDefaults;
+	public static final field MIN_PRESS_HOLD_MS J
+	public static final field MIN_RADIUS_FRACTION F
+	public static final field PRESSED_ALPHA F
+	public static final field PRESS_SPRING_DAMPING F
+	public static final field PRESS_SPRING_STIFFNESS F
+	public static final field RADIUS_EXPANSION_RATIO F
+	public final fun getFocusStrokeWidth-D9Ej5fM ()F
+	public final fun getHoverStrokeWidth-D9Ej5fM ()F
+}
+
+public final class io/github/alph_a07/basis/components/foundation/BasisIndicationKt {
+	public static final fun rememberBasisIndication-euL9pac (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZLandroidx/compose/runtime/Composer;II)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
 }
 
 public final class io/github/alph_a07/basis/components/foundation/modifier/BaseModifierKt {
@@ -36,6 +93,8 @@ public final class io/github/alph_a07/basis/components/foundation/modifier/Focus
 public final class io/github/alph_a07/basis/components/foundation/modifier/IndicationModifierKt {
 	public static final fun basisIndication (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisIndication$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun basisIndication-Bx497Mc (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;JLio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Z)Landroidx/compose/ui/Modifier;
+	public static synthetic fun basisIndication-Bx497Mc$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;JLio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
 public final class io/github/alph_a07/basis/components/foundation/modifier/PaddingModifierKt {
