@@ -25,6 +25,10 @@ function getA11yNarrative(sidecarEntry: any): string | undefined {
 
 const a11yNarrative = getA11yNarrative(sidecar);
 const title = getSemanticTitle(component);
+const additionalDescription =
+  component.description && component.description !== component.summary
+    ? component.description.replace(component.summary, '').trim()
+    : undefined;
 
 const tabs = [
   { id: 'overview', label: 'Overview', path: `/docs/components/${component.id}` },
@@ -48,8 +52,8 @@ const tabs = [
 
     <h1 class="component-title">{title}</h1>
     <p class="component-summary">{component.summary}</p>
-    {component.description && component.description !== component.summary && (
-      <p class="component-description">{component.description}</p>
+    {additionalDescription && (
+      <p class="component-description">{additionalDescription}</p>
     )}
 
     <!-- 4 Route-Per-Tab Navigation -->

@@ -22,6 +22,10 @@ function getA11yNarrative(sidecarEntry: any): string | undefined {
 
 const a11yNarrative = getA11yNarrative(sidecar);
 const title = getSemanticTitle(modifier);
+const additionalDescription =
+  modifier.description && modifier.description !== modifier.summary
+    ? modifier.description.replace(modifier.summary, '').trim()
+    : undefined;
 
 const tabs = [
   { id: 'overview', label: 'Overview', path: `/docs/modifiers/${modifier.id}` },
@@ -43,8 +47,8 @@ const tabs = [
 
     <h1 class="modifier-title">{title}</h1>
     <p class="modifier-summary">{modifier.summary}</p>
-    {modifier.description && modifier.description !== modifier.summary && (
-      <p class="modifier-description">{modifier.description}</p>
+    {additionalDescription && (
+      <p class="modifier-description">{additionalDescription}</p>
     )}
 
     <!-- Route-Per-Tab Navigation -->

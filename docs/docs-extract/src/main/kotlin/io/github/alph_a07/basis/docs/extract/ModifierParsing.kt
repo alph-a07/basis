@@ -154,13 +154,17 @@ internal object ModifierParsing {
         val lines = kdocText.lines()
         val descLines = mutableListOf<String>()
         for (line in lines) {
-            if (line.startsWith("@")) break
+            val cleaned = cleanKdocLine(line)
+            if (cleaned.startsWith("@")) break
 
-            descLines.add(line)
+            if (cleaned.isNotBlank()) {
+                descLines.add(cleaned)
+            }
         }
 
         val desc = descLines.joinToString(" ").trim()
+        val cleanDesc = KDocParser.stripBracketLinks(desc).trim()
 
-        return desc
+        return cleanDesc
     }
 }
