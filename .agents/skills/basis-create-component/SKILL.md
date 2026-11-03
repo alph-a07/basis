@@ -76,9 +76,20 @@ Every public declaration must include release-ready KDoc:
 - Document exception contracts (`@throws`).
 - References to other types in square brackets (`[BasisTheme]`).
 
-## 6. Verification Checklist
+## 6. Documentation Synchronization (Mandatory)
+
+Documentation must be created and updated in lockstep with the component implementation in the same task:
+1. Annotate the component with `@BasisComponentDoc(id = "<id>", family = "<Family>", role = "<Role>", ...)` from `io.github.alph_a07.basis.components.annotation`.
+2. Author the companion sidecar in `docs/docs-model/fixtures/<id>.sidecar.mdx` with usage guidelines (`do`, `dont`, `notes`) and an `## Accessibility` section.
+3. Run `./gradlew :docs:docs-extract:generateComponentsJson` to extract the component and update the catalog.
+4. Validate schemas and fixtures with `npm test --prefix docs/docs-model`.
+5. **Zero phantom components:** Never document undeveloped or non-existent components; documentation must strictly reflect real, implemented source code.
+
+## 7. Verification Checklist
 
 1. `./gradlew ktlintFormat` & `./gradlew ktlintCheck`
 2. `./gradlew detekt` (0 issues allowed)
 3. `./gradlew :basis-components:releaseApiDump` (dump new public API to `basis-components.api`)
-4. `./gradlew verifyAll` (must pass 100%)
+4. `./gradlew :docs:docs-extract:generateComponentsJson` & `npm test --prefix docs/docs-model`
+5. `npm test --prefix docs/docs-site`
+6. `./gradlew verifyAll` (must pass 100%)
