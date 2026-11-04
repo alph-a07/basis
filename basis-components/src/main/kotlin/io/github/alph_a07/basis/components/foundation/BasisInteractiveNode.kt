@@ -123,6 +123,7 @@ public class BasisInteractiveNode(
                         if (!enabled) return@detectTapGestures
                         val press = PressInteraction.Press(offset)
                         currentPress = press
+
                         coroutineScope.launch { activeInteractionSource.emit(press) }
                         val released = tryAwaitRelease()
                         currentPress = null
@@ -147,9 +148,10 @@ public class BasisInteractiveNode(
                     onTap = {
                         if (!enabled) return@detectTapGestures
                         val currentChecked = checked
+                        val toggleHandler = onCheckedChange
 
-                        if (currentChecked != null && onCheckedChange != null) {
-                            onCheckedChange?.invoke(!currentChecked)
+                        if (currentChecked != null && toggleHandler != null) {
+                            toggleHandler.invoke(!currentChecked)
                         } else {
                             onClick?.invoke()
                         }
@@ -174,36 +176,14 @@ public class BasisInteractiveNode(
         checked: Boolean? = this.checked,
         onCheckedChange: ((Boolean) -> Unit)? = this.onCheckedChange,
     ) {
-        var semanticsChanged = updateSemanticsFields(role, onClickLabel, onLongClickLabel, selected, checked)
-        var measurementChanged = false
+        val semanticsChanged =
+            updateInteractionParams(interactionSource, enabled, role, onClickLabel, onLongClickLabel) or
+                updateStateParams(onLongClick, onClick, selected, checked, onCheckedChange)
+        val measurementChanged = this.minTouchTarget != minTouchTarget
 
-        if (this.enabled != enabled) {
-            if (this.enabled && !enabled) {
-                val press = currentPress
-                currentPress = null
-
-                if (press != null && isAttached) {
-                    coroutineScope.launch { activeInteractionSource.emit(PressInteraction.Cancel(press)) }
-                }
-            }
-            this.enabled = enabled
-
-            semanticsChanged = true
-        }
-
-        if (this.interactionSource != interactionSource) {
-            this.interactionSource = interactionSource
-        }
-
-        if (this.minTouchTarget != minTouchTarget) {
+        if (measurementChanged) {
             this.minTouchTarget = minTouchTarget
-
-            measurementChanged = true
         }
-
-        this.onLongClick = onLongClick
-        this.onClick = onClick
-        this.onCheckedChange = onCheckedChange
 
         if (isAttached) {
             pointerInputNode.resetPointerInputHandler()
@@ -217,39 +197,79 @@ public class BasisInteractiveNode(
         }
     }
 
-    private fun updateSemanticsFields(
-        role: Role?,
-        onClickLabel: String?,
-        onLongClickLabel: String?,
-        selected: Boolean?,
-        checked: Boolean?,
+    private fun updateInteractionParams(
+        newSource: MutableInteractionSource?,
+        newEnabled: Boolean,
+        newRole: Role?,
+        newClickLabel: String?,
+        newLongClickLabel: String?,
     ): Boolean {
         var changed = false
-        if (this.role != role) {
-            this.role = role
+
+        if (this.enabled != newEnabled) {
+            if (this.enabled && !newEnabled) {
+                val press = currentPress
+                currentPress = null
+
+                if (press != null && isAttached) {
+                    coroutineScope.launch { activeInteractionSource.emit(PressInteraction.Cancel(press)) }
+                }
+            }
+            this.enabled = newEnabled
 
             changed = true
         }
-        if (this.onClickLabel != onClickLabel) {
-            this.onClickLabel = onClickLabel
+
+        if (this.interactionSource != newSource) {
+            this.interactionSource = newSource
+        }
+
+        if (this.role != newRole) {
+            this.role = newRole
 
             changed = true
         }
-        if (this.onLongClickLabel != onLongClickLabel) {
-            this.onLongClickLabel = onLongClickLabel
+
+        if (this.onClickLabel != newClickLabel) {
+            this.onClickLabel = newClickLabel
 
             changed = true
         }
-        if (this.selected != selected) {
-            this.selected = selected
+
+        if (this.onLongClickLabel != newLongClickLabel) {
+            this.onLongClickLabel = newLongClickLabel
 
             changed = true
         }
-        if (this.checked != checked) {
-            this.checked = checked
+
+        return changed
+    }
+
+    private fun updateStateParams(
+        newLongClick: (() -> Unit)?,
+        newClick: (() -> Unit)?,
+        newSelected: Boolean?,
+        newChecked: Boolean?,
+        newToggle: ((Boolean) -> Unit)?,
+    ): Boolean {
+        var changed = false
+
+        this.onLongClick = newLongClick
+        this.onClick = newClick
+
+        if (this.selected != newSelected) {
+            this.selected = newSelected
 
             changed = true
         }
+
+        if (this.checked != newChecked) {
+            this.checked = newChecked
+
+            changed = true
+        }
+
+        this.onCheckedChange = newToggle
 
         return changed
     }
@@ -370,9 +390,10 @@ public class BasisInteractiveNode(
                 if (press != null) {
                     coroutineScope.launch { activeInteractionSource.emit(PressInteraction.Release(press)) }
                 }
-                val currentChecked = checked
-                if (currentChecked != null && onCheckedChange != null) {
-                    onCheckedChange?.invoke(!currentChecked)
+                val nodeChecked = checked
+                val toggle = onCheckedChange
+                if (nodeChecked != null && toggle != null) {
+                    toggle.invoke(!nodeChecked)
                 } else {
                     onClick?.invoke()
                 }
@@ -398,7 +419,6 @@ public class BasisInteractiveNode(
                 if (press != null) {
                     activeInteractionSource.emit(PressInteraction.Cancel(press))
                 }
-
                 if (keyPress != null) {
                     activeInteractionSource.emit(PressInteraction.Cancel(keyPress))
                 }
@@ -487,8 +507,7 @@ public fun rememberBasisInteractiveNode(
 }
 
 /**
- * Configures the element with unified interactive gesture handling, accessibility semantics,
- * and touch target constraints.
+ * Configures the element with interactive gesture handling, accessibility semantics, and touch constraints.
  *
  * @param interactionSource Optional [MutableInteractionSource] to observe or emit interaction events.
  * @param enabled Whether user interaction is active; when false, gestures and key events are ignored.
