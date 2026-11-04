@@ -58,6 +58,42 @@ public data class OverviewDoc(
     val anatomy: AnatomyDoc,
     val variants: List<VariantDoc> = emptyList(),
     val states: List<StateDoc> = emptyList(),
+    val gallery: List<GalleryEntry> = emptyList(),
+)
+
+/**
+ * Screenshot asset specifications for anatomy and specimen previews.
+ */
+@Serializable
+public data class ScreenshotSpec(
+    val lightUrl: String,
+    val darkUrl: String,
+    val width: Int,
+    val height: Int,
+)
+
+/**
+ * Normalized geometry rectangle for anatomy callout bounds.
+ */
+@Serializable
+public data class GeometryRect(
+    val x: Double,
+    val y: Double,
+    val width: Double,
+    val height: Double,
+)
+
+/**
+ * Screenshot specimen gallery entry for a variant, state, and mode combination.
+ */
+@Serializable
+public data class GalleryEntry(
+    val variant: String,
+    val state: String,
+    val mode: String,
+    val url: String,
+    val width: Int,
+    val height: Int,
 )
 
 /**
@@ -66,6 +102,8 @@ public data class OverviewDoc(
 @Serializable
 public data class AnatomyDoc(
     val parts: List<PartDoc> = emptyList(),
+    val screenshot: ScreenshotSpec? = null,
+    val bounds: Map<String, GeometryRect>? = null,
 )
 
 /**

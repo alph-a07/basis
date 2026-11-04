@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" width="640" height="320">
+  <rect width="640" height="320" fill="#f6f8fa" />
+  
+  <!-- Outer interactive container -->
+  <rect x="160" y="80" width="320" height="160" rx="16" fill="#ffffff" stroke="#d0d7de" stroke-width="1.5" />
+  
+  <!-- State layer (semi-transparent tint conforming to shape) -->
+  <rect x="160" y="80" width="320" height="160" rx="16" fill="#0969da" fill-opacity="0.08" />
+  
+  <!-- Expanding ripple wavefront -->
+  <defs>
+    <radialGradient id="ripple-light" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0969da" stop-opacity="0.22" />
+      <stop offset="65%" stop-color="#0969da" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#0969da" stop-opacity="0.02" />
+    </radialGradient>
+  </defs>
+  <ellipse cx="320" cy="160" rx="60" ry="50" fill="url(#ripple-light)" stroke="#0969da" stroke-width="1" stroke-dasharray="3 3" stroke-opacity="0.4" />
+  
+  <!-- Center content label -->
+  <text x="320" y="165" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#24292f" text-anchor="middle">Interactive Surface</text>
+  <text x="320" y="185" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" fill="#57606a" text-anchor="middle">BasisIndication Feedback</text>
+</svg>

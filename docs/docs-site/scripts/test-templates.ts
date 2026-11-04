@@ -106,7 +106,29 @@ assert(dontItems.length >= 1, 'Don\'t items must render from sidecar');
 const notesItems = buttonOverviewDoc.querySelectorAll('.notes-card .note-item');
 assert(notesItems.length >= 1, 'Implementation notes must render from sidecar');
 
-console.log('✅ Indication Overview tab verified');
+// Anatomy Overlay & Annotated Screenshot
+const anatomyContainer = buttonOverviewDoc.querySelector('.anatomy-container');
+assert(anatomyContainer, 'Anatomy container must render');
+const anatomyLightImg = anatomyContainer.querySelector('.anatomy-img-light');
+assert(anatomyLightImg && anatomyLightImg.getAttribute('src')?.includes('indication-anatomy-light.svg'), 'Anatomy light screenshot must render');
+const anatomyDarkImg = anatomyContainer.querySelector('.anatomy-img-dark');
+assert(anatomyDarkImg && anatomyDarkImg.getAttribute('src')?.includes('indication-anatomy-dark.svg'), 'Anatomy dark screenshot must render');
+const anatomyMarkers = anatomyContainer.querySelectorAll('.anatomy-marker-group');
+assert.strictEqual(anatomyMarkers.length, 3, 'Must render 3 anatomy SVG marker groups (Container, StateLayer, FeedbackWave)');
+const anatomyParts = anatomyContainer.querySelectorAll('.part-card');
+assert.strictEqual(anatomyParts.length, 3, 'Must render 3 anatomy part cards');
+
+// Interaction States & Specimen Gallery
+const stateCards = buttonOverviewDoc.querySelectorAll('.states-grid .state-card');
+assert.strictEqual(stateCards.length, 4, 'Must render 4 interaction state cards (resting, hovered, pressed, focused)');
+const galleryCards = buttonOverviewDoc.querySelectorAll('.gallery-grid .gallery-card');
+assert.strictEqual(galleryCards.length, 8, 'Must render 8 specimen gallery cards (4 states across light/dark)');
+for (const card of Array.from(galleryCards)) {
+  const img = card.querySelector('.gallery-img');
+  assert(img && img.getAttribute('src')?.includes('/assets/components/indication/indication-'), 'Gallery preview image must reference valid asset');
+}
+
+console.log('✅ Indication Overview tab verified (Anatomy & States)');
 
 // --- API Tab ---
 const buttonApiDoc = loadHtml('docs/components/indication/api');

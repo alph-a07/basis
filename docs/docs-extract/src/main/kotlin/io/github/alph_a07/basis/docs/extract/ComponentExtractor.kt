@@ -88,7 +88,10 @@ public class ComponentExtractor(
                 overview =
                     OverviewDoc(
                         quickStartSample = docAnnotation.quickStartSample.trim(),
-                        anatomy = AnatomyDoc(parts = emptyList()),
+                        anatomy = ComponentMetadataCatalog.buildAnatomy(docAnnotation.id),
+                        variants = ComponentMetadataCatalog.buildVariants(docAnnotation.id),
+                        states = ComponentMetadataCatalog.buildStates(docAnnotation.id),
+                        gallery = ComponentMetadataCatalog.buildGallery(docAnnotation.id),
                     ),
                 api = buildComponentApiDoc(docAnnotation, className, content),
                 overrides = OverridesDoc(),
