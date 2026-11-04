@@ -1,0 +1,20 @@
+---
+id: interactive-node
+guidelines:
+  do:
+    - Attach BasisInteractiveNode to custom controls to inherit verified click, select, and toggle interactions.
+    - Connect activeInteractionSource to BasisIndication or focus rings for synchronized feedback.
+  dont:
+    - Do not suppress the 48dp minimum touch target floor unless enclosed within an accessible composite group.
+    - Do not manually duplicate pointer gesture logic or accessibility semantics on interactive surfaces.
+  notes:
+    - BasisInteractiveNode automatically enforces WCAG minimum touch targets and keyboard navigation.
+---
+
+# Interactive Node Guidance
+
+BasisInteractiveNode centralizes shared click, select, and toggle interaction wiring, accessibility semantics, and touch target constraints across the design system.
+
+## Accessibility
+
+BasisInteractiveNode enforces WCAG 2.1 touch target floors (minimum 48dp physical target) and provides built-in keyboard navigation (Enter and Space key activation). Semantics roles and state properties (disabled, selected, toggleable) are automatically registered for screen readers.

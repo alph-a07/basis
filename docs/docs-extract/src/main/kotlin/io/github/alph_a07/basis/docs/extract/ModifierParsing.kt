@@ -43,7 +43,9 @@ internal object ModifierParsing {
 
     fun parseKDocParamTags(kdoc: String): Map<String, String> {
         val result = mutableMapOf<String, String>()
-        val paramRegex = Regex("""@param\s+(\w+)\s+([\s\S]*?)(?=@param|@return|@throws|\*/|$)""")
+        val paramPattern =
+            """@(?:param|property)\s+(\w+)\s+([\s\S]*?)(?=@(?:param|property)|@return|@throws|\*/|$)"""
+        val paramRegex = Regex(paramPattern)
         paramRegex.findAll(kdoc).forEach { match ->
             val name = match.groupValues[1]
             val lines = match.groupValues[2].lines()
@@ -77,7 +79,8 @@ internal object ModifierParsing {
             return null
         }
 
-        val name = token.substring(0, colonIdx).trim()
+        val rawName = token.substring(0, colonIdx).trim()
+        val name = rawName.substringAfterLast(' ')
         val rest = token.substring(colonIdx + 1).trim()
 
         val eqIdx = rest.indexOf('=')

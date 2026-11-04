@@ -64,6 +64,67 @@ public final class io/github/alph_a07/basis/components/foundation/BasisIndicatio
 	public static final fun rememberBasisIndication-euL9pac (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZLandroidx/compose/runtime/Composer;II)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
 }
 
+public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNode : androidx/compose/ui/node/DelegatingNode, androidx/compose/ui/focus/FocusEventModifierNode, androidx/compose/ui/input/key/KeyInputModifierNode, androidx/compose/ui/node/CompositionLocalConsumerModifierNode, androidx/compose/ui/node/LayoutModifierNode, androidx/compose/ui/node/SemanticsModifierNode {
+	public static final field $stable I
+	public fun <init> ()V
+	public synthetic fun <init> (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun applySemantics (Landroidx/compose/ui/semantics/SemanticsPropertyReceiver;)V
+	public final fun getActiveInteractionSource ()Landroidx/compose/foundation/interaction/MutableInteractionSource;
+	public final fun getChecked ()Ljava/lang/Boolean;
+	public final fun getEnabled ()Z
+	public final fun getInteractionSource ()Landroidx/compose/foundation/interaction/MutableInteractionSource;
+	public final fun getMinTouchTarget-D9Ej5fM ()F
+	public final fun getOnCheckedChange ()Lkotlin/jvm/functions/Function1;
+	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnClickLabel ()Ljava/lang/String;
+	public final fun getOnLongClick ()Lkotlin/jvm/functions/Function0;
+	public final fun getOnLongClickLabel ()Ljava/lang/String;
+	public final fun getRole-RLKlGQI ()Landroidx/compose/ui/semantics/Role;
+	public final fun getSelected ()Ljava/lang/Boolean;
+	public fun getShouldClearDescendantSemantics ()Z
+	public fun getShouldMergeDescendantSemantics ()Z
+	public fun isImportantForBounds ()Z
+	public fun maxIntrinsicHeight (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
+	public fun maxIntrinsicWidth (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
+	public fun measure-3p2s80s (Landroidx/compose/ui/layout/MeasureScope;Landroidx/compose/ui/layout/Measurable;J)Landroidx/compose/ui/layout/MeasureResult;
+	public fun minIntrinsicHeight (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
+	public fun minIntrinsicWidth (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
+	public fun onDetach ()V
+	public fun onFocusEvent (Landroidx/compose/ui/focus/FocusState;)V
+	public fun onKeyEvent-ZmokQxo (Landroid/view/KeyEvent;)Z
+	public fun onPreKeyEvent-ZmokQxo (Landroid/view/KeyEvent;)Z
+	public fun onReset ()V
+	public final fun setChecked (Ljava/lang/Boolean;)V
+	public final fun setEnabled (Z)V
+	public final fun setInteractionSource (Landroidx/compose/foundation/interaction/MutableInteractionSource;)V
+	public final fun setMinTouchTarget-0680j_4 (F)V
+	public final fun setOnCheckedChange (Lkotlin/jvm/functions/Function1;)V
+	public final fun setOnClick (Lkotlin/jvm/functions/Function0;)V
+	public final fun setOnClickLabel (Ljava/lang/String;)V
+	public final fun setOnLongClick (Lkotlin/jvm/functions/Function0;)V
+	public final fun setOnLongClickLabel (Ljava/lang/String;)V
+	public final fun setRole-ytANHLE (Landroidx/compose/ui/semantics/Role;)V
+	public final fun setSelected (Ljava/lang/Boolean;)V
+	public final fun update--ghodQ4 (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun update--ghodQ4$default (Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNode;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+}
+
+public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNodeDefaults {
+	public static final field $stable I
+	public static final field DEFAULT_ENABLED Z
+	public static final field INSTANCE Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNodeDefaults;
+	public static final field LONG_PRESS_TIMEOUT_MS J
+	public static final field TAP_TIMEOUT_MS J
+	public final fun getDEFAULT_MIN_TOUCH_TARGET_DP-D9Ej5fM ()F
+}
+
+public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNodeKt {
+	public static final fun basisInteractiveNode-tJ_4DSw (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
+	public static synthetic fun basisInteractiveNode-tJ_4DSw$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun rememberBasisInteractiveNode-FFMhRHc (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNode;
+}
+
 public final class io/github/alph_a07/basis/components/foundation/modifier/BaseModifierKt {
 	public static final fun basisModifier (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 }
