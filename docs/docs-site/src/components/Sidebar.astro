@@ -310,6 +310,35 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
       document.body.style.overflow = 'hidden';
     }
 
+    // Keep the doc page from scrolling when the wheel is used over the sidebar.
+    // The sidebar's own nav area (.sidebar-nav) still scrolls naturally; once it
+    // reaches a scroll boundary the wheel is not allowed to chain up to the page.
+    // Wheeling over any non-scrollable part of the sidebar (header, footer) does
+    // nothing — the page behind the sticky sidebar never scrolls.
+    const lockedSidebars = new WeakSet();
+    function preventPageScrollOverSidebar() {
+      if (!sidebar || lockedSidebars.has(sidebar)) return;
+      lockedSidebars.add(sidebar);
+
+      sidebar.addEventListener(
+        'wheel',
+        (event) => {
+          const nav = (event.target as Element | null)?.closest('.sidebar-nav');
+          if (nav) {
+            const atTop = nav.scrollTop <= 0;
+            const atBottom =
+              Math.ceil(nav.scrollTop + nav.clientHeight) >= nav.scrollHeight;
+            if ((atTop && event.deltaY < 0) || (atBottom && event.deltaY > 0)) {
+              event.preventDefault();
+            }
+            return;
+          }
+          event.preventDefault();
+        },
+        { passive: false },
+      );
+    }
+
     function closeDrawer() {
       if (!sidebar || !backdrop) return;
       sidebar.classList.remove('drawer-open');
@@ -329,6 +358,8 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
 
     closeBtn?.addEventListener('click', closeDrawer);
     backdrop?.addEventListener('click', closeDrawer);
+
+    preventPageScrollOverSidebar();
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sidebar?.classList.contains('drawer-open')) {
@@ -485,6 +516,7 @@ const displayGroups = navGroups.length > 0 ? navGroups : staticGroups;
   .sidebar-nav {
     flex: 1;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 0.75rem 0.65rem;
     scrollbar-width: thin;
     scrollbar-color: var(--docs-border-subtle, #30363d) transparent;
