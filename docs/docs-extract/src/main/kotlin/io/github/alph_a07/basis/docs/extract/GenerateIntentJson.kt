@@ -31,7 +31,7 @@ public fun main(args: Array<String>) {
         if (args.size > 1) {
             args.drop(1).map { File(it) }
         } else {
-            listOf(File("build/docs-model/intent.json"))
+            listOf(File("docs/docs-model/generated/intent.json"))
         }
 
     outputTargets.forEach { file ->

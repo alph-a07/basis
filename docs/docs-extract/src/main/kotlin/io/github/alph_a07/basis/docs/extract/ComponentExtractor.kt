@@ -88,7 +88,11 @@ public class ComponentExtractor(
                 overview =
                     OverviewDoc(
                         quickStartSample = docAnnotation.quickStartSample.trim(),
-                        anatomy = ComponentMetadataCatalog.buildAnatomy(docAnnotation.id),
+                        anatomy =
+                            ComponentMetadataCatalog.buildAnatomy(
+                                docAnnotation.id,
+                                resolveProjectRoot(componentsDir),
+                            ),
                         variants = ComponentMetadataCatalog.buildVariants(docAnnotation.id),
                         states = ComponentMetadataCatalog.buildStates(docAnnotation.id),
                         gallery = ComponentMetadataCatalog.buildGallery(docAnnotation.id),
@@ -171,10 +175,7 @@ public class ComponentExtractor(
 
 private fun extractFactorySignature(content: String): SignatureDoc? {
     val factoryRegex = Regex("""@Composable\s+public fun (\w+)\(([\s\S]*?)\):\s*(\w+)""")
-    val factoryMatch = factoryRegex.find(content)
-    if (factoryMatch == null) {
-        return null
-    }
+    val factoryMatch = factoryRegex.find(content) ?: return null
 
     val funName = factoryMatch.groupValues[1]
     val paramsRaw = factoryMatch.groupValues[2]
@@ -206,10 +207,7 @@ private fun extractFactorySignature(content: String): SignatureDoc? {
 
 private fun extractClassSignature(className: String, content: String): SignatureDoc? {
     val classRegex = Regex("""public (?:data )?class ($className)\(([\s\S]*?)\)""")
-    val classMatch = classRegex.find(content)
-    if (classMatch == null) {
-        return null
-    }
+    val classMatch = classRegex.find(content) ?: return null
 
     val paramsRaw = classMatch.groupValues[2]
     val codeBefore = content.substring(0, classMatch.range.first)
@@ -247,12 +245,8 @@ private fun parseComponentDocAnnotation(content: String): ParsedComponentDocAnno
         Regex("""respectsReducedMotion\s*=\s*(true|false)""").find(content)?.groupValues?.get(1)?.toBoolean()
             ?: true
 
-    val rawSample = Regex("""quickStartSample\s*=\s*("(?:[^"\\]|\\.)*")""").find(content)?.groupValues?.get(1)
-    val quickStartSample =
-        rawSample?.removeSurrounding("\"")
-            ?.replace("\\n", "\n")
-            ?.replace("\\\"", "\"")
-            .orEmpty()
+    val annotationBody = extractAnnotationBody(content)
+    val quickStartSample = extractConcatenatedString(annotationBody, "quickStartSample")
 
     val parsed =
         ParsedComponentDocAnnotation(
@@ -265,6 +259,30 @@ private fun parseComponentDocAnnotation(content: String): ParsedComponentDocAnno
         )
 
     return parsed
+}
+
+private fun extractAnnotationBody(content: String): String {
+    val start = content.indexOf("@BasisComponentDoc(")
+
+    return if (start == -1) {
+        ""
+    } else {
+        val afterOpenParen = content.substring(start + "@BasisComponentDoc(".length)
+        val endIdx = afterOpenParen.indexOf("\npublic")
+
+        if (endIdx == -1) afterOpenParen else afterOpenParen.substring(0, endIdx)
+    }
+}
+
+private fun extractConcatenatedString(annotationBody: String, key: String): String {
+    val marker = "$key ="
+    val idx = annotationBody.indexOf(marker)
+
+    return if (idx == -1) {
+        ""
+    } else {
+        ModifierParsing.parseConcatenatedStrings(annotationBody.substring(idx + marker.length)).trim()
+    }
 }
 
 private fun extractClassName(content: String): String? {

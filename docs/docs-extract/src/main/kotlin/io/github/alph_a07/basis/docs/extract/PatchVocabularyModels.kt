@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Root documentation model for patch vocabulary covering universal fields, extra families, and token ladders.
  *
  * @property schemaVersion Semantic version of the vocabulary schema.
- * @property provenance Origin tag indicating whether this document was generated or fixture.
+ * @property provenance Origin tag indicating document provenance.
  * @property source Git provenance tracking commit metadata.
  * @property universalFields Fields common to the majority of components.
  * @property extraFamilies Family-specific patch fields extending universal styling.

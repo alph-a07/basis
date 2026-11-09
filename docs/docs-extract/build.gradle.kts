@@ -24,8 +24,7 @@ val generateIntentJsonTask =
         mainClass.set("io.github.alph_a07.basis.docs.extract.GenerateIntentJsonKt")
         args(
             rootProject.file("basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/intent").absolutePath,
-            rootProject.file("build/docs-model/intent.json").absolutePath,
-            rootProject.file("docs/docs-model/fixtures/intent.fixture.json").absolutePath,
+            rootProject.file("docs/docs-model/generated/intent.json").absolutePath,
         )
     }
 
@@ -39,8 +38,7 @@ val generatePatchVocabularyTask =
             rootProject.file(
                 "basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/intent/controls/overrides",
             ).absolutePath,
-            rootProject.file("build/docs-model/patch-vocabulary.json").absolutePath,
-            rootProject.file("docs/docs-model/fixtures/patch-vocabulary.fixture.json").absolutePath,
+            rootProject.file("docs/docs-model/generated/patch-vocabulary.json").absolutePath,
         )
     }
 
@@ -54,7 +52,17 @@ val generateComponentsJsonTask =
             rootProject.file(
                 "basis-components/src/main/kotlin/io/github/alph_a07/basis/components",
             ).absolutePath,
-            rootProject.file("build/docs-model/components.json").absolutePath,
-            rootProject.file("docs/docs-model/fixtures/components.fixture.json").absolutePath,
+            rootProject.file("docs/docs-model/generated/components.json").absolutePath,
         )
     }
+
+val generateDocsJsonTask =
+    tasks.register("generateDocsJson") {
+        group = "documentation"
+        description = "Generates all docs-model JSON documents into docs/docs-model/generated."
+        dependsOn(generateIntentJsonTask, generatePatchVocabularyTask, generateComponentsJsonTask)
+    }
+
+tasks.named("assemble") {
+    dependsOn(generateDocsJsonTask)
+}

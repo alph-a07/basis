@@ -65,7 +65,7 @@ private fun resolveOutputTargets(args: Array<String>): List<File> {
         if (args.size > 1) {
             args.drop(1).map { File(it) }
         } else {
-            listOf(File("build/docs-model/components.json"))
+            listOf(File("docs/docs-model/generated/components.json"))
         }
 
     return targets
@@ -77,13 +77,10 @@ private fun writeComponentsTarget(
     components: List<ComponentDocEntry>,
     jsonCodec: Json,
 ) {
-    val isFixture = file.name.endsWith(".fixture.json")
-    val provenance = if (isFixture) "fixture" else "generated"
-
     val generatedDoc =
         ComponentsDocument(
             schemaVersion = "0.2.0",
-            provenance = provenance,
+            provenance = "generated",
             source = SourceCommit(commit = commit),
             components = components,
         )

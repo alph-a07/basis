@@ -31,7 +31,7 @@ public fun main(args: Array<String>) {
         if (args.size > 1) {
             args.drop(1).map { File(it) }
         } else {
-            listOf(File("build/docs-model/patch-vocabulary.json"))
+            listOf(File("docs/docs-model/generated/patch-vocabulary.json"))
         }
 
     outputTargets.forEach { file ->

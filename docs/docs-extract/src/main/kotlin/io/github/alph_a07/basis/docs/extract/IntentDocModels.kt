@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Root documentation model for intent vocabulary mirroring the BasisIntent tree.
  *
  * @property schemaVersion Semantic version of the document schema.
- * @property provenance Origin tag indicating whether this document was generated or fixture.
+ * @property provenance Origin tag indicating document provenance.
  * @property source Git provenance tracking commit metadata.
  * @property identity Brand identity axis choices and constraints.
  * @property mood Preset archetypes and feel knob definitions.
