@@ -49,6 +49,9 @@ jobs:
       - name: Build docs-runtime JS artifacts
         run: ./gradlew :docs-runtime:jsBrowserProductionLibraryDistribution
 
+      - name: Generate docs JSON documents
+        run: ./gradlew :docs:docs-extract:generateDocsJson
+
       - name: Validate docs model and schemas
         run: npm test --workspace @basis/docs-model
 
