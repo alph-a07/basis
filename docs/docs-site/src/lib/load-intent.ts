@@ -15,13 +15,9 @@ function findProjectRoot(): string {
 
 export function loadIntentDoc(): IntentDocument {
   const root = findProjectRoot();
-  const buildPath = path.resolve(root, 'build/docs-model/intent.json');
-  if (fs.existsSync(buildPath)) {
-    return JSON.parse(fs.readFileSync(buildPath, 'utf-8')) as IntentDocument;
+  const filePath = path.resolve(root, 'docs/docs-model/generated/intent.json');
+  if (fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as IntentDocument;
   }
-  const fixturePath = path.resolve(root, 'docs/docs-model/fixtures/intent.fixture.json');
-  if (fs.existsSync(fixturePath)) {
-    return JSON.parse(fs.readFileSync(fixturePath, 'utf-8')) as IntentDocument;
-  }
-  throw new Error(`Neither generated ${buildPath} nor fixture ${fixturePath} exists.`);
+  throw new Error(`Generated ${filePath} does not exist. Run './gradlew :docs:docs-extract:generateDocsJson' first.`);
 }

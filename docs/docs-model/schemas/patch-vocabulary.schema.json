@@ -20,7 +20,7 @@
     },
     "provenance": {
       "type": "string",
-      "enum": ["generated", "fixture"],
+      "enum": ["generated"],
       "description": "Origin of the document."
     },
     "source": {

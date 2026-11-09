@@ -3,28 +3,23 @@ import path from 'node:path';
 
 function checkProvenance() {
   const rootDir = path.resolve(__dirname, '..');
-  const fixturesDir = path.join(rootDir, 'fixtures');
-  const isProd = process.env.DOCS_ENV === 'production' || process.env.NODE_ENV === 'production';
+  const generatedDir = path.join(rootDir, 'generated');
 
-  console.log(`Checking provenance (mode: ${isProd ? 'PRODUCTION' : 'development'})...`);
+  console.log('Checking provenance (strictly "generated")...');
 
-  const filesToCheck = [
-    path.join(fixturesDir, 'components.fixture.json'),
-    path.join(fixturesDir, 'intent.fixture.json'),
-    path.join(fixturesDir, 'patch-vocabulary.fixture.json'),
-  ];
-
+  const docNames = ['components.json', 'intent.json', 'patch-vocabulary.json'];
   let violations = 0;
 
-  for (const filePath of filesToCheck) {
+  for (const docName of docNames) {
+    const filePath = path.join(generatedDir, docName);
     if (!fs.existsSync(filePath)) continue;
 
     const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     const fileName = path.basename(filePath);
 
-    if (isProd && content.provenance === 'fixture') {
+    if (content.provenance !== 'generated') {
       console.error(
-        `❌ [provenance] ${fileName} has provenance="fixture" which is strictly forbidden in production builds!`
+        `❌ [provenance] ${fileName} has provenance="${content.provenance}", but only "generated" is allowed!`
       );
       violations++;
     } else {

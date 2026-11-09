@@ -8,28 +8,22 @@ import { SemanticValidator } from '@basis/docs-model/validator';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const schemasDir = path.resolve(currentDir, '../../docs-model/schemas');
-const fixturesDir = path.resolve(currentDir, '../../docs-model/fixtures');
-const buildModelDir = path.resolve(currentDir, '../../../build/docs-model');
+const generatedModelDir = path.resolve(currentDir, '../../docs-model/generated');
 
-function loadJsonWithFallback(filename: string): any {
-  const buildPath = path.join(buildModelDir, filename);
-  if (fs.existsSync(buildPath)) {
-    return JSON.parse(fs.readFileSync(buildPath, 'utf-8'));
+function loadJson(filename: string): any {
+  const filePath = path.join(generatedModelDir, filename);
+  if (fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
   }
-  const fixtureName = filename.replace('.json', '.fixture.json');
-  const fixturePath = path.join(fixturesDir, fixtureName);
-  if (fs.existsSync(fixturePath)) {
-    return JSON.parse(fs.readFileSync(fixturePath, 'utf-8'));
-  }
-  throw new Error(`Neither generated ${buildPath} nor fixture ${fixturePath} exists.`);
+  throw new Error(`Generated ${filePath} does not exist. Run './gradlew :docs:docs-extract:generateDocsJson' first.`);
 }
 
 const validator = new SemanticValidator(schemasDir);
 
 const components = defineCollection({
   loader: async () => {
-    const componentsDoc = loadJsonWithFallback('components.json');
-    const patchVocabDoc = loadJsonWithFallback('patch-vocabulary.json');
+    const componentsDoc = loadJson('components.json');
+    const patchVocabDoc = loadJson('patch-vocabulary.json');
 
     const result = validator.validateComponents(componentsDoc, patchVocabDoc);
     if (!result.ok) {
@@ -49,7 +43,7 @@ const components = defineCollection({
 
 const intent = defineCollection({
   loader: async () => {
-    const intentDoc = loadJsonWithFallback('intent.json');
+    const intentDoc = loadJson('intent.json');
 
     const result = validator.validateIntent(intentDoc);
     if (!result.ok) {
@@ -70,7 +64,7 @@ const intent = defineCollection({
 const sidecars = defineCollection({
   loader: glob({
     pattern: '**/*.sidecar.mdx',
-    base: path.resolve(currentDir, '../../docs-model/fixtures'),
+    base: path.resolve(currentDir, '../../docs-model/sidecars'),
   }),
   schema: z.object({
     id: z.string(),

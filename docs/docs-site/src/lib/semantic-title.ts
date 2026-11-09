@@ -4,7 +4,7 @@
  * and formats camelCase modifiers into naturally readable title-case words.
  *
  * Examples:
- * - 'BasisIndication' -> 'Indication'
+ * - 'BasisCard' -> 'Card'
  * - 'BasisButton' -> 'Button'
  * - 'basisBorder' -> 'Border'
  * - 'basisFocusRing' -> 'Focus Ring'

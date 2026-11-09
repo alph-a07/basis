@@ -10,7 +10,7 @@ console.log('Testing that validating loader catches invalid data...');
 
 const invalidDoc = {
   schemaVersion: '0.2.0',
-  provenance: 'fixture',
+  provenance: 'generated',
   source: { commit: 'test' },
   components: [
     {

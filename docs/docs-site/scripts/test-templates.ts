@@ -25,169 +25,20 @@ function loadHtml(relativeRoute: string): Document {
 }
 
 // -------------------------------------------------------------
-// 1. Component Tests (BasisIndication) across all 4 tabs
+// 1. Guide & Theming Templates
 // -------------------------------------------------------------
 
-const hasComponents = fs.existsSync(path.join(distDir, 'docs/components/indication/index.html'));
+console.log('Verifying Guide templates...');
 
-if (hasComponents) {
-  console.log('Testing BasisIndication across all 4 route-per-tab pages...');
+const overviewDoc = loadHtml('docs/getting-started/overview');
+const overviewTitle = overviewDoc.querySelector('h1');
+assert(overviewTitle && overviewTitle.textContent?.includes('Overview'), 'Overview page title must render');
+console.log('✅ Getting Started Overview template verified');
 
-// --- Overview Tab ---
-const buttonOverviewDoc = loadHtml('docs/components/indication');
-
-// Title & Meta
-const titleEl = buttonOverviewDoc.querySelector('.component-title');
-assert(titleEl && titleEl.textContent?.includes('Indication'), 'Indication semantic title must render');
-
-// Lifecycle Chips
-const statusChip = buttonOverviewDoc.querySelector('.status-chip');
-assert(statusChip && statusChip.textContent?.includes('stable'), 'Lifecycle status must be stable');
-
-const gradleFile = path.resolve(__dirname, '../../../basis-components/build.gradle.kts');
-const gradleContent = fs.readFileSync(gradleFile, 'utf-8');
-const versionMatch = gradleContent.match(/version\s*=\s*["']([^"']+)["']/);
-const expectedVersion = versionMatch ? `v${versionMatch[1]}` : 'v0.1.0';
-
-const versionChip = buttonOverviewDoc.querySelector('.version-chip');
-assert(versionChip && versionChip.textContent?.includes(expectedVersion), `Version chip must show ${expectedVersion}`);
-
-const familyChip = buttonOverviewDoc.querySelector('.family-chip');
-assert(familyChip && familyChip.textContent?.includes('Foundation'), 'Family chip must show Foundation');
-
-const sourceLink = buttonOverviewDoc.querySelector('.source-link');
-assert(sourceLink && sourceLink.getAttribute('href')?.includes('BasisIndication.kt'), 'Source link must point to BasisIndication.kt');
-
-// Sidebar component nesting in FOUNDATION -> Components
-const foundationNavGroup = Array.from(buttonOverviewDoc.querySelectorAll('.nav-group')).find((g) => {
-  return g.querySelector('.nav-group-title')?.textContent?.trim().toLowerCase() === 'foundation';
-});
-assert(foundationNavGroup, 'Sidebar must contain FOUNDATION section');
-
-const componentsSubgroup = foundationNavGroup.querySelector('.nav-subgroup[data-family="components"]');
-assert(componentsSubgroup, 'FOUNDATION section must contain Components subgroup');
-assert.strictEqual(componentsSubgroup.querySelector('.nav-subgroup-label')?.textContent?.trim(), 'Components');
-
-const indicationLink = componentsSubgroup.querySelector('a.nav-link[href="/docs/components/indication"]');
-assert(indicationLink, 'FOUNDATION -> Components must contain link to /docs/components/indication');
-assert(indicationLink.textContent?.includes('Indication'), 'Indication link must have semantic title Indication');
-assert(!indicationLink.textContent?.includes('BasisIndication'), 'Indication link must not have Basis prefix');
-
-// Ensure root COMPONENTS section does not contain Indication (or is absent when 0 T1 components exist)
-const rootComponentsGroup = buttonOverviewDoc.querySelector('.components-group');
-if (rootComponentsGroup) {
-  const componentLinks = Array.from(rootComponentsGroup.querySelectorAll('a.nav-link'));
-  const hasIndication = componentLinks.some((l) => l.getAttribute('href')?.includes('indication'));
-  assert(!hasIndication, 'Foundational Indication component must not be present in root Components group');
-}
-
-// Tabs navigation
-const tabsNav = buttonOverviewDoc.querySelector('.component-tabs');
-assert(tabsNav, 'Component tabs navigation must render');
-const activeTabOverview = tabsNav.querySelector('a.active[aria-current="page"]');
-assert(activeTabOverview && activeTabOverview.textContent?.trim() === 'Overview', 'Overview tab must be active');
-
-// Quick Start CodeBlock & Copy Button
-const quickStartContainer = buttonOverviewDoc.querySelector('[data-code-block]');
-assert(quickStartContainer, 'Quick start code block container must render');
-const quickStartBlock = quickStartContainer.querySelector('.code-viewport pre code');
-assert(quickStartBlock && quickStartBlock.textContent?.includes('rememberBasisIndication'), 'Quick start code block must render highlighted code');
-
-const copyButton = quickStartContainer.querySelector('.copy-button');
-assert(copyButton, 'Codeblock copy button must render');
-assert.strictEqual(copyButton.getAttribute('aria-label'), 'Copy code to clipboard');
-assert(copyButton.getAttribute('data-code')?.includes('rememberBasisIndication'), 'Copy button must contain encoded code payload');
-
-// Usage Guidelines (from sidecar)
-const doItems = buttonOverviewDoc.querySelectorAll('.do-card .guideline-item');
-assert(doItems.length >= 1, 'Do items must render from sidecar');
-const dontItems = buttonOverviewDoc.querySelectorAll('.dont-card .guideline-item');
-assert(dontItems.length >= 1, 'Don\'t items must render from sidecar');
-const notesItems = buttonOverviewDoc.querySelectorAll('.notes-card .note-item');
-assert(notesItems.length >= 1, 'Implementation notes must render from sidecar');
-
-// Anatomy Overlay & Annotated Screenshot
-const anatomyContainer = buttonOverviewDoc.querySelector('.anatomy-container');
-assert(anatomyContainer, 'Anatomy container must render');
-const anatomyLightImg = anatomyContainer.querySelector('.anatomy-img-light');
-assert(anatomyLightImg && anatomyLightImg.getAttribute('src')?.includes('indication-anatomy-light.svg'), 'Anatomy light screenshot must render');
-const anatomyDarkImg = anatomyContainer.querySelector('.anatomy-img-dark');
-assert(anatomyDarkImg && anatomyDarkImg.getAttribute('src')?.includes('indication-anatomy-dark.svg'), 'Anatomy dark screenshot must render');
-const anatomyMarkers = anatomyContainer.querySelectorAll('.anatomy-marker-group');
-assert.strictEqual(anatomyMarkers.length, 3, 'Must render 3 anatomy SVG marker groups (Container, StateLayer, FeedbackWave)');
-const anatomyParts = anatomyContainer.querySelectorAll('.part-card');
-assert.strictEqual(anatomyParts.length, 3, 'Must render 3 anatomy part cards');
-
-// Interaction States & Specimen Gallery
-const stateCards = buttonOverviewDoc.querySelectorAll('.states-grid .state-card');
-assert.strictEqual(stateCards.length, 4, 'Must render 4 interaction state cards (resting, hovered, pressed, focused)');
-const galleryCards = buttonOverviewDoc.querySelectorAll('.gallery-grid .gallery-card');
-assert.strictEqual(galleryCards.length, 8, 'Must render 8 specimen gallery cards (4 states across light/dark)');
-for (const card of Array.from(galleryCards)) {
-  const img = card.querySelector('.gallery-img');
-  assert(img && img.getAttribute('src')?.includes('/assets/components/indication/indication-'), 'Gallery preview image must reference valid asset');
-}
-
-console.log('✅ Indication Overview tab verified (Anatomy & States)');
-
-// --- API Tab ---
-const buttonApiDoc = loadHtml('docs/components/indication/api');
-
-const activeTabApi = buttonApiDoc.querySelector('.component-tabs a.active[aria-current="page"]');
-assert(activeTabApi && activeTabApi.textContent?.trim() === 'API', 'API tab must be active on /api route');
-
-const declarationBlock = buttonApiDoc.querySelector('.signature-container .code-viewport pre code');
-assert(declarationBlock && declarationBlock.textContent?.includes('rememberBasisIndication'), 'Declaration must render in highlighted CodeBlock');
-
-const apiCopyButton = buttonApiDoc.querySelector('.signature-container .copy-button');
-assert(apiCopyButton, 'API signature copy button must render');
-
-// Table layout & column widths (fit tables to width)
-const tableResponsive = buttonApiDoc.querySelector('.table-responsive');
-assert(tableResponsive, 'Table responsive container must render');
-
-const paramRows = buttonApiDoc.querySelectorAll('.params-table tbody tr');
-assert(paramRows.length >= 4, 'Parameters table must render parameter rows');
-
-console.log('✅ Indication API tab verified');
-
-// --- Overrides Tab ---
-const buttonOverridesDoc = loadHtml('docs/components/indication/overrides');
-
-const activeTabOverrides = buttonOverridesDoc.querySelector('.component-tabs a.active[aria-current="page"]');
-assert(activeTabOverrides && activeTabOverrides.textContent?.trim() === 'Overrides', 'Overrides tab must be active');
-
-console.log('✅ Indication Overrides tab verified');
-
-// --- Accessibility Tab ---
-const buttonA11yDoc = loadHtml('docs/components/indication/accessibility');
-
-const activeTabA11y = buttonA11yDoc.querySelector('.component-tabs a.active[aria-current="page"]');
-assert(activeTabA11y && activeTabA11y.textContent?.trim() === 'Accessibility', 'Accessibility tab must be active');
-
-const reportCard = buttonA11yDoc.querySelector('.report-card');
-assert(reportCard, 'Automated test report card must render');
-const reportStatus = reportCard.querySelector('.report-status-badge');
-assert(reportStatus && reportStatus.textContent?.includes('PASS'), 'Report status must be PASS');
-
-const narrativeBlock = buttonA11yDoc.querySelector('.narrative-block');
-assert(narrativeBlock && narrativeBlock.textContent?.includes('WCAG 2.1'), 'Narrative accessibility text from sidecar must render');
-
-console.log('✅ Indication Accessibility tab verified');
-} else {
-  console.log('ℹ️ Clean separation: Non-developed components omitted from docs site as expected.');
-  console.log('Verifying Guide templates...');
-
-  const overviewDoc = loadHtml('docs/getting-started/overview');
-  const overviewTitle = overviewDoc.querySelector('h1');
-  assert(overviewTitle && overviewTitle.textContent?.includes('Overview'), 'Overview page title must render');
-  console.log('✅ Getting Started Overview template verified');
-
-  const setBrandDoc = loadHtml('docs/theming/set-brand');
-  const setBrandTitle = setBrandDoc.querySelector('h1');
-  assert(setBrandTitle && setBrandTitle.textContent?.includes('Set your brand'), 'Set your brand page title must render');
-  console.log('✅ Theming template verified');
-}
+const setBrandDoc = loadHtml('docs/theming/set-brand');
+const setBrandTitle = setBrandDoc.querySelector('h1');
+assert(setBrandTitle && setBrandTitle.textContent?.includes('Set your brand'), 'Set your brand page title must render');
+console.log('✅ Theming template verified');
 
 // -------------------------------------------------------------
 // 3. Foundation Modifiers Tests
