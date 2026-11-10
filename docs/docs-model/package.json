@@ -10,12 +10,12 @@
     "./validator": "./scripts/semantic-validator.ts"
   },
   "scripts": {
-    "generate:types": "tsx scripts/generate-types.ts",
-    "prebuild": "npm run generate:types",
+    "generate:types": "node ../../scripts/basis-npm-runner.mjs --label docs-model:generate:types -- tsx scripts/generate-types.ts",
+    "prebuild": "node ../../scripts/basis-npm-runner.mjs --label docs-model:prebuild -- npm run generate:types",
     "validate": "tsx scripts/validate.ts",
     "validate:negative": "tsx scripts/validate-negative.ts",
     "check:provenance": "tsx scripts/check-provenance.ts",
-    "test": "npm run validate && npm run validate:negative && npm run check:provenance"
+    "test": "node ../../scripts/basis-npm-runner.mjs --label docs-model:test -- sh -c 'npm run validate && npm run validate:negative && npm run check:provenance'"
   },
   "devDependencies": {
     "@types/node": "22.13.0",

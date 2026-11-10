@@ -5,14 +5,14 @@
   "private": true,
   "scripts": {
     "dev": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro dev",
-    "generate:theme": "tsx scripts/generate-theme.ts && tsx scripts/extract-snippets.ts",
-    "generate:token-index": "tsx scripts/generate-token-index.ts",
-    "copy-runtime": "tsx scripts/copy-runtime.ts",
-    "prebuild": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime",
-    "build": "npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro build && pagefind --site dist && NODE_ENV=production tsx scripts/generate-sitemap.ts",
+    "generate:theme": "node ../../scripts/basis-npm-runner.mjs --label docs-site:generate:theme -- sh -c 'tsx scripts/generate-theme.ts && tsx scripts/extract-snippets.ts'",
+    "generate:token-index": "node ../../scripts/basis-npm-runner.mjs --label docs-site:generate:token-index -- tsx scripts/generate-token-index.ts",
+    "copy-runtime": "node ../../scripts/basis-npm-runner.mjs --label docs-site:copy-runtime -- tsx scripts/copy-runtime.ts",
+    "prebuild": "node ../../scripts/basis-npm-runner.mjs --label docs-site:prebuild -- sh -c 'npm run generate:theme && npm run generate:token-index && npm run copy-runtime'",
+    "build": "node ../../scripts/basis-npm-runner.mjs --label docs-site:build -- sh -c 'npm run generate:theme && npm run generate:token-index && npm run copy-runtime && astro build && pagefind --site dist && NODE_ENV=production tsx scripts/generate-sitemap.ts'",
     "preview": "astro preview",
-    "check": "npm run generate:theme && npm run generate:token-index && astro check",
-    "generate:fonts-catalog": "tsx scripts/generate-fonts-catalog.ts",
+    "check": "node ../../scripts/basis-npm-runner.mjs --label docs-site:check -- sh -c 'npm run generate:theme && npm run generate:token-index && astro check'",
+    "generate:fonts-catalog": "node ../../scripts/basis-npm-runner.mjs --label docs-site:generate:fonts-catalog -- tsx scripts/generate-fonts-catalog.ts",
     "test:loader": "tsx scripts/test-loader-validation.ts",
     "test:snippets-sync": "tsx scripts/test-snippets-sync.ts",
     "test:theme": "tsx scripts/test-theme-resolution.ts",
@@ -26,7 +26,7 @@
     "test:landing": "tsx scripts/test-landing.ts",
     "test:studio-intent": "tsx scripts/test-studio-intent.ts",
     "test:studio": "npm run generate:token-index && tsx src/studio/__tests__/plumbing.test.ts && tsx src/studio/__tests__/coverage.test.ts && tsx src/studio/__tests__/effectiveness.test.ts && tsx src/studio/__tests__/tokenCoverage.test.ts && tsx src/studio/__tests__/scene-invariance.test.ts && tsx src/studio/__tests__/annotate.test.ts && tsx src/studio/__tests__/scope-check.test.ts && tsx src/studio/__tests__/tokensPreviewCoverage.test.ts && tsx src/studio/__tests__/sync.test.ts && tsx src/studio/__tests__/locality.test.ts && tsx src/studio/__tests__/responsive.test.ts && tsx src/studio/__tests__/editorSupport.test.ts",
-    "test": "tsx scripts/test-loader-validation.ts && tsx scripts/test-snippets-sync.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts && tsx scripts/test-landing.ts && tsx scripts/test-studio-intent.ts && npm run test:studio"
+    "test": "node ../../scripts/basis-npm-runner.mjs --label docs-site:test -- sh -c 'tsx scripts/test-loader-validation.ts && tsx scripts/test-snippets-sync.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts && tsx scripts/test-landing.ts && tsx scripts/test-studio-intent.ts && npm run test:studio'"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",
