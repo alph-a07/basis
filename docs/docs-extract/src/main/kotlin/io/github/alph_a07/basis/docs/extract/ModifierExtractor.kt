@@ -66,7 +66,7 @@ public class ModifierExtractor(
                 lifecycle = LifecycleDoc(status = "stable", addedIn = "0.1.0"),
                 summary = summary,
                 description = description,
-                packageName = "io.github.alph_a07.basis.components.foundation.modifier",
+                packageName = "io.github.alph_a07.basis.components.modifiers",
                 sourceUrl = buildSourceUrl(commit, file.name),
                 overview =
                     OverviewDoc(
@@ -84,7 +84,7 @@ public class ModifierExtractor(
     private fun buildSourceUrl(commit: String, fileName: String): String {
         val url =
             "https://github.com/alph-a07/basis/blob/$commit/basis-components/src/main/kotlin/" +
-                "io/github/alph_a07/basis/components/foundation/modifier/$fileName"
+                "io/github/alph_a07/basis/components/modifiers/$fileName"
 
         return url
     }
@@ -173,7 +173,14 @@ private fun extractKeyboardNavigation(role: String, id: String): List<String> {
         when (role) {
             "Button", "RadioButton" -> listOf("Space", "Enter")
             "Checkbox" -> listOf("Space")
-            else -> if (id == "basis-focus-ring") listOf("Tab", "ArrowKeys", "D-Pad") else emptyList()
+            else ->
+                if (id == "basis-focus-ring" ||
+                    id == "basis-focusable"
+                ) {
+                    listOf("Tab", "ArrowKeys", "D-Pad")
+                } else {
+                    emptyList()
+                }
         }
 
     return nav
@@ -185,8 +192,10 @@ private fun extractA11yChecks(docAnnotation: ParsedDocAnnotation): List<String> 
             if (docAnnotation.touchTargetEnforced) add("ATF-TouchTarget-48dp")
             if (docAnnotation.role != "None") add("Compose-Semantics-${docAnnotation.role}")
             if (docAnnotation.id == "basis-focus-ring") add("WCAG-Focus-Appearance-3:1")
+            if (docAnnotation.id == "basis-focusable") add("WCAG-Focus-Appearance-3:1")
             if (docAnnotation.id == "basis-surface") add("surface-contrast-compliance")
             if (docAnnotation.id == "basis-border") add("border-decorative-semantics")
+            if (docAnnotation.id == "basis-clip") add("clip-shape-boundary")
             if (docAnnotation.id == "basis-clear-and-set-semantics") add("semantics-isolation")
             if (docAnnotation.id == "basis-semantics") add("semantics-tree-integrity")
             if (docAnnotation.id == "basis-indication") add("State-Layer-Contrast")

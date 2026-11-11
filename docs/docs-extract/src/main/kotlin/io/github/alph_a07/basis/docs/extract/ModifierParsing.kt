@@ -166,8 +166,7 @@ internal object ModifierParsing {
         }
 
         val desc = descLines.joinToString(" ").trim()
-        val cleanDesc = KDocParser.stripBracketLinks(desc).trim()
 
-        return cleanDesc
+        return desc
     }
 }

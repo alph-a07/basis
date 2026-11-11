@@ -5,21 +5,8 @@ package io.github.alph_a07.basis.docs.extract
  */
 public object KDocParser {
 
-    private val bracketLinkRegex = Regex("""\[([^]]+)]""")
     private val knobTowardRegex = Regex("""(\w[\w-]*)\s+toward\s+(\w[\w-]*)(?:[;.]|$)""")
     private val propertyTagRegex = Regex("""@property\s+(\w+)\s+([\s\S]*?)(?=@property|@param|@return|@throws|\*/|$)""")
-
-    /**
-     * Cleans bracket syntax from KDoc references into plain text.
-     *
-     * @param text Raw KDoc documentation string.
-     * @return Documentation string with `[Reference]` replaced by `Reference`.
-     */
-    public fun stripBracketLinks(text: String): String = bracketLinkRegex.replace(text) { matchResult ->
-        val inner = matchResult.groupValues[1]
-
-        inner.substringAfterLast('.').substringAfterLast('#')
-    }
 
     /**
      * Extracts the first sentence from a documentation block.
@@ -28,7 +15,7 @@ public object KDocParser {
      * @return First sentence ending with a period, or entire string trimmed.
      */
     public fun extractFirstSentence(text: String): String {
-        val clean = stripBracketLinks(text).trim()
+        val clean = text.trim()
         val parts = clean.split(". ")
         var accumulated = ""
 

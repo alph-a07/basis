@@ -21,7 +21,7 @@ public fun main(args: Array<String>) {
         if (inputDir.name == "modifier") {
             inputDir
         } else {
-            File(inputDir, "foundation/modifier").takeIf { it.exists() } ?: inputDir
+            File(inputDir, "modifiers").takeIf { it.exists() } ?: inputDir
         }
 
     val componentsDir =

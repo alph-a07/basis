@@ -193,16 +193,13 @@ private fun extractFactorySignature(content: String): SignatureDoc? {
                 "    ${p.name}: ${p.type}$defaultPart"
             } + "\n): $returnType"
 
-    val sig =
-        SignatureDoc(
-            name = funName,
-            declaration = decl,
-            parameters = params,
-            returnType = returnType,
-            kdoc = funKDoc,
-        )
-
-    return sig
+    return SignatureDoc(
+        name = funName,
+        declaration = decl,
+        parameters = params,
+        returnType = returnType,
+        kdoc = funKDoc,
+    )
 }
 
 private fun extractClassSignature(className: String, content: String): SignatureDoc? {
@@ -223,16 +220,13 @@ private fun extractClassSignature(className: String, content: String): Signature
                 "    val ${p.name}: ${p.type}$defaultPart"
             } + "\n)"
 
-    val sig =
-        SignatureDoc(
-            name = className,
-            declaration = decl,
-            parameters = params,
-            returnType = className,
-            kdoc = classKDoc,
-        )
-
-    return sig
+    return SignatureDoc(
+        name = className,
+        declaration = decl,
+        parameters = params,
+        returnType = className,
+        kdoc = classKDoc,
+    )
 }
 
 private fun parseComponentDocAnnotation(content: String): ParsedComponentDocAnnotation {
@@ -305,5 +299,5 @@ private fun extractClassKDoc(content: String, className: String): String {
 private fun extractPackageName(content: String): String {
     val match = Regex("""package\s+([\w.]+)""").find(content)
 
-    return match?.groupValues?.get(1) ?: "io.github.alph_a07.basis.components.foundation"
+    return match?.groupValues?.get(1) ?: "io.github.alph_a07.basis.components.primitives"
 }
