@@ -24,9 +24,10 @@
     "check:specimens": "tsx scripts/check-specimen-vars.ts",
     "test:specimens": "tsx scripts/test-specimens.ts",
     "test:landing": "tsx scripts/test-landing.ts",
+    "test:kdoc": "tsx scripts/test-format-kdoc.ts",
     "test:studio-intent": "tsx scripts/test-studio-intent.ts",
     "test:studio": "npm run generate:token-index && tsx src/studio/__tests__/plumbing.test.ts && tsx src/studio/__tests__/coverage.test.ts && tsx src/studio/__tests__/effectiveness.test.ts && tsx src/studio/__tests__/tokenCoverage.test.ts && tsx src/studio/__tests__/scene-invariance.test.ts && tsx src/studio/__tests__/annotate.test.ts && tsx src/studio/__tests__/scope-check.test.ts && tsx src/studio/__tests__/tokensPreviewCoverage.test.ts && tsx src/studio/__tests__/sync.test.ts && tsx src/studio/__tests__/locality.test.ts && tsx src/studio/__tests__/responsive.test.ts && tsx src/studio/__tests__/editorSupport.test.ts",
-    "test": "node ../../scripts/basis-npm-runner.mjs --label docs-site:test -- sh -c 'tsx scripts/test-loader-validation.ts && tsx scripts/test-snippets-sync.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts && tsx scripts/test-landing.ts && tsx scripts/test-studio-intent.ts && npm run test:studio'"
+    "test": "node ../../scripts/basis-npm-runner.mjs --label docs-site:test -- sh -c 'tsx scripts/test-kdoc.ts 2>/dev/null || tsx scripts/test-format-kdoc.ts && tsx scripts/test-loader-validation.ts && tsx scripts/test-snippets-sync.ts && npm run build && tsx scripts/test-theme-resolution.ts && tsx scripts/test-templates.ts && tsx scripts/test-a11y-layout.ts && tsx scripts/test-design-pass.ts && tsx scripts/test-link-checker.ts && tsx scripts/test-control-generator.ts && tsx scripts/test-specimens.ts && tsx scripts/test-landing.ts && tsx scripts/test-studio-intent.ts && npm run test:studio'"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.2",
