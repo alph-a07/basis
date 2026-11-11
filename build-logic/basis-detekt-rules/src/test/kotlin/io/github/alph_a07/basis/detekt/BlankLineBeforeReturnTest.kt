@@ -145,4 +145,42 @@ class BlankLineBeforeReturnTest {
 
         assertThat(subject.lint(code)).hasSize(1)
     }
+
+    @Test
+    fun `does not report a return on the right hand side of an elvis operator`() {
+        val code =
+            """
+            class A {
+                fun f(item: String?): String {
+                    val resolved = item ?: return ""
+
+                    return resolved
+                }
+            }
+            """.trimIndent()
+
+        assertThat(subject.lint(code)).isEmpty()
+    }
+
+    @Test
+    fun `does not report elvis return in obtainOutline`() {
+        val code =
+            """
+            class IndicationNode {
+                var shape: Any? = null
+
+                private fun obtainOutline(): Any? {
+                    val currentShape = shape ?: return null
+
+                    if (shape == null) {
+                        return null
+                    }
+
+                    return null
+                }
+            }
+            """.trimIndent()
+
+        assertThat(subject.lint(code)).isEmpty()
+    }
 }

@@ -8,6 +8,8 @@ import io.gitlab.arturbosch.detekt.api.Issue
 import io.gitlab.arturbosch.detekt.api.Rule
 import io.gitlab.arturbosch.detekt.api.Severity
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace
+import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.psi.KtBinaryExpression
 import org.jetbrains.kotlin.psi.KtBlockExpression
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtIfExpression
@@ -42,6 +44,11 @@ class BlankLineBeforeReturn(config: Config) : Rule(config) {
             return
         }
 
+        if (isRhsOfElvisExpression(expression)) {
+            // A return on the right-hand side of an Elvis operator is an expression, not a standalone statement.
+            return
+        }
+
         if (isFirstStatementOfBlock(expression)) {
             // The return is the first statement of its block; there is no statement above it.
             return
@@ -66,6 +73,11 @@ class BlankLineBeforeReturn(config: Config) : Rule(config) {
             return parent.statements.firstOrNull() === expression
         }
         return false
+    }
+
+    private fun isRhsOfElvisExpression(expression: KtReturnExpression): Boolean {
+        val parent = expression.parent
+        return parent is KtBinaryExpression && parent.operationToken == KtTokens.ELVIS && parent.right === expression
     }
 
     private fun isOnlyStatementOfControlFlowBody(expression: KtReturnExpression): Boolean {
