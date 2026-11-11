@@ -406,14 +406,15 @@ export function formatKdoc(text: string | null | undefined): string {
     const cleanTargetBase = cleanTarget.replace(/\?$/, '');
     const info = SYMBOL_MAP[cleanTarget] || SYMBOL_MAP[cleanTargetBase];
     const safeLabel = escapeHtml(label);
-    if (info) {
+    if (info && info.url) {
       const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
       const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
       const titleAttr = info.title ? ` title="${escapeHtml(info.title)}"` : '';
       const icon = isExternal ? getExternalIconSvg() : '';
       return pushToken(`<a href="${info.url}" class="kdoc-symbol-link${isExternal ? ' external' : ''}"${externalAttrs}${titleAttr}><code>${safeLabel}</code>${icon}</a>`);
     }
-    return pushToken(`<code class="kdoc-symbol-ref">${safeLabel}</code>`);
+    const titleAttr = info?.title ? ` title="${escapeHtml(info.title)}"` : '';
+    return pushToken(`<code class="kdoc-symbol-ref"${titleAttr}>${safeLabel}</code>`);
   });
 
   // 3. KDoc single-part references: [Symbol] or [Symbol?]
@@ -432,11 +433,13 @@ export function formatKdoc(text: string | null | undefined): string {
       : (SYMBOL_MAP[cleanWithoutParens] ? cleanWithoutParens : (SYMBOL_MAP[cleanBase] ? cleanBase : null));
     if (matchedKey) {
       const info = SYMBOL_MAP[matchedKey];
-      const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
-      const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
-      const titleAttr = info.title ? ` title="${escapeHtml(info.title)}"` : '';
-      const icon = isExternal ? getExternalIconSvg() : '';
-      return pushToken(`<a href="${info.url}" class="kdoc-symbol-link${isExternal ? ' external' : ''}"${externalAttrs}${titleAttr}><code>${escapeHtml(clean)}</code>${icon}</a>`);
+      if (info && info.url) {
+        const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
+        const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
+        const titleAttr = info.title ? ` title="${escapeHtml(info.title)}"` : '';
+        const icon = isExternal ? getExternalIconSvg() : '';
+        return pushToken(`<a href="${info.url}" class="kdoc-symbol-link${isExternal ? ' external' : ''}"${externalAttrs}${titleAttr}><code>${escapeHtml(clean)}</code>${icon}</a>`);
+      }
     }
     return pushToken(`<code class="kdoc-inline-code">${escapeHtml(code)}</code>`);
   });

@@ -70,6 +70,6 @@ class IntentExtractorTest {
         val json2 = codec.encodeToString(IntentDocument.serializer(), doc2)
 
         assertEquals(json1, json2, "Output must be byte-identical across runs")
-        assertTrue(!json1.contains("[Balanced]"), "KDoc links must not contain brackets")
+        assertTrue(json1.contains("[Balanced]"), "KDoc links should preserve bracket syntax for site formatting")
     }
 }
