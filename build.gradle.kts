@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.vanniktech.maven.publish)
     id("verify-all-conventions")
+    id("test-conventions")
 }
 
 val basisVersion: String =
@@ -113,4 +114,3 @@ tasks.register("generatePatchVocabulary") {
     description = "Delegates to :docs:docs-extract:generatePatchVocabulary."
     dependsOn(":docs:docs-extract:generatePatchVocabulary")
 }
-
