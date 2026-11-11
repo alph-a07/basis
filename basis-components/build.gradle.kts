@@ -86,6 +86,8 @@ val syncComponentScreenshotsTask =
         val adbProvider = androidComponents.sdkComponents.adb
         val targetDir = rootProject.file("docs/docs-site/public/assets/components/indication")
 
+        isIgnoreExitValue = true
+
         doFirst {
             targetDir.mkdirs()
             executable = adbProvider.get().asFile.absolutePath
