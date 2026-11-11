@@ -1,8 +1,7 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -20,6 +19,7 @@ import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
  * @param color Fill [Color] for the surface background.
  * @param border Optional [BorderStroke] drawn along the shape outline.
  * @param depth Optional [DepthSpec] defining elevation and shadow intensity.
+ * @param clip Whether to clip the content to [shape]. Defaults to true.
  * @return Configured [Modifier].
  */
 @BasisModifierDoc(
@@ -32,14 +32,14 @@ import io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec
         "Box(\n" +
             "    modifier = Modifier\n" +
             "        .basisSurface(\n" +
-            "            shape = BasisTheme.shapes.medium,\n" +
-            "            color = BasisTheme.colors.surfaceElevated,\n" +
+            "            shape = RoundedCornerShape(BasisTheme.radius.level2.toDp()),\n" +
+            "            color = BasisTheme.colors.surface.elevated,\n" +
             "            depth = BasisTheme.depth.level1,\n" +
-            "            border = BorderStroke(1.dp, BasisTheme.colors.outlineVariant)\n" +
+            "            border = BorderStroke(1.dp, BasisTheme.colors.border.muted)\n" +
             "        )\n" +
-            "        .padding(BasisTheme.spacing.md)\n" +
+            "        .basisPadding(all = BasisTheme.spacing.level3)\n" +
             ") {\n" +
-            "    Text(\"Elevated Surface Container\")\n" +
+            "    BasicText(\"Elevated Surface Container\")\n" +
             "}",
 )
 public fun Modifier.basisSurface(
@@ -47,6 +47,7 @@ public fun Modifier.basisSurface(
     color: Color,
     border: BorderStroke? = null,
     depth: DepthSpec? = null,
+    clip: Boolean = true,
 ): Modifier {
     var modifier: Modifier = basisModifier()
 
@@ -61,10 +62,14 @@ public fun Modifier.basisSurface(
             )
     }
 
-    modifier = modifier.clip(shape).background(color, shape)
+    if (clip) {
+        modifier = modifier.clip(shape)
+    }
+
+    modifier = modifier.background(color, shape)
 
     if (border != null) {
-        modifier = modifier.border(border, shape)
+        modifier = modifier.basisBorder(border, shape)
     }
 
     return modifier
