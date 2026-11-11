@@ -356,6 +356,11 @@ def generate_html_report(data, md_content):
     api = data["api"]
     prof = data["profile"]
     all_passed = tests["total_failed"] == 0 and tests["total_tests"] > 0
+    pass_rate = (
+        f"{(tests['total_passed'] / tests['total_tests'] * 100):.1f}%"
+        if tests["total_tests"] > 0
+        else "100%"
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -479,7 +484,7 @@ def generate_html_report(data, md_content):
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Pass Rate</div>
-                <div class="kpi-value">{(tests['total_passed'] / tests['total_tests'] * 100):.1f}%</div>
+                <div class="kpi-value">{pass_rate}</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Public API Surface</div>
