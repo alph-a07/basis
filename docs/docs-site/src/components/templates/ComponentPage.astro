@@ -7,6 +7,7 @@ import OverridesMatrix from '../sections/OverridesMatrix.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
 import CodeBlock from '../CodeBlock.astro';
+import KDocText from '../KDocText.astro';
 import { getSemanticTitle } from '../../lib/semantic-title';
 
 interface Props {
@@ -51,9 +52,9 @@ const tabs = [
     </div>
 
     <h1 class="component-title">{title}</h1>
-    <p class="component-summary">{component.summary}</p>
+    <p class="component-summary"><KDocText text={component.summary} /></p>
     {additionalDescription && (
-      <p class="component-description">{additionalDescription}</p>
+      <p class="component-description"><KDocText text={additionalDescription} /></p>
     )}
 
     <!-- 4 Route-Per-Tab Navigation -->

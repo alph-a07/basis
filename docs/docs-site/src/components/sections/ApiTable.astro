@@ -1,5 +1,7 @@
 ---
 import CodeBlock from '../CodeBlock.astro';
+import KDocText from '../KDocText.astro';
+import { formatTypeExpression } from '../../lib/format-kdoc';
 
 interface Parameter {
   name: string;
@@ -77,17 +79,21 @@ const { signatures = [], samples = [] } = Astro.props;
                       <code>{param.name}</code>
                     </td>
                     <td class="param-type-cell">
-                      <span class="type-badge">{param.type}</span>
+                      <span class="type-badge">
+                        <KDocText html={formatTypeExpression(param.type)} />
+                      </span>
                     </td>
                     <td class="param-default-cell">
                       {param.defaultValue ? (
-                        <code>{param.defaultValue}</code>
+                        <span class="default-badge">
+                          <KDocText html={formatTypeExpression(param.defaultValue)} />
+                        </span>
                       ) : (
                         <span class="required-badge">required</span>
                       )}
                     </td>
                     <td class="param-desc-cell">
-                      {param.description}
+                      <KDocText text={param.description} />
                     </td>
                   </tr>
                 ))}
@@ -110,7 +116,11 @@ const { signatures = [], samples = [] } = Astro.props;
           <div class="sample-card">
             <div class="sample-header">
               <h4 class="sample-title">{sample.title}</h4>
-              {sample.description && <p class="sample-desc">{sample.description}</p>}
+              {sample.description && (
+                <p class="sample-desc">
+                  <KDocText text={sample.description} />
+                </p>
+              )}
             </div>
             <CodeBlock
               code={sample.code}
@@ -279,6 +289,15 @@ const { signatures = [], samples = [] } = Astro.props;
     color: var(--docs-accent, #58a6ff);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.8125rem;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .default-badge {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    color: var(--docs-text-muted, #8b949e);
     word-break: break-word;
     overflow-wrap: anywhere;
     white-space: normal;

@@ -1,4 +1,6 @@
 ---
+import KDocText from '../KDocText.astro';
+
 interface Part {
   id: string;
   name: string;
@@ -172,7 +174,7 @@ const hasAnatomy = parts.length > 0;
                     </span>
                   )}
                 </div>
-                <p class="part-desc">{part.description}</p>
+                <p class="part-desc"><KDocText text={part.description} /></p>
               </div>
             </li>
           ))}

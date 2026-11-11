@@ -1,4 +1,6 @@
 ---
+import KDocText from '../KDocText.astro';
+
 interface VariantItem {
   id: string;
   name: string;
@@ -51,7 +53,7 @@ const hasStates = states.length > 0;
               <span class="variant-name">{v.name}</span>
               <code class="variant-id">{v.id}</code>
             </div>
-            {v.description && <p class="variant-desc">{v.description}</p>}
+            {v.description && <p class="variant-desc"><KDocText text={v.description} /></p>}
           </div>
         ))}
       </div>
@@ -71,7 +73,7 @@ const hasStates = states.length > 0;
               <span class="state-name">{s.name}</span>
               <code class="state-id">{s.id}</code>
             </div>
-            {s.description && <p class="state-desc">{s.description}</p>}
+            {s.description && <p class="state-desc"><KDocText text={s.description} /></p>}
           </div>
         ))}
       </div>

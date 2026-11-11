@@ -4,6 +4,7 @@ import ApiTable from '../sections/ApiTable.astro';
 import GuidelinesCard from '../sections/GuidelinesCard.astro';
 import A11yFacts from '../sections/A11yFacts.astro';
 import CodeBlock from '../CodeBlock.astro';
+import KDocText from '../KDocText.astro';
 import { getSemanticTitle } from '../../lib/semantic-title';
 
 interface Props {
@@ -46,9 +47,9 @@ const tabs = [
     </div>
 
     <h1 class="modifier-title">{title}</h1>
-    <p class="modifier-summary">{modifier.summary}</p>
+    <p class="modifier-summary"><KDocText text={modifier.summary} /></p>
     {additionalDescription && (
-      <p class="modifier-description">{additionalDescription}</p>
+      <p class="modifier-description"><KDocText text={additionalDescription} /></p>
     )}
 
     <!-- Route-Per-Tab Navigation -->

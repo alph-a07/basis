@@ -1,4 +1,6 @@
 ---
+import KDocText from '../KDocText.astro';
+
 interface GuidelinesData {
   do?: string[];
   dont?: string[];
@@ -30,7 +32,7 @@ const hasGuidelines = doList.length > 0 || dontList.length > 0 || notesList.leng
             </div>
             <ul class="guideline-list">
               {doList.map((item) => (
-                <li class="guideline-item">{item}</li>
+                <li class="guideline-item"><KDocText text={item} /></li>
               ))}
             </ul>
           </div>
@@ -45,7 +47,7 @@ const hasGuidelines = doList.length > 0 || dontList.length > 0 || notesList.leng
             </div>
             <ul class="guideline-list">
               {dontList.map((item) => (
-                <li class="guideline-item">{item}</li>
+                <li class="guideline-item"><KDocText text={item} /></li>
               ))}
             </ul>
           </div>
@@ -58,7 +60,7 @@ const hasGuidelines = doList.length > 0 || dontList.length > 0 || notesList.leng
           <h3 class="notes-title">Implementation Notes</h3>
           <ul class="notes-list">
             {notesList.map((note) => (
-              <li class="note-item">{note}</li>
+              <li class="note-item"><KDocText text={note} /></li>
             ))}
           </ul>
         </div>

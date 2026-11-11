@@ -1,4 +1,7 @@
 ---
+import KDocText from '../KDocText.astro';
+import { formatTypeExpression } from '../../lib/format-kdoc';
+
 interface TouchTarget {
   minWidthDp: number;
   minHeightDp: number;
@@ -41,7 +44,9 @@ const { accessibility, narrative } = Astro.props;
   <div class="facts-grid">
     <div class="fact-card">
       <span class="fact-label">Compose Semantics Role</span>
-      <code class="fact-value role-value">Role.{accessibility?.role || 'Default'}</code>
+      <span class="fact-value role-value">
+        <KDocText html={formatTypeExpression(`Role.${accessibility?.role || 'None'}`)} />
+      </span>
     </div>
 
     <div class="fact-card">
@@ -50,7 +55,13 @@ const { accessibility, narrative } = Astro.props;
         <strong>{accessibility?.touchTarget?.minWidthDp || 48}dp</strong> ×{' '}
         <strong>{accessibility?.touchTarget?.minHeightDp || 48}dp</strong>
         {accessibility?.touchTarget?.enforced && (
-          <span class="enforced-tag">Enforced</span>
+          <a
+            href="/docs/modifiers/basis-min-touch-target"
+            class="enforced-tag-link"
+            title="Enforced via basisMinTouchTarget"
+          >
+            <span class="enforced-tag">Enforced</span>
+          </a>
         )}
       </span>
     </div>
@@ -128,7 +139,7 @@ const { accessibility, narrative } = Astro.props;
     <div class="narrative-block">
       <h3 class="section-subtitle">Accessibility Guidance</h3>
       <div class="narrative-content">
-        <p>{narrative}</p>
+        <p><KDocText text={narrative} /></p>
       </div>
     </div>
   )}
@@ -183,6 +194,16 @@ const { accessibility, narrative } = Astro.props;
     color: var(--docs-accent, #58a6ff);
     font-size: 0.95rem;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .enforced-tag-link {
+    display: inline-flex;
+    text-decoration: none;
+  }
+
+  .enforced-tag-link:hover .enforced-tag {
+    background: var(--docs-sidebar-active-bg, rgba(88, 166, 255, 0.28));
+    box-shadow: 0 0 0 1px var(--docs-accent, #58a6ff);
   }
 
   .enforced-tag {

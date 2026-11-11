@@ -1,4 +1,7 @@
 ---
+import KDocText from '../KDocText.astro';
+import { formatTypeExpression } from '../../lib/format-kdoc';
+
 interface MatrixEntry {
   variant: string;
   state: string;
@@ -51,7 +54,7 @@ const matrix = overrides?.matrix || [];
         <strong class="extra-name">{extraFamily}</strong>
       </div>
       <p class="extra-desc">
-        This component binds an additional <code>{extraFamily}</code> token family allowing deep customization
+        This component binds an additional <KDocText html={formatTypeExpression(extraFamily)} /> token family allowing deep customization
         of domain-specific interactive behaviors.
       </p>
     </div>
