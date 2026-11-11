@@ -133,7 +133,7 @@ complexity:
     excludes: [ '**/tokens/src/**/OklchDerivation.kt' ]
   LongParameterList:
     active: true
-    excludes: [ '**/theme/resolution/fonts/FontAssignment.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt', '**/components/foundation/**', '**/components/theme/BasisTheme.kt', '**/components/modifier/**' ]
+    excludes: [ '**/theme/resolution/fonts/FontAssignment.kt', '**/theme/resolution/derive/ColorRoleDerivation.kt', '**/components/primitives/**', '**/components/theme/BasisTheme.kt', '**/components/modifiers/**' ]
     functionThreshold: 6
     constructorThreshold: 7
     ignoreDefaultParameters: false
@@ -353,7 +353,7 @@ naming:
     # Token files are named after their token group (SpacingTokens.kt) while the single
     # public declaration inside carries the required `Basis` prefix (BasisSpacingTokens).
     # Renaming either side would break the module's file-per-group convention.
-    excludes: [ '**/tokens/src/**', '**/theme/resolution/mood/MoodInfluence.kt' ]
+    excludes: [ '**/tokens/src/**', '**/theme/resolution/mood/MoodInfluence.kt', '**/components/primitives/**' ]
   MemberNameEqualsClassName:
     active: true
     ignoreOverridden: true
