@@ -23,8 +23,11 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4   # handles Gradle + dependency caching
 
-      - name: Verify All (Assemble, Test, Lint, Detekt, Ktlint, API Check)
+      - name: Verify All (Assemble, Lint, Detekt, Ktlint, API Check)
         run: ./gradlew verifyAll
+
+      - name: Run unit tests
+        run: ./gradlew unitTests
 
       - name: Upload reports on failure
         if: failure()
@@ -36,3 +39,51 @@ jobs:
             **/build/reports/lint-results*.html
             **/build/reports/detekt/
             **/build/reports/ktlint/
+
+  instrumentation:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: AVD Cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-34
+
+      - name: Create AVD and generate emulator snapshot
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: arm64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot"
+
+      - name: Run Android instrumentation tests and capture screenshots
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: arm64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew BasisComponentsIntegrationTests :basis-components:syncComponentScreenshots
+
+      - name: Upload screenshots artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-screenshots
+          path: docs/docs-site/public/assets/components/

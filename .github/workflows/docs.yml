@@ -52,9 +52,6 @@ jobs:
       - name: Generate docs JSON documents
         run: ./gradlew :docs:docs-extract:generateDocsJson
 
-      - name: Validate docs model and schemas
-        run: npm test --workspace @basis/docs-model
-
       - name: Generate docs-model TypeScript types
         run: npm run generate:types --workspace @basis/docs-model
 
@@ -64,20 +61,8 @@ jobs:
       - name: Typecheck Astro docs site
         run: npm run check --workspace docs-site
 
-      - name: Validate docs loader and data
-        run: npm run test:loader --workspace docs-site
-
-      - name: Build static docs site (Astro + Pagefind)
-        run: npm run build --workspace docs-site
-
-      - name: Run layout accessibility audit (axe-core)
-        run: npm run test:a11y --workspace docs-site
-
-      - name: Run design pass and specification audit
-        run: npm run test:design --workspace docs-site
-
-      - name: Run internal link checker and stub audit
-        run: npm run test:links --workspace docs-site
+      - name: Run documentation test aggregate
+        run: ./gradlew docsTests
 
       - name: Verify specimen token variables and contracts
         run: |
