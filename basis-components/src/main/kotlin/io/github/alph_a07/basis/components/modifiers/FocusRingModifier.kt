@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusEventModifierNode
@@ -37,10 +37,10 @@ import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
     sampleCode =
         "Box(\n" +
             "    modifier = Modifier\n" +
-            "        .basisFocusRing(shape = BasisTheme.shapes.small)\n" +
-            "        .clickable { /* action */ }\n" +
+            "        .basisFocusRing(shape = RoundedCornerShape(BasisTheme.radius.level1.toDp()))\n" +
+            "        .basisClickable { /* action */ }\n" +
             ") {\n" +
-            "    Text(\"Focusable Target\")\n" +
+            "    BasicText(\"Focusable Target\")\n" +
             "}",
 )
 public fun Modifier.basisFocusRing(

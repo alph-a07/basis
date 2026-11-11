@@ -1,8 +1,9 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
@@ -32,10 +33,10 @@ import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
             "            role = Role.Checkbox,\n" +
             "            onValueChange = { isChecked = it }\n" +
             "        )\n" +
-            "        .padding(BasisTheme.spacing.sm)\n" +
+            "        .basisPadding(all = BasisTheme.spacing.level2)\n" +
             ") {\n" +
             "    Checkbox(checked = isChecked, onCheckedChange = null)\n" +
-            "    Text(\"Enable Push Notifications\")\n" +
+            "    BasicText(\"Enable Push Notifications\")\n" +
             "}",
 )
 public fun Modifier.basisToggleable(
@@ -57,8 +58,16 @@ public fun Modifier.basisToggleable(
             onValueChange = onValueChange,
         )
 
+    val focusRingModifier =
+        if (enabled) {
+            Modifier.basisFocusRing(shape = shape ?: RectangleShape)
+        } else {
+            Modifier
+        }
+
     return this
         .basisModifier()
+        .then(focusRingModifier)
         .then(toggleableModifier)
         .basisMinTouchTarget()
 }

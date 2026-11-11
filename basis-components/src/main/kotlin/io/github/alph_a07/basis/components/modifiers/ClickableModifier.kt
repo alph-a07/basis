@@ -1,10 +1,11 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
 import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
@@ -34,13 +35,12 @@ import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
             "    modifier = Modifier\n" +
             "        .basisClickable(\n" +
             "            interactionSource = interactionSource,\n" +
-            "            shape = BasisTheme.shapes.medium,\n" +
+            "            shape = RoundedCornerShape(BasisTheme.radius.level2.toDp()),\n" +
             "            onClick = { /* handle action */ }\n" +
             "        )\n" +
-            "        .basisFocusRing(shape = BasisTheme.shapes.medium)\n" +
-            "        .padding(BasisTheme.spacing.md)\n" +
+            "        .basisPadding(all = BasisTheme.spacing.level3)\n" +
             ") {\n" +
-            "    Text(\"Interactive Tile\")\n" +
+            "    BasicText(\"Interactive Tile\")\n" +
             "}",
 )
 @OptIn(ExperimentalFoundationApi::class)
@@ -55,6 +55,7 @@ public fun Modifier.basisClickable(
     onClick: () -> Unit,
 ): Modifier {
     val indication = createBasisIndication(shape = shape)
+
     val clickableModifier =
         if (onLongClick != null) {
             Modifier.combinedClickable(
@@ -78,8 +79,16 @@ public fun Modifier.basisClickable(
             )
         }
 
+    val focusRingModifier =
+        if (enabled) {
+            Modifier.basisFocusRing(shape = shape ?: RectangleShape)
+        } else {
+            Modifier
+        }
+
     return this
         .basisModifier()
+        .then(focusRingModifier)
         .then(clickableModifier)
         .basisMinTouchTarget()
 }
