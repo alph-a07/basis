@@ -145,11 +145,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
-import io.github.alph_a07.basis.components.foundation.modifier.basisBorder
-import io.github.alph_a07.basis.components.foundation.modifier.basisClickable
-import io.github.alph_a07.basis.components.foundation.modifier.basisFocusRing
-import io.github.alph_a07.basis.components.foundation.modifier.basisMinTouchTarget
-import io.github.alph_a07.basis.components.foundation.modifier.basisSurface
+import io.github.alph_a07.basis.components.modifiers.basisBorder
+import io.github.alph_a07.basis.components.modifiers.basisClickable
+import io.github.alph_a07.basis.components.modifiers.basisFocusRing
+import io.github.alph_a07.basis.components.modifiers.basisMinTouchTarget
+import io.github.alph_a07.basis.components.modifiers.basisSurface
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.conversion.toDp
 

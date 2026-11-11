@@ -42,17 +42,22 @@ Enforcement lives in source — reference, don't copy:
   personal notes / change-tracking. Order APIs public → internal → private; higher-level to lower-level; top to bottom.
   Put private constants at bottom of file, after public API, to avoid cluttering the top. No explanatory comments
   tracking this edit.
+- **Generated content & transparency:** Code generators are the single source of truth for their targets; never
+  manually edit generated files. Generated files must consistently live under a `generated/` directory within their
+  owning package or module. Generated source files (`.kt`, `.ts`, `.css`, `.mdx`) must include an
+  `AUTO-GENERATED FILE. DO NOT MODIFY DIRECTLY.` header comment. Generated JSON files must declare provenance via
+  schema-backed metadata (`"provenance"`, `"$comment"`, or `"source"`) rather than unsupported raw comment syntax.
 - **Documentation synchronization & Zero phantom components:** Every developed or modified component, modifier, or
   public API in `basis-components` must have its corresponding documentation metadata (`@BasisModifierDoc`,
   `@BasisComponentDoc`), extraction pipeline entry, and sidecar MDX created or updated in lockstep in the same task.
-  Undeveloped, proposed, or phantom components must NEVER be documented in the catalog, sidebar, fixtures, or site;
+  Undeveloped, proposed, or phantom components must NEVER be documented in the catalog, sidebar, models, sidecars, or site;
   documentation must strictly reflect real, implemented, and tested source code. Conclude component tasks only after
-  running `./gradlew :docs:docs-extract:generateComponentsJson` and validating with `npm test --prefix docs/docs-model`.
+  running `./gradlew :docs:docs-extract:generateDocsJson` and validating with `npm test --prefix docs/docs-model`.
 
 **Done when (conventions):** `Basis` prefix verified for public API only → 1:1 declaration match → suffix consistency
 verified → no 'leaf' terminology (use 'token') → `SCREAMING_SNAKE_CASE` for new constants → no duplication (single
-source) → tight, no drive-by → documentation synchronized (zero phantom components, sidecars updated) →
-`./gradlew verifyAll` passes.
+source) → tight, no drive-by → generated content transparency verified → documentation synchronized (zero phantom
+components, sidecars updated) → `./gradlew verifyAll` passes.
 
 ---
 
