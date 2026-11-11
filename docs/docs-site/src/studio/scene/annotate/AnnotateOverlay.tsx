@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { getConsumersForToken } from '../tokenIndex.js';
+import React, { useEffect, useState } from 'react';
 
 interface PinData {
   id: string;

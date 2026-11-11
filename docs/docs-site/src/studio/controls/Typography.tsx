@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FONTS_CATALOG, evaluateFontEligibility, type FontItem } from '../fonts/catalog.js';
+import { FONTS_CATALOG, evaluateFontEligibility } from '../fonts/catalog.js';
 import type { FontFamilyRefInput } from '../state/serialize.js';
 
 interface TypographyProps {

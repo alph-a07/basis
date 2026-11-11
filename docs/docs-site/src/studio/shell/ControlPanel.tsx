@@ -8,7 +8,6 @@ import { Toggle } from '../controls/Toggle.js';
 import { Knob } from '../controls/Knob.js';
 import { Typography } from '../controls/Typography.js';
 import { PathMap } from '../controls/PathMap.js';
-import { JsonEditor } from '../controls/JsonEditor.js';
 import type { ControlDefinition } from '../controls/registry.js';
 import {
   RAIL_CATEGORIES,

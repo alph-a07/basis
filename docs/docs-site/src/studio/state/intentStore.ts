@@ -12,8 +12,6 @@
 
 import {
   type BasisIntentState,
-  serializeIntent,
-  deserializeIntent,
 } from './serialize';
 import {
   resolveSafe,

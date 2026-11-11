@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { JSDOM } from 'jsdom';
-import { loadDocsRuntime, resolveSafe } from '../state/resolveClient';
+import { loadDocsRuntime } from '../state/resolveClient';
 import { StudioIntentStore } from '../state/intentStore';
 
 console.log('Testing Local Scope Isolation (Gate 4: no CSS var leaks to document, chrome, or other routes)...\n');

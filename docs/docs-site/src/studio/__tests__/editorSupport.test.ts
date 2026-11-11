@@ -5,7 +5,6 @@
 import assert from 'node:assert';
 import { EditorState } from '@codemirror/state';
 import { json } from '@codemirror/lang-json';
-import { syntaxTree } from '@codemirror/language';
 import {
   kotlinLanguage,
   studioHighlightStyle,
