@@ -2,7 +2,7 @@
  * Maps Kotlin, Jetpack Compose, and Basis symbols to documentation URLs.
  */
 interface SymbolInfo {
-  url: string;
+  url?: string;
   external?: boolean;
   title?: string;
 }
@@ -280,12 +280,36 @@ const SYMBOL_MAP: Record<string, SymbolInfo> = {
   'BasisTheme.colors': { url: '/docs/theming/set-brand', title: 'BasisTheme.colors' },
   'BasisTheme.colors.surface': { url: '/docs/theming/set-brand', title: 'BasisTheme.colors.surface' },
   'BasisTheme.colors.border': { url: '/docs/theming/set-brand', title: 'BasisTheme.colors.border' },
-  'BasisTheme.spacing': { url: '/docs/theming/intent-reference', title: 'BasisTheme.spacing' },
-  'BasisTheme.radius': { url: '/docs/theming/intent-reference', title: 'BasisTheme.radius' },
-  'BasisTheme.depth': { url: '/docs/theming/intent-reference', title: 'BasisTheme.depth' },
-  'BasisTheme.motion': { url: '/docs/theming/intent-reference', title: 'BasisTheme.motion' },
-  DpValue: { url: '/docs/theming/intent-reference', title: 'io.github.alph_a07.basis.theme.core.DpValue' },
-  DepthSpec: { url: '/docs/theming/intent-reference', title: 'DepthSpec elevation definition' },
+  'BasisTheme.spacing': {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/SpacingTokens.kt',
+    external: true,
+    title: 'BasisTheme.spacing (SpacingTokens)',
+  },
+  'BasisTheme.radius': {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/RadiusTokens.kt',
+    external: true,
+    title: 'BasisTheme.radius (RadiusTokens)',
+  },
+  'BasisTheme.depth': {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/DepthTokens.kt',
+    external: true,
+    title: 'BasisTheme.depth (DepthTokens: level1, level2, level3, level4)',
+  },
+  'BasisTheme.motion': {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/tokens/motion/MotionTokens.kt',
+    external: true,
+    title: 'BasisTheme.motion (MotionTokens)',
+  },
+  DpValue: {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/core/DpValue.kt',
+    external: true,
+    title: 'io.github.alph_a07.basis.theme.core.DpValue',
+  },
+  DepthSpec: {
+    url: 'https://github.com/alph-a07/basis/blob/main/basis-theme/src/commonMain/kotlin/io/github/alph_a07/basis/theme/tokens/scalars/DepthTokens.kt',
+    external: true,
+    title: 'io.github.alph_a07.basis.theme.tokens.scalars.DepthSpec',
+  },
   Treatment: { url: '/docs/theming/customize-components', title: 'Treatment visual archetype' },
   ConstraintsControl: { url: '/docs/theming/intent-reference', title: 'ConstraintsControl' },
   'ConstraintsControl.minTouchTarget': { url: '/docs/theming/intent-reference', title: 'ConstraintsControl.minTouchTarget' },
@@ -322,15 +346,18 @@ function getExternalIconSvg(): string {
  * Formats a single symbol into an interactive link or pill.
  */
 function renderSymbolTag(symbol: string): string {
-  const info = SYMBOL_MAP[symbol];
-  if (info) {
+  const isNullable = symbol.endsWith('?');
+  const baseSymbol = isNullable ? symbol.slice(0, -1) : symbol;
+  const info = SYMBOL_MAP[symbol] || SYMBOL_MAP[baseSymbol];
+  if (info && info.url) {
     const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
     const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
     const titleAttr = info.title ? ` title="${escapeHtml(info.title)}"` : '';
     const icon = isExternal ? getExternalIconSvg() : '';
     return `<a href="${info.url}" class="kdoc-symbol-link${isExternal ? ' external' : ''}"${externalAttrs}${titleAttr}><code>${escapeHtml(symbol)}</code>${icon}</a>`;
   }
-  return `<code class="kdoc-symbol-ref">${escapeHtml(symbol)}</code>`;
+  const titleAttr = info?.title ? ` title="${escapeHtml(info.title)}"` : '';
+  return `<code class="kdoc-symbol-ref"${titleAttr}>${escapeHtml(symbol)}</code>`;
 }
 
 /**
@@ -376,7 +403,8 @@ export function formatKdoc(text: string | null | undefined): string {
   // 2. KDoc two-part links: [Label][Target]
   processed = processed.replace(/\[([^\]]+)\]\[([^\]]+)\]/g, (_, label, target) => {
     const cleanTarget = target.trim();
-    const info = SYMBOL_MAP[cleanTarget];
+    const cleanTargetBase = cleanTarget.replace(/\?$/, '');
+    const info = SYMBOL_MAP[cleanTarget] || SYMBOL_MAP[cleanTargetBase];
     const safeLabel = escapeHtml(label);
     if (info) {
       const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
@@ -388,8 +416,8 @@ export function formatKdoc(text: string | null | undefined): string {
     return pushToken(`<code class="kdoc-symbol-ref">${safeLabel}</code>`);
   });
 
-  // 3. KDoc single-part references: [Symbol]
-  processed = processed.replace(/\[([A-Za-z0-9_.]+)\]/g, (_, rawSymbol) => {
+  // 3. KDoc single-part references: [Symbol] or [Symbol?]
+  processed = processed.replace(/\[([A-Za-z0-9_.]+\??)\]/g, (_, rawSymbol) => {
     const symbol = rawSymbol.trim();
     return pushToken(renderSymbolTag(symbol));
   });
@@ -398,8 +426,11 @@ export function formatKdoc(text: string | null | undefined): string {
   processed = processed.replace(/`([^`]+)`/g, (_, code) => {
     const clean = code.trim();
     const cleanWithoutParens = clean.replace(/\(\)$/, '');
-    if (SYMBOL_MAP[clean] || SYMBOL_MAP[cleanWithoutParens]) {
-      const matchedKey = SYMBOL_MAP[clean] ? clean : cleanWithoutParens;
+    const cleanBase = cleanWithoutParens.replace(/\?$/, '');
+    const matchedKey = SYMBOL_MAP[clean]
+      ? clean
+      : (SYMBOL_MAP[cleanWithoutParens] ? cleanWithoutParens : (SYMBOL_MAP[cleanBase] ? cleanBase : null));
+    if (matchedKey) {
       const info = SYMBOL_MAP[matchedKey];
       const isExternal = info.external || info.url.startsWith('http://') || info.url.startsWith('https://');
       const externalAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
@@ -446,9 +477,10 @@ export function formatTypeExpression(expression: string | null | undefined): str
   let wrapped = expression;
   for (const symbol of SORTED_SYMBOLS) {
     const escaped = symbol.replace(/\./g, '\\.');
-    // Match the symbol as an independent token not already inside brackets or backticks
-    const regex = new RegExp(`(?<![A-Za-z0-9_.[\`])${escaped}(?![A-Za-z0-9_.\`\\]])`, 'g');
-    wrapped = wrapped.replace(regex, `[${symbol}]`);
+    // Match the symbol as an independent token (optionally nullable with '?')
+    // not already inside brackets or backticks, avoiding partial matches of dotted properties
+    const regex = new RegExp(`(?<![A-Za-z0-9_.[\`])${escaped}(\\?)?(?!(?:\\.[A-Za-z0-9_]|[A-Za-z0-9_\`\\]]))`, 'g');
+    wrapped = wrapped.replace(regex, (_, q) => `[${symbol}${q || ''}]`);
   }
 
   return formatKdoc(wrapped);

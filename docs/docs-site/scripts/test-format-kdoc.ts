@@ -54,10 +54,19 @@ console.log('--- Testing formatKdoc & formatTypeExpression ---');
 {
   const htmlShape = formatTypeExpression('Shape?');
   assert.ok(htmlShape.includes('androidx/compose/ui/graphics/Shape'), 'Shape? contains Shape link');
-  assert.ok(htmlShape.endsWith('?'), 'Shape? preserves trailing ?');
+  assert.ok(htmlShape.includes('<code>Shape?</code>'), 'Shape? includes nullability indicator inside code pill');
+  assert.ok(!htmlShape.endsWith('</a>?'), 'Shape? does not leave dangling question mark outside link');
 
   const htmlBorder = formatTypeExpression('BorderStroke?');
   assert.ok(htmlBorder.includes('androidx/compose/foundation/BorderStroke'), 'BorderStroke? links to BorderStroke');
+  assert.ok(htmlBorder.includes('<code>BorderStroke?</code>'), 'BorderStroke? includes nullability indicator inside code pill');
+  assert.ok(!htmlBorder.includes('</svg></a>?'), 'External icon does not precede question mark');
+
+  const htmlDepth = formatTypeExpression('DepthSpec?');
+  assert.ok(htmlDepth.includes('DepthTokens.kt'), 'DepthSpec? links to DepthTokens definition');
+  assert.ok(!htmlDepth.includes('/docs/theming/intent-reference'), 'DepthSpec? does not link to irrelevant intent reference');
+  assert.ok(htmlDepth.includes('<code>DepthSpec?</code>'), 'DepthSpec? includes nullability indicator inside code pill');
+  assert.ok(!htmlDepth.endsWith('</a>?'), 'DepthSpec? does not leave dangling question mark outside link');
 
   const htmlDp = formatTypeExpression('Dp');
   assert.ok(htmlDp.includes('androidx/compose/ui/unit/Dp'), 'Dp links to Dp');
@@ -68,8 +77,8 @@ console.log('--- Testing formatKdoc & formatTypeExpression ---');
 // 7. formatTypeExpression: compound lambdas
 {
   const lambdaHtml = formatTypeExpression('(ContentDrawScope.() -> Unit)?');
-  assert.ok(lambdaHtml.includes('ContentDrawScope'), 'Lambda links ContentDrawScope');
-  assert.ok(lambdaHtml.includes('kotlin/-unit/'), 'Lambda links Unit');
+  assert.ok(lambdaHtml.includes('graphics/drawscope/ContentDrawScope'), 'Lambda links ContentDrawScope receiver');
+  assert.ok(lambdaHtml.includes('kotlin/-unit/'), 'Lambda links Unit return type');
   assert.ok(lambdaHtml.startsWith('('), 'Lambda preserves opening paren');
   assert.ok(lambdaHtml.endsWith(')?'), 'Lambda preserves closing paren and nullable operator');
   console.log('✓ formatTypeExpression handles functional receiver lambdas');
