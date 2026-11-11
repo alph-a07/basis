@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.foundation
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -26,14 +26,6 @@ import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
-import io.github.alph_a07.basis.components.foundation.modifier.basisClearAndSetSemantics
-import io.github.alph_a07.basis.components.foundation.modifier.basisClickable
-import io.github.alph_a07.basis.components.foundation.modifier.basisFocusRing
-import io.github.alph_a07.basis.components.foundation.modifier.basisIndication
-import io.github.alph_a07.basis.components.foundation.modifier.basisMinTouchTarget
-import io.github.alph_a07.basis.components.foundation.modifier.basisModifier
-import io.github.alph_a07.basis.components.foundation.modifier.basisSelectable
-import io.github.alph_a07.basis.components.foundation.modifier.basisToggleable
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.locals.LocalBasisContentColor
 import io.github.alph_a07.basis.theme.core.DpValue
@@ -49,7 +41,7 @@ import org.junit.Test
 /**
  * Instrumentation UI tests for internal foundation (T0) infrastructure across theme configurations.
  */
-class BasisFoundationTest {
+class BasisModifiersTest {
 
     @get:Rule
     val composeRule = createComposeRule()
