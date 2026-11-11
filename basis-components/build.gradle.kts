@@ -73,3 +73,22 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
 }
+
+val syncComponentScreenshotsTask =
+    tasks.register<Exec>("syncComponentScreenshots") {
+        group = "documentation"
+        description =
+            "Pulls rendered component screenshots and anatomy metadata from the connected device into docs assets."
+        val androidComponents =
+            project.extensions.getByType(
+                com.android.build.api.variant.LibraryAndroidComponentsExtension::class.java,
+            )
+        val adbProvider = androidComponents.sdkComponents.adb
+        val targetDir = rootProject.file("docs/docs-site/public/assets/components/indication")
+
+        doFirst {
+            targetDir.mkdirs()
+            executable = adbProvider.get().asFile.absolutePath
+            args("pull", "/sdcard/Download/screenshots/indication/.", targetDir.absolutePath)
+        }
+    }
