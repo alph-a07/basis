@@ -10,6 +10,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,6 +25,10 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - uses: gradle/actions/setup-gradle@v4   # handles Gradle + dependency caching
 
       - name: Verify All (Assemble, Lint, Detekt, Ktlint, API Check)
@@ -29,12 +37,24 @@ jobs:
       - name: Run unit tests
         run: ./gradlew unitTests
 
-      - name: Upload reports on failure
-        if: failure()
+      - name: Generate Visual CI Report (Step Summary & Artifacts)
+        if: always()
+        run: python3 scripts/generate_ci_report.py --github-step-summary $GITHUB_STEP_SUMMARY --output-md build/reports/ci-summary.md --output-html build/reports/ci-summary.html --output-json build/reports/ci-summary.json
+
+      - name: Upload CI Summary Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-build-summary
+          path: build/reports/ci-summary.*
+
+      - name: Upload test & lint reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reports
           path: |
+            **/build/test-results/**/*.xml
             **/build/reports/tests/
             **/build/reports/lint-results*.html
             **/build/reports/detekt/
@@ -72,7 +92,7 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot"
 
-      - name: Run Android instrumentation tests and capture screenshots
+      - name: Run Android integration tests, baseline profile, macrobenchmark and screenshot sync
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -80,10 +100,109 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew BasisComponentsIntegrationTests :basis-components:syncComponentScreenshots
+          script: |
+            ./gradlew :demo-app:installDebug
+            ./gradlew BasisComponentsIntegrationTests :basis-baseline-profile:connectedDebugAndroidTest :basis-benchmark:connectedDebugAndroidTest
+            ./gradlew :basis-baseline-profile:syncBaselineProfile
+            ./gradlew :basis-components:syncComponentScreenshots
 
       - name: Upload screenshots artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: component-screenshots
           path: docs/docs-site/public/assets/components/
+
+      - name: Upload benchmark outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-outputs
+          path: |
+            **/build/outputs/connected_android_test_additional_output/**
+            **/build/outputs/androidTest-results/**
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [build, instrumentation]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Download test & lint reports
+        uses: actions/download-artifact@v4
+        with:
+          name: reports
+          path: build-artifacts/reports
+        continue-on-error: true
+
+      - name: Download benchmark outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: benchmark-outputs
+          path: build-artifacts/benchmarks
+        continue-on-error: true
+
+      - name: Consolidate Artifacts into Build Directory
+        run: |
+          mkdir -p build/test-results build/outputs
+          if [ -d "build-artifacts/reports" ]; then
+            cp -rn build-artifacts/reports/* . 2>/dev/null || true
+          fi
+          if [ -d "build-artifacts/benchmarks" ]; then
+            cp -rn build-artifacts/benchmarks/* . 2>/dev/null || true
+          fi
+
+      - name: Generate Consolidated Visual CI & Public API Report
+        run: |
+          python3 scripts/generate_ci_report.py \
+            --github-step-summary "$GITHUB_STEP_SUMMARY" \
+            --output-md build/reports/ci-summary.md \
+            --output-html build/reports/ci-summary.html \
+            --output-json build/reports/ci-summary.json
+
+      - name: Upload Consolidated CI Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-consolidated-report
+          path: build/reports/ci-summary.*
+
+      - name: Post or Update PR Visual Report Comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'build/reports/ci-summary.md';
+            if (!fs.existsSync(path)) return;
+
+            const body = fs.readFileSync(path, 'utf8');
+            const marker = '<!-- basis-ci-report-comment -->';
+            const fullComment = `${marker}\n${body}`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: fullComment,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: fullComment,
+              });
+            }
