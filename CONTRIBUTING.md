@@ -91,10 +91,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import io.github.alph_a07.basis.components.foundation.modifier.basisClickable
-import io.github.alph_a07.basis.components.foundation.modifier.basisFocusRing
-import io.github.alph_a07.basis.components.foundation.modifier.basisMinTouchTarget
-import io.github.alph_a07.basis.components.foundation.modifier.basisSurface
+import io.github.alph_a07.basis.components.modifiers.basisClickable
+import io.github.alph_a07.basis.components.modifiers.basisFocusRing
+import io.github.alph_a07.basis.components.modifiers.basisMinTouchTarget
+import io.github.alph_a07.basis.components.modifiers.basisSurface
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.conversion.toDp
 
@@ -149,23 +149,41 @@ Branch from `main` as `feature|bugfix|enhancement/Issue-<n>`. Commits and PR tit
 
 ## Gradle Tasks & Checks
 
-Basis uses Gradle conventions defined in `build-logic` (`verify-all-conventions.gradle.kts`) to lift nested subproject tasks into clean, root-level commands.
+Basis uses Gradle conventions defined in `build-logic` (`verify-all-conventions.gradle.kts` and
+`test-conventions.gradle.kts`) to lift nested subproject tasks into clean, root-level commands.
 
 ### Unified Pipeline & Lifted Tasks (Root)
 
 | Command | Group | Scope & Description |
 | --- | --- | --- |
-| `./gradlew verifyAll` | `verification` | **CI Gate:** Runs `assemble`, `test`, `lint`, `detekt`, `ktlintCheck`, and `releaseApiCheck` across all modules and `build-logic`. |
+| `./gradlew verifyAll` | `verification` | **CI Gate:** Runs `assemble`, `lint`, `detekt`, `ktlintCheck`, and `releaseApiCheck` across all modules and `build-logic`. Test execution is owned by the dedicated test task family. |
 | `./gradlew fixAll` | `formatting` | **Auto-Fix Gate:** Runs `ktlintFormat` and `lintFix` across all modules and `build-logic`. |
-| `./gradlew tests` | `verification` | **Test Suite:** Runs all JVM/JS unit tests and executes connected Android instrumentation tests (`connectedDebugAndroidTest`) on online devices/emulators. |
+| `./gradlew tests` | `verification` | **Compatibility alias:** Runs the same complete suite as `allTests`. |
+| `./gradlew allTests` | `verification` | **Test God Task:** Runs every unit, integration, and documentation test suite. |
+| `./gradlew unitTests` | `verification` | Runs JVM, JS, and Android unit tests only. |
+| `./gradlew integrationTests` | `verification` | Runs connected Android and integration test tasks only. |
+| `./gradlew docsTests` | `verification` | Runs `docs-model` and `docs-site` Node test suites. |
+| `./gradlew <module>Tests` | `verification` | Runs the available unit and integration tests for one module; matching `<module>UnitTests` and `<module>IntegrationTests` tasks are also available. |
 | `./gradlew releaseApiCheck` | `verification` | **[Lifted]** Validates public Binary Compatibility Validator (BCV) dumps against committed baselines (`basis-components/api/basis-components.api`). |
 | `./gradlew releaseApiDump` | `verification` | **[Lifted]** Dumps current public ABI signatures to committed baseline files across modules. |
 | `./gradlew detekt` | `verification` | Runs Detekt static analysis with type resolution across all subprojects. |
 | `./gradlew ktlintCheck` | `verification` | Enforces `.editorconfig` formatting rules across all Kotlin source files. |
 | `./gradlew ktlintFormat` | `formatting` | Auto-formats Kotlin source code according to `.editorconfig`. |
-| `./gradlew updateGolden` | `verification` | **[Lifted]** Updates JVM parity golden test fixtures (`ParityGoldens.kt`) in `:basis-theme`. |
+| `./gradlew updateGolden` | `verification` | **[Lifted]** Updates JVM parity golden test files (`ParityGoldens.kt`) in `:basis-theme`. |
 | `./gradlew generateIntentJson` | `documentation` | **[Lifted]** Generates `intent.json` schema from `basis-theme` Kotlin sources and KDoc. |
 | `./gradlew generatePatchVocabulary` | `documentation` | **[Lifted]** Generates `patch-vocabulary.json` schema from style patches and token ladders. |
+
+Lifted pipeline tasks automatically hide Gradle's internal task lifecycle output at the default
+logging level. Instead, they print a grouped, styled report for each notable check, including
+whether it completed, was cached, skipped, or failed, followed by a pipeline summary. Task
+generator output is captured, and failures include the task's root cause and the most relevant
+generated report paths. The same presentation applies to direct `detekt`, `ktlint*`, Android
+`lint*`, unit/integration test, connected-test, and `generate*` Gradle tasks. Documentation
+generation, validation, build, and check scripts under `docs/docs-model` and `docs/docs-site`
+use the matching buffered Node runner. Failure locations are rendered as clickable terminal
+links when the terminal supports OSC 8 hyperlinks, and failed statuses use color-coded text and
+badges when the command is attached to a color terminal. Pass `--info` or `--debug` when the
+underlying Gradle/plugin output is required for diagnosis.
 
 ---
 
