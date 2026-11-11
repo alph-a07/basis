@@ -1,0 +1,72 @@
+---
+title: Platform Compatibility & Performance
+section: Getting Started
+order: 4
+status: published
+description: Public API compatibility matrix, supported Android versions (API 24 to 37), toolchain specifications, and Baseline Profile performance benchmarks.
+---
+
+Basis is built with strict runtime stability, performance budgets, and explicit binary compatibility guarantees. This page details the official Android platform matrix, toolchain specifications, Binary Compatibility Validator (BCV) contracts, and Macrobenchmark performance SLAs.
+
+## Android Platform Compatibility Matrix
+
+Basis targets modern Android development while ensuring backwards compatibility across all supported active Android devices.
+
+| Android OS Version | API Level | Codename | Platform Role in Basis | Compatibility & Support Level |
+| :--- | :---: | :--- | :--- | :--- |
+| **Android 7.0 / 7.1** | **API 24 / 25** | Nougat | `minSdk` | Minimum supported runtime target. Tested for foundational Compose stability. |
+| **Android 8.0 – 8.1** | **API 26 / 27** | Oreo | Runtime Target | Full support. Native adaptive vector and color pipeline support. |
+| **Android 9.0 – 10** | **API 28 / 29** | Pie / Q | Runtime Target | Full support. Hardware-accelerated rendering and modern touch slop models. |
+| **Android 11 – 13** | **API 30 – 33** | R / S / Tiramisu | Runtime Target | Full support. Dynamic system bar insets and modern focus traversal. |
+| **Android 14** | **API 34** | UpsideDownCake | CI Automated Target | Reference device target for automated CI instrumentation and screenshot tests. |
+| **Android 15** | **API 35** | VanillaIceCream | Production Baseline | Full support. Predictable back navigation and edge-to-edge window insets. |
+| **Android 16** | **API 36** | Baklava | `targetSdk` | Target SDK behavioral alignment and system feature optimizations. |
+| **Android 17 / Extension** | **API 37** | Preview | `compileSdk` | Latest platform APIs, SDK compilation baseline, and lint definitions. |
+
+---
+
+## Toolchain & Runtime Matrix
+
+Basis is developed and verified against the following toolchain and dependency matrix:
+
+| Technology Layer | Active Specification | Role & Contract |
+| :--- | :---: | :--- |
+| **Basis Library** | `0.1.0` | Production UI token, theme, and foundation modifier system |
+| **Kotlin Multiplatform** | `2.4.21` | Kotlin JVM + Multiplatform compiler with Compose compiler plugin |
+| **Jetpack Compose BOM** | `2026.09.00` | Foundation Compose runtime, animation, and UI primitives |
+| **Java Toolchain** | `OpenJDK 21` (Temurin) | Bytecode compilation target (`jvmTarget = 21`) |
+| **Android Gradle Plugin** | `9.2.1` | Build system, resource packaging, and baseline profile bundling |
+| **Macrobenchmark** | `1.5.0` | Macrobenchmark frame timing and startup measurement |
+| **Detekt Analysis** | `1.23.8` | Strict architectural compliance with `maxIssues: 0` |
+
+---
+
+## Binary Compatibility & Public API Stability (BCV)
+
+Basis uses the **JetBrains Binary Compatibility Validator (BCV)** (`org.jetbrains.kotlinx.binary-compatibility-validator`) to protect public API signatures from breaking changes:
+
+- **Committed Contract:** Every public signature is tracked in `basis-components/api/basis-components.api`.
+- **Zero Breaking Changes Policy:** Every build and pull request executes `./gradlew releaseApiCheck` in CI. Any uncommitted addition, deletion, or binary signature alteration immediately fails the build.
+- **Explicit API Mode:** Kotlin's `explicitApi()` mode is enabled across `basis-components`, enforcing explicit visibility modifiers and complete KDoc documentation on every public symbol.
+- **Foundation Scope:** Covers the public `BasisTheme` theme entrypoints, all 13 foundation modifiers (`basisBorder`, `basisClickable`, `basisClip`, `basisFocusRing`, `basisFocusable`, `basisIndication`, `basisPadding`, `basisRipple`, `basisSelectable`, `basisShadow`, `basisTouchTarget`, `basisModifier`, `basisClearAndSetSemantics`), and theme contracts.
+
+---
+
+## Performance SLAs & Baseline Profile
+
+Basis enforces strict frame rendering budgets to ensure seamless 60 Hz and 120 Hz display performance:
+
+### Frame Timing Budgets
+
+| Target Display Refresh Rate | Frame Rendering Budget | SLA Threshold | Verification Test |
+| :---: | :---: | :---: | :--- |
+| **60 Hz Standard Displays** | **16.6 ms** | P95 `< 16.6 ms` | `BasisStartupBenchmark` with `FrameTimingMetric` |
+| **120 Hz High-Refresh Displays** | **8.3 ms** | P99 `< 8.3 ms` | `BasisStartupBenchmark` with `FrameTimingMetric` |
+
+### Pre-compiled ART Baseline Profile
+
+Every release of Basis ships with a pre-compiled **ART Baseline Profile** embedded directly in the library AAR (`basis-components/src/main/baseline-prof.txt`):
+
+1. **Zero Install JIT Jank:** Android's Ahead-Of-Time (AOT) compiler pre-compiles Basis theme locals, modifier chains, and token resolution algorithms during application installation via Google Play Cloud Profiles.
+2. **Cold Startup Optimization:** Eliminates runtime interpretation of core composable paths during the critical first application launch frame.
+3. **Continuous Regeneration:** Updated and verified using the `:basis-baseline-profile` generator module on connected Android reference devices.

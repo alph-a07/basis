@@ -16,7 +16,7 @@ Add three Gradle dependencies and you are ready to call `BasisTheme`. This page 
 | **JDK** | 17 | JDK 21 recommended |
 | **Android Gradle Plugin (AGP)** | 8.8.0 | Compatible with Gradle 8.11+ / 9.2+ |
 | **Kotlin** | 2.0.0 | Compatible with Kotlin 2.1+ and Compose Compiler |
-| **Android SDK** | `minSdk 24`, `compileSdk 37` | `targetSdk 36` |
+| **Android SDK** | `minSdk 24`, `compileSdk 37` | `targetSdk 36` (see [Platform Compatibility](/docs/getting-started/compatibility)) |
 
 ## Repository Setup
 
@@ -37,7 +37,7 @@ dependencyResolutionManagement {
 
 Basis publishes three artifacts:
 
-- **`basis-components`**: Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals.
+- **`basis-components`**: Jetpack Compose foundation modifiers (`basisSurface`, `basisClickable`, `basisFocusRing`, `basisPadding`, etc.) and theme ambient locals.
 - **`basis-theme`**: Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees.
 - **`basis-lint`**: Android Lint check (`SpOnlyFontSizeDetector`) enforcing `sp` units for font size, line height, and letter spacing.
 

@@ -24,7 +24,7 @@ The Basis repository is organized into four modules, publishing three artifacts:
 
 | Module | Published Artifact | Role |
 | :--- | :--- | :--- |
-| `basis-components` | `io.github.alph_a07:basis-components` | Jetpack Compose foundation modifiers (`basisSurface`, `basisMinTouchTarget`, `basisClickable`) and theme ambient locals. |
+| `basis-components` | `io.github.alph_a07:basis-components` | Jetpack Compose foundation modifiers (`basisSurface`, `basisClickable`, `basisFocusRing`, `basisPadding`, etc.) and theme ambient locals. |
 | `basis-theme` | `io.github.alph_a07:basis-theme` | Pure Kotlin multiplatform resolution engine that converts `BasisIntent` into typed token trees. |
 | `basis-lint` | `io.github.alph_a07:basis-lint` | Android Lint check (`SpOnlyFontSizeDetector`) enforcing `sp` units for font size, line height, and letter spacing. |
 | `demo-app` | *(Sample application)* | Reference Android app used to verify integrations and compile documentation snippets. |
@@ -35,6 +35,7 @@ Wrap your Compose tree with `BasisTheme` to make tokens available to child compo
 
 <DocSnippet name="quickstart_app" />
 
-## Next Step
+## Next Steps
 
-Add Basis dependencies and Gradle configuration to your project in [Installation](/docs/getting-started/installation).
+1. Add Basis dependencies and Gradle configuration in [Installation](/docs/getting-started/installation).
+2. Review the Android version support matrix and performance budgets in [Platform Compatibility](/docs/getting-started/compatibility).
