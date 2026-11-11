@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -24,11 +24,11 @@ import io.github.alph_a07.basis.theme.core.DpValue
         "Box(\n" +
             "    modifier = Modifier\n" +
             "        .basisPadding(\n" +
-            "            horizontal = BasisTheme.spacing.md,\n" +
-            "            vertical = BasisTheme.spacing.sm\n" +
+            "            horizontal = BasisTheme.spacing.level3,\n" +
+            "            vertical = BasisTheme.spacing.level2\n" +
             "        )\n" +
             ") {\n" +
-            "    Text(\"Token Spaced Content\")\n" +
+            "    BasicText(\"Token Spaced Content\")\n" +
             "}",
 )
 public fun Modifier.basisPadding(
@@ -37,6 +37,27 @@ public fun Modifier.basisPadding(
 ): Modifier = basisModifier().padding(
     horizontal = horizontal?.toDp() ?: 0.dp,
     vertical = vertical?.toDp() ?: 0.dp,
+)
+
+/**
+ * Applies directional padding along individual edges using Basis token dimensions.
+ *
+ * @param start Optional leading edge padding in [DpValue].
+ * @param top Optional top edge padding in [DpValue].
+ * @param end Optional trailing edge padding in [DpValue].
+ * @param bottom Optional bottom edge padding in [DpValue].
+ * @return Configured [Modifier].
+ */
+public fun Modifier.basisPadding(
+    start: DpValue? = null,
+    top: DpValue? = null,
+    end: DpValue? = null,
+    bottom: DpValue? = null,
+): Modifier = basisModifier().padding(
+    start = start?.toDp() ?: 0.dp,
+    top = top?.toDp() ?: 0.dp,
+    end = end?.toDp() ?: 0.dp,
+    bottom = bottom?.toDp() ?: 0.dp,
 )
 
 /**
