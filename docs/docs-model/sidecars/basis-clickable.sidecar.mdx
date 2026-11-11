@@ -2,13 +2,13 @@
 id: basis-clickable
 guidelines:
   do:
-    - Share a single `MutableInteractionSource` with `Modifier.basisFocusRing()`.
+    - Pass `shape` matching the container to conform both the focus ring and indication layer.
     - Explicitly set `role = Role.Button` or the appropriate semantic role.
   dont:
     - Do not nest `basisClickable` inside an outer clickable container.
-    - Do not suppress indication unless providing an accessible visual state layer.
+    - Do not manually re-apply `basisFocusRing` or `basisMinTouchTarget` as `basisClickable` prepends them automatically.
   notes:
-    - Automatically enforces a 48dp physical touch target boundary via `basisMinTouchTarget()`.
+    - Automatically enforces a 48dp physical touch target boundary via `basisMinTouchTarget()` and attaches `basisFocusRing()` for keyboard navigation.
 ---
 
 ## Accessibility

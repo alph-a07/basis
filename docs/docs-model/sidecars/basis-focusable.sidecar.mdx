@@ -1,0 +1,18 @@
+---
+id: basis-focusable
+guidelines:
+  do:
+    - Use `basisFocusable` for custom interactive controls that need keyboard focus but are not standard clickable buttons or switches.
+    - Provide a matching `shape` parameter to ensure the focus ring aligns with the element's visual contour.
+  dont:
+    - Do not use `basisFocusable` alongside `basisClickable` or `basisSelectable` as they already include focus handling.
+    - Do not make purely decorative or non-actionable elements focusable.
+  notes:
+    - Automatically attaches high-contrast focus rings responding to Tab and directional arrow key navigation.
+---
+
+## Accessibility
+
+`basisFocusable` registers the element into the accessibility and focus tree without requiring
+click handlers. When focused via hardware keyboards or TalkBack linear navigation, it draws
+a WCAG AA compliant 2dp focus ring conforming to the ambient theme.

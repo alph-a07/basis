@@ -1,0 +1,17 @@
+---
+id: basis-clip
+guidelines:
+  do:
+    - Use `basisClip` to constrain media, imagery, or overflowing children to shapes derived from `BasisTheme.radius` tokens.
+    - Pair with `BasisTheme.radius` tokens to maintain visual consistency across containers.
+  dont:
+    - Do not clip containers whose children render focus rings or badges outside layout bounds.
+    - Do not apply duplicate clipping when `basisSurface` already clips by default.
+  notes:
+    - Clipping is applied during the draw phase and does not alter measured layout dimensions.
+---
+
+## Accessibility
+
+`basisClip` visually clips content to the specified shape boundary. For accessibility services
+and TalkBack touch exploration, the semantic touch bounds reflect the layout dimensions.

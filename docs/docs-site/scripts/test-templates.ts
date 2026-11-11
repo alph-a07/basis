@@ -50,7 +50,9 @@ const expectedModifiers = [
   { id: 'basis-border', name: 'basisBorder', title: 'Border' },
   { id: 'basis-clear-and-set-semantics', name: 'basisClearAndSetSemantics', title: 'Clear and Set Semantics' },
   { id: 'basis-clickable', name: 'basisClickable', title: 'Clickable' },
+  { id: 'basis-clip', name: 'basisClip', title: 'Clip' },
   { id: 'basis-focus-ring', name: 'basisFocusRing', title: 'Focus Ring' },
+  { id: 'basis-focusable', name: 'basisFocusable', title: 'Focusable' },
   { id: 'basis-indication', name: 'basisIndication', title: 'Indication' },
   { id: 'basis-min-touch-target', name: 'basisMinTouchTarget', title: 'Min Touch Target' },
   { id: 'basis-padding', name: 'basisPadding', title: 'Padding' },
@@ -60,7 +62,7 @@ const expectedModifiers = [
   { id: 'basis-toggleable', name: 'basisToggleable', title: 'Toggleable' },
 ];
 
-// Check all 11 modifiers in the sidebar under Foundation -> Modifiers
+// Check all 13 modifiers in the sidebar under Foundation -> Modifiers
 const sampleDoc = loadHtml('docs/modifiers/basis-border');
 const foundationGroup = Array.from(sampleDoc.querySelectorAll('.nav-group')).find((g) => {
   return g.querySelector('.nav-group-title')?.textContent?.trim().toLowerCase() === 'foundation';

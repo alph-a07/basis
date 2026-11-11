@@ -2,13 +2,13 @@
 id: basis-indication
 guidelines:
   do:
-    - Pass a conforming shape so visual ripples and hover overlays clip to the container bounds.
+    - Pass a conforming shape so visual state overlays clip cleanly to the container bounds.
     - Set `LocalBasisContentColor` in parents to control the indication highlight color.
   dont:
     - Do not hardcode opaque colors that obscure the underlying text or icon content.
     - Do not manually animate custom state overlays when `basisIndication` is already chained.
   notes:
-    - Automatically supports prefers-reduced-motion by suppressing ripple expansion animations.
+    - Automatically supports prefers-reduced-motion by suppressing transition animations.
 ---
 
 ## Accessibility
