@@ -141,6 +141,30 @@ esac
 
 CLASSPATH="\\\"\\\""
 
+# Pipeline commands provide their own processed report. Keep Gradle's internal
+# lifecycle output hidden unless an explicit diagnostic level was requested.
+pipeline_task=false
+explicit_log_level=false
+for arg in "$@"; do
+    case "$arg" in
+        verifyAll|fixAll|tests|detekt|ktlintCheck|ktlintFormat|lint|lintFix|check|\
+        connectedDebugAndroidTest|generateDocsJson|generateComponentsJson|generateIntentJson|\
+        generatePatchVocabulary|:*:detekt|:*:ktlintCheck|:*:ktlintFormat|:*:lint|:*:lintFix|\
+        :*:check|:*:connectedDebugAndroidTest|:*:generateDocsJson|:*:generateComponentsJson|\
+        :*:generateIntentJson|:*:generatePatchVocabulary|generate*|:*:generate*|:verifyAll|:fixAll|:tests)
+            pipeline_task=true
+            ;;
+        allTests|unitTests|integrationTests|docsTests|*Tests|:*Tests|:*:allTests|:*:unitTests|\
+        :*:integrationTests|:*:docsTests)
+            pipeline_task=true
+            ;;
+        --quiet|--warn|--lifecycle|--info|--debug|--stacktrace|--scan) explicit_log_level=true ;;
+    esac
+done
+if $pipeline_task && ! $explicit_log_level; then
+    set -- --quiet "$@"
+fi
+
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
@@ -227,7 +251,7 @@ fi
 
 
 # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+DEFAULT_JVM_OPTS='"-Xmx2g" "-Xms256m"'
 
 # Collect all arguments for the java command:
 #   * DEFAULT_JVM_OPTS, JAVA_OPTS, and optsEnvironmentVar are not allowed to contain shell fragments,
@@ -272,5 +296,78 @@ eval "set -- $(
         sed ' s~[^-[:alnum:]+,./:=@_]~\\&~g; ' |
         tr '\n' ' '
     )" '"$@"'
+
+if $pipeline_task && ! $explicit_log_level; then
+    if [ -t 1 ] || [ -t 2 ]; then
+        export BASIS_PIPELINE_COLOR=1
+    else
+        export BASIS_PIPELINE_COLOR=0
+    fi
+    PIPELINE_LOG_FILE=$(mktemp "${TMPDIR:-/tmp}/basis-gradle-output.XXXXXX") ||
+        die "Unable to create pipeline output buffer"
+    PIPELINE_STATUS_FILE=$(mktemp "${TMPDIR:-/tmp}/basis-gradle-status.XXXXXX") ||
+        die "Unable to create pipeline status buffer"
+    if [ -t 2 ]; then
+        (
+            spinner='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+            index=1
+            while [ ! -s "$PIPELINE_STATUS_FILE" ]; do
+                frame=$(printf '%s' "$spinner" | cut -c "$index")
+                printf '\r\033[K  %s  Basis pipeline is running…' "$frame" >&2
+                index=$((index % 10 + 1))
+                sleep 0.12
+            done
+        ) &
+        PIPELINE_HEARTBEAT_PID=$!
+    else
+        PIPELINE_HEARTBEAT_PID=
+    fi
+    "$JAVACMD" "$@" >"$PIPELINE_LOG_FILE" 2>&1
+    PIPELINE_STATUS=$?
+    printf '%s\n' "$PIPELINE_STATUS" >"$PIPELINE_STATUS_FILE"
+    if [ -n "$PIPELINE_HEARTBEAT_PID" ]; then
+        kill "$PIPELINE_HEARTBEAT_PID" 2>/dev/null
+        wait "$PIPELINE_HEARTBEAT_PID" 2>/dev/null
+        printf '\r\033[K' >&2
+    fi
+    if grep -q 'Basis pipeline report' "$PIPELINE_LOG_FILE"; then
+        awk '
+        /Basis pipeline report/ { capture=1 }
+        capture { print }
+        /Pipeline completed successfully\./ { exit }
+        /Pipeline completed with failures\./ { exit }
+        ' "$PIPELINE_LOG_FILE"
+    else
+        if [ "$BASIS_PIPELINE_COLOR" = 1 ]; then
+            printf '\033[36m◆\033[0m \033[1mBasis pipeline report\033[0m\n\n'
+        else
+            printf '◆ Basis pipeline report\n\n'
+        fi
+        if [ "$PIPELINE_STATUS" -eq 0 ]; then
+            if [ "$BASIS_PIPELINE_COLOR" = 1 ]; then
+                printf '  \033[32m✓  Pipeline completed successfully.\033[0m\n'
+            else
+                printf '  ✓  Pipeline completed successfully.\n'
+            fi
+        else
+            if [ "$BASIS_PIPELINE_COLOR" = 1 ]; then
+                printf '  \033[31m✗  Pipeline failed before the report was generated.\033[0m\n'
+            else
+                printf '  ✗  Pipeline failed before the report was generated.\n'
+            fi
+        fi
+        if [ "$PIPELINE_STATUS" -ne 0 ]; then
+            awk '
+            /^FAILURE:/ { print "\n  | " $0; next }
+            /^\* What went wrong/ { print "  | " $0; next }
+            /^> / { print "  | " $0; next }
+            ' "$PIPELINE_LOG_FILE"
+            printf '\n  ↳ Run with --info or --stacktrace for the full diagnostic trace.\n'
+        fi
+    fi
+    rm -f "$PIPELINE_LOG_FILE"
+    rm -f "$PIPELINE_STATUS_FILE"
+    exit "$PIPELINE_STATUS"
+fi
 
 exec "$JAVACMD" "$@"
