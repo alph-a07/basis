@@ -114,3 +114,16 @@ tasks.register("generatePatchVocabulary") {
     description = "Delegates to :docs:docs-extract:generatePatchVocabulary."
     dependsOn(":docs:docs-extract:generatePatchVocabulary")
 }
+
+tasks.register("syncBaselineProfile") {
+    group = "verification"
+    description = "Delegates to :basis-baseline-profile:syncBaselineProfile."
+    dependsOn(":basis-baseline-profile:syncBaselineProfile")
+}
+
+tasks.register<Exec>("generateCiReport") {
+    group = "verification"
+    description = "Generates GitHub Actions visual summary, performance, coverage, and Public API matrix report."
+    workingDir = rootDir
+    commandLine = listOf("python3", "scripts/generate_ci_report.py")
+}

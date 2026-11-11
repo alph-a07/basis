@@ -12,12 +12,13 @@ detekt = "1.23.8"
 #noinspection UnusedVersionCatalogEntry
 ktlint = "1.8.0"
 ktlintGradle = "14.2.0"
-lint = "32.4.1"
+lint = "32.5.1"
 ksp = "2.3.12"
 vanniktechMavenPublish = "0.37.0"
 bcv = "0.18.2"
 bcvBridge = "0.2.0"
-kotlinxSerialization = "1.8.0"
+kotlinxSerialization = "1.12.0"
+macrobenchmark = "1.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +49,7 @@ detekt-test = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test", ver
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.27.7" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "macrobenchmark" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
