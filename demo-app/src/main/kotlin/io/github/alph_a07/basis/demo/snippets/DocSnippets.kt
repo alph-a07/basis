@@ -9,9 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.alph_a07.basis.components.foundation.modifier.basisClickable
-import io.github.alph_a07.basis.components.foundation.modifier.basisMinTouchTarget
-import io.github.alph_a07.basis.components.foundation.modifier.basisSurface
+import io.github.alph_a07.basis.components.modifiers.basisClickable
+import io.github.alph_a07.basis.components.modifiers.basisMinTouchTarget
+import io.github.alph_a07.basis.components.modifiers.basisSurface
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.conversion.toDp
 import io.github.alph_a07.basis.theme.core.color.ColorSpec
