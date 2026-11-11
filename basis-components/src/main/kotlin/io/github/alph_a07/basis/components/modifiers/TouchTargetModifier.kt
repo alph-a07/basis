@@ -1,4 +1,4 @@
-package io.github.alph_a07.basis.components.foundation.modifier
+package io.github.alph_a07.basis.components.modifiers
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Measurable
@@ -17,8 +17,11 @@ import io.github.alph_a07.basis.components.annotation.BasisModifierDoc
 import io.github.alph_a07.basis.components.theme.BasisTheme
 import io.github.alph_a07.basis.components.theme.conversion.toDp
 import io.github.alph_a07.basis.components.theme.locals.LocalBasisTheme
+import io.github.alph_a07.basis.theme.core.DpValue
 import io.github.alph_a07.basis.theme.intent.controls.ConstraintsControl
 import kotlin.math.max
+
+private val DEFAULT_MIN_TOUCH_TARGET_DP: Dp = 48.dp
 
 /**
  * Enforces a minimum accessible touch target size on the modified element without altering visual size.
@@ -41,13 +44,21 @@ import kotlin.math.max
             "    modifier = Modifier\n" +
             "        .size(24.dp)\n" +
             "        .basisMinTouchTarget()\n" +
-            "        .clickable { /* action */ }\n" +
+            "        .basisClickable { /* action */ }\n" +
             ") {\n" +
             "    Icon(Icons.Default.Close, contentDescription = \"Close\")\n" +
             "}",
 )
 public fun Modifier.basisMinTouchTarget(min: Dp = Dp.Unspecified): Modifier =
     basisModifier() then TouchTargetElement(min)
+
+/**
+ * Enforces a minimum accessible touch target size on the modified element using a Basis token dimension.
+ *
+ * @param min Minimum touch target dimension in [DpValue].
+ * @return Configured [Modifier].
+ */
+public fun Modifier.basisMinTouchTarget(min: DpValue): Modifier = basisMinTouchTarget(min.toDp())
 
 private data class TouchTargetElement(
     val min: Dp,
@@ -92,9 +103,5 @@ private class TouchTargetModifierNode(
         return layout(targetWidth, targetHeight) {
             placeable.place(x, y)
         }
-    }
-
-    private companion object {
-        private val DEFAULT_MIN_TOUCH_TARGET_DP: Dp = 48.dp
     }
 }
