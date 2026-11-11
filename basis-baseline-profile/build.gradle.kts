@@ -52,19 +52,31 @@ dependencies {
     androidTestImplementation(libs.benchmark.macro.junit4)
 }
 
-tasks.register("syncBaselineProfile") {
-    group = "verification"
-    description = "Copies generated baseline profiles into basis-components/src/main/baseline-prof.txt."
-    doLast {
+abstract class SyncBaselineProfileTask : DefaultTask() {
+    @get:Internal
+    abstract val buildDirectory: DirectoryProperty
+
+    @get:Internal
+    abstract val outputFile: RegularFileProperty
+
+    @TaskAction
+    fun sync() {
+        val buildDir = buildDirectory.asFile.orNull
         val candidates =
-            fileTree(layout.buildDirectory.asFile.get()) {
-                include("outputs/**/basis-components-baseline-prof.txt")
-                include("outputs/**/baseline-prof.txt")
-            }.files
+            if (buildDir != null && buildDir.exists()) {
+                buildDir.walkTopDown()
+                    .filter {
+                        it.isFile &&
+                            (it.name == "basis-components-baseline-prof.txt" || it.name == "baseline-prof.txt")
+                    }
+                    .toList()
+            } else {
+                emptyList()
+            }
 
         val source = candidates.firstOrNull()
         if (source != null && source.exists()) {
-            val destination = rootProject.file("basis-components/src/main/baseline-prof.txt")
+            val destination = outputFile.asFile.get()
             destination.parentFile.mkdirs()
             source.copyTo(destination, overwrite = true)
             logger.lifecycle("✅ Synced baseline profile to ${destination.absolutePath}")
@@ -72,4 +84,11 @@ tasks.register("syncBaselineProfile") {
             logger.lifecycle("ℹ️ No generated baseline profile output found to sync.")
         }
     }
+}
+
+tasks.register<SyncBaselineProfileTask>("syncBaselineProfile") {
+    group = "verification"
+    description = "Copies generated baseline profiles into basis-components/src/main/baseline-prof.txt."
+    buildDirectory.set(layout.buildDirectory)
+    outputFile.set(rootProject.layout.projectDirectory.file("basis-components/src/main/baseline-prof.txt"))
 }
