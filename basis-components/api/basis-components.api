@@ -16,177 +16,82 @@ public abstract interface annotation class io/github/alph_a07/basis/components/a
 	public abstract fun touchTargetEnforced ()Z
 }
 
-public final class io/github/alph_a07/basis/components/foundation/BasisIndication : androidx/compose/foundation/IndicationNodeFactory {
-	public static final field $stable I
-	public fun <init> ()V
-	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-0d7_KjU ()J
-	public final fun component2 ()Landroidx/compose/ui/graphics/Shape;
-	public final fun component3 ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
-	public final fun component4 ()Z
-	public final fun copy-Iv8Zu3U (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Z)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
-	public static synthetic fun copy-Iv8Zu3U$default (Lio/github/alph_a07/basis/components/foundation/BasisIndication;JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILjava/lang/Object;)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
-	public fun create (Landroidx/compose/foundation/interaction/InteractionSource;)Landroidx/compose/ui/node/DelegatableNode;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBounded ()Z
-	public final fun getColor-0d7_KjU ()J
-	public final fun getShape ()Landroidx/compose/ui/graphics/Shape;
-	public final fun getTreatment ()Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;
-	public fun hashCode ()I
-	public fun rememberUpdatedInstance (Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/runtime/Composer;I)Landroidx/compose/foundation/IndicationInstance;
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class io/github/alph_a07/basis/components/foundation/BasisIndicationDefaults {
-	public static final field $stable I
-	public static final field CANCEL_FADE_MS I
-	public static final field FADE_OUT_MS I
-	public static final field FILL_CROSS_FADE_MS I
-	public static final field FOCUSED_ALPHA F
-	public static final field FOCUS_IN_MS I
-	public static final field FOCUS_OUT_MS I
-	public static final field HOVERED_ALPHA F
-	public static final field HOVER_IN_MS I
-	public static final field HOVER_OUT_MS I
-	public static final field INSTANCE Lio/github/alph_a07/basis/components/foundation/BasisIndicationDefaults;
-	public static final field MIN_PRESS_HOLD_MS J
-	public static final field MIN_RADIUS_FRACTION F
-	public static final field PRESSED_ALPHA F
-	public static final field PRESS_SPRING_DAMPING F
-	public static final field PRESS_SPRING_STIFFNESS F
-	public static final field RADIUS_EXPANSION_RATIO F
-	public final fun getFocusStrokeWidth-D9Ej5fM ()F
-	public final fun getHoverStrokeWidth-D9Ej5fM ()F
-}
-
-public final class io/github/alph_a07/basis/components/foundation/BasisIndicationKt {
-	public static final fun rememberBasisIndication-euL9pac (JLandroidx/compose/ui/graphics/Shape;Lio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZLandroidx/compose/runtime/Composer;II)Lio/github/alph_a07/basis/components/foundation/BasisIndication;
-}
-
-public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNode : androidx/compose/ui/node/DelegatingNode, androidx/compose/ui/focus/FocusEventModifierNode, androidx/compose/ui/input/key/KeyInputModifierNode, androidx/compose/ui/node/CompositionLocalConsumerModifierNode, androidx/compose/ui/node/LayoutModifierNode, androidx/compose/ui/node/SemanticsModifierNode {
-	public static final field $stable I
-	public fun <init> ()V
-	public synthetic fun <init> (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun applySemantics (Landroidx/compose/ui/semantics/SemanticsPropertyReceiver;)V
-	public final fun getActiveInteractionSource ()Landroidx/compose/foundation/interaction/MutableInteractionSource;
-	public final fun getChecked ()Ljava/lang/Boolean;
-	public final fun getEnabled ()Z
-	public final fun getInteractionSource ()Landroidx/compose/foundation/interaction/MutableInteractionSource;
-	public final fun getMinTouchTarget-D9Ej5fM ()F
-	public final fun getOnCheckedChange ()Lkotlin/jvm/functions/Function1;
-	public final fun getOnClick ()Lkotlin/jvm/functions/Function0;
-	public final fun getOnClickLabel ()Ljava/lang/String;
-	public final fun getOnLongClick ()Lkotlin/jvm/functions/Function0;
-	public final fun getOnLongClickLabel ()Ljava/lang/String;
-	public final fun getRole-RLKlGQI ()Landroidx/compose/ui/semantics/Role;
-	public final fun getSelected ()Ljava/lang/Boolean;
-	public fun getShouldClearDescendantSemantics ()Z
-	public fun getShouldMergeDescendantSemantics ()Z
-	public fun isImportantForBounds ()Z
-	public fun maxIntrinsicHeight (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
-	public fun maxIntrinsicWidth (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
-	public fun measure-3p2s80s (Landroidx/compose/ui/layout/MeasureScope;Landroidx/compose/ui/layout/Measurable;J)Landroidx/compose/ui/layout/MeasureResult;
-	public fun minIntrinsicHeight (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
-	public fun minIntrinsicWidth (Landroidx/compose/ui/layout/IntrinsicMeasureScope;Landroidx/compose/ui/layout/IntrinsicMeasurable;I)I
-	public fun onDetach ()V
-	public fun onFocusEvent (Landroidx/compose/ui/focus/FocusState;)V
-	public fun onKeyEvent-ZmokQxo (Landroid/view/KeyEvent;)Z
-	public fun onPreKeyEvent-ZmokQxo (Landroid/view/KeyEvent;)Z
-	public fun onReset ()V
-	public final fun setChecked (Ljava/lang/Boolean;)V
-	public final fun setEnabled (Z)V
-	public final fun setInteractionSource (Landroidx/compose/foundation/interaction/MutableInteractionSource;)V
-	public final fun setMinTouchTarget-0680j_4 (F)V
-	public final fun setOnCheckedChange (Lkotlin/jvm/functions/Function1;)V
-	public final fun setOnClick (Lkotlin/jvm/functions/Function0;)V
-	public final fun setOnClickLabel (Ljava/lang/String;)V
-	public final fun setOnLongClick (Lkotlin/jvm/functions/Function0;)V
-	public final fun setOnLongClickLabel (Ljava/lang/String;)V
-	public final fun setRole-ytANHLE (Landroidx/compose/ui/semantics/Role;)V
-	public final fun setSelected (Ljava/lang/Boolean;)V
-	public final fun update--ghodQ4 (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun update--ghodQ4$default (Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNode;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-}
-
-public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNodeDefaults {
-	public static final field $stable I
-	public static final field DEFAULT_ENABLED Z
-	public static final field INSTANCE Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNodeDefaults;
-	public static final field LONG_PRESS_TIMEOUT_MS J
-	public static final field TAP_TIMEOUT_MS J
-	public final fun getDEFAULT_MIN_TOUCH_TARGET_DP-D9Ej5fM ()F
-}
-
-public final class io/github/alph_a07/basis/components/foundation/BasisInteractiveNodeKt {
-	public static final fun basisInteractiveNode-tJ_4DSw (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
-	public static synthetic fun basisInteractiveNode-tJ_4DSw$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
-	public static final fun rememberBasisInteractiveNode-FFMhRHc (Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLandroidx/compose/ui/semantics/Role;Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/Boolean;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;III)Lio/github/alph_a07/basis/components/foundation/BasisInteractiveNode;
-}
-
-public final class io/github/alph_a07/basis/components/foundation/modifier/BaseModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/BaseModifierKt {
 	public static final fun basisModifier (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/BorderModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/BorderModifierKt {
+	public static final fun basisBorder (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/BorderStroke;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+	public static final fun basisBorder-1XhtgEY (Landroidx/compose/ui/Modifier;FJLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
 	public static final fun basisBorder-xT4_qwU (Landroidx/compose/ui/Modifier;FJLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/ClearAndSetSemanticsModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/ClearAndSetSemanticsModifierKt {
 	public static final fun basisClearAndSetSemantics (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/ClickableModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/ClickableModifierKt {
 	public static final fun basisClickable-9ecaMys (Landroidx/compose/ui/Modifier;ZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisClickable-9ecaMys$default (Landroidx/compose/ui/Modifier;ZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 	public static final fun basisClickable-f5TDLPQ (Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Ljava/lang/String;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisClickable-f5TDLPQ$default (Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Ljava/lang/String;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/FocusRingModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/ClipModifierKt {
+	public static final fun basisClip (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+}
+
+public final class io/github/alph_a07/basis/components/modifiers/FocusRingModifierKt {
 	public static final fun basisFocusRing-1Yev-eo (Landroidx/compose/ui/Modifier;ZLandroidx/compose/ui/graphics/Shape;JF)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisFocusRing-1Yev-eo$default (Landroidx/compose/ui/Modifier;ZLandroidx/compose/ui/graphics/Shape;JFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 	public static final fun basisFocusRing-1gnV_Wk (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JF)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisFocusRing-1gnV_Wk$default (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JFILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/IndicationModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/FocusableModifierKt {
+	public static final fun basisFocusable (Landroidx/compose/ui/Modifier;ZLandroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
+	public static synthetic fun basisFocusable$default (Landroidx/compose/ui/Modifier;ZLandroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+}
+
+public final class io/github/alph_a07/basis/components/modifiers/IndicationModifierKt {
 	public static final fun basisIndication (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisIndication$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 	public static final fun basisIndication-Bx497Mc (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;JLio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;Z)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisIndication-Bx497Mc$default (Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/InteractionSource;Landroidx/compose/ui/graphics/Shape;JLio/github/alph_a07/basis/theme/intent/controls/overrides/Treatment;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/PaddingModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/PaddingModifierKt {
+	public static final fun basisPadding-GTST-1I (Landroidx/compose/ui/Modifier;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;)Landroidx/compose/ui/Modifier;
+	public static synthetic fun basisPadding-GTST-1I$default (Landroidx/compose/ui/Modifier;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 	public static final fun basisPadding-HRI7PV8 (Landroidx/compose/ui/Modifier;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisPadding-HRI7PV8$default (Landroidx/compose/ui/Modifier;Lio/github/alph_a07/basis/theme/core/DpValue;Lio/github/alph_a07/basis/theme/core/DpValue;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 	public static final fun basisPadding-ch3aPfs (Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/SelectableModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/SelectableModifierKt {
 	public static final fun basisSelectable-3WzHGRc (Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisSelectable-3WzHGRc$default (Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/SemanticsModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/SemanticsModifierKt {
 	public static final fun basisSemantics (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisSemantics$default (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/SurfaceModifierKt {
-	public static final fun basisSurface-XO-JAsU (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JLandroidx/compose/foundation/BorderStroke;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;)Landroidx/compose/ui/Modifier;
-	public static synthetic fun basisSurface-XO-JAsU$default (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JLandroidx/compose/foundation/BorderStroke;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+public final class io/github/alph_a07/basis/components/modifiers/SurfaceModifierKt {
+	public static final fun basisSurface-FNF3uiM (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JLandroidx/compose/foundation/BorderStroke;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;Z)Landroidx/compose/ui/Modifier;
+	public static synthetic fun basisSurface-FNF3uiM$default (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;JLandroidx/compose/foundation/BorderStroke;Lio/github/alph_a07/basis/theme/tokens/scalars/DepthSpec;ZILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/ToggleableModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/ToggleableModifierKt {
 	public static final fun basisToggleable-3WzHGRc (Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function1;)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisToggleable-3WzHGRc$default (Landroidx/compose/ui/Modifier;ZZLandroidx/compose/ui/semantics/Role;Landroidx/compose/foundation/interaction/MutableInteractionSource;Landroidx/compose/ui/graphics/Shape;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
 }
 
-public final class io/github/alph_a07/basis/components/foundation/modifier/TouchTargetModifierKt {
+public final class io/github/alph_a07/basis/components/modifiers/TouchTargetModifierKt {
 	public static final fun basisMinTouchTarget-3ABfNKs (Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;
 	public static synthetic fun basisMinTouchTarget-3ABfNKs$default (Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+	public static final fun basisMinTouchTarget-ch3aPfs (Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;
 }
 
 public final class io/github/alph_a07/basis/components/theme/BasisTheme {
