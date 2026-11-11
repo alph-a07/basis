@@ -16,26 +16,19 @@ import org.gradle.tooling.events.task.TaskFinishEvent
 import org.gradle.tooling.events.task.TaskSkippedResult
 import org.gradle.tooling.events.task.TaskSuccessResult
 
-val verifyAllChecks = listOf("assemble", "test", "lint", "detekt", "ktlintCheck", "releaseApiCheck")
+val verifyAllChecks = listOf("assemble", "lint", "detekt", "ktlintCheck", "releaseApiCheck")
 val fixAllChecks = listOf("ktlintFormat", "lintFix")
-val testsChecks = listOf("test", "connectedDebugAndroidTest")
 
 val verifyAll =
     tasks.register("verifyAll") {
         group = "verification"
-        description = "Runs assemble, test, lint, detekt, ktlint and releaseApiCheck across every build."
+        description = "Runs assemble, lint, detekt, ktlint and releaseApiCheck across every build."
     }
 
 val fixAll =
     tasks.register("fixAll") {
         group = "formatting"
         description = "Attempts to auto-fix formatting and linting issues (ktlintFormat, lintFix)."
-    }
-
-val tests =
-    tasks.register("tests") {
-        group = "verification"
-        description = "Runs all unit tests and Android instrumentation tests on the first available connected device."
     }
 
 val releaseApiDump =
@@ -159,7 +152,10 @@ abstract class VerificationReporter : BuildService<ReporterParams>, OperationCom
             taskName.startsWith("test") ||
             taskName.startsWith("connected") ||
             taskName.startsWith("integrationTest") ||
-            taskName.startsWith("generate")
+            taskName.startsWith("generate") ||
+            taskName.endsWith("Tests") ||
+            taskName.endsWith("UnitTests") ||
+            taskName.endsWith("IntegrationTests")
     }
 
     override fun onFinish(event: FinishEvent) {
@@ -473,7 +469,11 @@ val styledTaskNames =
     setOf(
         verifyAll.name,
         fixAll.name,
-        tests.name,
+        "allTests",
+        "unitTests",
+        "integrationTests",
+        "docsTests",
+        "tests",
         "detekt",
         "ktlintCheck",
         "ktlintFormat",
@@ -494,7 +494,10 @@ val isPipelineActive =
             it.startsWith("test") ||
             it.startsWith("connected") ||
             it.startsWith("integrationTest") ||
-            it.startsWith("generate")
+            it.startsWith("generate") ||
+            it.endsWith("Tests") ||
+            it.endsWith("UnitTests") ||
+            it.endsWith("IntegrationTests")
     }
 
 if (isPipelineActive) {
@@ -529,21 +532,11 @@ gradle.projectsEvaluated {
         fixAllChecks.filter { it in module.tasks.names }.forEach { check ->
             fixAll.configure { dependsOn(module.tasks.named(check)) }
         }
-        testsChecks.filter { it in module.tasks.names }.forEach { check ->
-            tests.configure { dependsOn(module.tasks.named(check)) }
-        }
-
         if (module != project && "releaseApiDump" in module.tasks.names) {
             releaseApiDump.configure { dependsOn(module.tasks.named("releaseApiDump")) }
         }
         if (module != project && "releaseApiCheck" in module.tasks.names) {
             releaseApiCheck.configure { dependsOn(module.tasks.named("releaseApiCheck")) }
-        }
-
-        val testTask = module.tasks.findByName("test")
-        val androidTestTask = module.tasks.findByName("connectedDebugAndroidTest")
-        if (testTask != null && androidTestTask != null) {
-            androidTestTask.mustRunAfter(testTask)
         }
 
         val dumpTask = module.tasks.findByName("releaseApiDump")
@@ -558,10 +551,6 @@ gradle.projectsEvaluated {
         dependsOn(buildLogic.task(":detekt"), buildLogic.task(":ktlintCheck"))
         dependsOn(buildLogic.task(":basis-theme-ksp:detekt"))
         dependsOn(buildLogic.task(":basis-theme-ksp:ktlintCheck"))
-        dependsOn(buildLogic.task(":basis-theme-ksp:test"))
     }
     fixAll.configure { dependsOn(buildLogic.task(":ktlintFormat")) }
-    tests.configure {
-        dependsOn(buildLogic.task(":basis-theme-ksp:test"))
-    }
 }
